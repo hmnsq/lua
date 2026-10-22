@@ -7,10 +7,10 @@
 #define lopcodes_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#ಅನ್ತರ್ಭಾವ "lprefix.h"
 
 
-#include "lopcodes.h"
+#ಅನ್ತರ್ಭಾವ "lopcodes.h"
 
 
 #define opmode(mm,ot,it,t,a,m)  \
@@ -19,7 +19,7 @@
 
 /* ORDER OP */
 
-LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
+LUAI_DDEF ಧ್ರುವ lu_byte luaP_opmodes[ಅಂಕೆ_OPCODES] = {
 /*       MM OT IT T  A  mode		   opcode  */
   opmode(0, 0, 0, 0, 1, iABC)		/* OP_MOVE */
  ,opmode(0, 0, 0, 0, 1, iAsBx)		/* OP_LOADI */
@@ -117,15 +117,15 @@ LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
 ** and for instructions that use multiple values set by the previous
 ** instruction.
 */
-int luaP_isIT (Instruction i) {
+ಪೂರ್ಣಾಙ್ಕ luaP_isIT (Instruction i) {
   OpCode op = GET_OPCODE(i);
-  switch (op) {
-    case OP_SETLIST:
-      return GETARG_vB(i) == 0;
-    case OP_VARARGPREP:
-      return 1;
-    default:
-      return testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
+  ವಿಕಲ್ಪ (op) {
+    ಪಕ್ಷ OP_SETLIST:
+      ಪ್ರತ್ಯಾಗಮ GETARG_vB(i) == 0;
+    ಪಕ್ಷ OP_VARARGPREP:
+      ಪ್ರತ್ಯಾಗಮ 1;
+    ಸ್ವಭಾವ:
+      ಪ್ರತ್ಯಾಗಮ testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
   }
 }
 

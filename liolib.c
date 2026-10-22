@@ -7,38 +7,38 @@
 #define liolib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#ಅನ್ತರ್ಭಾವ "lprefix.h"
 
 
-#include <ctype.h>
-#include <errno.h>
-#include <locale.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ಅನ್ತರ್ಭಾವ <ctype.h>
+#ಅನ್ತರ್ಭಾವ <errno.h>
+#ಅನ್ತರ್ಭಾವ <locale.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#include "lua.h"
+#ಅನ್ತರ್ಭಾವ "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ಅನ್ತರ್ಭಾವ "lauxlib.h"
+#ಅನ್ತರ್ಭಾವ "lualib.h"
+#ಅನ್ತರ್ಭಾವ "llimits.h"
 
 
 /*
 ** Change this macro to accept other modes for 'fopen' besides
 ** the standard ones.
 */
-#if !defined(l_checkmode)
+#ಯದಿ !defined(l_checkmode)
 
 /* accepted extensions to 'mode' in 'fopen' */
-#if !defined(L_MODEEXT)
+#ಯದಿ !defined(L_MODEEXT)
 #define L_MODEEXT	"b"
 #endif
 
 /* Check whether 'mode' matches '[rwa]%+?[L_MODEEXT]*' */
-static int l_checkmode (const char *mode) {
-  return (*mode != '\0' && strchr("rwa", *(mode++)) != NULL &&
-         (*mode != '+' || ((void)(++mode), 1)) &&  /* skip if char is '+' */
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ l_checkmode (ಧ್ರುವ ವರ್ಣ *mode) {
+  ಪ್ರತ್ಯಾಗಮ (*mode != '\0' && strchr("rwa", *(mode++)) != ರಿಕ್ತ &&
+         (*mode != '+' || ((ಶೂನ್ಯ)(++mode), 1)) &&  /* skip if char is '+' */
          (strspn(mode, L_MODEEXT) == strlen(mode)));  /* check extensions */
 }
 
@@ -51,39 +51,39 @@ static int l_checkmode (const char *mode) {
 ** =======================================================
 */
 
-#if !defined(l_popen)		/* { */
+#ಯದಿ !defined(l_popen)		/* { */
 
-#if defined(LUA_USE_POSIX)	/* { */
+#ಯದಿ defined(LUA_USE_POSIX)	/* { */
 
-#define l_popen(L,c,m)		(fflush(NULL), popen(c,m))
+#define l_popen(L,c,m)		(fflush(ರಿಕ್ತ), popen(c,m))
 #define l_pclose(L,file)	(pclose(file))
 
-#elif defined(LUA_USE_WINDOWS)	/* }{ */
+#ನೋಚೇದ್ಯದಿ defined(LUA_USE_WINDOWS)	/* }{ */
 
 #define l_popen(L,c,m)		(_popen(c,m))
 #define l_pclose(L,file)	(_pclose(file))
 
-#if !defined(l_checkmodep)
+#ಯದಿ !defined(l_checkmodep)
 /* Windows accepts "[rw][bt]?" as valid modes */
 #define l_checkmodep(m)	((m[0] == 'r' || m[0] == 'w') && \
   (m[1] == '\0' || ((m[1] == 'b' || m[1] == 't') && m[2] == '\0')))
 #endif
 
-#else				/* }{ */
+#ಅನ್ಯಥಾ				/* }{ */
 
 /* ISO C definitions */
 #define l_popen(L,c,m)  \
-	  ((void)c, (void)m, \
+	  ((ಶೂನ್ಯ)c, (ಶೂನ್ಯ)m, \
 	  luaL_error(L, "'popen' not supported"), \
 	  (FILE*)0)
-#define l_pclose(L,file)		((void)L, (void)file, -1)
+#define l_pclose(L,file)		((ಶೂನ್ಯ)L, (ಶೂನ್ಯ)file, -1)
 
 #endif				/* } */
 
 #endif				/* } */
 
 
-#if !defined(l_checkmodep)
+#ಯದಿ !defined(l_checkmodep)
 /* By default, Lua accepts only "r" or "w" as valid modes */
 #define l_checkmodep(m)        ((m[0] == 'r' || m[0] == 'w') && m[1] == '\0')
 #endif
@@ -91,16 +91,16 @@ static int l_checkmode (const char *mode) {
 /* }====================================================== */
 
 
-#if !defined(l_getc)		/* { */
+#ಯದಿ !defined(l_getc)		/* { */
 
-#if defined(LUA_USE_POSIX)
+#ಯದಿ defined(LUA_USE_POSIX)
 #define l_getc(f)		getc_unlocked(f)
 #define l_lockfile(f)		flockfile(f)
 #define l_unlockfile(f)		funlockfile(f)
-#else
+#ಅನ್ಯಥಾ
 #define l_getc(f)		getc(f)
-#define l_lockfile(f)		((void)0)
-#define l_unlockfile(f)		((void)0)
+#define l_lockfile(f)		((ಶೂನ್ಯ)0)
+#define l_unlockfile(f)		((ಶೂನ್ಯ)0)
 #endif
 
 #endif				/* } */
@@ -112,17 +112,17 @@ static int l_checkmode (const char *mode) {
 ** =======================================================
 */
 
-#if !defined(l_fseek)		/* { */
+#ಯದಿ !defined(l_fseek)		/* { */
 
-#if defined(LUA_USE_POSIX) || defined(LUA_USE_OFF_T)	/* { */
+#ಯದಿ defined(LUA_USE_POSIX) || defined(LUA_USE_OFF_T)	/* { */
 
-#include <sys/types.h>
+#ಅನ್ತರ್ಭಾವ <sys/types.h>
 
 #define l_fseek(f,o,w)		fseeko(f,o,w)
 #define l_ftell(f)		ftello(f)
 #define l_seeknum		off_t
 
-#elif defined(LUA_USE_WINDOWS) && !defined(_CRTIMP_TYPEINFO) \
+#ನೋಚೇದ್ಯದಿ defined(LUA_USE_WINDOWS) && !defined(_CRTIMP_TYPEINFO) \
    && defined(_MSC_VER) && (_MSC_VER >= 1400)	/* }{ */
 
 /* Windows (but not DDK) and Visual C++ 2005 or higher */
@@ -130,7 +130,7 @@ static int l_checkmode (const char *mode) {
 #define l_ftell(f)		_ftelli64(f)
 #define l_seeknum		__int64
 
-#else				/* }{ */
+#ಅನ್ಯಥಾ				/* }{ */
 
 /* ISO C definitions */
 #define l_fseek(f,o,w)		fseek(f,o,w)
@@ -146,49 +146,49 @@ static int l_checkmode (const char *mode) {
 
 
 #define IO_PREFIX	"_IO_"
-#define IOPREF_LEN	(sizeof(IO_PREFIX)/sizeof(char) - 1)
-#define IO_INPUT	(IO_PREFIX "input")
+#define IOPREF_LEN	(ಪರಿಮಾಣ(IO_PREFIX)/ಪರಿಮಾಣ(ವರ್ಣ) - 1)
+#define IO_ಒಳಹರಿವು	(IO_PREFIX "input")
 #define IO_OUTPUT	(IO_PREFIX "output")
 
 
-typedef luaL_Stream LStream;
+ಪ್ರಕಾರನಿರ್ದೇಶ luaL_Stream LStream;
 
 
 #define tolstream(L)	((LStream *)luaL_checkudata(L, 1, LUA_FILEHANDLE))
 
-#define isclosed(p)	((p)->closef == NULL)
+#define isclosed(p)	((p)->closef == ರಿಕ್ತ)
 
 
-static int io_type (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_type (lua_State *L) {
   LStream *p;
   luaL_checkany(L, 1);
   p = (LStream *)luaL_testudata(L, 1, LUA_FILEHANDLE);
-  if (p == NULL)
+  ಯದಿ (p == ರಿಕ್ತ)
     luaL_pushfail(L);  /* not a file */
-  else if (isclosed(p))
+  ಅನ್ಯಥಾ ಯದಿ (isclosed(p))
     lua_pushliteral(L, "closed file");
-  else
+  ಅನ್ಯಥಾ
     lua_pushliteral(L, "file");
-  return 1;
+  ಪ್ರತ್ಯಾಗಮ 1;
 }
 
 
-static int f_tostring (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_tostring (lua_State *L) {
   LStream *p = tolstream(L);
-  if (isclosed(p))
+  ಯದಿ (isclosed(p))
     lua_pushliteral(L, "file (closed)");
-  else
+  ಅನ್ಯಥಾ
     lua_pushfstring(L, "file (%p)", p->f);
-  return 1;
+  ಪ್ರತ್ಯಾಗಮ 1;
 }
 
 
-static FILE *tofile (lua_State *L) {
+ಸ್ಥಿರ FILE *tofile (lua_State *L) {
   LStream *p = tolstream(L);
-  if (l_unlikely(isclosed(p)))
+  ಯದಿ (l_unlikely(isclosed(p)))
     luaL_error(L, "attempt to use a closed file");
   lua_assert(p->f);
-  return p->f;
+  ಪ್ರತ್ಯಾಗಮ p->f;
 }
 
 
@@ -197,11 +197,11 @@ static FILE *tofile (lua_State *L) {
 ** before opening the actual file; so, if there is a memory error, the
 ** handle is in a consistent state.
 */
-static LStream *newprefile (lua_State *L) {
-  LStream *p = (LStream *)lua_newuserdatauv(L, sizeof(LStream), 0);
-  p->closef = NULL;  /* mark file handle as 'closed' */
+ಸ್ಥಿರ LStream *newprefile (lua_State *L) {
+  LStream *p = (LStream *)lua_newuserdatauv(L, ಪರಿಮಾಣ(LStream), 0);
+  p->closef = ರಿಕ್ತ;  /* mark file handle as 'closed' */
   luaL_setmetatable(L, LUA_FILEHANDLE);
-  return p;
+  ಪ್ರತ್ಯಾಗಮ p;
 }
 
 
@@ -210,119 +210,119 @@ static LStream *newprefile (lua_State *L) {
 ** a bug in some versions of the Clang compiler (e.g., clang 3.0 for
 ** 32 bits).
 */
-static int aux_close (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ aux_close (lua_State *L) {
   LStream *p = tolstream(L);
-  volatile lua_CFunction cf = p->closef;
-  p->closef = NULL;  /* mark stream as closed */
-  return (*cf)(L);  /* close it */
+  ಚಞ್ಚಲ lua_CFunction cf = p->closef;
+  p->closef = ರಿಕ್ತ;  /* mark stream as closed */
+  ಪ್ರತ್ಯಾಗಮ (*cf)(L);  /* close it */
 }
 
 
-static int f_close (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_close (lua_State *L) {
   tofile(L);  /* make sure argument is an open stream */
-  return aux_close(L);
+  ಪ್ರತ್ಯಾಗಮ aux_close(L);
 }
 
 
-static int io_close (lua_State *L) {
-  if (lua_isnone(L, 1))  /* no argument? */
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_close (lua_State *L) {
+  ಯದಿ (lua_isnone(L, 1))  /* no argument? */
     lua_getfield(L, LUA_REGISTRYINDEX, IO_OUTPUT);  /* use default output */
-  return f_close(L);
+  ಪ್ರತ್ಯಾಗಮ f_close(L);
 }
 
 
-static int f_gc (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_gc (lua_State *L) {
   LStream *p = tolstream(L);
-  if (!isclosed(p) && p->f != NULL)
+  ಯದಿ (!isclosed(p) && p->f != ರಿಕ್ತ)
     aux_close(L);  /* ignore closed and incompletely open files */
-  return 0;
+  ಪ್ರತ್ಯಾಗಮ 0;
 }
 
 
 /*
 ** function to close regular files
 */
-static int io_fclose (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_fclose (lua_State *L) {
   LStream *p = tolstream(L);
   errno = 0;
-  return luaL_fileresult(L, (fclose(p->f) == 0), NULL);
+  ಪ್ರತ್ಯಾಗಮ luaL_fileresult(L, (fclose(p->f) == 0), ರಿಕ್ತ);
 }
 
 
-static LStream *newfile (lua_State *L) {
+ಸ್ಥಿರ LStream *newfile (lua_State *L) {
   LStream *p = newprefile(L);
-  p->f = NULL;
+  p->f = ರಿಕ್ತ;
   p->closef = &io_fclose;
-  return p;
+  ಪ್ರತ್ಯಾಗಮ p;
 }
 
 
-static void opencheck (lua_State *L, const char *fname, const char *mode) {
+ಸ್ಥಿರ ಶೂನ್ಯ opencheck (lua_State *L, ಧ್ರುವ ವರ್ಣ *fname, ಧ್ರುವ ವರ್ಣ *mode) {
   LStream *p = newfile(L);
   p->f = fopen(fname, mode);
-  if (l_unlikely(p->f == NULL))
+  ಯದಿ (l_unlikely(p->f == ರಿಕ್ತ))
     luaL_error(L, "cannot open file '%s' (%s)", fname, strerror(errno));
 }
 
 
-static int io_open (lua_State *L) {
-  const char *filename = luaL_checkstring(L, 1);
-  const char *mode = luaL_optstring(L, 2, "r");
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_open (lua_State *L) {
+  ಧ್ರುವ ವರ್ಣ *filename = luaL_checkstring(L, 1);
+  ಧ್ರುವ ವರ್ಣ *mode = luaL_optstring(L, 2, "r");
   LStream *p = newfile(L);
-  const char *md = mode;  /* to traverse/check mode */
+  ಧ್ರುವ ವರ್ಣ *md = mode;  /* to traverse/check mode */
   luaL_argcheck(L, l_checkmode(md), 2, "invalid mode");
   errno = 0;
   p->f = fopen(filename, mode);
-  return (p->f == NULL) ? luaL_fileresult(L, 0, filename) : 1;
+  ಪ್ರತ್ಯಾಗಮ (p->f == ರಿಕ್ತ) ? luaL_fileresult(L, 0, filename) : 1;
 }
 
 
 /*
 ** function to close 'popen' files
 */
-static int io_pclose (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_pclose (lua_State *L) {
   LStream *p = tolstream(L);
   errno = 0;
-  return luaL_execresult(L, l_pclose(L, p->f));
+  ಪ್ರತ್ಯಾಗಮ luaL_execresult(L, l_pclose(L, p->f));
 }
 
 
-static int io_popen (lua_State *L) {
-  const char *filename = luaL_checkstring(L, 1);
-  const char *mode = luaL_optstring(L, 2, "r");
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_popen (lua_State *L) {
+  ಧ್ರುವ ವರ್ಣ *filename = luaL_checkstring(L, 1);
+  ಧ್ರುವ ವರ್ಣ *mode = luaL_optstring(L, 2, "r");
   LStream *p = newprefile(L);
   luaL_argcheck(L, l_checkmodep(mode), 2, "invalid mode");
   errno = 0;
   p->f = l_popen(L, filename, mode);
   p->closef = &io_pclose;
-  return (p->f == NULL) ? luaL_fileresult(L, 0, filename) : 1;
+  ಪ್ರತ್ಯಾಗಮ (p->f == ರಿಕ್ತ) ? luaL_fileresult(L, 0, filename) : 1;
 }
 
 
-static int io_tmpfile (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_tmpfile (lua_State *L) {
   LStream *p = newfile(L);
   errno = 0;
   p->f = tmpfile();
-  return (p->f == NULL) ? luaL_fileresult(L, 0, NULL) : 1;
+  ಪ್ರತ್ಯಾಗಮ (p->f == ರಿಕ್ತ) ? luaL_fileresult(L, 0, ರಿಕ್ತ) : 1;
 }
 
 
-static FILE *getiofile (lua_State *L, const char *findex) {
+ಸ್ಥಿರ FILE *getiofile (lua_State *L, ಧ್ರುವ ವರ್ಣ *findex) {
   LStream *p;
   lua_getfield(L, LUA_REGISTRYINDEX, findex);
   p = (LStream *)lua_touserdata(L, -1);
-  if (l_unlikely(isclosed(p)))
+  ಯದಿ (l_unlikely(isclosed(p)))
     luaL_error(L, "default %s file is closed", findex + IOPREF_LEN);
-  return p->f;
+  ಪ್ರತ್ಯಾಗಮ p->f;
 }
 
 
-static int g_iofile (lua_State *L, const char *f, const char *mode) {
-  if (!lua_isnoneornil(L, 1)) {
-    const char *filename = lua_tostring(L, 1);
-    if (filename)
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ g_iofile (lua_State *L, ಧ್ರುವ ವರ್ಣ *f, ಧ್ರುವ ವರ್ಣ *mode) {
+  ಯದಿ (!lua_isnoneornil(L, 1)) {
+    ಧ್ರುವ ವರ್ಣ *filename = lua_tostring(L, 1);
+    ಯದಿ (filename)
       opencheck(L, filename, mode);
-    else {
+    ಅನ್ಯಥಾ {
       tofile(L);  /* check that it's a valid file handle */
       lua_pushvalue(L, 1);
     }
@@ -330,21 +330,21 @@ static int g_iofile (lua_State *L, const char *f, const char *mode) {
   }
   /* return current value */
   lua_getfield(L, LUA_REGISTRYINDEX, f);
-  return 1;
+  ಪ್ರತ್ಯಾಗಮ 1;
 }
 
 
-static int io_input (lua_State *L) {
-  return g_iofile(L, IO_INPUT, "r");
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_ಒಳಹರಿವು (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ g_iofile(L, IO_ಒಳಹರಿವು, "r");
 }
 
 
-static int io_output (lua_State *L) {
-  return g_iofile(L, IO_OUTPUT, "w");
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_output (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ g_iofile(L, IO_OUTPUT, "w");
 }
 
 
-static int io_readline (lua_State *L);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_readline (lua_State *L);
 
 
 /*
@@ -362,8 +362,8 @@ static int io_readline (lua_State *L);
 ** 3) a boolean, true iff file has to be closed when finished ('toclose')
 ** *) a variable number of format arguments (rest of the stack)
 */
-static void aux_lines (lua_State *L, int toclose) {
-  int n = lua_gettop(L) - 1;  /* number of arguments to read */
+ಸ್ಥಿರ ಶೂನ್ಯ aux_ಸಾಲುಗಳು (lua_State *L, ಪೂರ್ಣಾಙ್ಕ toclose) {
+  ಪೂರ್ಣಾಙ್ಕ n = lua_gettop(L) - 1;  /* number of arguments to read */
   luaL_argcheck(L, n <= MAXARGLINE, MAXARGLINE + 2, "too many arguments");
   lua_pushvalue(L, 1);  /* file */
   lua_pushinteger(L, n);  /* number of arguments to read */
@@ -373,10 +373,10 @@ static void aux_lines (lua_State *L, int toclose) {
 }
 
 
-static int f_lines (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_ಸಾಲುಗಳು (lua_State *L) {
   tofile(L);  /* check that it's a valid file handle */
-  aux_lines(L, 0);
-  return 1;
+  aux_ಸಾಲುಗಳು(L, 0);
+  ಪ್ರತ್ಯಾಗಮ 1;
 }
 
 
@@ -385,30 +385,30 @@ static int f_lines (lua_State *L) {
 ** closed, also returns the file itself as a second result (to be
 ** closed as the state at the exit of a generic for).
 */
-static int io_lines (lua_State *L) {
-  int toclose;
-  if (lua_isnone(L, 1)) lua_pushnil(L);  /* at least one argument */
-  if (lua_isnil(L, 1)) {  /* no file name? */
-    lua_getfield(L, LUA_REGISTRYINDEX, IO_INPUT);  /* get default input */
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_ಸಾಲುಗಳು (lua_State *L) {
+  ಪೂರ್ಣಾಙ್ಕ toclose;
+  ಯದಿ (lua_isnone(L, 1)) lua_pushnil(L);  /* at least one argument */
+  ಯದಿ (lua_isnil(L, 1)) {  /* no file name? */
+    lua_getfield(L, LUA_REGISTRYINDEX, IO_ಒಳಹರಿವು);  /* get default input */
     lua_replace(L, 1);  /* put it at index 1 */
     tofile(L);  /* check that it's a valid file handle */
     toclose = 0;  /* do not close it after iteration */
   }
-  else {  /* open a new file */
-    const char *filename = luaL_checkstring(L, 1);
+  ಅನ್ಯಥಾ {  /* open a new file */
+    ಧ್ರುವ ವರ್ಣ *filename = luaL_checkstring(L, 1);
     opencheck(L, filename, "r");
     lua_replace(L, 1);  /* put file at index 1 */
     toclose = 1;  /* close it after iteration */
   }
-  aux_lines(L, toclose);  /* push iteration function */
-  if (toclose) {
+  aux_ಸಾಲುಗಳು(L, toclose);  /* push iteration function */
+  ಯದಿ (toclose) {
     lua_pushnil(L);  /* state */
     lua_pushnil(L);  /* control */
     lua_pushvalue(L, 1);  /* file is the to-be-closed variable (4th result) */
-    return 4;
+    ಪ್ರತ್ಯಾಗಮ 4;
   }
-  else
-    return 1;
+  ಅನ್ಯಥಾ
+    ಪ್ರತ್ಯಾಗಮ 1;
 }
 
 
@@ -420,32 +420,32 @@ static int io_lines (lua_State *L) {
 
 
 /* maximum length of a numeral */
-#if !defined (L_MAXLENNUM)
+#ಯದಿ !defined (L_MAXLENNUM)
 #define L_MAXLENNUM     200
 #endif
 
 
 /* auxiliary structure used by 'read_number' */
-typedef struct {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ {
   FILE *f;  /* file being read */
-  int c;  /* current character (look ahead) */
-  int n;  /* number of elements in buffer 'buff' */
-  char buff[L_MAXLENNUM + 1];  /* +1 for ending '\0' */
+  ಪೂರ್ಣಾಙ್ಕ c;  /* current character (look ahead) */
+  ಪೂರ್ಣಾಙ್ಕ n;  /* number of elements in buffer 'buff' */
+  ವರ್ಣ buff[L_MAXLENNUM + 1];  /* +1 for ending '\0' */
 } RN;
 
 
 /*
 ** Add current char to buffer (if not out of space) and read next one
 */
-static int nextc (RN *rn) {
-  if (l_unlikely(rn->n >= L_MAXLENNUM)) {  /* buffer overflow? */
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ nextc (RN *rn) {
+  ಯದಿ (l_unlikely(rn->n >= L_MAXLENNUM)) {  /* buffer overflow? */
     rn->buff[0] = '\0';  /* invalidate result */
-    return 0;  /* fail */
+    ಪ್ರತ್ಯಾಗಮ 0;  /* fail */
   }
-  else {
+  ಅನ್ಯಥಾ {
     rn->buff[rn->n++] = cast_char(rn->c);  /* save current char */
     rn->c = l_getc(rn->f);  /* read next one */
-    return 1;
+    ಪ್ರತ್ಯಾಗಮ 1;
   }
 }
 
@@ -453,21 +453,21 @@ static int nextc (RN *rn) {
 /*
 ** Accept current char if it is in 'set' (of size 2)
 */
-static int test2 (RN *rn, const char *set) {
-  if (rn->c == set[0] || rn->c == set[1])
-    return nextc(rn);
-  else return 0;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ test2 (RN *rn, ಧ್ರುವ ವರ್ಣ *set) {
+  ಯದಿ (rn->c == set[0] || rn->c == set[1])
+    ಪ್ರತ್ಯಾಗಮ nextc(rn);
+  ಅನ್ಯಥಾ ಪ್ರತ್ಯಾಗಮ 0;
 }
 
 
 /*
 ** Read a sequence of (hex)digits
 */
-static int readdigits (RN *rn, int hex) {
-  int count = 0;
-  while ((hex ? isxdigit(rn->c) : isdigit(rn->c)) && nextc(rn))
-    count++;
-  return count;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ readdigits (RN *rn, ಪೂರ್ಣಾಙ್ಕ hex) {
+  ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ = 0;
+  ಯಾವತ್ ((hex ? isxdigit(rn->c) : isdigit(rn->c)) && nextc(rn))
+    ಎಣಿಕೆ++;
+  ಪ್ರತ್ಯಾಗಮ ಎಣಿಕೆ;
 }
 
 
@@ -476,286 +476,286 @@ static int readdigits (RN *rn, int hex) {
 ** Then it calls 'lua_stringtonumber' to check whether the format is
 ** correct and to convert it to a Lua number.
 */
-static int read_number (lua_State *L, FILE *f) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ read_ಸಂಖ್ಯೆ (lua_State *L, FILE *f) {
   RN rn;
-  int count = 0;
-  int hex = 0;
-  char decp[2];
+  ಪೂರ್ಣಾಙ್ಕ ಎಣಿಕೆ = 0;
+  ಪೂರ್ಣಾಙ್ಕ hex = 0;
+  ವರ್ಣ decp[2];
   rn.f = f; rn.n = 0;
   decp[0] = lua_getlocaledecpoint();  /* get decimal point from locale */
   decp[1] = '.';  /* always accept a dot */
   l_lockfile(rn.f);
-  do { rn.c = l_getc(rn.f); } while (isspace(rn.c));  /* skip spaces */
+  ಕುರು { rn.c = l_getc(rn.f); } ಯಾವತ್ (isspace(rn.c));  /* skip spaces */
   test2(&rn, "-+");  /* optional sign */
-  if (test2(&rn, "00")) {
-    if (test2(&rn, "xX")) hex = 1;  /* numeral is hexadecimal */
-    else count = 1;  /* count initial '0' as a valid digit */
+  ಯದಿ (test2(&rn, "00")) {
+    ಯದಿ (test2(&rn, "xX")) hex = 1;  /* numeral is hexadecimal */
+    ಅನ್ಯಥಾ ಎಣಿಕೆ = 1;  /* count initial '0' as a valid digit */
   }
-  count += readdigits(&rn, hex);  /* integral part */
-  if (test2(&rn, decp))  /* decimal point? */
-    count += readdigits(&rn, hex);  /* fractional part */
-  if (count > 0 && test2(&rn, (hex ? "pP" : "eE"))) {  /* exponent mark? */
+  ಎಣಿಕೆ += readdigits(&rn, hex);  /* integral part */
+  ಯದಿ (test2(&rn, decp))  /* decimal point? */
+    ಎಣಿಕೆ += readdigits(&rn, hex);  /* fractional part */
+  ಯದಿ (ಎಣಿಕೆ > 0 && test2(&rn, (hex ? "pP" : "eE"))) {  /* exponent mark? */
     test2(&rn, "-+");  /* exponent sign */
     readdigits(&rn, 0);  /* exponent digits */
   }
   ungetc(rn.c, rn.f);  /* unread look-ahead char */
   l_unlockfile(rn.f);
   rn.buff[rn.n] = '\0';  /* finish string */
-  if (l_likely(lua_stringtonumber(L, rn.buff)))
-    return 1;  /* ok, it is a valid number */
-  else {  /* invalid format */
+  ಯದಿ (l_likely(lua_stringtonumber(L, rn.buff)))
+    ಪ್ರತ್ಯಾಗಮ 1;  /* ok, it is a valid number */
+  ಅನ್ಯಥಾ {  /* invalid format */
    lua_pushnil(L);  /* "result" to be removed */
-   return 0;  /* read fails */
+   ಪ್ರತ್ಯಾಗಮ 0;  /* read fails */
   }
 }
 
 
-static int test_eof (lua_State *L, FILE *f) {
-  int c = getc(f);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ test_eof (lua_State *L, FILE *f) {
+  ಪೂರ್ಣಾಙ್ಕ c = getc(f);
   ungetc(c, f);  /* no-op when c == EOF */
   lua_pushliteral(L, "");
-  return (c != EOF);
+  ಪ್ರತ್ಯಾಗಮ (c != EOF);
 }
 
 
-static int read_line (lua_State *L, FILE *f, int chop) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ read_ಸಾಲು (lua_State *L, FILE *f, ಪೂರ್ಣಾಙ್ಕ chop) {
   luaL_Buffer b;
-  int c;
+  ಪೂರ್ಣಾಙ್ಕ c;
   luaL_buffinit(L, &b);
-  do {  /* may need to read several chunks to get whole line */
-    char *buff = luaL_prepbuffer(&b);  /* preallocate buffer space */
+  ಕುರು {  /* may need to read several chunks to get whole line */
+    ವರ್ಣ *buff = luaL_prepbuffer(&b);  /* preallocate buffer space */
     unsigned i = 0;
     l_lockfile(f);  /* no memory errors can happen inside the lock */
-    while (i < LUAL_BUFFERSIZE && (c = l_getc(f)) != EOF && c != '\n')
+    ಯಾವತ್ (i < LUAL_BUFFERSIZE && (c = l_getc(f)) != EOF && c != '\n')
       buff[i++] = cast_char(c);  /* read up to end of line or buffer limit */
     l_unlockfile(f);
     luaL_addsize(&b, i);
-  } while (c != EOF && c != '\n');  /* repeat until end of line */
-  if (!chop && c == '\n')  /* want a newline and have one? */
+  } ಯಾವತ್ (c != EOF && c != '\n');  /* repeat until end of line */
+  ಯದಿ (!chop && c == '\n')  /* want a newline and have one? */
     luaL_addchar(&b, '\n');  /* add ending newline to result */
   luaL_pushresult(&b);  /* close buffer */
   /* return ok if read something (either a newline or something else) */
-  return (c == '\n' || lua_rawlen(L, -1) > 0);
+  ಪ್ರತ್ಯಾಗಮ (c == '\n' || lua_rawlen(L, -1) > 0);
 }
 
 
-static void read_all (lua_State *L, FILE *f) {
+ಸ್ಥಿರ ಶೂನ್ಯ read_all (lua_State *L, FILE *f) {
   size_t nr;
   luaL_Buffer b;
   luaL_buffinit(L, &b);
-  do {  /* read file in chunks of LUAL_BUFFERSIZE bytes */
-    char *p = luaL_prepbuffer(&b);
-    nr = fread(p, sizeof(char), LUAL_BUFFERSIZE, f);
+  ಕುರು {  /* read file in chunks of LUAL_BUFFERSIZE bytes */
+    ವರ್ಣ *p = luaL_prepbuffer(&b);
+    nr = fread(p, ಪರಿಮಾಣ(ವರ್ಣ), LUAL_BUFFERSIZE, f);
     luaL_addsize(&b, nr);
-  } while (nr == LUAL_BUFFERSIZE);
+  } ಯಾವತ್ (nr == LUAL_BUFFERSIZE);
   luaL_pushresult(&b);  /* close buffer */
 }
 
 
-static int read_chars (lua_State *L, FILE *f, size_t n) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ read_chars (lua_State *L, FILE *f, size_t n) {
   size_t nr;  /* number of chars actually read */
-  char *p;
+  ವರ್ಣ *p;
   luaL_Buffer b;
   luaL_buffinit(L, &b);
   p = luaL_prepbuffsize(&b, n);  /* prepare buffer to read whole block */
-  nr = fread(p, sizeof(char), n, f);  /* try to read 'n' chars */
+  nr = fread(p, ಪರಿಮಾಣ(ವರ್ಣ), n, f);  /* try to read 'n' chars */
   luaL_addsize(&b, nr);
   luaL_pushresult(&b);  /* close buffer */
-  return (nr > 0);  /* true iff read something */
+  ಪ್ರತ್ಯಾಗಮ (nr > 0);  /* true iff read something */
 }
 
 
-static int g_read (lua_State *L, FILE *f, int first) {
-  int nargs = lua_gettop(L) - 1;
-  int n, success;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ g_read (lua_State *L, FILE *f, ಪೂರ್ಣಾಙ್ಕ first) {
+  ಪೂರ್ಣಾಙ್ಕ nargs = lua_gettop(L) - 1;
+  ಪೂರ್ಣಾಙ್ಕ n, success;
   clearerr(f);
   errno = 0;
-  if (nargs == 0) {  /* no arguments? */
-    success = read_line(L, f, 1);
+  ಯದಿ (nargs == 0) {  /* no arguments? */
+    success = read_ಸಾಲು(L, f, 1);
     n = first + 1;  /* to return 1 result */
   }
-  else {
+  ಅನ್ಯಥಾ {
     /* ensure stack space for all results and for auxlib's buffer */
     luaL_checkstack(L, nargs+LUA_MINSTACK, "too many arguments");
     success = 1;
-    for (n = first; nargs-- && success; n++) {
-      if (lua_type(L, n) == LUA_TNUMBER) {
+    ಪ್ರತಿ (n = first; nargs-- && success; n++) {
+      ಯದಿ (lua_type(L, n) == LUA_TNUMBER) {
         size_t l = (size_t)luaL_checkinteger(L, n);
         success = (l == 0) ? test_eof(L, f) : read_chars(L, f, l);
       }
-      else {
-        const char *p = luaL_checkstring(L, n);
-        if (*p == '*') p++;  /* skip optional '*' (for compatibility) */
-        switch (*p) {
-          case 'n':  /* number */
-            success = read_number(L, f);
-            break;
-          case 'l':  /* line */
-            success = read_line(L, f, 1);
-            break;
-          case 'L':  /* line with end-of-line */
-            success = read_line(L, f, 0);
-            break;
-          case 'a':  /* file */
+      ಅನ್ಯಥಾ {
+        ಧ್ರುವ ವರ್ಣ *p = luaL_checkstring(L, n);
+        ಯದಿ (*p == '*') p++;  /* skip optional '*' (for compatibility) */
+        ವಿಕಲ್ಪ (*p) {
+          ಪಕ್ಷ 'n':  /*ಸಂಖ್ಯೆ*/
+            success = read_ಸಂಖ್ಯೆ(L, f);
+            ಭಙ್ಗ;
+          ಪಕ್ಷ 'l':  /*ಸಾಲು*/
+            success = read_ಸಾಲು(L, f, 1);
+            ಭಙ್ಗ;
+          ಪಕ್ಷ 'L':  /* line with end-of-line */
+            success = read_ಸಾಲು(L, f, 0);
+            ಭಙ್ಗ;
+          ಪಕ್ಷ 'a':  /* file */
             read_all(L, f);  /* read entire file */
             success = 1; /* always success */
-            break;
-          default:
-            return luaL_argerror(L, n, "invalid format");
+            ಭಙ್ಗ;
+          ಸ್ವಭಾವ:
+            ಪ್ರತ್ಯಾಗಮ luaL_argerror(L, n, "invalid format");
         }
       }
     }
   }
-  if (ferror(f))
-    return luaL_fileresult(L, 0, NULL);
-  if (!success) {
-    lua_pop(L, 1);  /* remove last result */
+  ಯದಿ (ferror(f))
+    ಪ್ರತ್ಯಾಗಮ luaL_fileresult(L, 0, ರಿಕ್ತ);
+  ಯದಿ (!success) {
+    lua_ತೆಗೆ(L, 1);  /* remove last result */
     luaL_pushfail(L);  /* push nil instead */
   }
-  return n - first;
+  ಪ್ರತ್ಯಾಗಮ n - first;
 }
 
 
-static int io_read (lua_State *L) {
-  return g_read(L, getiofile(L, IO_INPUT), 1);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_read (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ g_read(L, getiofile(L, IO_ಒಳಹರಿವು), 1);
 }
 
 
-static int f_read (lua_State *L) {
-  return g_read(L, tofile(L), 2);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_read (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ g_read(L, tofile(L), 2);
 }
 
 
 /*
 ** Iteration function for 'lines'.
 */
-static int io_readline (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_readline (lua_State *L) {
   LStream *p = (LStream *)lua_touserdata(L, lua_upvalueindex(1));
-  int i;
-  int n = (int)lua_tointeger(L, lua_upvalueindex(2));
-  if (isclosed(p))  /* file is already closed? */
-    return luaL_error(L, "file is already closed");
+  ಪೂರ್ಣಾಙ್ಕ i;
+  ಪೂರ್ಣಾಙ್ಕ n = (ಪೂರ್ಣಾಙ್ಕ)lua_tointeger(L, lua_upvalueindex(2));
+  ಯದಿ (isclosed(p))  /* file is already closed? */
+    ಪ್ರತ್ಯಾಗಮ luaL_error(L, "file is already closed");
   lua_settop(L , 1);
   luaL_checkstack(L, n, "too many arguments");
-  for (i = 1; i <= n; i++)  /* push arguments to 'g_read' */
+  ಪ್ರತಿ (i = 1; i <= n; i++)  /* push arguments to 'g_read' */
     lua_pushvalue(L, lua_upvalueindex(3 + i));
   n = g_read(L, p->f, 2);  /* 'n' is number of results */
   lua_assert(n > 0);  /* should return at least a nil */
-  if (lua_toboolean(L, -n))  /* read at least one value? */
-    return n;  /* return them */
-  else {  /* first result is false: EOF or error */
-    if (n > 1) {  /* is there error information? */
+  ಯದಿ (lua_toboolean(L, -n))  /* read at least one value? */
+    ಪ್ರತ್ಯಾಗಮ n;  /* return them */
+  ಅನ್ಯಥಾ {  /* first result is false: EOF or error */
+    ಯದಿ (n > 1) {  /* is there error information? */
       /* 2nd result is error message */
-      return luaL_error(L, "%s", lua_tostring(L, -n + 1));
+      ಪ್ರತ್ಯಾಗಮ luaL_error(L, "%s", lua_tostring(L, -n + 1));
     }
-    if (lua_toboolean(L, lua_upvalueindex(3))) {  /* generator created file? */
+    ಯದಿ (lua_toboolean(L, lua_upvalueindex(3))) {  /* generator created file? */
       lua_settop(L, 0);  /* clear stack */
       lua_pushvalue(L, lua_upvalueindex(1));  /* push file at index 1 */
       aux_close(L);  /* close it */
     }
-    return 0;
+    ಪ್ರತ್ಯಾಗಮ 0;
   }
 }
 
 /* }====================================================== */
 
 
-static int g_write (lua_State *L, FILE *f, int arg) {
-  int nargs = lua_gettop(L) - arg;
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ g_write (lua_State *L, FILE *f, ಪೂರ್ಣಾಙ್ಕ arg) {
+  ಪೂರ್ಣಾಙ್ಕ nargs = lua_gettop(L) - arg;
   size_t totalbytes = 0;  /* total number of bytes written */
   errno = 0;
-  for (; nargs--; arg++) {  /* for each argument */
-    char buff[LUA_N2SBUFFSZ];
-    const char *s;
+  ಪ್ರತಿ (; nargs--; arg++) {  /* for each argument */
+    ವರ್ಣ buff[LUA_N2SBUFFSZ];
+    ಧ್ರುವ ವರ್ಣ *s;
     size_t numbytes;  /* bytes written in one call to 'fwrite' */
     size_t len = lua_numbertocstring(L, arg, buff);  /* try as a number */
-    if (len > 0) {  /* did conversion work (value was a number)? */
+    ಯದಿ (len > 0) {  /* did conversion work (value was a number)? */
       s = buff;
       len--;
     }
-    else  /* must be a string */
+    ಅನ್ಯಥಾ  /* must be a string */
       s = luaL_checklstring(L, arg, &len);
-    numbytes = fwrite(s, sizeof(char), len, f);
+    numbytes = fwrite(s, ಪರಿಮಾಣ(ವರ್ಣ), len, f);
     totalbytes += numbytes;
-    if (numbytes < len) {  /* write error? */
-      int n = luaL_fileresult(L, 0, NULL);
+    ಯದಿ (numbytes < len) {  /* write error? */
+      ಪೂರ್ಣಾಙ್ಕ n = luaL_fileresult(L, 0, ರಿಕ್ತ);
       lua_pushinteger(L, cast_st2S(totalbytes));
-      return n + 1;  /* return fail, error msg., error code, and counter */
+      ಪ್ರತ್ಯಾಗಮ n + 1;  /* return fail, error msg., error code, and counter */
     }
   }
-  return 1;  /* no errors; file handle already on stack top */
+  ಪ್ರತ್ಯಾಗಮ 1;  /* no errors; file handle already on stack top */
 }
 
 
-static int io_write (lua_State *L) {
-  return g_write(L, getiofile(L, IO_OUTPUT), 1);
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_write (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ g_write(L, getiofile(L, IO_OUTPUT), 1);
 }
 
 
-static int f_write (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_write (lua_State *L) {
   FILE *f = tofile(L);
   lua_pushvalue(L, 1);  /* push file at the stack top (to be returned) */
-  return g_write(L, f, 2);
+  ಪ್ರತ್ಯಾಗಮ g_write(L, f, 2);
 }
 
 
-static int f_seek (lua_State *L) {
-  static const int mode[] = {SEEK_SET, SEEK_CUR, SEEK_END};
-  static const char *const modenames[] = {"set", "cur", "end", NULL};
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_seek (lua_State *L) {
+  ಸ್ಥಿರ ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ mode[] = {SEEK_SET, SEEK_CUR, SEEK_END};
+  ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *ಧ್ರುವ modenames[] = {"set", "cur", "end", ರಿಕ್ತ};
   FILE *f = tofile(L);
-  int op = luaL_checkoption(L, 2, "cur", modenames);
+  ಪೂರ್ಣಾಙ್ಕ op = luaL_checkoption(L, 2, "cur", modenames);
   lua_Integer p3 = luaL_optinteger(L, 3, 0);
   l_seeknum offset = (l_seeknum)p3;
   luaL_argcheck(L, (lua_Integer)offset == p3, 3,
                   "not an integer in proper range");
   errno = 0;
   op = l_fseek(f, offset, mode[op]);
-  if (l_unlikely(op))
-    return luaL_fileresult(L, 0, NULL);  /* error */
-  else {
+  ಯದಿ (l_unlikely(op))
+    ಪ್ರತ್ಯಾಗಮ luaL_fileresult(L, 0, ರಿಕ್ತ);  /* error */
+  ಅನ್ಯಥಾ {
     lua_pushinteger(L, (lua_Integer)l_ftell(f));
-    return 1;
+    ಪ್ರತ್ಯಾಗಮ 1;
   }
 }
 
 
-static int f_setvbuf (lua_State *L) {
-  static const int mode[] = {_IONBF, _IOFBF, _IOLBF};
-  static const char *const modenames[] = {"no", "full", "line", NULL};
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_setvbuf (lua_State *L) {
+  ಸ್ಥಿರ ಧ್ರುವ ಪೂರ್ಣಾಙ್ಕ mode[] = {_IONBF, _IOFBF, _IOLBF};
+  ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *ಧ್ರುವ modenames[] = {"no", "full", "line", ರಿಕ್ತ};
   FILE *f = tofile(L);
-  int op = luaL_checkoption(L, 2, NULL, modenames);
+  ಪೂರ್ಣಾಙ್ಕ op = luaL_checkoption(L, 2, ರಿಕ್ತ, modenames);
   lua_Integer sz = luaL_optinteger(L, 3, LUAL_BUFFERSIZE);
-  int res;
+  ಪೂರ್ಣಾಙ್ಕ res;
   errno = 0;
-  res = setvbuf(f, NULL, mode[op], (size_t)sz);
-  return luaL_fileresult(L, res == 0, NULL);
+  res = setvbuf(f, ರಿಕ್ತ, mode[op], (size_t)sz);
+  ಪ್ರತ್ಯಾಗಮ luaL_fileresult(L, res == 0, ರಿಕ್ತ);
 }
 
 
-static int aux_flush (lua_State *L, FILE *f) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ aux_flush (lua_State *L, FILE *f) {
   errno = 0;
-  return luaL_fileresult(L, fflush(f) == 0, NULL);
+  ಪ್ರತ್ಯಾಗಮ luaL_fileresult(L, fflush(f) == 0, ರಿಕ್ತ);
 }
 
 
-static int f_flush (lua_State *L) {
-  return aux_flush(L, tofile(L));
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ f_flush (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ aux_flush(L, tofile(L));
 }
 
 
-static int io_flush (lua_State *L) {
-  return aux_flush(L, getiofile(L, IO_OUTPUT));
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_flush (lua_State *L) {
+  ಪ್ರತ್ಯಾಗಮ aux_flush(L, getiofile(L, IO_OUTPUT));
 }
 
 
 /*
 ** functions for 'io' library
 */
-static const luaL_Reg iolib[] = {
+ಸ್ಥಿರ ಧ್ರುವ luaL_Reg iolib[] = {
   {"close", io_close},
   {"flush", io_flush},
-  {"input", io_input},
-  {"lines", io_lines},
+  {"input", io_ಒಳಹರಿವು},
+  {"lines", io_ಸಾಲುಗಳು},
   {"open", io_open},
   {"output", io_output},
   {"popen", io_popen},
@@ -763,65 +763,65 @@ static const luaL_Reg iolib[] = {
   {"tmpfile", io_tmpfile},
   {"type", io_type},
   {"write", io_write},
-  {NULL, NULL}
+  {ರಿಕ್ತ, ರಿಕ್ತ}
 };
 
 
 /*
 ** methods for file handles
 */
-static const luaL_Reg meth[] = {
+ಸ್ಥಿರ ಧ್ರುವ luaL_Reg meth[] = {
   {"read", f_read},
   {"write", f_write},
-  {"lines", f_lines},
+  {"lines", f_ಸಾಲುಗಳು},
   {"flush", f_flush},
   {"seek", f_seek},
   {"close", f_close},
   {"setvbuf", f_setvbuf},
-  {NULL, NULL}
+  {ರಿಕ್ತ, ರಿಕ್ತ}
 };
 
 
 /*
 ** metamethods for file handles
 */
-static const luaL_Reg metameth[] = {
-  {"__index", NULL},  /* placeholder */
+ಸ್ಥಿರ ಧ್ರುವ luaL_Reg metameth[] = {
+  {"__index", ರಿಕ್ತ},  /* placeholder */
   {"__gc", f_gc},
   {"__close", f_gc},
   {"__tostring", f_tostring},
-  {NULL, NULL}
+  {ರಿಕ್ತ, ರಿಕ್ತ}
 };
 
 
-static void createmeta (lua_State *L) {
+ಸ್ಥಿರ ಶೂನ್ಯ createmeta (lua_State *L) {
   luaL_newmetatable(L, LUA_FILEHANDLE);  /* metatable for file handles */
   luaL_setfuncs(L, metameth, 0);  /* add metamethods to new metatable */
   luaL_newlibtable(L, meth);  /* create method table */
   luaL_setfuncs(L, meth, 0);  /* add file methods to method table */
   lua_setfield(L, -2, "__index");  /* metatable.__index = method table */
-  lua_pop(L, 1);  /* pop metatable */
+  lua_ತೆಗೆ(L, 1);  /* pop metatable */
 }
 
 
 /*
 ** function to (not) close the standard files stdin, stdout, and stderr
 */
-static int io_noclose (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ io_noclose (lua_State *L) {
   LStream *p = tolstream(L);
   p->closef = &io_noclose;  /* keep file opened */
   luaL_pushfail(L);
   lua_pushliteral(L, "cannot close standard file");
-  return 2;
+  ಪ್ರತ್ಯಾಗಮ 2;
 }
 
 
-static void createstdfile (lua_State *L, FILE *f, const char *k,
-                           const char *fname) {
+ಸ್ಥಿರ ಶೂನ್ಯ createstdfile (lua_State *L, FILE *f, ಧ್ರುವ ವರ್ಣ *k,
+                           ಧ್ರುವ ವರ್ಣ *fname) {
   LStream *p = newprefile(L);
   p->f = f;
   p->closef = &io_noclose;
-  if (k != NULL) {
+  ಯದಿ (k != ರಿಕ್ತ) {
     lua_pushvalue(L, -1);
     lua_setfield(L, LUA_REGISTRYINDEX, k);  /* add file to registry */
   }
@@ -829,13 +829,13 @@ static void createstdfile (lua_State *L, FILE *f, const char *k,
 }
 
 
-LUAMOD_API int luaopen_io (lua_State *L) {
+LUAMOD_API ಪೂರ್ಣಾಙ್ಕ luaopen_io (lua_State *L) {
   luaL_newlib(L, iolib);  /* new module */
   createmeta(L);
   /* create (and set) default files */
-  createstdfile(L, stdin, IO_INPUT, "stdin");
+  createstdfile(L, stdin, IO_ಒಳಹರಿವು, "stdin");
   createstdfile(L, stdout, IO_OUTPUT, "stdout");
-  createstdfile(L, stderr, NULL, "stderr");
-  return 1;
+  createstdfile(L, stderr, ರಿಕ್ತ, "stderr");
+  ಪ್ರತ್ಯಾಗಮ 1;
 }
 

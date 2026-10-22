@@ -8,31 +8,31 @@
 #define lapi_h
 
 
-#include "llimits.h"
-#include "lstate.h"
+#ಅನ್ತರ್ಭಾವ "llimits.h"
+#ಅನ್ತರ್ಭಾವ "lstate.h"
 
 
-#if defined(LUA_USE_APICHECK)
-#include <assert.h>
-#define api_check(l,e,msg)	assert(e)
-#else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
+#ಯದಿ defined(LUA_USE_APICHECK)
+#ಅನ್ತರ್ಭಾವ <assert.h>
+#define api_check(l,e,ಸಂದೇಶ)	ಪ್ರತಿಜ್ಞಾ(e)
+#ಅನ್ಯಥಾ	/* for testing */
+#define api_check(l,e,ಸಂದೇಶ)	((ಶೂನ್ಯ)(l), lua_assert((e) && ಸಂದೇಶ))
 #endif
 
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)  \
-    (L->top.p++, api_check(L, L->top.p <= L->ci->top.p, "stack overflow"))
+#define api_incr_ತುದಿ(L)  \
+    (L->ತುದಿ.p++, api_check(L, L->ತುದಿ.p <= L->ci->ತುದಿ.p, "stack overflow"))
 
 
 /*
 ** macros that are executed whenever program enters the Lua core
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
-#if !defined(lua_lock)
-#define lua_lock(L)	((void) 0)
-#define lua_unlock(L)	((void) 0)
+#ಯದಿ !defined(lua_lock)
+#define lua_lock(L)	((ಶೂನ್ಯ) 0)
+#define lua_unlock(L)	((ಶೂನ್ಯ) 0)
 #endif
 
 
@@ -43,13 +43,13 @@
 ** increases its stack space ('L->ci->top.p').
 */
 #define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
-	L->ci->top.p = L->top.p; }
+    { ಯದಿ ((nres) <= LUA_MULTRET && L->ci->ತುದಿ.p < L->ತುದಿ.p) \
+	L->ci->ತುದಿ.p = L->ತುದಿ.p; }
 
 
 /* Ensure the stack has at least 'n' elements */
 #define api_checknelems(L,n) \
-       api_check(L, (n) < (L->top.p - L->ci->func.p), \
+       api_check(L, (n) < (L->ತುದಿ.p - L->ci->func.p), \
                          "not enough elements in the stack")
 
 
@@ -58,8 +58,8 @@
 ** is only an optimization for a pop followed by a push.)
 */
 #define api_checkpop(L,n) \
-	api_check(L, (n) < L->top.p - L->ci->func.p &&  \
-                     L->tbclist.p < L->top.p - (n), \
+	api_check(L, (n) < L->ತುದಿ.p - L->ci->func.p &&  \
+                     L->tbclist.p < L->ತುದಿ.p - (n), \
 			  "not enough free elements in the stack")
 
 #endif
