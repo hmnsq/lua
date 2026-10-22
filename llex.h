@@ -20,7 +20,7 @@
 #define FIRST_RESERVED	(UCHAR_MAX + 1)
 
 
-#if !defined(LUA_ENV)
+#ប្រសិនបើ !defined(LUA_ENV)
 #define LUA_ENV		"_ENV"
 #endif
 
@@ -29,7 +29,7 @@
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER RESERVED"
 */
-enum RESERVED {
+ga_nanaa RESERVED {
   /* terminal symbols denoted by reserved words */
   TK_AND = FIRST_RESERVED, TK_BREAK,
   TK_DO, TK_ELSE, TK_ELSEIF, TK_END, TK_FALSE, TK_FOR, TK_FUNCTION,
@@ -46,33 +46,33 @@ enum RESERVED {
 #define NUM_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
 
 
-typedef union {
+typedef sa_ngha {
   lua_Number r;
   lua_Integer i;
   TString *ts;
 } SemInfo;  /* semantics information */
 
 
-typedef struct Token {
-  int token;
+typedef sa_nracanaa Token {
+  ចំនួនគត់ token;
   SemInfo seminfo;
 } Token;
 
 
 /* state of the scanner plus state of the parser when shared by all
    functions */
-typedef struct LexState {
-  int current;  /* current character (charint) */
-  int linenumber;  /* input line counter */
-  int lastline;  /* line of last token 'consumed' */
+typedef sa_nracanaa LexState {
+  ចំនួនគត់ current;  /* current character (charint) */
+  ចំនួនគត់ linenumber;  /* input line counter */
+  ចំនួនគត់ lastline;  /* line of last token 'consumed' */
   Token t;  /* current token */
   Token lookahead;  /* look ahead token */
-  struct FuncState *fs;  /* current function (parser) */
-  struct lua_State *L;
+  sa_nracanaa FuncState *fs;  /* current function (parser) */
+  sa_nracanaa lua_State *L;
   ZIO *z;  /* input stream */
   Mbuffer *buff;  /* buffer for tokens */
   Table *h;  /* to avoid collection/reuse strings */
-  struct Dyndata *dyd;  /* dynamic structures used by the parser */
+  sa_nracanaa Dyndata *dyd;  /* dynamic structures used by the parser */
   TString *source;  /* current source name */
   TString *envn;  /* environment variable name */
   TString *brkn;  /* "break" name (used as a label) */
@@ -82,12 +82,12 @@ typedef struct LexState {
 
 LUAI_FUNC void luaX_init (lua_State *L);
 LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
-                              TString *source, int firstchar);
-LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l);
+                              TString *source, ចំនួនគត់ firstchar);
+LUAI_FUNC TString *luaX_newstring (LexState *ls, const var_na *str, size_t l);
 LUAI_FUNC void luaX_next (LexState *ls);
-LUAI_FUNC int luaX_lookahead (LexState *ls);
-LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const char *s);
-LUAI_FUNC const char *luaX_token2str (LexState *ls, int token);
+LUAI_FUNC ចំនួនគត់ luaX_lookahead (LexState *ls);
+LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const var_na *s);
+LUAI_FUNC const var_na *luaX_token2str (LexState *ls, ចំនួនគត់ token);
 
 
 #endif
