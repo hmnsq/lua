@@ -7,32 +7,32 @@
 #define lapi_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <limits.h>
-#include <stdarg.h>
-#include <string.h>
+#ضمن <limits.h>
+#ضمن <stdarg.h>
+#ضمن <string.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lundump.h"
-#include "lvm.h"
+#ضمن "lapi.h"
+#ضمن "ldebug.h"
+#ضمن "ldo.h"
+#ضمن "lfunc.h"
+#ضمن "lgc.h"
+#ضمن "lmem.h"
+#ضمن "lobject.h"
+#ضمن "lstate.h"
+#ضمن "lstring.h"
+#ضمن "ltable.h"
+#ضمن "ltm.h"
+#ضمن "lundump.h"
+#ضمن "lvm.h"
 
 
 
-const char lua_ident[] =
+ثابت حرف lua_ident[] =
   "$LuaVersion: " LUA_COPYRIGHT " $"
   "$LuaAuthors: " LUA_AUTHORS " $";
 
@@ -55,32 +55,32 @@ const char lua_ident[] =
 ** Convert an acceptable index to a pointer to its respective value.
 ** Non-valid indices return the special nil value 'G(L)->nilvalue'.
 */
-static TValue *index2value (lua_State *L, int idx) {
+ساكن TValue *index2value (lua_State *L, صحيح idx) {
   CallInfo *ci = L->ci;
-  if (idx > 0) {
+  ܐܢ (idx > 0) {
     StkId o = ci->func.p + idx;
     api_check(L, idx <= ci->top.p - (ci->func.p + 1), "unacceptable index");
-    if (o >= L->top.p) return &G(L)->nilvalue;
-    else return s2v(o);
+    ܐܢ (o >= L->top.p) ܦܢܐ &G(L)->nilvalue;
+    ܐܚܪܢܐ ܦܢܐ s2v(o);
   }
-  else if (!ispseudo(idx)) {  /* negative index */
+  ܐܚܪܢܐ ܐܢ (!ispseudo(idx)) {  /* negative index */
     api_check(L, idx != 0 && -idx <= L->top.p - (ci->func.p + 1),
                  "invalid index");
-    return s2v(L->top.p + idx);
+    ܦܢܐ s2v(L->top.p + idx);
   }
-  else if (idx == LUA_REGISTRYINDEX)
-    return &G(L)->l_registry;
-  else {  /* upvalues */
+  ܐܚܪܢܐ ܐܢ (idx == LUA_REGISTRYINDEX)
+    ܦܢܐ &G(L)->l_registry;
+  ܐܚܪܢܐ {  /* upvalues */
     idx = LUA_REGISTRYINDEX - idx;
     api_check(L, idx <= MAXUPVAL + 1, "upvalue index too large");
-    if (ttisCclosure(s2v(ci->func.p))) {  /* C closure? */
+    ܐܢ (ttisCclosure(s2v(ci->func.p))) {  /* C closure? */
       CClosure *func = clCvalue(s2v(ci->func.p));
-      return (idx <= func->nupvalues) ? &func->upvalue[idx-1]
+      ܦܢܐ (idx <= func->nupvalues) ? &func->upvalue[idx-1]
                                       : &G(L)->nilvalue;
     }
-    else {  /* light C function or Lua function (through a hook)?) */
+    ܐܚܪܢܐ {  /* light C function or Lua function (through a hook)?) */
       api_check(L, ttislcf(s2v(ci->func.p)), "caller not a C function");
-      return &G(L)->nilvalue;  /* no upvalues */
+      ܦܢܐ &G(L)->nilvalue;  /* no upvalues */
     }
   }
 }
@@ -90,48 +90,48 @@ static TValue *index2value (lua_State *L, int idx) {
 /*
 ** Convert a valid actual index (not a pseudo-index) to its address.
 */
-static StkId index2stack (lua_State *L, int idx) {
+ساكن StkId index2stack (lua_State *L, صحيح idx) {
   CallInfo *ci = L->ci;
-  if (idx > 0) {
+  ܐܢ (idx > 0) {
     StkId o = ci->func.p + idx;
     api_check(L, o < L->top.p, "invalid index");
-    return o;
+    ܦܢܐ o;
   }
-  else {    /* non-positive index */
+  ܐܚܪܢܐ {    /* non-positive index */
     api_check(L, idx != 0 && -idx <= L->top.p - (ci->func.p + 1),
                  "invalid index");
     api_check(L, !ispseudo(idx), "invalid index");
-    return L->top.p + idx;
+    ܦܢܐ L->top.p + idx;
   }
 }
 
 
-LUA_API int lua_checkstack (lua_State *L, int n) {
-  int res;
+LUA_API صحيح lua_checkstack (lua_State *L, صحيح n) {
+  صحيح res;
   CallInfo *ci;
   lua_lock(L);
   ci = L->ci;
   api_check(L, n >= 0, "negative 'n'");
-  if (L->stack_last.p - L->top.p > n)  /* stack large enough? */
+  ܐܢ (L->stack_last.p - L->top.p > n)  /* stack large enough? */
     res = 1;  /* yes; check is OK */
-  else  /* need to grow stack */
+  ܐܚܪܢܐ  /* need to grow stack */
     res = luaD_growstack(L, n, 0);
-  if (res && ci->top.p < L->top.p + n)
+  ܐܢ (res && ci->top.p < L->top.p + n)
     ci->top.p = L->top.p + n;  /* adjust frame top */
   lua_unlock(L);
-  return res;
+  ܦܢܐ res;
 }
 
 
-LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
-  int i;
-  if (from == to) return;
+LUA_API فراغ lua_xmove (lua_State *from, lua_State *to, صحيح n) {
+  صحيح i;
+  ܐܢ (from == to) ܦܢܐ;
   lua_lock(to);
   api_checkpop(from, n);
   api_check(from, G(from) == G(to), "moving among independent states");
   api_check(from, to->ci->top.p - to->top.p >= n, "stack overflow");
   from->top.p -= n;
-  for (i = 0; i < n; i++) {
+  لكل (i = 0; i < n; i++) {
     setobjs2s(to, to->top.p, from->top.p + i);
     to->top.p++;  /* stack already checked by previous 'api_check' */
   }
@@ -145,13 +145,13 @@ LUA_API lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf) {
   old = G(L)->panic;
   G(L)->panic = panicf;
   lua_unlock(L);
-  return old;
+  ܦܢܐ old;
 }
 
 
 LUA_API lua_Number lua_version (lua_State *L) {
   UNUSED(L);
-  return LUA_VERSION_NUM;
+  ܦܢܐ LUA_VERSION_NUM;
 }
 
 
@@ -164,37 +164,37 @@ LUA_API lua_Number lua_version (lua_State *L) {
 /*
 ** convert an acceptable stack index into an absolute index
 */
-LUA_API int lua_absindex (lua_State *L, int idx) {
-  return (idx > 0 || ispseudo(idx))
+LUA_API صحيح lua_absindex (lua_State *L, صحيح idx) {
+  ܦܢܐ (idx > 0 || ispseudo(idx))
          ? idx
          : cast_int(L->top.p - L->ci->func.p) + idx;
 }
 
 
-LUA_API int lua_gettop (lua_State *L) {
-  return cast_int(L->top.p - (L->ci->func.p + 1));
+LUA_API صحيح lua_gettop (lua_State *L) {
+  ܦܢܐ cast_int(L->top.p - (L->ci->func.p + 1));
 }
 
 
-LUA_API void lua_settop (lua_State *L, int idx) {
+LUA_API فراغ lua_settop (lua_State *L, صحيح idx) {
   CallInfo *ci;
   StkId func, newtop;
   ptrdiff_t diff;  /* difference for new top */
   lua_lock(L);
   ci = L->ci;
   func = ci->func.p;
-  if (idx >= 0) {
+  ܐܢ (idx >= 0) {
     api_check(L, idx <= ci->top.p - (func + 1), "new top too large");
     diff = ((func + 1) + idx) - L->top.p;
-    for (; diff > 0; diff--)
+    لكل (; diff > 0; diff--)
       setnilvalue2s(L->top.p++);  /* clear new slots */
   }
-  else {
+  ܐܚܪܢܐ {
     api_check(L, -(idx+1) <= (L->top.p - (func + 1)), "invalid new top");
     diff = idx + 1;  /* will "subtract" index (as it is negative) */
   }
   newtop = L->top.p + diff;
-  if (diff < 0 && L->tbclist.p >= newtop) {
+  ܐܢ (diff < 0 && L->tbclist.p >= newtop) {
     lua_assert(ci->callstatus & CIST_TBC);
     newtop = luaF_close(L, newtop, CLOSEKTOP, 0);
   }
@@ -203,7 +203,7 @@ LUA_API void lua_settop (lua_State *L, int idx) {
 }
 
 
-LUA_API void lua_closeslot (lua_State *L, int idx) {
+LUA_API فراغ lua_closeslot (lua_State *L, صحيح idx) {
   StkId level;
   lua_lock(L);
   level = index2stack(L, idx);
@@ -221,8 +221,8 @@ LUA_API void lua_closeslot (lua_State *L, int idx) {
 ** Note that we move(copy) only the value inside the stack.
 ** (We do not move additional fields that may exist.)
 */
-static void reverse (lua_State *L, StkId from, StkId to) {
-  for (; from < to; from++, to--) {
+ساكن فراغ reverse (lua_State *L, StkId from, StkId to) {
+  لكل (; from < to; from++, to--) {
     TValue temp;
     setobj(L, &temp, s2v(from));
     setobjs2s(L, from, to);
@@ -235,7 +235,7 @@ static void reverse (lua_State *L, StkId from, StkId to) {
 ** Let x = AB, where A is a prefix of length 'n'. Then,
 ** rotate x n == BA. But BA == (A^r . B^r)^r.
 */
-LUA_API void lua_rotate (lua_State *L, int idx, int n) {
+LUA_API فراغ lua_rotate (lua_State *L, صحيح idx, صحيح n) {
   StkId p, t, m;
   lua_lock(L);
   t = L->top.p - 1;  /* end of stack segment being rotated */
@@ -250,14 +250,14 @@ LUA_API void lua_rotate (lua_State *L, int idx, int n) {
 }
 
 
-LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
+LUA_API فراغ lua_copy (lua_State *L, صحيح fromidx, صحيح toidx) {
   TValue *fr, *to;
   lua_lock(L);
   fr = index2value(L, fromidx);
   to = index2value(L, toidx);
   api_check(L, isvalid(L, to), "invalid index");
   setobj(L, to, fr);
-  if (isupvalue(toidx))  /* function upvalue? */
+  ܐܢ (isupvalue(toidx))  /* function upvalue? */
     luaC_barrier(L, clCvalue(s2v(L->ci->func.p)), fr);
   /* LUA_REGISTRYINDEX does not need gc barrier
      (collector revisits it before finishing collection) */
@@ -265,7 +265,7 @@ LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
 }
 
 
-LUA_API void lua_pushvalue (lua_State *L, int idx) {
+LUA_API فراغ lua_pushvalue (lua_State *L, صحيح idx) {
   lua_lock(L);
   setobj2s(L, L->top.p, index2value(L, idx));
   api_incr_top(L);
@@ -279,62 +279,62 @@ LUA_API void lua_pushvalue (lua_State *L, int idx) {
 */
 
 
-LUA_API int lua_type (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (isvalid(L, o) ? ttype(o) : LUA_TNONE);
+LUA_API صحيح lua_type (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ (isvalid(L, o) ? ttype(o) : LUA_TNONE);
 }
 
 
-LUA_API const char *lua_typename (lua_State *L, int t) {
+LUA_API ثابت حرف *lua_typename (lua_State *L, صحيح t) {
   UNUSED(L);
   api_check(L, LUA_TNONE <= t && t < LUA_NUMTYPES, "invalid type");
-  return ttypename(t);
+  ܦܢܐ ttypename(t);
 }
 
 
-LUA_API int lua_iscfunction (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttislcf(o) || (ttisCclosure(o)));
+LUA_API صحيح lua_iscfunction (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ (ttislcf(o) || (ttisCclosure(o)));
 }
 
 
-LUA_API int lua_isinteger (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return ttisinteger(o);
+LUA_API صحيح lua_isinteger (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ ttisinteger(o);
 }
 
 
-LUA_API int lua_isnumber (lua_State *L, int idx) {
+LUA_API صحيح lua_isnumber (lua_State *L, صحيح idx) {
   lua_Number n;
-  const TValue *o = index2value(L, idx);
-  return tonumber(o, &n);
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ tonumber(o, &n);
 }
 
 
-LUA_API int lua_isstring (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttisstring(o) || cvt2str(o));
+LUA_API صحيح lua_isstring (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ (ttisstring(o) || cvt2str(o));
 }
 
 
-LUA_API int lua_isuserdata (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttisfulluserdata(o) || ttislightuserdata(o));
+LUA_API صحيح lua_isuserdata (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ (ttisfulluserdata(o) || ttislightuserdata(o));
 }
 
 
-LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
-  const TValue *o1 = index2value(L, index1);
-  const TValue *o2 = index2value(L, index2);
-  return (isvalid(L, o1) && isvalid(L, o2)) ? luaV_rawequalobj(o1, o2) : 0;
+LUA_API صحيح lua_rawequal (lua_State *L, صحيح index1, صحيح index2) {
+  ثابت TValue *o1 = index2value(L, index1);
+  ثابت TValue *o2 = index2value(L, index2);
+  ܦܢܐ (isvalid(L, o1) && isvalid(L, o2)) ? luaV_rawequalobj(o1, o2) : 0;
 }
 
 
-LUA_API void lua_arith (lua_State *L, int op) {
+LUA_API فراغ lua_arith (lua_State *L, صحيح op) {
   lua_lock(L);
-  if (op != LUA_OPUNM && op != LUA_OPBNOT)
+  ܐܢ (op != LUA_OPUNM && op != LUA_OPBNOT)
     api_checkpop(L, 2);  /* all other operations expect two operands */
-  else {  /* for unary operations, add fake 2nd operand */
+  ܐܚܪܢܐ {  /* for unary operations, add fake 2nd operand */
     api_checkpop(L, 1);
     setobjs2s(L, L->top.p, L->top.p - 1);
     api_incr_top(L);
@@ -346,139 +346,139 @@ LUA_API void lua_arith (lua_State *L, int op) {
 }
 
 
-LUA_API int lua_compare (lua_State *L, int index1, int index2, int op) {
-  const TValue *o1;
-  const TValue *o2;
-  int i = 0;
+LUA_API صحيح lua_compare (lua_State *L, صحيح index1, صحيح index2, صحيح op) {
+  ثابت TValue *o1;
+  ثابت TValue *o2;
+  صحيح i = 0;
   lua_lock(L);  /* may call tag method */
   o1 = index2value(L, index1);
   o2 = index2value(L, index2);
-  if (isvalid(L, o1) && isvalid(L, o2)) {
-    switch (op) {
-      case LUA_OPEQ: i = luaV_equalobj(L, o1, o2); break;
-      case LUA_OPLT: i = luaV_lessthan(L, o1, o2); break;
-      case LUA_OPLE: i = luaV_lessequal(L, o1, o2); break;
-      default: api_check(L, 0, "invalid option");
+  ܐܢ (isvalid(L, o1) && isvalid(L, o2)) {
+    بدل (op) {
+      حالة LUA_OPEQ: i = luaV_equalobj(L, o1, o2); اكسر;
+      حالة LUA_OPLT: i = luaV_lessthan(L, o1, o2); اكسر;
+      حالة LUA_OPLE: i = luaV_lessequal(L, o1, o2); اكسر;
+      افتراضي: api_check(L, 0, "invalid option");
     }
   }
   lua_unlock(L);
-  return i;
+  ܦܢܐ i;
 }
 
 
-LUA_API unsigned lua_numbertocstring (lua_State *L, int idx, char *buff) {
-  const TValue *o = index2value(L, idx);
-  if (ttisnumber(o)) {
+LUA_API unsigned lua_numbertocstring (lua_State *L, صحيح idx, حرف *buff) {
+  ثابت TValue *o = index2value(L, idx);
+  ܐܢ (ttisnumber(o)) {
     unsigned len = luaO_tostringbuff(o, buff);
     buff[len++] = '\0';  /* add final zero */
-    return len;
+    ܦܢܐ len;
   }
-  else
-    return 0;
+  ܐܚܪܢܐ
+    ܦܢܐ 0;
 }
 
 
-LUA_API size_t lua_stringtonumber (lua_State *L, const char *s) {
+LUA_API size_t lua_stringtonumber (lua_State *L, ثابت حرف *s) {
   size_t sz = luaO_str2num(s, s2v(L->top.p));
-  if (sz != 0)
+  ܐܢ (sz != 0)
     api_incr_top(L);
-  return sz;
+  ܦܢܐ sz;
 }
 
 
-LUA_API lua_Number lua_tonumberx (lua_State *L, int idx, int *pisnum) {
+LUA_API lua_Number lua_tonumberx (lua_State *L, صحيح idx, صحيح *pisnum) {
   lua_Number n = 0;
-  const TValue *o = index2value(L, idx);
-  int isnum = tonumber(o, &n);
-  if (pisnum)
+  ثابت TValue *o = index2value(L, idx);
+  صحيح isnum = tonumber(o, &n);
+  ܐܢ (pisnum)
     *pisnum = isnum;
-  return n;
+  ܦܢܐ n;
 }
 
 
-LUA_API lua_Integer lua_tointegerx (lua_State *L, int idx, int *pisnum) {
+LUA_API lua_Integer lua_tointegerx (lua_State *L, صحيح idx, صحيح *pisnum) {
   lua_Integer res = 0;
-  const TValue *o = index2value(L, idx);
-  int isnum = tointeger(o, &res);
-  if (pisnum)
+  ثابت TValue *o = index2value(L, idx);
+  صحيح isnum = tointeger(o, &res);
+  ܐܢ (pisnum)
     *pisnum = isnum;
-  return res;
+  ܦܢܐ res;
 }
 
 
-LUA_API int lua_toboolean (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return !l_isfalse(o);
+LUA_API صحيح lua_toboolean (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ !l_isfalse(o);
 }
 
 
-LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
+LUA_API ثابت حرف *lua_tolstring (lua_State *L, صحيح idx, size_t *len) {
   TValue *o;
   lua_lock(L);
   o = index2value(L, idx);
-  if (!ttisstring(o)) {
-    if (!cvt2str(o)) {  /* not convertible? */
-      if (len != NULL) *len = 0;
+  ܐܢ (!ttisstring(o)) {
+    ܐܢ (!cvt2str(o)) {  /* not convertible? */
+      ܐܢ (len != عدم) *len = 0;
       lua_unlock(L);
-      return NULL;
+      ܦܢܐ عدم;
     }
     luaO_tostring(L, o);
     luaC_checkGC(L);
     o = index2value(L, idx);  /* previous call may reallocate the stack */
   }
   lua_unlock(L);
-  if (len != NULL)
-    return getlstr(tsvalue(o), *len);
-  else
-    return getstr(tsvalue(o));
+  ܐܢ (len != عدم)
+    ܦܢܐ getlstr(tsvalue(o), *len);
+  ܐܚܪܢܐ
+    ܦܢܐ getstr(tsvalue(o));
 }
 
 
-LUA_API lua_Unsigned lua_rawlen (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  switch (ttypetag(o)) {
-    case LUA_VSHRSTR: return cast(lua_Unsigned, tsvalue(o)->shrlen);
-    case LUA_VLNGSTR: return cast(lua_Unsigned, tsvalue(o)->u.lnglen);
-    case LUA_VUSERDATA: return cast(lua_Unsigned, uvalue(o)->len);
-    case LUA_VTABLE: {
+LUA_API lua_Unsigned lua_rawlen (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  بدل (ttypetag(o)) {
+    حالة LUA_VSHRSTR: ܦܢܐ cast(lua_Unsigned, tsvalue(o)->shrlen);
+    حالة LUA_VLNGSTR: ܦܢܐ cast(lua_Unsigned, tsvalue(o)->u.lnglen);
+    حالة LUA_VUSERDATA: ܦܢܐ cast(lua_Unsigned, uvalue(o)->len);
+    حالة LUA_VTABLE: {
       lua_Unsigned res;
       lua_lock(L);
       res = luaH_getn(L, hvalue(o));
       lua_unlock(L);
-      return res;
+      ܦܢܐ res;
     }
-    default: return 0;
+    افتراضي: ܦܢܐ 0;
   }
 }
 
 
-LUA_API lua_CFunction lua_tocfunction (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  if (ttislcf(o)) return fvalue(o);
-  else if (ttisCclosure(o))
-    return clCvalue(o)->f;
-  else return NULL;  /* not a C function */
+LUA_API lua_CFunction lua_tocfunction (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܐܢ (ttislcf(o)) ܦܢܐ fvalue(o);
+  ܐܚܪܢܐ ܐܢ (ttisCclosure(o))
+    ܦܢܐ clCvalue(o)->f;
+  ܐܚܪܢܐ ܦܢܐ عدم;  /* not a C function */
 }
 
 
-l_sinline void *touserdata (const TValue *o) {
-  switch (ttype(o)) {
-    case LUA_TUSERDATA: return getudatamem(uvalue(o));
-    case LUA_TLIGHTUSERDATA: return pvalue(o);
-    default: return NULL;
+l_sinline فراغ *touserdata (ثابت TValue *o) {
+  بدل (ttype(o)) {
+    حالة LUA_TUSERDATA: ܦܢܐ getudatamem(uvalue(o));
+    حالة LUA_TLIGHTUSERDATA: ܦܢܐ pvalue(o);
+    افتراضي: ܦܢܐ عدم;
   }
 }
 
 
-LUA_API void *lua_touserdata (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return touserdata(o);
+LUA_API فراغ *lua_touserdata (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ touserdata(o);
 }
 
 
-LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (!ttisthread(o)) ? NULL : thvalue(o);
+LUA_API lua_State *lua_tothread (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  ܦܢܐ (!ttisthread(o)) ? عدم : thvalue(o);
 }
 
 
@@ -489,17 +489,17 @@ LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
 ** a 'size_t'. (As the returned pointer is only informative, this
 ** conversion should not be a problem.)
 */
-LUA_API const void *lua_topointer (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  switch (ttypetag(o)) {
-    case LUA_VLCF: return cast_voidp(cast_sizet(fvalue(o)));
-    case LUA_VUSERDATA: case LUA_VLIGHTUSERDATA:
-      return touserdata(o);
-    default: {
-      if (iscollectable(o))
-        return gcvalue(o);
-      else
-        return NULL;
+LUA_API ثابت فراغ *lua_topointer (lua_State *L, صحيح idx) {
+  ثابت TValue *o = index2value(L, idx);
+  بدل (ttypetag(o)) {
+    حالة LUA_VLCF: ܦܢܐ cast_voidp(cast_sizet(fvalue(o)));
+    حالة LUA_VUSERDATA: حالة LUA_VLIGHTUSERDATA:
+      ܦܢܐ touserdata(o);
+    افتراضي: {
+      ܐܢ (iscollectable(o))
+        ܦܢܐ gcvalue(o);
+      ܐܚܪܢܐ
+        ܦܢܐ عدم;
     }
   }
 }
@@ -511,7 +511,7 @@ LUA_API const void *lua_topointer (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushnil (lua_State *L) {
+LUA_API فراغ lua_pushnil (lua_State *L) {
   lua_lock(L);
   setnilvalue2s(L->top.p);
   api_incr_top(L);
@@ -519,7 +519,7 @@ LUA_API void lua_pushnil (lua_State *L) {
 }
 
 
-LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
+LUA_API فراغ lua_pushnumber (lua_State *L, lua_Number n) {
   lua_lock(L);
   setfltvalue(s2v(L->top.p), n);
   api_incr_top(L);
@@ -527,7 +527,7 @@ LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
 }
 
 
-LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
+LUA_API فراغ lua_pushinteger (lua_State *L, lua_Integer n) {
   lua_lock(L);
   setivalue(s2v(L->top.p), n);
   api_incr_top(L);
@@ -540,7 +540,7 @@ LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
 ** 'len' == 0 (as 's' can be NULL in that case), due to later use of
 ** 'memcmp' and 'memcpy'.
 */
-LUA_API const char *lua_pushlstring (lua_State *L, const char *s, size_t len) {
+LUA_API ثابت حرف *lua_pushlstring (lua_State *L, ثابت حرف *s, size_t len) {
   TString *ts;
   lua_lock(L);
   ts = (len == 0) ? luaS_new(L, "") : luaS_newlstr(L, s, len);
@@ -548,12 +548,12 @@ LUA_API const char *lua_pushlstring (lua_State *L, const char *s, size_t len) {
   api_incr_top(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getstr(ts);
+  ܦܢܐ getstr(ts);
 }
 
 
-LUA_API const char *lua_pushexternalstring (lua_State *L,
-	        const char *s, size_t len, lua_Alloc falloc, void *ud) {
+LUA_API ثابت حرف *lua_pushexternalstring (lua_State *L,
+	        ثابت حرف *s, size_t len, lua_Alloc falloc, فراغ *ud) {
   TString *ts;
   lua_lock(L);
   api_check(L, len <= MAX_SIZE, "string too large");
@@ -563,15 +563,15 @@ LUA_API const char *lua_pushexternalstring (lua_State *L,
   api_incr_top(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getstr(ts);
+  ܦܢܐ getstr(ts);
 }
 
 
-LUA_API const char *lua_pushstring (lua_State *L, const char *s) {
+LUA_API ثابت حرف *lua_pushstring (lua_State *L, ثابت حرف *s) {
   lua_lock(L);
-  if (s == NULL)
+  ܐܢ (s == عدم)
     setnilvalue2s(L->top.p);
-  else {
+  ܐܚܪܢܐ {
     TString *ts;
     ts = luaS_new(L, s);
     setsvalue2s(L, L->top.p, ts);
@@ -580,46 +580,46 @@ LUA_API const char *lua_pushstring (lua_State *L, const char *s) {
   api_incr_top(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return s;
+  ܦܢܐ s;
 }
 
 
-LUA_API const char *lua_pushvfstring (lua_State *L, const char *fmt,
+LUA_API ثابت حرف *lua_pushvfstring (lua_State *L, ثابت حرف *fmt,
                                       va_list argp) {
-  const char *ret;
+  ثابت حرف *ret;
   lua_lock(L);
   ret = luaO_pushvfstring(L, fmt, argp);
   luaC_checkGC(L);
   lua_unlock(L);
-  return ret;
+  ܦܢܐ ret;
 }
 
 
-LUA_API const char *lua_pushfstring (lua_State *L, const char *fmt, ...) {
-  const char *ret;
+LUA_API ثابت حرف *lua_pushfstring (lua_State *L, ثابت حرف *fmt, ...) {
+  ثابت حرف *ret;
   va_list argp;
   lua_lock(L);
   pushvfstring(L, argp, fmt, ret);
   luaC_checkGC(L);
   lua_unlock(L);
-  return ret;
+  ܦܢܐ ret;
 }
 
 
-LUA_API void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n) {
+LUA_API فراغ lua_pushcclosure (lua_State *L, lua_CFunction fn, صحيح n) {
   lua_lock(L);
-  if (n == 0) {
+  ܐܢ (n == 0) {
     setfvalue(s2v(L->top.p), fn);
     api_incr_top(L);
   }
-  else {
-    int i;
+  ܐܚܪܢܐ {
+    صحيح i;
     CClosure *cl;
     api_checkpop(L, n);
     api_check(L, n <= MAXUPVAL, "upvalue index too large");
     cl = luaF_newCclosure(L, n);
     cl->f = fn;
-    for (i = 0; i < n; i++) {
+    لكل (i = 0; i < n; i++) {
       setobj2n(L, &cl->upvalue[i], s2v(L->top.p - n + i));
       /* does not need barrier because closure is white */
       lua_assert(iswhite(cl));
@@ -633,18 +633,18 @@ LUA_API void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n) {
 }
 
 
-LUA_API void lua_pushboolean (lua_State *L, int b) {
+LUA_API فراغ lua_pushboolean (lua_State *L, صحيح b) {
   lua_lock(L);
-  if (b)
+  ܐܢ (b)
     setbtvalue(s2v(L->top.p));
-  else
+  ܐܚܪܢܐ
     setbfvalue(s2v(L->top.p));
   api_incr_top(L);
   lua_unlock(L);
 }
 
 
-LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
+LUA_API فراغ lua_pushlightuserdata (lua_State *L, فراغ *p) {
   lua_lock(L);
   setpvalue(s2v(L->top.p), p);
   api_incr_top(L);
@@ -652,12 +652,12 @@ LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
 }
 
 
-LUA_API int lua_pushthread (lua_State *L) {
+LUA_API صحيح lua_pushthread (lua_State *L) {
   lua_lock(L);
   setthvalue(L, s2v(L->top.p), L);
   api_incr_top(L);
   lua_unlock(L);
-  return (mainthread(G(L)) == L);
+  ܦܢܐ (mainthread(G(L)) == L);
 }
 
 
@@ -667,19 +667,19 @@ LUA_API int lua_pushthread (lua_State *L) {
 */
 
 
-static int auxgetstr (lua_State *L, const TValue *t, const char *k) {
+ساكن صحيح auxgetstr (lua_State *L, ثابت TValue *t, ثابت حرف *k) {
   lu_byte tag;
   TString *str = luaS_new(L, k);
   luaV_fastget(t, str, s2v(L->top.p), luaH_getstr, tag);
-  if (!tagisempty(tag))
+  ܐܢ (!tagisempty(tag))
     api_incr_top(L);
-  else {
+  ܐܚܪܢܐ {
     setsvalue2s(L, L->top.p, str);
     api_incr_top(L);
     tag = luaV_finishget(L, t, s2v(L->top.p - 1), L->top.p - 1, tag);
   }
   lua_unlock(L);
-  return novariant(tag);
+  ܦܢܐ novariant(tag);
 }
 
 
@@ -688,76 +688,76 @@ static int auxgetstr (lua_State *L, const TValue *t, const char *k) {
 ** table; so, an emergency collection while using the global table
 ** cannot collect it.
 */
-static void getGlobalTable (lua_State *L, TValue *gt) {
+ساكن فراغ getGlobalTable (lua_State *L, TValue *gt) {
   Table *registry = hvalue(&G(L)->l_registry);
   lu_byte tag = luaH_getint(registry, LUA_RIDX_GLOBALS, gt);
-  (void)tag;  /* avoid not-used warnings when checks are off */
+  (فراغ)tag;  /* avoid not-used warnings when checks are off */
   api_check(L, novariant(tag) == LUA_TTABLE, "global table must exist");
 }
 
 
-LUA_API int lua_getglobal (lua_State *L, const char *name) {
+LUA_API صحيح lua_getglobal (lua_State *L, ثابت حرف *name) {
   TValue gt;
   lua_lock(L);
   getGlobalTable(L, &gt);
-  return auxgetstr(L, &gt, name);
+  ܦܢܐ auxgetstr(L, &gt, name);
 }
 
 
-LUA_API int lua_gettable (lua_State *L, int idx) {
+LUA_API صحيح lua_gettable (lua_State *L, صحيح idx) {
   lu_byte tag;
   TValue *t;
   lua_lock(L);
   api_checkpop(L, 1);
   t = index2value(L, idx);
   luaV_fastget(t, s2v(L->top.p - 1), s2v(L->top.p - 1), luaH_get, tag);
-  if (tagisempty(tag))
+  ܐܢ (tagisempty(tag))
     tag = luaV_finishget(L, t, s2v(L->top.p - 1), L->top.p - 1, tag);
   lua_unlock(L);
-  return novariant(tag);
+  ܦܢܐ novariant(tag);
 }
 
 
-LUA_API int lua_getfield (lua_State *L, int idx, const char *k) {
+LUA_API صحيح lua_getfield (lua_State *L, صحيح idx, ثابت حرف *k) {
   lua_lock(L);
-  return auxgetstr(L, index2value(L, idx), k);
+  ܦܢܐ auxgetstr(L, index2value(L, idx), k);
 }
 
 
-LUA_API int lua_geti (lua_State *L, int idx, lua_Integer n) {
+LUA_API صحيح lua_geti (lua_State *L, صحيح idx, lua_Integer n) {
   TValue *t;
   lu_byte tag;
   lua_lock(L);
   t = index2value(L, idx);
   luaV_fastgeti(t, n, s2v(L->top.p), tag);
-  if (tagisempty(tag)) {
+  ܐܢ (tagisempty(tag)) {
     TValue key;
     setivalue(&key, n);
     tag = luaV_finishget(L, t, &key, L->top.p, tag);
   }
   api_incr_top(L);
   lua_unlock(L);
-  return novariant(tag);
+  ܦܢܐ novariant(tag);
 }
 
 
-static int finishrawget (lua_State *L, lu_byte tag) {
-  if (tagisempty(tag))  /* avoid copying empty items to the stack */
+ساكن صحيح finishrawget (lua_State *L, lu_byte tag) {
+  ܐܢ (tagisempty(tag))  /* avoid copying empty items to the stack */
     setnilvalue2s(L->top.p);
   api_incr_top(L);
   lua_unlock(L);
-  return novariant(tag);
+  ܦܢܐ novariant(tag);
 }
 
 
-l_sinline Table *gettable (lua_State *L, int idx) {
+l_sinline Table *gettable (lua_State *L, صحيح idx) {
   TValue *t = index2value(L, idx);
   api_check(L, ttistable(t), "table expected");
-  return hvalue(t);
+  ܦܢܐ hvalue(t);
 }
 
 
-LUA_API int lua_rawget (lua_State *L, int idx) {
+LUA_API صحيح lua_rawget (lua_State *L, صحيح idx) {
   Table *t;
   lu_byte tag;
   lua_lock(L);
@@ -765,87 +765,87 @@ LUA_API int lua_rawget (lua_State *L, int idx) {
   t = gettable(L, idx);
   tag = luaH_get(t, s2v(L->top.p - 1), s2v(L->top.p - 1));
   L->top.p--;  /* pop key */
-  return finishrawget(L, tag);
+  ܦܢܐ finishrawget(L, tag);
 }
 
 
-LUA_API int lua_rawgeti (lua_State *L, int idx, lua_Integer n) {
+LUA_API صحيح lua_rawgeti (lua_State *L, صحيح idx, lua_Integer n) {
   Table *t;
   lu_byte tag;
   lua_lock(L);
   t = gettable(L, idx);
   luaH_fastgeti(t, n, s2v(L->top.p), tag);
-  return finishrawget(L, tag);
+  ܦܢܐ finishrawget(L, tag);
 }
 
 
-LUA_API int lua_rawgetp (lua_State *L, int idx, const void *p) {
+LUA_API صحيح lua_rawgetp (lua_State *L, صحيح idx, ثابت فراغ *p) {
   Table *t;
   TValue k;
   lua_lock(L);
   t = gettable(L, idx);
   setpvalue(&k, cast_voidp(p));
-  return finishrawget(L, luaH_get(t, &k, s2v(L->top.p)));
+  ܦܢܐ finishrawget(L, luaH_get(t, &k, s2v(L->top.p)));
 }
 
 
-LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
+LUA_API فراغ lua_createtable (lua_State *L, صحيح narray, صحيح nrec) {
   Table *t;
   lua_lock(L);
   t = luaH_new(L);
   sethvalue2s(L, L->top.p, t);
   api_incr_top(L);
-  if (narray > 0 || nrec > 0)
+  ܐܢ (narray > 0 || nrec > 0)
     luaH_resize(L, t, cast_uint(narray), cast_uint(nrec));
   luaC_checkGC(L);
   lua_unlock(L);
 }
 
 
-LUA_API int lua_getmetatable (lua_State *L, int objindex) {
-  const TValue *obj;
+LUA_API صحيح lua_getmetatable (lua_State *L, صحيح objindex) {
+  ثابت TValue *obj;
   Table *mt;
-  int res = 0;
+  صحيح res = 0;
   lua_lock(L);
   obj = index2value(L, objindex);
-  switch (ttype(obj)) {
-    case LUA_TTABLE:
+  بدل (ttype(obj)) {
+    حالة LUA_TTABLE:
       mt = hvalue(obj)->metatable;
-      break;
-    case LUA_TUSERDATA:
+      اكسر;
+    حالة LUA_TUSERDATA:
       mt = uvalue(obj)->metatable;
-      break;
-    default:
+      اكسر;
+    افتراضي:
       mt = G(L)->mt[ttype(obj)];
-      break;
+      اكسر;
   }
-  if (mt != NULL) {
+  ܐܢ (mt != عدم) {
     sethvalue2s(L, L->top.p, mt);
     api_incr_top(L);
     res = 1;
   }
   lua_unlock(L);
-  return res;
+  ܦܢܐ res;
 }
 
 
-LUA_API int lua_getiuservalue (lua_State *L, int idx, int n) {
+LUA_API صحيح lua_getiuservalue (lua_State *L, صحيح idx, صحيح n) {
   TValue *o;
-  int t;
+  صحيح t;
   lua_lock(L);
   o = index2value(L, idx);
   api_check(L, ttisfulluserdata(o), "full userdata expected");
-  if (n <= 0 || n > uvalue(o)->nuvalue) {
+  ܐܢ (n <= 0 || n > uvalue(o)->nuvalue) {
     setnilvalue2s(L->top.p);
     t = LUA_TNONE;
   }
-  else {
+  ܐܚܪܢܐ {
     setobj2s(L, L->top.p, &uvalue(o)->uv[n - 1].uv);
     t = ttype(s2v(L->top.p));
   }
   api_incr_top(L);
   lua_unlock(L);
-  return t;
+  ܦܢܐ t;
 }
 
 
@@ -856,16 +856,16 @@ LUA_API int lua_getiuservalue (lua_State *L, int idx, int n) {
 /*
 ** t[k] = value at the top of the stack (where 'k' is a string)
 */
-static void auxsetstr (lua_State *L, const TValue *t, const char *k) {
-  int hres;
+ساكن فراغ auxsetstr (lua_State *L, ثابت TValue *t, ثابت حرف *k) {
+  صحيح hres;
   TString *str = luaS_new(L, k);
   api_checkpop(L, 1);
   luaV_fastset(t, str, s2v(L->top.p - 1), hres, luaH_psetstr);
-  if (hres == HOK) {
+  ܐܢ (hres == HOK) {
     luaV_finishfastset(L, t, s2v(L->top.p - 1));
     L->top.p--;  /* pop value */
   }
-  else {
+  ܐܚܪܢܐ {
     setsvalue2s(L, L->top.p, str);  /* push 'str' (to make it a TValue) */
     api_incr_top(L);
     luaV_finishset(L, t, s2v(L->top.p - 1), s2v(L->top.p - 2), hres);
@@ -875,7 +875,7 @@ static void auxsetstr (lua_State *L, const TValue *t, const char *k) {
 }
 
 
-LUA_API void lua_setglobal (lua_State *L, const char *name) {
+LUA_API فراغ lua_setglobal (lua_State *L, ثابت حرف *name) {
   TValue gt;
   lua_lock(L);  /* unlock done in 'auxsetstr' */
   getGlobalTable(L, &gt);
@@ -883,38 +883,38 @@ LUA_API void lua_setglobal (lua_State *L, const char *name) {
 }
 
 
-LUA_API void lua_settable (lua_State *L, int idx) {
+LUA_API فراغ lua_settable (lua_State *L, صحيح idx) {
   TValue *t;
-  int hres;
+  صحيح hres;
   lua_lock(L);
   api_checkpop(L, 2);
   t = index2value(L, idx);
   luaV_fastset(t, s2v(L->top.p - 2), s2v(L->top.p - 1), hres, luaH_pset);
-  if (hres == HOK)
+  ܐܢ (hres == HOK)
     luaV_finishfastset(L, t, s2v(L->top.p - 1));
-  else
+  ܐܚܪܢܐ
     luaV_finishset(L, t, s2v(L->top.p - 2), s2v(L->top.p - 1), hres);
   L->top.p -= 2;  /* pop index and value */
   lua_unlock(L);
 }
 
 
-LUA_API void lua_setfield (lua_State *L, int idx, const char *k) {
+LUA_API فراغ lua_setfield (lua_State *L, صحيح idx, ثابت حرف *k) {
   lua_lock(L);  /* unlock done in 'auxsetstr' */
   auxsetstr(L, index2value(L, idx), k);
 }
 
 
-LUA_API void lua_seti (lua_State *L, int idx, lua_Integer n) {
+LUA_API فراغ lua_seti (lua_State *L, صحيح idx, lua_Integer n) {
   TValue *t;
-  int hres;
+  صحيح hres;
   lua_lock(L);
   api_checkpop(L, 1);
   t = index2value(L, idx);
   luaV_fastseti(t, n, s2v(L->top.p - 1), hres);
-  if (hres == HOK)
+  ܐܢ (hres == HOK)
     luaV_finishfastset(L, t, s2v(L->top.p - 1));
-  else {
+  ܐܚܪܢܐ {
     TValue temp;
     setivalue(&temp, n);
     luaV_finishset(L, t, &temp, s2v(L->top.p - 1), hres);
@@ -924,7 +924,7 @@ LUA_API void lua_seti (lua_State *L, int idx, lua_Integer n) {
 }
 
 
-static void aux_rawset (lua_State *L, int idx, TValue *key, int n) {
+ساكن فراغ aux_rawset (lua_State *L, صحيح idx, TValue *key, صحيح n) {
   Table *t;
   lua_lock(L);
   api_checkpop(L, n);
@@ -937,19 +937,19 @@ static void aux_rawset (lua_State *L, int idx, TValue *key, int n) {
 }
 
 
-LUA_API void lua_rawset (lua_State *L, int idx) {
+LUA_API فراغ lua_rawset (lua_State *L, صحيح idx) {
   aux_rawset(L, idx, s2v(L->top.p - 2), 2);
 }
 
 
-LUA_API void lua_rawsetp (lua_State *L, int idx, const void *p) {
+LUA_API فراغ lua_rawsetp (lua_State *L, صحيح idx, ثابت فراغ *p) {
   TValue k;
   setpvalue(&k, cast_voidp(p));
   aux_rawset(L, idx, &k, 1);
 }
 
 
-LUA_API void lua_rawseti (lua_State *L, int idx, lua_Integer n) {
+LUA_API فراغ lua_rawseti (lua_State *L, صحيح idx, lua_Integer n) {
   Table *t;
   lua_lock(L);
   api_checkpop(L, 1);
@@ -961,63 +961,63 @@ LUA_API void lua_rawseti (lua_State *L, int idx, lua_Integer n) {
 }
 
 
-LUA_API int lua_setmetatable (lua_State *L, int objindex) {
+LUA_API صحيح lua_setmetatable (lua_State *L, صحيح objindex) {
   TValue *obj;
   Table *mt;
   lua_lock(L);
   api_checkpop(L, 1);
   obj = index2value(L, objindex);
-  if (ttisnil(s2v(L->top.p - 1)))
-    mt = NULL;
-  else {
+  ܐܢ (ttisnil(s2v(L->top.p - 1)))
+    mt = عدم;
+  ܐܚܪܢܐ {
     api_check(L, ttistable(s2v(L->top.p - 1)), "table expected");
     mt = hvalue(s2v(L->top.p - 1));
   }
-  switch (ttype(obj)) {
-    case LUA_TTABLE: {
+  بدل (ttype(obj)) {
+    حالة LUA_TTABLE: {
       hvalue(obj)->metatable = mt;
-      if (mt) {
+      ܐܢ (mt) {
         luaC_objbarrier(L, gcvalue(obj), mt);
         luaC_checkfinalizer(L, gcvalue(obj), mt);
       }
-      break;
+      اكسر;
     }
-    case LUA_TUSERDATA: {
+    حالة LUA_TUSERDATA: {
       uvalue(obj)->metatable = mt;
-      if (mt) {
+      ܐܢ (mt) {
         luaC_objbarrier(L, uvalue(obj), mt);
         luaC_checkfinalizer(L, gcvalue(obj), mt);
       }
-      break;
+      اكسر;
     }
-    default: {
+    افتراضي: {
       G(L)->mt[ttype(obj)] = mt;
-      break;
+      اكسر;
     }
   }
   L->top.p--;
   lua_unlock(L);
-  return 1;
+  ܦܢܐ 1;
 }
 
 
-LUA_API int lua_setiuservalue (lua_State *L, int idx, int n) {
+LUA_API صحيح lua_setiuservalue (lua_State *L, صحيح idx, صحيح n) {
   TValue *o;
-  int res;
+  صحيح res;
   lua_lock(L);
   api_checkpop(L, 1);
   o = index2value(L, idx);
   api_check(L, ttisfulluserdata(o), "full userdata expected");
-  if (!(cast_uint(n) - 1u < cast_uint(uvalue(o)->nuvalue)))
+  ܐܢ (!(cast_uint(n) - 1u < cast_uint(uvalue(o)->nuvalue)))
     res = 0;  /* 'n' not in [1, uvalue(o)->nuvalue] */
-  else {
+  ܐܚܪܢܐ {
     setobj(L, &uvalue(o)->uv[n - 1].uv, s2v(L->top.p - 1));
     luaC_barrierback(L, gcvalue(o), s2v(L->top.p - 1));
     res = 1;
   }
   L->top.p--;
   lua_unlock(L);
-  return res;
+  ܦܢܐ res;
 }
 
 
@@ -1034,22 +1034,22 @@ LUA_API int lua_setiuservalue (lua_State *L, int idx, int n) {
                    "invalid number of results"))
 
 
-LUA_API void lua_callk (lua_State *L, int nargs, int nresults,
+LUA_API فراغ lua_callk (lua_State *L, صحيح nargs, صحيح nresults,
                         lua_KContext ctx, lua_KFunction k) {
   StkId func;
   lua_lock(L);
-  api_check(L, k == NULL || !isLua(L->ci),
+  api_check(L, k == عدم || !isLua(L->ci),
     "cannot use continuations inside hooks");
   api_checkpop(L, nargs + 1);
   api_check(L, L->status == LUA_OK, "cannot do calls on non-normal thread");
   checkresults(L, nargs, nresults);
   func = L->top.p - (nargs+1);
-  if (k != NULL && yieldable(L)) {  /* need to prepare continuation? */
+  ܐܢ (k != عدم && yieldable(L)) {  /* need to prepare continuation? */
     L->ci->u.c.k = k;  /* save continuation */
     L->ci->u.c.ctx = ctx;  /* save context */
     luaD_call(L, func, nresults);  /* do the call */
   }
-  else  /* no continuation or no yieldable */
+  ܐܚܪܢܐ  /* no continuation or no yieldable */
     luaD_callnoyield(L, func, nresults);  /* just do the call */
   adjustresults(L, nresults);
   lua_unlock(L);
@@ -1060,43 +1060,43 @@ LUA_API void lua_callk (lua_State *L, int nargs, int nresults,
 /*
 ** Execute a protected call.
 */
-struct CallS {  /* data to 'f_call' */
+بنية CallS {  /* data to 'f_call' */
   StkId func;
-  int nresults;
+  صحيح nresults;
 };
 
 
-static void f_call (lua_State *L, void *ud) {
-  struct CallS *c = cast(struct CallS *, ud);
+ساكن فراغ f_call (lua_State *L, فراغ *ud) {
+  بنية CallS *c = cast(بنية CallS *, ud);
   luaD_callnoyield(L, c->func, c->nresults);
 }
 
 
 
-LUA_API int lua_pcallk (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API صحيح lua_pcallk (lua_State *L, صحيح nargs, صحيح nresults, صحيح errfunc,
                         lua_KContext ctx, lua_KFunction k) {
-  struct CallS c;
+  بنية CallS c;
   TStatus status;
   ptrdiff_t func;
   lua_lock(L);
-  api_check(L, k == NULL || !isLua(L->ci),
+  api_check(L, k == عدم || !isLua(L->ci),
     "cannot use continuations inside hooks");
   api_checkpop(L, nargs + 1);
   api_check(L, L->status == LUA_OK, "cannot do calls on non-normal thread");
   checkresults(L, nargs, nresults);
-  if (errfunc == 0)
+  ܐܢ (errfunc == 0)
     func = 0;
-  else {
+  ܐܚܪܢܐ {
     StkId o = index2stack(L, errfunc);
     api_check(L, ttisfunction(s2v(o)), "error handler must be a function");
     func = savestack(L, o);
   }
   c.func = L->top.p - (nargs+1);  /* function to be called */
-  if (k == NULL || !yieldable(L)) {  /* no continuation or no yieldable? */
+  ܐܢ (k == عدم || !yieldable(L)) {  /* no continuation or no yieldable? */
     c.nresults = nresults;  /* do a 'conventional' protected call */
     status = luaD_pcall(L, f_call, &c, savestack(L, c.func), func);
   }
-  else {  /* prepare continuation (call is already protected by 'resume') */
+  ܐܚܪܢܐ {  /* prepare continuation (call is already protected by 'resume') */
     CallInfo *ci = L->ci;
     ci->u.c.k = k;  /* save continuation */
     ci->u.c.ctx = ctx;  /* save context */
@@ -1113,22 +1113,22 @@ LUA_API int lua_pcallk (lua_State *L, int nargs, int nresults, int errfunc,
   }
   adjustresults(L, nresults);
   lua_unlock(L);
-  return APIstatus(status);
+  ܦܢܐ APIstatus(status);
 }
 
 
-LUA_API int lua_load (lua_State *L, lua_Reader reader, void *data,
-                      const char *chunkname, const char *mode) {
+LUA_API صحيح lua_load (lua_State *L, lua_Reader reader, فراغ *data,
+                      ثابت حرف *chunkname, ثابت حرف *mode) {
   ZIO z;
   TStatus status;
   lua_lock(L);
   luaC_checkGC(L);
-  if (!chunkname) chunkname = "?";
+  ܐܢ (!chunkname) chunkname = "?";
   luaZ_init(L, &z, reader, data);
   status = luaD_protectedparser(L, &z, chunkname, mode);
-  if (status == LUA_OK) {  /* no errors? */
+  ܐܢ (status == LUA_OK) {  /* no errors? */
     LClosure *f = clLvalue(s2v(L->top.p - 1));  /* get new function */
-    if (f->nupvalues >= 1) {  /* does it have an upvalue? */
+    ܐܢ (f->nupvalues >= 1) {  /* does it have an upvalue? */
       /* get global table from registry */
       TValue gt;
       getGlobalTable(L, &gt);
@@ -1138,7 +1138,7 @@ LUA_API int lua_load (lua_State *L, lua_Reader reader, void *data,
     }
   }
   lua_unlock(L);
-  return APIstatus(status);
+  ܦܢܐ APIstatus(status);
 }
 
 
@@ -1146,8 +1146,8 @@ LUA_API int lua_load (lua_State *L, lua_Reader reader, void *data,
 ** Dump a Lua function, calling 'writer' to write its parts. Ensure
 ** the stack returns with its original size.
 */
-LUA_API int lua_dump (lua_State *L, lua_Writer writer, void *data, int strip) {
-  int status;
+LUA_API صحيح lua_dump (lua_State *L, lua_Writer writer, فراغ *data, صحيح strip) {
+  صحيح status;
   ptrdiff_t otop = savestack(L, L->top.p);  /* original top */
   TValue *f = s2v(L->top.p - 1);  /* function to be dumped */
   lua_lock(L);
@@ -1156,96 +1156,96 @@ LUA_API int lua_dump (lua_State *L, lua_Writer writer, void *data, int strip) {
   status = luaU_dump(L, clLvalue(f)->p, writer, data, strip);
   L->top.p = restorestack(L, otop);  /* restore top */
   lua_unlock(L);
-  return status;
+  ܦܢܐ status;
 }
 
 
-LUA_API int lua_status (lua_State *L) {
-  return APIstatus(L->status);
+LUA_API صحيح lua_status (lua_State *L) {
+  ܦܢܐ APIstatus(L->status);
 }
 
 
 /*
 ** Garbage-collection function
 */
-LUA_API int lua_gc (lua_State *L, int what, ...) {
+LUA_API صحيح lua_gc (lua_State *L, صحيح what, ...) {
   va_list argp;
-  int res = 0;
+  صحيح res = 0;
   global_State *g = G(L);
-  if (g->gcstp & (GCSTPGC | GCSTPCLS))  /* internal stop? */
-    return -1;  /* all options are invalid when stopped */
+  ܐܢ (g->gcstp & (GCSTPGC | GCSTPCLS))  /* internal stop? */
+    ܦܢܐ -1;  /* all options are invalid when stopped */
   lua_lock(L);
   va_start(argp, what);
-  switch (what) {
-    case LUA_GCSTOP: {
+  بدل (what) {
+    حالة LUA_GCSTOP: {
       g->gcstp = GCSTPUSR;  /* stopped by the user */
-      break;
+      اكسر;
     }
-    case LUA_GCRESTART: {
+    حالة LUA_GCRESTART: {
       luaE_setdebt(g, 0);
       g->gcstp = 0;  /* (other bits must be zero here) */
-      break;
+      اكسر;
     }
-    case LUA_GCCOLLECT: {
+    حالة LUA_GCCOLLECT: {
       luaC_fullgc(L, 0);
-      break;
+      اكسر;
     }
-    case LUA_GCCOUNT: {
+    حالة LUA_GCCOUNT: {
       /* GC values are expressed in Kbytes: #bytes/2^10 */
       res = cast_int(gettotalbytes(g) >> 10);
-      break;
+      اكسر;
     }
-    case LUA_GCCOUNTB: {
+    حالة LUA_GCCOUNTB: {
       res = cast_int(gettotalbytes(g) & 0x3ff);
-      break;
+      اكسر;
     }
-    case LUA_GCSTEP: {
+    حالة LUA_GCSTEP: {
       lu_byte oldstp = g->gcstp;
       l_mem n = cast(l_mem, va_arg(argp, size_t));
       l_mem newdebt;
-      int work = 0;  /* true if GC did some work */
+      صحيح work = 0;  /* true if GC did some work */
       g->gcstp = 0;  /* allow GC to run (other bits must be zero here) */
-      if (n <= 0)
+      ܐܢ (n <= 0)
         newdebt = 0;  /* force to run one basic step */
-      else if (g->GCdebt >= n - MAX_LMEM)  /* no overflow? */
+      ܐܚܪܢܐ ܐܢ (g->GCdebt >= n - MAX_LMEM)  /* no overflow? */
         newdebt = g->GCdebt - n;
-      else  /* overflow */
+      ܐܚܪܢܐ  /* overflow */
         newdebt = -MAX_LMEM;  /* set debt to mininum value */
       luaE_setdebt(g, newdebt);
-      luaC_condGC(L, (void)0, work = 1);
-      if (work && g->gcstate == GCSpause)  /* end of cycle? */
+      luaC_condGC(L, (فراغ)0, work = 1);
+      ܐܢ (work && g->gcstate == GCSpause)  /* end of cycle? */
         res = 1;  /* signal it */
       g->gcstp = oldstp;  /* restore previous state */
-      break;
+      اكسر;
     }
-    case LUA_GCISRUNNING: {
+    حالة LUA_GCISRUNNING: {
       res = gcrunning(g);
-      break;
+      اكسر;
     }
-    case LUA_GCGEN: {
+    حالة LUA_GCGEN: {
       res = (g->gckind == KGC_INC) ? LUA_GCINC : LUA_GCGEN;
       luaC_changemode(L, KGC_GENMINOR);
-      break;
+      اكسر;
     }
-    case LUA_GCINC: {
+    حالة LUA_GCINC: {
       res = (g->gckind == KGC_INC) ? LUA_GCINC : LUA_GCGEN;
       luaC_changemode(L, KGC_INC);
-      break;
+      اكسر;
     }
-    case LUA_GCPARAM: {
-      int param = va_arg(argp, int);
-      int value = va_arg(argp, int);
+    حالة LUA_GCPARAM: {
+      صحيح param = va_arg(argp, صحيح);
+      صحيح value = va_arg(argp, صحيح);
       api_check(L, 0 <= param && param < LUA_GCPN, "invalid parameter");
       res = cast_int(luaO_applyparam(g->gcparams[param], 100));
-      if (value >= 0)
+      ܐܢ (value >= 0)
         g->gcparams[param] = luaO_codeparam(cast_uint(value));
-      break;
+      اكسر;
     }
-    default: res = -1;  /* invalid option */
+    افتراضي: res = -1;  /* invalid option */
   }
   va_end(argp);
   lua_unlock(L);
-  return res;
+  ܦܢܐ res;
 }
 
 
@@ -1255,38 +1255,38 @@ LUA_API int lua_gc (lua_State *L, int what, ...) {
 */
 
 
-LUA_API int lua_error (lua_State *L) {
+LUA_API صحيح lua_error (lua_State *L) {
   TValue *errobj;
   lua_lock(L);
   errobj = s2v(L->top.p - 1);
   api_checkpop(L, 1);
   /* error object is the memory error message? */
-  if (ttisshrstring(errobj) && eqshrstr(tsvalue(errobj), G(L)->memerrmsg))
+  ܐܢ (ttisshrstring(errobj) && eqshrstr(tsvalue(errobj), G(L)->memerrmsg))
     luaM_error(L);  /* raise a memory error */
-  else
+  ܐܚܪܢܐ
     luaG_errormsg(L);  /* raise a regular error */
   /* code unreachable; will unlock when control actually leaves the kernel */
-  return 0;  /* to avoid warnings */
+  ܦܢܐ 0;  /* to avoid warnings */
 }
 
 
-LUA_API int lua_next (lua_State *L, int idx) {
+LUA_API صحيح lua_next (lua_State *L, صحيح idx) {
   Table *t;
-  int more;
+  صحيح more;
   lua_lock(L);
   api_checkpop(L, 1);
   t = gettable(L, idx);
   more = luaH_next(L, t, L->top.p - 1);
-  if (more)
+  ܐܢ (more)
     api_incr_top(L);
-  else  /* no more elements */
+  ܐܚܪܢܐ  /* no more elements */
     L->top.p--;  /* pop key */
   lua_unlock(L);
-  return more;
+  ܦܢܐ more;
 }
 
 
-LUA_API void lua_toclose (lua_State *L, int idx) {
+LUA_API فراغ lua_toclose (lua_State *L, صحيح idx) {
   StkId o;
   lua_lock(L);
   o = index2stack(L, idx);
@@ -1297,14 +1297,14 @@ LUA_API void lua_toclose (lua_State *L, int idx) {
 }
 
 
-LUA_API void lua_concat (lua_State *L, int n) {
+LUA_API فراغ lua_concat (lua_State *L, صحيح n) {
   lua_lock(L);
-  if (n > 0) {
+  ܐܢ (n > 0) {
     api_checkpop(L, n);
     luaV_concat(L, n);
     luaC_checkGC(L);
   }
-  else {  /* nothing to concatenate */
+  ܐܚܪܢܐ {  /* nothing to concatenate */
     setsvalue2s(L, L->top.p, luaS_newlstr(L, "", 0));  /* push empty string */
     api_incr_top(L);
   }
@@ -1312,7 +1312,7 @@ LUA_API void lua_concat (lua_State *L, int n) {
 }
 
 
-LUA_API void lua_len (lua_State *L, int idx) {
+LUA_API فراغ lua_len (lua_State *L, صحيح idx) {
   TValue *t;
   lua_lock(L);
   t = index2value(L, idx);
@@ -1322,17 +1322,17 @@ LUA_API void lua_len (lua_State *L, int idx) {
 }
 
 
-LUA_API lua_Alloc lua_getallocf (lua_State *L, void **ud) {
+LUA_API lua_Alloc lua_getallocf (lua_State *L, فراغ **ud) {
   lua_Alloc f;
   lua_lock(L);
-  if (ud) *ud = G(L)->ud;
+  ܐܢ (ud) *ud = G(L)->ud;
   f = G(L)->frealloc;
   lua_unlock(L);
-  return f;
+  ܦܢܐ f;
 }
 
 
-LUA_API void lua_setallocf (lua_State *L, lua_Alloc f, void *ud) {
+LUA_API فراغ lua_setallocf (lua_State *L, lua_Alloc f, فراغ *ud) {
   lua_lock(L);
   G(L)->ud = ud;
   G(L)->frealloc = f;
@@ -1340,7 +1340,7 @@ LUA_API void lua_setallocf (lua_State *L, lua_Alloc f, void *ud) {
 }
 
 
-void lua_setwarnf (lua_State *L, lua_WarnFunction f, void *ud) {
+فراغ lua_setwarnf (lua_State *L, lua_WarnFunction f, فراغ *ud) {
   lua_lock(L);
   G(L)->ud_warn = ud;
   G(L)->warnf = f;
@@ -1348,7 +1348,7 @@ void lua_setwarnf (lua_State *L, lua_WarnFunction f, void *ud) {
 }
 
 
-void lua_warning (lua_State *L, const char *msg, int tocont) {
+فراغ lua_warning (lua_State *L, ثابت حرف *msg, صحيح tocont) {
   lua_lock(L);
   luaE_warning(L, msg, tocont);
   lua_unlock(L);
@@ -1356,7 +1356,7 @@ void lua_warning (lua_State *L, const char *msg, int tocont) {
 
 
 
-LUA_API void *lua_newuserdatauv (lua_State *L, size_t size, int nuvalue) {
+LUA_API فراغ *lua_newuserdatauv (lua_State *L, size_t size, صحيح nuvalue) {
   Udata *u;
   lua_lock(L);
   api_check(L, 0 <= nuvalue && nuvalue < SHRT_MAX, "invalid value");
@@ -1365,113 +1365,113 @@ LUA_API void *lua_newuserdatauv (lua_State *L, size_t size, int nuvalue) {
   api_incr_top(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getudatamem(u);
+  ܦܢܐ getudatamem(u);
 }
 
 
 
-static const char *aux_upvalue (TValue *fi, int n, TValue **val,
+ساكن ثابت حرف *aux_upvalue (TValue *fi, صحيح n, TValue **val,
                                 GCObject **owner) {
-  switch (ttypetag(fi)) {
-    case LUA_VCCL: {  /* C closure */
+  بدل (ttypetag(fi)) {
+    حالة LUA_VCCL: {  /* C closure */
       CClosure *f = clCvalue(fi);
-      if (!(cast_uint(n) - 1u < cast_uint(f->nupvalues)))
-        return NULL;  /* 'n' not in [1, f->nupvalues] */
+      ܐܢ (!(cast_uint(n) - 1u < cast_uint(f->nupvalues)))
+        ܦܢܐ عدم;  /* 'n' not in [1, f->nupvalues] */
       *val = &f->upvalue[n-1];
-      if (owner) *owner = obj2gco(f);
-      return "";
+      ܐܢ (owner) *owner = obj2gco(f);
+      ܦܢܐ "";
     }
-    case LUA_VLCL: {  /* Lua closure */
+    حالة LUA_VLCL: {  /* Lua closure */
       LClosure *f = clLvalue(fi);
       TString *name;
       Proto *p = f->p;
-      if (!(cast_uint(n) - 1u  < cast_uint(p->sizeupvalues)))
-        return NULL;  /* 'n' not in [1, p->sizeupvalues] */
+      ܐܢ (!(cast_uint(n) - 1u  < cast_uint(p->sizeupvalues)))
+        ܦܢܐ عدم;  /* 'n' not in [1, p->sizeupvalues] */
       *val = f->upvals[n-1]->v.p;
-      if (owner) *owner = obj2gco(f->upvals[n - 1]);
+      ܐܢ (owner) *owner = obj2gco(f->upvals[n - 1]);
       name = p->upvalues[n-1].name;
-      return (name == NULL) ? "(no name)" : getstr(name);
+      ܦܢܐ (name == عدم) ? "(no name)" : getstr(name);
     }
-    default: return NULL;  /* not a closure */
+    افتراضي: ܦܢܐ عدم;  /* not a closure */
   }
 }
 
 
-LUA_API const char *lua_getupvalue (lua_State *L, int funcindex, int n) {
-  const char *name;
-  TValue *val = NULL;  /* to avoid warnings */
+LUA_API ثابت حرف *lua_getupvalue (lua_State *L, صحيح funcindex, صحيح n) {
+  ثابت حرف *name;
+  TValue *val = عدم;  /* to avoid warnings */
   lua_lock(L);
-  name = aux_upvalue(index2value(L, funcindex), n, &val, NULL);
-  if (name) {
+  name = aux_upvalue(index2value(L, funcindex), n, &val, عدم);
+  ܐܢ (name) {
     setobj2s(L, L->top.p, val);
     api_incr_top(L);
   }
   lua_unlock(L);
-  return name;
+  ܦܢܐ name;
 }
 
 
-LUA_API const char *lua_setupvalue (lua_State *L, int funcindex, int n) {
-  const char *name;
-  TValue *val = NULL;  /* to avoid warnings */
-  GCObject *owner = NULL;  /* to avoid warnings */
+LUA_API ثابت حرف *lua_setupvalue (lua_State *L, صحيح funcindex, صحيح n) {
+  ثابت حرف *name;
+  TValue *val = عدم;  /* to avoid warnings */
+  GCObject *owner = عدم;  /* to avoid warnings */
   TValue *fi;
   lua_lock(L);
   fi = index2value(L, funcindex);
   api_checkpop(L, 1);
   name = aux_upvalue(fi, n, &val, &owner);
-  if (name) {
+  ܐܢ (name) {
     L->top.p--;
     setobj(L, val, s2v(L->top.p));
     luaC_barrier(L, owner, val);
   }
   lua_unlock(L);
-  return name;
+  ܦܢܐ name;
 }
 
 
-static UpVal **getupvalref (lua_State *L, int fidx, int n, LClosure **pf) {
-  static const UpVal *const nullup = NULL;
+ساكن UpVal **getupvalref (lua_State *L, صحيح fidx, صحيح n, LClosure **pf) {
+  ساكن ثابت UpVal *ثابت nullup = عدم;
   LClosure *f;
   TValue *fi = index2value(L, fidx);
   api_check(L, ttisLclosure(fi), "Lua function expected");
   f = clLvalue(fi);
-  if (pf) *pf = f;
-  if (1 <= n && n <= f->p->sizeupvalues)
-    return &f->upvals[n - 1];  /* get its upvalue pointer */
-  else
-    return (UpVal**)&nullup;
+  ܐܢ (pf) *pf = f;
+  ܐܢ (1 <= n && n <= f->p->sizeupvalues)
+    ܦܢܐ &f->upvals[n - 1];  /* get its upvalue pointer */
+  ܐܚܪܢܐ
+    ܦܢܐ (UpVal**)&nullup;
 }
 
 
-LUA_API void *lua_upvalueid (lua_State *L, int fidx, int n) {
+LUA_API فراغ *lua_upvalueid (lua_State *L, صحيح fidx, صحيح n) {
   TValue *fi = index2value(L, fidx);
-  switch (ttypetag(fi)) {
-    case LUA_VLCL: {  /* lua closure */
-      return *getupvalref(L, fidx, n, NULL);
+  بدل (ttypetag(fi)) {
+    حالة LUA_VLCL: {  /* lua closure */
+      ܦܢܐ *getupvalref(L, fidx, n, عدم);
     }
-    case LUA_VCCL: {  /* C closure */
+    حالة LUA_VCCL: {  /* C closure */
       CClosure *f = clCvalue(fi);
-      if (1 <= n && n <= f->nupvalues)
-        return &f->upvalue[n - 1];
+      ܐܢ (1 <= n && n <= f->nupvalues)
+        ܦܢܐ &f->upvalue[n - 1];
       /* else */
     }  /* FALLTHROUGH */
-    case LUA_VLCF:
-      return NULL;  /* light C functions have no upvalues */
-    default: {
+    حالة LUA_VLCF:
+      ܦܢܐ عدم;  /* light C functions have no upvalues */
+    افتراضي: {
       api_check(L, 0, "function expected");
-      return NULL;
+      ܦܢܐ عدم;
     }
   }
 }
 
 
-LUA_API void lua_upvaluejoin (lua_State *L, int fidx1, int n1,
-                                            int fidx2, int n2) {
+LUA_API فراغ lua_upvaluejoin (lua_State *L, صحيح fidx1, صحيح n1,
+                                            صحيح fidx2, صحيح n2) {
   LClosure *f1;
   UpVal **up1 = getupvalref(L, fidx1, n1, &f1);
-  UpVal **up2 = getupvalref(L, fidx2, n2, NULL);
-  api_check(L, *up1 != NULL && *up2 != NULL, "invalid upvalue index");
+  UpVal **up2 = getupvalref(L, fidx2, n2, عدم);
+  api_check(L, *up1 != عدم && *up2 != عدم, "invalid upvalue index");
   *up1 = *up2;
   luaC_objbarrier(L, f1, *up1);
 }

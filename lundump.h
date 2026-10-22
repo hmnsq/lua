@@ -7,11 +7,11 @@
 #ifndef lundump_h
 #define lundump_h
 
-#include <limits.h>
+#ضمن <limits.h>
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#ضمن "llimits.h"
+#ضمن "lobject.h"
+#ضمن "lzio.h"
 
 
 /* data to catch conversion errors */
@@ -31,10 +31,10 @@
 
 /* load one chunk; from lundump.c */
 LUAI_FUNC LClosure* luaU_undump (lua_State* L, ZIO* Z, Table *anchor,
-                                 const char* name, int fixed);
+                                 ثابت حرف* name, صحيح fixed);
 
 /* dump one chunk; from ldump.c */
-LUAI_FUNC int luaU_dump (lua_State* L, const Proto* f, lua_Writer w,
-                         void* data, int strip);
+LUAI_FUNC صحيح luaU_dump (lua_State* L, ثابت Proto* f, lua_Writer w,
+                         فراغ* data, صحيح strip);
 
 #endif
