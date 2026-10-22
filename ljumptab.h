@@ -9,16 +9,16 @@
 #undef vmcase
 #undef vmbreak
 
-#define vmdispatch(x)     goto *disptab[x];
+#define vmdispatch(x)     গচ্ছ *disptab[x];
 
 #define vmcase(l)     L_##l:
 
 #define vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
 
 
-static const void *const disptab[NUM_OPCODES] = {
+স্থির ধ্রুৱ শূন্য *ধ্রুৱ disptab[অঙ্ক_OPCODES] = {
 
-#if 0
+#যদি 0
 ** you can update the following list with this command:
 **
 **  sed -n '/^OP_/!d; s/OP_/\&\&L_OP_/ ; s/,.*/,/ ; s/\/.*// ; p'  lopcodes.h
