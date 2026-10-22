@@ -43,11 +43,11 @@ enum RESERVED {
 };
 
 /* number of reserved words */
-#define NUM_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
+#define नुमेरो_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
 
 
 typedef union {
-  lua_Number r;
+  lua_नुमेरो r;
   lua_Integer i;
   TString *ts;
 } SemInfo;  /* semantics information */

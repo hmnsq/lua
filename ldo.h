@@ -33,7 +33,7 @@
 #endif
 
 #define luaD_checkstackaux(L,n,pre,pos)  \
-	if (l_unlikely(L->stack_last.p - L->top.p <= (n))) \
+	if (l_unlikely(L->सालानसान_last.p - L->इताअस.p <= (n))) \
 	  { pre; luaD_growstack(L, n, 1); pos; } \
 	else { condmovestack(L,pre,pos); }
 
@@ -42,8 +42,8 @@
 
 
 
-#define savestack(L,pt)		(cast_charp(pt) - cast_charp(L->stack.p))
-#define restorestack(L,n)	cast(StkId, cast_charp(L->stack.p) + (n))
+#define savestack(L,pt)		(cast_charp(pt) - cast_charp(L->सालानसान.p))
+#define restorestack(L,n)	cast(StkId, cast_charp(L->सालानसान.p) + (n))
 
 
 /* macro to check stack size, preserving 'p' */
@@ -72,7 +72,7 @@ LUAI_FUNC void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop);
 LUAI_FUNC TStatus luaD_protectedparser (lua_State *L, ZIO *z,
                                                   const char *name,
                                                   const char *mode);
-LUAI_FUNC void luaD_hook (lua_State *L, int event, int line,
+LUAI_FUNC void luaD_hook (lua_State *L, int event, int लिन्या,
                                         int fTransfer, int nTransfer);
 LUAI_FUNC void luaD_hookcall (lua_State *L, CallInfo *ci);
 LUAI_FUNC int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,

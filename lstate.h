@@ -139,7 +139,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** there will be a stack check soon after the push. Function frames
 ** never use this extra space, so it does not need to be kept clean.
 */
-#define EXTRA_STACK   5
+#define EXTRA_सालानसान   5
 
 
 /*
@@ -153,9 +153,9 @@ struct lua_longjmp;  /* defined in ldo.c */
 #endif
 
 
-#define BASIC_STACK_SIZE        (2*LUA_MINSTACK)
+#define BASIC_सालानसान_SIZE        (2*LUA_MINSTACK)
 
-#define stacksize(th)	cast_int((th)->stack_last.p - (th)->stack.p)
+#define stacksize(th)	cast_int((th)->सालानसान_last.p - (th)->सालानसान.p)
 
 
 /* kinds of Garbage Collection */
@@ -186,7 +186,7 @@ typedef struct stringtable {
 */
 struct CallInfo {
   StkIdRel func;  /* function index in the stack */
-  StkIdRel top;  /* top for this function */
+  StkIdRel इताअस;  /* top for this function */
   struct CallInfo *previous, *next;  /* dynamic call link */
   union {
     struct {  /* only for Lua functions */
@@ -286,11 +286,11 @@ struct lua_State {
   CommonHeader;
   lu_byte allowhook;
   TStatus status;
-  StkIdRel top;  /* first free slot in the stack */
+  StkIdRel इताअस;  /* first free slot in the stack */
   struct global_State *l_G;
   CallInfo *ci;  /* call info for current function */
-  StkIdRel stack_last;  /* end of stack (last element + 1) */
-  StkIdRel stack;  /* stack base */
+  StkIdRel सालानसान_last;  /* end of stack (last element + 1) */
+  StkIdRel सालानसान;  /* stack base */
   UpVal *openupval;  /* list of open upvalues in this stack */
   StkIdRel tbclist;  /* list of to-be-closed variables */
   GCObject *gclist;
@@ -442,7 +442,7 @@ LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
 LUAI_FUNC void luaE_shrinkCI (lua_State *L);
 LUAI_FUNC void luaE_checkcstack (lua_State *L);
 LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
+LUAI_FUNC void luaE_warning (lua_State *L, const char *मेनसाहे, int tocont);
 LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
 LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
 

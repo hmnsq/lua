@@ -72,7 +72,7 @@ static int getbaseline (const Proto *f, int pc, int *basepc) {
     while (i + 1 < f->sizeabslineinfo && pc >= f->abslineinfo[i + 1].pc)
       i++;  /* low estimate; adjust it */
     *basepc = f->abslineinfo[i].pc;
-    return f->abslineinfo[i].line;
+    return f->abslineinfo[i].लिन्या;
   }
 }
 
@@ -130,13 +130,13 @@ static void settraps (CallInfo *ci) {
 ** for all platforms where it runs). Moreover, 'hook' is always checked
 ** before being called (see 'luaD_hook').
 */
-LUA_API void lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
+LUA_API void lua_sethook (lua_State *L, lua_Hook func, int mask, int बिलांग) {
   if (func == NULL || mask == 0) {  /* turn off hooks? */
     mask = 0;
     func = NULL;
   }
   L->hook = func;
-  L->basehookcount = count;
+  L->basehookcount = बिलांग;
   resethookcount(L);
   L->hookmask = cast_byte(mask);
   if (mask)
@@ -205,7 +205,7 @@ const char *luaG_findlocal (lua_State *L, CallInfo *ci, int n, StkId *pos) {
       name = luaF_getlocalname(ci_func(ci)->p, cast_uint(n), currentpc(ci));
   }
   if (name == NULL) {  /* no 'standard' name? */
-    StkId limit = (ci == L->ci) ? L->top.p : ci->next->func.p;
+    StkId limit = (ci == L->ci) ? L->इताअस.p : ci->next->func.p;
     if (limit - base >= n && n > 0) {  /* is 'n' inside 'ci' stack? */
       /* generic name for any valid slot */
       name = isLua(ci) ? "(temporary)" : "(C temporary)";
@@ -223,17 +223,17 @@ LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
   const char *name;
   lua_lock(L);
   if (ar == NULL) {  /* information about non-active function? */
-    if (!isLfunction(s2v(L->top.p - 1)))  /* not a Lua function? */
+    if (!isLfunction(s2v(L->इताअस.p - 1)))  /* not a Lua function? */
       name = NULL;
     else  /* consider live variables at function start (parameters) */
-      name = luaF_getlocalname(clLvalue(s2v(L->top.p - 1))->p, cast_uint(n), 0);
+      name = luaF_getlocalname(clLvalue(s2v(L->इताअस.p - 1))->p, cast_uint(n), 0);
   }
   else {  /* active function; get information through 'ar' */
     StkId pos = NULL;  /* to avoid warnings */
     name = luaG_findlocal(L, ar->i_ci, n, &pos);
     if (name) {
-      setobjs2s(L, L->top.p, pos);
-      api_incr_top(L);
+      setobjs2s(L, L->इताअस.p, pos);
+      api_incr_इताअस(L);
     }
   }
   lua_unlock(L);
@@ -248,8 +248,8 @@ LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
   name = luaG_findlocal(L, ar->i_ci, n, &pos);
   if (name) {
     api_checkpop(L, 1);
-    setobjs2s(L, pos, L->top.p - 1);
-    L->top.p--;  /* pop value */
+    setobjs2s(L, pos, L->इताअस.p - 1);
+    L->इताअस.p--;  /* pop value */
   }
   lua_unlock(L);
   return name;
@@ -291,15 +291,15 @@ static int nextline (const Proto *p, int currentline, int pc) {
 
 static void collectvalidlines (lua_State *L, Closure *f) {
   if (!LuaClosure(f)) {
-    setnilvalue2s(L->top.p);
-    api_incr_top(L);
+    setnilvalue2s(L->इताअस.p);
+    api_incr_इताअस(L);
   }
   else {
     const Proto *p = f->l.p;
     int currentline = p->linedefined;
     Table *t = luaH_new(L);  /* new table to store active lines */
-    sethvalue2s(L, L->top.p, t);  /* push it on stack */
-    api_incr_top(L);
+    sethvalue2s(L, L->इताअस.p, t);  /* push it on stack */
+    api_incr_इताअस(L);
     if (p->lineinfo != NULL) {  /* proto with debug information? */
       int i;
       TValue v;
@@ -400,10 +400,10 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   lua_lock(L);
   if (*what == '>') {
     ci = NULL;
-    func = s2v(L->top.p - 1);
+    func = s2v(L->इताअस.p - 1);
     api_check(L, ttisfunction(func), "function expected");
     what++;  /* skip the '>' */
-    L->top.p--;  /* pop function */
+    L->इताअस.p--;  /* pop function */
   }
   else {
     ci = ar->i_ci;
@@ -413,8 +413,8 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   cl = ttisclosure(func) ? clvalue(func) : NULL;
   status = auxgetinfo(L, what, ar, cl, ci);
   if (strchr(what, 'f')) {
-    setobj2s(L, L->top.p, func);
-    api_incr_top(L);
+    setobj2s(L, L->इताअस.p, func);
+    api_incr_इताअस(L);
   }
   if (strchr(what, 'L'))
     collectvalidlines(L, cl);
@@ -685,7 +685,7 @@ static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
 static int instack (CallInfo *ci, const TValue *o) {
   int pos;
   StkId base = ci->func.p + 1;
-  for (pos = 0; base + pos < ci->top.p; pos++) {
+  for (pos = 0; base + pos < ci->इताअस.p; pos++) {
     if (o == s2v(base + pos))
       return pos;
   }
@@ -786,10 +786,10 @@ l_noret luaG_concaterror (lua_State *L, const TValue *p1, const TValue *p2) {
 
 
 l_noret luaG_opinterror (lua_State *L, const TValue *p1,
-                         const TValue *p2, const char *msg) {
+                         const TValue *p2, const char *मेनसाहे) {
   if (!ttisnumber(p1))  /* first operand is wrong? */
     p2 = p1;  /* now second is wrong */
-  luaG_typeerror(L, p2, msg);
+  luaG_typeerror(L, p2, मेनसाहे);
 }
 
 
@@ -823,16 +823,16 @@ l_noret luaG_errnnil (lua_State *L, LClosure *cl, int k) {
 
 
 /* add src:line information to 'msg' */
-const char *luaG_addinfo (lua_State *L, const char *msg, TString *src,
-                                        int line) {
+const char *luaG_addinfo (lua_State *L, const char *मेनसाहे, TString *src,
+                                        int लिन्या) {
   if (src == NULL)  /* no debug information? */
-    return luaO_pushfstring(L, "?:?: %s", msg);
+    return luaO_pushfstring(L, "?:?: %s", मेनसाहे);
   else {
     char buff[LUA_IDSIZE];
     size_t idlen;
     const char *id = getlstr(src, idlen);
     luaO_chunkid(buff, id, idlen);
-    return luaO_pushfstring(L, "%s:%d: %s", buff, line, msg);
+    return luaO_pushfstring(L, "%s:%d: %s", buff, लिन्या, मेनसाहे);
   }
 }
 
@@ -841,14 +841,14 @@ l_noret luaG_errormsg (lua_State *L) {
   if (L->errfunc != 0) {  /* is there an error handling function? */
     StkId errfunc = restorestack(L, L->errfunc);
     lua_assert(ttisfunction(s2v(errfunc)));
-    setobjs2s(L, L->top.p, L->top.p - 1);  /* move argument */
-    setobjs2s(L, L->top.p - 1, errfunc);  /* push function */
-    L->top.p++;  /* assume EXTRA_STACK */
-    luaD_callnoyield(L, L->top.p - 2, 1);  /* call it */
+    setobjs2s(L, L->इताअस.p, L->इताअस.p - 1);  /* move argument */
+    setobjs2s(L, L->इताअस.p - 1, errfunc);  /* push function */
+    L->इताअस.p++;  /* assume EXTRA_STACK */
+    luaD_callnoyield(L, L->इताअस.p - 2, 1);  /* call it */
   }
-  if (ttisnil(s2v(L->top.p - 1))) {  /* error object is nil? */
+  if (ttisnil(s2v(L->इताअस.p - 1))) {  /* error object is nil? */
     /* change it to a proper message */
-    setsvalue2s(L, L->top.p - 1, luaS_newliteral(L, "<no error object>"));
+    setsvalue2s(L, L->इताअस.p - 1, luaS_newliteral(L, "<no error object>"));
   }
   luaD_throw(L, LUA_ERRRUN);
 }
@@ -856,15 +856,15 @@ l_noret luaG_errormsg (lua_State *L) {
 
 l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
   CallInfo *ci = L->ci;
-  const char *msg;
+  const char *मेनसाहे;
   va_list argp;
   luaC_checkGC(L);  /* error message uses memory */
-  pushvfstring(L, argp, fmt, msg);
+  pushvfstring(L, argp, fmt, मेनसाहे);
   if (isLua(ci)) {  /* Lua function? */
     /* add source:line information */
-    luaG_addinfo(L, msg, ci_func(ci)->p->source, getcurrentline(ci));
-    setobjs2s(L, L->top.p - 2, L->top.p - 1);  /* remove 'msg' */
-    L->top.p--;
+    luaG_addinfo(L, मेनसाहे, ci_func(ci)->p->source, getcurrentline(ci));
+    setobjs2s(L, L->इताअस.p - 2, L->इताअस.p - 1);  /* remove 'msg' */
+    L->इताअस.p--;
   }
   luaG_errormsg(L);
 }
@@ -954,7 +954,7 @@ int luaG_traceexec (lua_State *L, const Instruction *pc) {
     return 1;  /* do not call hook again (VM yielded, so it did not move) */
   }
   if (!luaP_isIT(*(ci->u.l.savedpc - 1)))  /* top not being used? */
-    L->top.p = ci->top.p;  /* correct top */
+    L->इताअस.p = ci->इताअस.p;  /* correct top */
   if (counthook)
     luaD_hook(L, LUA_HOOKCOUNT, -1, 0, 0);  /* call count hook */
   if (mask & LUA_MASKLINE) {

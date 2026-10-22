@@ -59,18 +59,18 @@ static const char *utf8_decode (const char *s, l_uint32 *val, int strict) {
   else if (c >= 0xfe)  /* c >= 1111 1110b ? */
     return NULL;  /* would need six or more continuation bytes */
   else {
-    int count = 0;  /* to count number of continuation bytes */
+    int बिलांग = 0;  /* to count number of continuation bytes */
     for (; c & 0x40; c <<= 1) {  /* while it needs continuation bytes... */
-      unsigned int cc = (unsigned char)s[++count];  /* read next byte */
+      unsigned int cc = (unsigned char)s[++बिलांग];  /* read next byte */
       if (!iscont(cc))  /* not a continuation byte? */
         return NULL;  /* invalid byte sequence */
       res = (res << 6) | (cc & 0x3F);  /* add lower 6 bits from cont. byte */
     }
-    lua_assert(count <= 5);
-    res |= ((l_uint32)(c & 0x7F) << (count * 5));  /* add first byte */
-    if (res > MAXUTF || res < limits[count])
+    lua_assert(बिलांग <= 5);
+    res |= ((l_uint32)(c & 0x7F) << (बिलांग * 5));  /* add first byte */
+    if (res > MAXUTF || res < limits[बिलांग])
       return NULL;  /* invalid byte sequence */
-    s += count;  /* skip continuation bytes read */
+    s += बिलांग;  /* skip continuation bytes read */
   }
   if (strict) {
     /* check for invalid code points; too large or surrogates */

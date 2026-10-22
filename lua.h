@@ -21,8 +21,8 @@
 #define LUA_VERSION_MINOR_N	5
 #define LUA_VERSION_RELEASE_N	1
 
-#define LUA_VERSION_NUM  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
-#define LUA_VERSION_RELEASE_NUM  (LUA_VERSION_NUM * 100 + LUA_VERSION_RELEASE_N)
+#define LUA_VERSION_नुमेरो  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
+#define LUA_VERSION_RELEASE_नुमेरो  (LUA_VERSION_नुमेरो * 100 + LUA_VERSION_RELEASE_N)
 
 
 #include "luaconf.h"
@@ -87,7 +87,7 @@ typedef struct lua_State lua_State;
 
 
 /* type of numbers in Lua */
-typedef LUA_NUMBER lua_Number;
+typedef LUA_नुमेरो lua_नुमेरो;
 
 
 /* type for integer functions */
@@ -128,7 +128,7 @@ typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
 /*
 ** Type for warning functions
 */
-typedef void (*lua_WarnFunction) (void *ud, const char *msg, int tocont);
+typedef void (*lua_WarnFunction) (void *ud, const char *मेनसाहे, int tocont);
 
 
 /*
@@ -168,7 +168,7 @@ LUA_API int        (lua_closethread) (lua_State *L, lua_State *from);
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
 
-LUA_API lua_Number (lua_version) (lua_State *L);
+LUA_API lua_नुमेरो (lua_version) (lua_State *L);
 
 
 /*
@@ -197,7 +197,7 @@ LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
 LUA_API int             (lua_type) (lua_State *L, int idx);
 LUA_API const char     *(lua_typename) (lua_State *L, int tp);
 
-LUA_API lua_Number      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
+LUA_API lua_नुमेरो      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
 LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);
 LUA_API int             (lua_toboolean) (lua_State *L, int idx);
 LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
@@ -241,7 +241,7 @@ LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
 ** push functions (C -> stack)
 */
 LUA_API void        (lua_pushnil) (lua_State *L);
-LUA_API void        (lua_pushnumber) (lua_State *L, lua_Number n);
+LUA_API void        (lua_pushnumber) (lua_State *L, lua_नुमेरो n);
 LUA_API void        (lua_pushinteger) (lua_State *L, lua_Integer n);
 LUA_API const char *(lua_pushlstring) (lua_State *L, const char *s, size_t len);
 LUA_API const char *(lua_pushexternalstring) (lua_State *L,
@@ -321,7 +321,7 @@ LUA_API int (lua_isyieldable) (lua_State *L);
 ** Warning-related functions
 */
 LUA_API void (lua_setwarnf) (lua_State *L, lua_WarnFunction f, void *ud);
-LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
+LUA_API void (lua_warning)  (lua_State *L, const char *मेनसाहे, int tocont);
 
 
 /*
@@ -393,7 +393,7 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_tonumber(L,i)	lua_tonumberx(L,(i),NULL)
 #define lua_tointeger(L,i)	lua_tointegerx(L,(i),NULL)
 
-#define lua_pop(L,n)		lua_settop(L, -(n)-1)
+#define lua_आलिसिन(L,n)		lua_settop(L, -(n)-1)
 
 #define lua_newtable(L)		lua_createtable(L, 0, 0)
 
@@ -418,11 +418,11 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_tostring(L,i)	lua_tolstring(L, (i), NULL)
 
 
-#define lua_insert(L,idx)	lua_rotate(L, (idx), 1)
+#define lua_इसिंगित(L,idx)	lua_rotate(L, (idx), 1)
 
-#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_pop(L, 1))
+#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_आलिसिन(L, 1))
 
-#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_pop(L, 1))
+#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_आलिसिन(L, 1))
 
 /* }============================================================== */
 
@@ -478,7 +478,7 @@ LUA_API void *(lua_upvalueid) (lua_State *L, int fidx, int n);
 LUA_API void  (lua_upvaluejoin) (lua_State *L, int fidx1, int n1,
                                                int fidx2, int n2);
 
-LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int बिलांग);
 LUA_API lua_Hook (lua_gethook) (lua_State *L);
 LUA_API int (lua_gethookmask) (lua_State *L);
 LUA_API int (lua_gethookcount) (lua_State *L);

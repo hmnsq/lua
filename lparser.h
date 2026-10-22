@@ -79,7 +79,7 @@ typedef struct expdesc {
   expkind k;
   union {
     lua_Integer ival;    /* for VKINT */
-    lua_Number nval;  /* for VKFLT */
+    lua_नुमेरो nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
     int info;  /* for generic use */
     struct {  /* for indexed variables */
@@ -132,7 +132,7 @@ typedef union Vardesc {
 typedef struct Labeldesc {
   TString *name;  /* label identifier */
   int pc;  /* position in code */
-  int line;  /* line where it appeared */
+  int लिन्या;  /* line where it appeared */
   short nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;

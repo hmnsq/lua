@@ -50,7 +50,7 @@ LUALIB_API void luaL_openselectedlibs (lua_State *L, int load, int preload) {
   for (lib = stdlibs, mask = 1; lib->name != NULL; lib++, mask <<= 1) {
     if (load & mask) {  /* selected? */
       luaL_requiref(L, lib->name, lib->func, 1);  /* require library */
-      lua_pop(L, 1);  /* remove result from the stack */
+      lua_आलिसिन(L, 1);  /* remove result from the stack */
     }
     else if (preload & mask) {  /* selected? */
       lua_pushcfunction(L, lib->func);
@@ -58,6 +58,6 @@ LUALIB_API void luaL_openselectedlibs (lua_State *L, int load, int preload) {
     }
   }
   lua_assert((mask >> 1) == LUA_UTF8LIBK);
-  lua_pop(L, 1);  /* remove PRELOAD table */
+  lua_आलिसिन(L, 1);  /* remove PRELOAD table */
 }
 

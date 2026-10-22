@@ -41,11 +41,11 @@ typedef struct luaL_Reg {
 } luaL_Reg;
 
 
-#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_Number))
+#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_नुमेरो))
 
-LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_Number ver, size_t sz);
+LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_नुमेरो ver, size_t sz);
 #define luaL_checkversion(L)  \
-	  luaL_checkversion_(L, LUA_VERSION_NUM, LUAL_NUMSIZES)
+	  luaL_checkversion_(L, LUA_VERSION_नुमेरो, LUAL_NUMSIZES)
 
 LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
 LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
@@ -56,14 +56,14 @@ LUALIB_API const char *(luaL_checklstring) (lua_State *L, int arg,
                                                           size_t *l);
 LUALIB_API const char *(luaL_optlstring) (lua_State *L, int arg,
                                           const char *def, size_t *l);
-LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int arg);
-LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int arg, lua_Number def);
+LUALIB_API lua_नुमेरो (luaL_checknumber) (lua_State *L, int arg);
+LUALIB_API lua_नुमेरो (luaL_optnumber) (lua_State *L, int arg, lua_नुमेरो def);
 
 LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, int arg);
 LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, int arg,
                                           lua_Integer def);
 
-LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
+LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *मेनसाहे);
 LUALIB_API void (luaL_checktype) (lua_State *L, int arg, int t);
 LUALIB_API void (luaL_checkany) (lua_State *L, int arg);
 
@@ -117,7 +117,7 @@ LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
 LUALIB_API int (luaL_getsubtable) (lua_State *L, int idx, const char *fname);
 
 LUALIB_API void (luaL_traceback) (lua_State *L, lua_State *L1,
-                                  const char *msg, int level);
+                                  const char *मेनसाहे, int level);
 
 LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
                                  lua_CFunction openf, int glb);

@@ -206,7 +206,7 @@ static void linkgclist_ (GCObject *o, GCObject **pnext, GCObject **list) {
 ** its associated empty value is enough to signal that the entry is
 ** logically empty.
 */
-static void clearkey (Node *n) {
+static void clearkey (बुहोल_2 *n) {
   lua_assert(isempty(gval(n)));
   if (keyiscollectable(n))
     setdeadkey(n);  /* unused key; remove it */
@@ -485,7 +485,7 @@ static void genlink (global_State *g, GCObject *o) {
 ** to check table age in generational mode.
 */
 static void traverseweakvalue (global_State *g, Table *h) {
-  Node *n, *limit = gnodelast(h);
+  बुहोल_2 *n, *limit = gnodelast(h);
   /* if there is array part, assume it may have white values (it is not
      worth traversing it now just to check) */
   int hasclears = (h->asize > 0);
@@ -547,7 +547,7 @@ static int traverseephemeron (global_State *g, Table *h, int inv) {
   /* traverse hash part; if 'inv', traverse descending
      (see 'convergeephemerons') */
   for (i = 0; i < nsize; i++) {
-    Node *n = inv ? gnode(h, nsize - 1 - i) : gnode(h, i);
+    बुहोल_2 *n = inv ? gnode(h, nsize - 1 - i) : gnode(h, i);
     if (isempty(gval(n)))  /* entry is empty? */
       clearkey(n);  /* clear its key */
     else if (iscleared(g, gckeyN(n))) {  /* key is not marked (yet)? */
@@ -574,7 +574,7 @@ static int traverseephemeron (global_State *g, Table *h, int inv) {
 
 
 static void traversestrongtable (global_State *g, Table *h) {
-  Node *n, *limit = gnodelast(h);
+  बुहोल_2 *n, *limit = gnodelast(h);
   traversearray(g, h);
   for (n = gnode(h, 0); n < limit; n++) {  /* traverse hash part */
     if (isempty(gval(n)))  /* entry is empty? */
@@ -694,21 +694,21 @@ static l_mem traverseLclosure (global_State *g, LClosure *cl) {
 */
 static l_mem traversethread (global_State *g, lua_State *th) {
   UpVal *uv;
-  StkId o = th->stack.p;
+  StkId o = th->सालानसान.p;
   if (isold(th) || g->gcstate == GCSpropagate)
     linkgclist(th, g->grayagain);  /* insert into 'grayagain' list */
   if (o == NULL)
     return 0;  /* stack not completely built yet */
   lua_assert(g->gcstate == GCSatomic ||
              th->openupval == NULL || isintwups(th));
-  for (; o < th->top.p; o++)  /* mark live elements in the stack */
+  for (; o < th->इताअस.p; o++)  /* mark live elements in the stack */
     markvalue(g, s2v(o));
   for (uv = th->openupval; uv != NULL; uv = uv->u.open.next)
     markobject(g, uv);  /* open upvalues cannot be collected */
   if (g->gcstate == GCSatomic) {  /* final traversal? */
     if (!g->gcemergency)
       luaD_shrinkstack(th); /* do not change stack in emergency cycle */
-    for (o = th->top.p; o < th->stack_last.p + EXTRA_STACK; o++)
+    for (o = th->इताअस.p; o < th->सालानसान_last.p + EXTRA_सालानसान; o++)
       setnilvalue2s(o);  /* clear dead stack slice */
     /* 'remarkupvals' may have removed thread from 'twups' list */
     if (!isintwups(th) && th->openupval != NULL) {
@@ -716,7 +716,7 @@ static l_mem traversethread (global_State *g, lua_State *th) {
       g->twups = th;
     }
   }
-  return 1 + (th->top.p - th->stack.p);
+  return 1 + (th->इताअस.p - th->सालानसान.p);
 }
 
 
@@ -789,8 +789,8 @@ static void convergeephemerons (global_State *g) {
 static void clearbykeys (global_State *g, GCObject *l) {
   for (; l; l = gco2t(l)->gclist) {
     Table *h = gco2t(l);
-    Node *limit = gnodelast(h);
-    Node *n;
+    बुहोल_2 *limit = gnodelast(h);
+    बुहोल_2 *n;
     for (n = gnode(h, 0); n < limit; n++) {
       if (iscleared(g, gckeyN(n)))  /* unmarked key? */
         setempty(gval(n));  /* remove entry */
@@ -808,7 +808,7 @@ static void clearbykeys (global_State *g, GCObject *l) {
 static void clearbyvalues (global_State *g, GCObject *l, GCObject *f) {
   for (; l != f; l = gco2t(l)->gclist) {
     Table *h = gco2t(l);
-    Node *n, *limit = gnodelast(h);
+    बुहोल_2 *n, *limit = gnodelast(h);
     unsigned int i;
     unsigned int asize = h->asize;
     for (i = 0; i < asize; i++) {
@@ -961,7 +961,7 @@ static GCObject *udata2finalize (global_State *g) {
 
 static void dothecall (lua_State *L, void *ud) {
   UNUSED(ud);
-  luaD_callnoyield(L, L->top.p - 2, 0);
+  luaD_callnoyield(L, L->इताअस.p - 2, 0);
 }
 
 
@@ -978,16 +978,16 @@ static void GCTM (lua_State *L) {
     lu_byte oldgcstp  = g->gcstp;
     g->gcstp |= GCSTPGC;  /* avoid GC steps */
     L->allowhook = 0;  /* stop debug hooks during GC metamethod */
-    setobj2s(L, L->top.p++, tm);  /* push finalizer... */
-    setobj2s(L, L->top.p++, &v);  /* ... and its argument */
+    setobj2s(L, L->इताअस.p++, tm);  /* push finalizer... */
+    setobj2s(L, L->इताअस.p++, &v);  /* ... and its argument */
     L->ci->callstatus |= CIST_FIN;  /* will run a finalizer */
-    status = luaD_pcall(L, dothecall, NULL, savestack(L, L->top.p - 2), 0);
+    status = luaD_pcall(L, dothecall, NULL, savestack(L, L->इताअस.p - 2), 0);
     L->ci->callstatus &= ~CIST_FIN;  /* not running a finalizer anymore */
     L->allowhook = oldah;  /* restore hooks */
     g->gcstp = oldgcstp;  /* restore state */
     if (l_unlikely(status != LUA_OK)) {  /* error while running __gc? */
       luaE_warnerror(L, "__gc");
-      L->top.p--;  /* pops error object */
+      L->इताअस.p--;  /* pops error object */
     }
   }
 }

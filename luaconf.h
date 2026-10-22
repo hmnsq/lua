@@ -241,9 +241,9 @@
 
 #else			/* }{ */
 
-#define LUA_ROOT	"/usr/local/"
-#define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
-#define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
+#define LUA_उगात	"/usr/local/"
+#define LUA_LDIR	LUA_उगात "share/lua/" LUA_VDIR "/"
+#define LUA_CDIR	LUA_उगात "lib/lua/" LUA_VDIR "/"
 
 #if !defined(LUA_PATH_DEFAULT)
 #define LUA_PATH_DEFAULT  \
@@ -409,15 +409,15 @@
 
 #if LUA_FLOAT_TYPE == LUA_FLOAT_FLOAT		/* { single float */
 
-#define LUA_NUMBER	float
+#define LUA_नुमेरो	float
 
 #define l_floatatt(n)		(FLT_##n)
 
 #define LUAI_UACNUMBER	double
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.7g"
-#define LUA_NUMBER_FMT_N	"%.9g"
+#define LUA_नुमेरो_FRMLEN	""
+#define LUA_नुमेरो_FMT		"%.7g"
+#define LUA_नुमेरो_FMT_N	"%.9g"
 
 #define l_mathop(op)		op##f
 
@@ -426,15 +426,15 @@
 
 #elif LUA_FLOAT_TYPE == LUA_FLOAT_LONGDOUBLE	/* }{ long double */
 
-#define LUA_NUMBER	long double
+#define LUA_नुमेरो	long double
 
 #define l_floatatt(n)		(LDBL_##n)
 
 #define LUAI_UACNUMBER	long double
 
-#define LUA_NUMBER_FRMLEN	"L"
-#define LUA_NUMBER_FMT		"%.19Lg"
-#define LUA_NUMBER_FMT_N	"%.21Lg"
+#define LUA_नुमेरो_FRMLEN	"L"
+#define LUA_नुमेरो_FMT		"%.19Lg"
+#define LUA_नुमेरो_FMT_N	"%.21Lg"
 
 #define l_mathop(op)		op##l
 
@@ -442,15 +442,15 @@
 
 #elif LUA_FLOAT_TYPE == LUA_FLOAT_DOUBLE	/* }{ double */
 
-#define LUA_NUMBER	double
+#define LUA_नुमेरो	double
 
 #define l_floatatt(n)		(DBL_##n)
 
 #define LUAI_UACNUMBER	double
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.15g"
-#define LUA_NUMBER_FMT_N	"%.17g"
+#define LUA_नुमेरो_FRMLEN	""
+#define LUA_नुमेरो_FMT		"%.15g"
+#define LUA_नुमेरो_FMT_N	"%.17g"
 
 #define l_mathop(op)		op
 
@@ -612,8 +612,8 @@
 #if defined(LUA_USE_C89) || (defined(HUGE_VAL) && !defined(HUGE_VALF))
 #undef l_mathop  /* variants not available */
 #undef lua_str2number
-#define l_mathop(op)		(lua_Number)op  /* no variant */
-#define lua_str2number(s,p)	((lua_Number)strtod((s), (p)))
+#define l_mathop(op)		(lua_नुमेरो)op  /* no variant */
+#define lua_str2number(s,p)	((lua_नुमेरो)strtod((s), (p)))
 #endif
 
 
@@ -721,7 +721,7 @@
 @@ LUAL_BUFFERSIZE is the initial buffer size used by the lauxlib
 ** buffer system.
 */
-#define LUAL_BUFFERSIZE   ((int)(16 * sizeof(void*) * sizeof(lua_Number)))
+#define LUAL_BUFFERSIZE   ((int)(16 * sizeof(void*) * sizeof(lua_नुमेरो)))
 
 
 /*
@@ -734,7 +734,7 @@
 #define LUAI_MAXALIGN long double u; void *s; long long l
 #else
 /* use only C89 stuff */
-#define LUAI_MAXALIGN  lua_Number n; double u; void *s; lua_Integer i; long l
+#define LUAI_MAXALIGN  lua_नुमेरो n; double u; void *s; lua_Integer i; long l
 #endif
 
 /* }================================================================== */

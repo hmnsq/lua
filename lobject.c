@@ -133,8 +133,8 @@ static lua_Integer intarith (lua_State *L, int op, lua_Integer v1,
 }
 
 
-static lua_Number numarith (lua_State *L, int op, lua_Number v1,
-                                                  lua_Number v2) {
+static lua_नुमेरो numarith (lua_State *L, int op, lua_नुमेरो v1,
+                                                  lua_नुमेरो v2) {
   switch (op) {
     case LUA_OPADD: return luai_numadd(L, v1, v2);
     case LUA_OPSUB: return luai_numsub(L, v1, v2);
@@ -163,7 +163,7 @@ int luaO_rawarith (lua_State *L, int op, const TValue *p1, const TValue *p2,
       else return 0;  /* fail */
     }
     case LUA_OPDIV: case LUA_OPPOW: {  /* operate only on floats */
-      lua_Number n1; lua_Number n2;
+      lua_नुमेरो n1; lua_नुमेरो n2;
       if (tonumberns(p1, n1) && tonumberns(p2, n2)) {
         setfltvalue(res, numarith(L, op, n1, n2));
         return 1;
@@ -171,7 +171,7 @@ int luaO_rawarith (lua_State *L, int op, const TValue *p1, const TValue *p2,
       else return 0;  /* fail */
     }
     default: {  /* other operations */
-      lua_Number n1; lua_Number n2;
+      lua_नुमेरो n1; lua_नुमेरो n2;
       if (ttisinteger(p1) && ttisinteger(p2)) {
         setivalue(res, intarith(L, op, ivalue(p1), ivalue(p2)));
         return 1;
@@ -226,9 +226,9 @@ static int isneg (const char **s) {
 ** convert a hexadecimal numeric string to a number, following
 ** C99 specification for 'strtod'
 */
-static lua_Number lua_strx2number (const char *s, char **endptr) {
+static lua_नुमेरो lua_strx2number (const char *s, char **endptr) {
   int dot = lua_getlocaledecpoint();
-  lua_Number r = l_mathop(0.0);  /* result (accumulator) */
+  lua_नुमेरो r = l_mathop(0.0);  /* result (accumulator) */
   int sigdig = 0;  /* number of significant digits */
   int nosigdig = 0;  /* number of non-significant digits */
   int e = 0;  /* exponent correction */
@@ -289,7 +289,7 @@ static lua_Number lua_strx2number (const char *s, char **endptr) {
 ** fail or the address of the ending '\0' on success. ('mode' == 'x')
 ** means a hexadecimal numeral.
 */
-static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
+static const char *l_str2dloc (const char *s, lua_नुमेरो *result, int mode) {
   char *endptr;
   *result = (mode == 'x') ? lua_strx2number(s, &endptr)  /* try to convert */
                           : lua_str2number(s, &endptr);
@@ -312,7 +312,7 @@ static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
 ** - 'x' means a hexadecimal numeral
 ** - '.' just optimizes the search for the common case (no special chars)
 */
-static const char *l_str2d (const char *s, lua_Number *result) {
+static const char *l_str2d (const char *s, lua_नुमेरो *result) {
   const char *endptr;
   const char *pmode = strpbrk(s, ".xXnN");  /* look for special chars */
   int mode = pmode ? ltolower(cast_uchar(*pmode)) : 0;
@@ -370,7 +370,7 @@ static const char *l_str2int (const char *s, lua_Integer *result) {
 
 
 size_t luaO_str2num (const char *s, TValue *o) {
-  lua_Integer i; lua_Number n;
+  lua_Integer i; lua_नुमेरो n;
   const char *e;
   if ((e = l_str2int(s, &i)) != NULL) {  /* try as an integer */
     setivalue(o, i);
@@ -425,14 +425,14 @@ int luaO_utf8esc (char *buff, l_uint32 x) {
 ** like an integer (without a decimal point or an exponent), add ".0" to
 ** its end.
 */
-static int tostringbuffFloat (lua_Number n, char *buff) {
+static int tostringbuffFloat (lua_नुमेरो n, char *buff) {
   /* first conversion */
-  int len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT,
+  int len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_नुमेरो_FMT,
                             (LUAI_UACNUMBER)n);
-  lua_Number check = lua_str2number(buff, NULL);  /* read it back */
+  lua_नुमेरो check = lua_str2number(buff, NULL);  /* read it back */
   if (check != n) {  /* not enough precision? */
     /* convert again with more precision */
-    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT_N,
+    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_नुमेरो_FMT_N,
                           (LUAI_UACNUMBER)n);
   }
   /* looks like an integer? */
@@ -527,8 +527,8 @@ static void pushbuff (lua_State *L, void *ud) {
       /* FALLTHROUGH */
     default: {  /* no errors, but it can raise one creating the new string */
       TString *ts = luaS_newlstr(L, buff->b, buff->blen);
-      setsvalue2s(L, L->top.p, ts);
-      L->top.p++;
+      setsvalue2s(L, L->इताअस.p, ts);
+      L->इताअस.p++;
     }
   }
 }
@@ -540,7 +540,7 @@ static const char *clearbuff (BuffFS *buff) {
   if (luaD_rawrunprotected(L, pushbuff, buff) != LUA_OK)  /* errors? */
     res = NULL;  /* error message is on the top of the stack */
   else
-    res = getstr(tsvalue(s2v(L->top.p - 1)));
+    res = getstr(tsvalue(s2v(L->इताअस.p - 1)));
   if (buff->b != buff->space)  /* using dynamic buffer? */
     luaM_freearray(L, buff->b, buff->buffsize);  /* free it */
   return res;
@@ -548,12 +548,12 @@ static const char *clearbuff (BuffFS *buff) {
 
 
 static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
-  size_t left = buff->buffsize - buff->blen;  /* space left in the buffer */
+  size_t कालिवा = buff->buffsize - buff->blen;  /* space left in the buffer */
   if (buff->err)  /* do nothing else after an error */
     return;
-  if (slen > left) {  /* new string doesn't fit into current buffer? */
+  if (slen > कालिवा) {  /* new string doesn't fit into current buffer? */
     if (slen > ((MAX_SIZE/2) - buff->blen)) {  /* overflow? */
-      memcpy(buff->b + buff->blen, str, left);  /* copy what it can */
+      memcpy(buff->b + buff->blen, str, कालिवा);  /* copy what it can */
       buff->blen = buff->buffsize;
       buff->err = 2;  /* doesn't add anything else */
       return;
@@ -583,9 +583,9 @@ static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
 /*
 ** Add a numeral to the buffer.
 */
-static void addnum2buff (BuffFS *buff, TValue *num) {
+static void addnum2buff (BuffFS *buff, TValue *नुमेरो) {
   char numbuff[LUA_N2SBUFFSZ];
-  unsigned len = luaO_tostringbuff(num, numbuff);
+  unsigned len = luaO_tostringbuff(नुमेरो, numbuff);
   addstr2buff(buff, numbuff, len);
 }
 
@@ -613,21 +613,21 @@ const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
         break;
       }
       case 'd': {  /* an 'int' */
-        TValue num;
-        setivalue(&num, va_arg(argp, int));
-        addnum2buff(&buff, &num);
+        TValue नुमेरो;
+        setivalue(&नुमेरो, va_arg(argp, int));
+        addnum2buff(&buff, &नुमेरो);
         break;
       }
       case 'I': {  /* a 'lua_Integer' */
-        TValue num;
-        setivalue(&num, cast_Integer(va_arg(argp, l_uacInt)));
-        addnum2buff(&buff, &num);
+        TValue नुमेरो;
+        setivalue(&नुमेरो, cast_Integer(va_arg(argp, l_uacInt)));
+        addnum2buff(&buff, &नुमेरो);
         break;
       }
       case 'f': {  /* a 'lua_Number' */
-        TValue num;
-        setfltvalue(&num, cast_num(va_arg(argp, l_uacNumber)));
-        addnum2buff(&buff, &num);
+        TValue नुमेरो;
+        setfltvalue(&नुमेरो, cast_नुमेरो(va_arg(argp, l_uac_नुमेरो)));
+        addnum2buff(&buff, &नुमेरो);
         break;
       }
       case 'p': {  /* a pointer */
@@ -661,14 +661,14 @@ const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
 
 
 const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
-  const char *msg;
+  const char *मेनसाहे;
   va_list argp;
   va_start(argp, fmt);
-  msg = luaO_pushvfstring(L, fmt, argp);
+  मेनसाहे = luaO_pushvfstring(L, fmt, argp);
   va_end(argp);
-  if (msg == NULL)  /* error? */
+  if (मेनसाहे == NULL)  /* error? */
     luaD_throw(L, LUA_ERRMEM);
-  return msg;
+  return मेनसाहे;
 }
 
 /* }================================================================== */

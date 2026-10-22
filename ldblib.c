@@ -249,7 +249,7 @@ static int db_setlocal (lua_State *L) {
   lua_xmove(L, L1, 1);
   name = lua_setlocal(L1, &ar, nvar);
   if (name == NULL)
-    lua_pop(L1, 1);  /* pop value (if not popped by 'lua_setlocal') */
+    lua_आलिसिन(L1, 1);  /* pop value (if not popped by 'lua_setlocal') */
   lua_pushstring(L, name);
   return 1;
 }
@@ -265,7 +265,7 @@ static int auxupvalue (lua_State *L, int get) {
   name = get ? lua_getupvalue(L, 1, n) : lua_setupvalue(L, 1, n);
   if (name == NULL) return 0;
   lua_pushstring(L, name);
-  lua_insert(L, -(get+1));  /* no-op if get is false */
+  lua_इसिंगित(L, -(get+1));  /* no-op if get is false */
   return get + 1;
 }
 
@@ -342,12 +342,12 @@ static void hookf (lua_State *L, lua_Debug *ar) {
 /*
 ** Convert a string mask (for 'sethook') into a bit mask
 */
-static int makemask (const char *smask, int count) {
+static int makemask (const char *smask, int बिलांग) {
   int mask = 0;
   if (strchr(smask, 'c')) mask |= LUA_MASKCALL;
   if (strchr(smask, 'r')) mask |= LUA_MASKRET;
   if (strchr(smask, 'l')) mask |= LUA_MASKLINE;
-  if (count > 0) mask |= LUA_MASKCOUNT;
+  if (बिलांग > 0) mask |= LUA_MASKCOUNT;
   return mask;
 }
 
@@ -366,18 +366,18 @@ static char *unmakemask (int mask, char *smask) {
 
 
 static int db_sethook (lua_State *L) {
-  int arg, mask, count;
+  int arg, mask, बिलांग;
   lua_Hook func;
   lua_State *L1 = getthread(L, &arg);
   if (lua_isnoneornil(L, arg+1)) {  /* no hook? */
     lua_settop(L, arg+1);
-    func = NULL; mask = 0; count = 0;  /* turn off hooks */
+    func = NULL; mask = 0; बिलांग = 0;  /* turn off hooks */
   }
   else {
     const char *smask = luaL_checkstring(L, arg+2);
     luaL_checktype(L, arg+1, LUA_TFUNCTION);
-    count = (int)luaL_optinteger(L, arg + 3, 0);
-    func = hookf; mask = makemask(smask, count);
+    बिलांग = (int)luaL_optinteger(L, arg + 3, 0);
+    func = hookf; mask = makemask(smask, बिलांग);
   }
   if (!luaL_getsubtable(L, LUA_REGISTRYINDEX, HOOKKEY)) {
     /* table just created; initialize it */
@@ -390,7 +390,7 @@ static int db_sethook (lua_State *L) {
   lua_pushthread(L1); lua_xmove(L1, L, 1);  /* key (thread) */
   lua_pushvalue(L, arg + 1);  /* value (hook function) */
   lua_rawset(L, -3);  /* hooktable[L1] = new Lua hook */
-  lua_sethook(L1, func, mask, count);
+  lua_sethook(L1, func, mask, बिलांग);
   return 0;
 }
 
@@ -438,12 +438,12 @@ static int db_debug (lua_State *L) {
 static int db_traceback (lua_State *L) {
   int arg;
   lua_State *L1 = getthread(L, &arg);
-  const char *msg = lua_tostring(L, arg + 1);
-  if (msg == NULL && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
+  const char *मेनसाहे = lua_tostring(L, arg + 1);
+  if (मेनसाहे == NULL && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
     lua_pushvalue(L, arg + 1);  /* return it untouched */
   else {
     int level = (int)luaL_optinteger(L, arg + 2, (L == L1) ? 1 : 0);
-    luaL_traceback(L, L1, msg, level);
+    luaL_traceback(L, L1, मेनसाहे, level);
   }
   return 1;
 }

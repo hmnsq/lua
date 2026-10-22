@@ -262,7 +262,7 @@ static int noenv (lua_State *L) {
   int b;
   lua_getfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
   b = lua_toboolean(L, -1);
-  lua_pop(L, 1);  /* remove value */
+  lua_आलिसिन(L, 1);  /* remove value */
   return b;
 }
 
@@ -300,7 +300,7 @@ static void setpath (lua_State *L, const char *fieldname,
   }
   setprogdir(L);
   lua_setfield(L, -3, fieldname);  /* package[fieldname] = path value */
-  lua_pop(L, 1);  /* pop versioned variable name ('nver') */
+  lua_आलिसिन(L, 1);  /* pop versioned variable name ('nver') */
 }
 
 /* }================================================================== */
@@ -324,7 +324,7 @@ static void *checkclib (lua_State *L, const char *path) {
   lua_getfield(L, LUA_REGISTRYINDEX, CLIBS);
   lua_getfield(L, -1, path);
   plib = lua_touserdata(L, -1);  /* plib = CLIBS[path] */
-  lua_pop(L, 2);  /* pop CLIBS table and 'plib' */
+  lua_आलिसिन(L, 2);  /* pop CLIBS table and 'plib' */
   return plib;
 }
 
@@ -362,7 +362,7 @@ static void addtoclib (lua_State *L, const char *path, void *plib) {
   lua_setfield(L, -2, path);  /* CLIBS[path] = plib */
   createlibstr(L, plib);
   luaL_ref(L, -2);  /* keep library string in CLIBS */
-  lua_pop(L, 1);  /* pop CLIBS table */
+  lua_आलिसिन(L, 1);  /* pop CLIBS table */
 }
 
 
@@ -410,7 +410,7 @@ static int ll_loadlib (lua_State *L) {
     return 1;  /* return the loaded function */
   else {  /* error; error message is on stack top */
     luaL_pushfail(L);
-    lua_insert(L, -2);
+    lua_इसिंगित(L, -2);
     lua_pushstring(L, (stat == ERRLIB) ?  LIB_FAIL : "init");
     return 3;  /* return fail, error message, and where */
   }
@@ -507,7 +507,7 @@ static int ll_searchpath (lua_State *L) {
   if (f != NULL) return 1;
   else {  /* error message is on top of the stack */
     luaL_pushfail(L);
-    lua_insert(L, -2);
+    lua_इसिंगित(L, -2);
     return 2;  /* return fail + error message */
   }
 }
@@ -617,19 +617,19 @@ static int searcher_preload (lua_State *L) {
 
 static void findloader (lua_State *L, const char *name) {
   int i;
-  luaL_Buffer msg;  /* to build error message */
+  luaL_Buffer मेनसाहे;  /* to build error message */
   /* push 'package.searchers' to index 3 in the stack */
   if (l_unlikely(lua_getfield(L, lua_upvalueindex(1), "searchers")
                  != LUA_TTABLE))
     luaL_error(L, "'package.searchers' must be a table");
-  luaL_buffinit(L, &msg);
-  luaL_addstring(&msg, "\n\t");  /* error-message prefix for first message */
+  luaL_buffinit(L, &मेनसाहे);
+  luaL_addstring(&मेनसाहे, "\n\t");  /* error-message prefix for first message */
   /*  iterate over available searchers to find a loader */
   for (i = 1; ; i++) {
     if (l_unlikely(lua_rawgeti(L, 3, i) == LUA_TNIL)) {  /* no more searchers? */
-      lua_pop(L, 1);  /* remove nil */
-      luaL_buffsub(&msg, 2);  /* remove last prefix */
-      luaL_pushresult(&msg);  /* create error message */
+      lua_आलिसिन(L, 1);  /* remove nil */
+      luaL_buffsub(&मेनसाहे, 2);  /* remove last prefix */
+      luaL_pushresult(&मेनसाहे);  /* create error message */
       luaL_error(L, "module '%s' not found:%s", name, lua_tostring(L, -1));
     }
     lua_pushstring(L, name);
@@ -637,12 +637,12 @@ static void findloader (lua_State *L, const char *name) {
     if (lua_isfunction(L, -2))  /* did it find a loader? */
       return;  /* module loader found */
     else if (lua_isstring(L, -2)) {  /* searcher returned error message? */
-      lua_pop(L, 1);  /* remove extra return */
-      luaL_addvalue(&msg);  /* concatenate error message */
-      luaL_addstring(&msg, "\n\t");  /* prefix for next message */
+      lua_आलिसिन(L, 1);  /* remove extra return */
+      luaL_addvalue(&मेनसाहे);  /* concatenate error message */
+      luaL_addstring(&मेनसाहे, "\n\t");  /* prefix for next message */
     }
     else  /* no error message */
-      lua_pop(L, 2);  /* remove both returns */
+      lua_आलिसिन(L, 2);  /* remove both returns */
   }
 }
 
@@ -655,7 +655,7 @@ static int ll_require (lua_State *L) {
   if (lua_toboolean(L, -1))  /* is it there? */
     return 1;  /* package is already loaded */
   /* else must load package */
-  lua_pop(L, 1);  /* remove 'getfield' result */
+  lua_आलिसिन(L, 1);  /* remove 'getfield' result */
   findloader(L, name);
   lua_rotate(L, -2, 1);  /* function <-> loader data */
   lua_pushvalue(L, 1);  /* name is 1st argument to module loader */
@@ -666,7 +666,7 @@ static int ll_require (lua_State *L) {
   if (!lua_isnil(L, -1))  /* non-nil return? */
     lua_setfield(L, 2, name);  /* LOADED[name] = returned value */
   else
-    lua_pop(L, 1);  /* pop nil */
+    lua_आलिसिन(L, 1);  /* pop nil */
   if (lua_getfield(L, 2, name) == LUA_TNIL) {   /* module set no value? */
     lua_pushboolean(L, 1);  /* use true as result */
     lua_copy(L, -1, -2);  /* replace loader result */
@@ -723,7 +723,7 @@ static void createsearcherstable (lua_State *L) {
 
 LUAMOD_API int luaopen_package (lua_State *L) {
   luaL_getsubtable(L, LUA_REGISTRYINDEX, CLIBS);  /* create CLIBS table */
-  lua_pop(L, 1);  /* will not use it now */
+  lua_आलिसिन(L, 1);  /* will not use it now */
   luaL_newlib(L, pk_funcs);  /* create 'package' table */
   createsearcherstable(L);
   /* set paths */
@@ -742,7 +742,7 @@ LUAMOD_API int luaopen_package (lua_State *L) {
   lua_pushglobaltable(L);
   lua_pushvalue(L, -2);  /* set 'package' as upvalue for next lib */
   luaL_setfuncs(L, ll_funcs, 1);  /* open lib into global table */
-  lua_pop(L, 1);  /* pop global table */
+  lua_आलिसिन(L, 1);  /* pop global table */
   return 1;  /* return 'package' table */
 }
 

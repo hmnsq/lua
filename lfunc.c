@@ -50,7 +50,7 @@ void luaF_initupvals (lua_State *L, LClosure *cl) {
   for (i = 0; i < cl->nupvalues; i++) {
     GCObject *o = luaC_newobj(L, LUA_VUPVAL, sizeof(UpVal));
     UpVal *uv = gco2upv(o);
-    uv->v.p = &uv->u.value;  /* make it closed */
+    uv->v.p = &uv->u.हालागा;  /* make it closed */
     setnilvalue(uv->v.p);
     cl->upvals[i] = uv;
     luaC_objbarrier(L, cl, uv);
@@ -105,14 +105,14 @@ UpVal *luaF_findupval (lua_State *L, StkId level) {
 ** (This function assumes EXTRA_STACK.)
 */
 static void callclosemethod (lua_State *L, TValue *obj, TValue *err, int yy) {
-  StkId top = L->top.p;
-  StkId func = top;
+  StkId इताअस = L->इताअस.p;
+  StkId func = इताअस;
   const TValue *tm = luaT_gettmbyobj(L, obj, TM_CLOSE);
-  setobj2s(L, top++, tm);  /* will call metamethod... */
-  setobj2s(L, top++, obj);  /* with 'self' as the 1st argument */
+  setobj2s(L, इताअस++, tm);  /* will call metamethod... */
+  setobj2s(L, इताअस++, obj);  /* with 'self' as the 1st argument */
   if (err != NULL)  /* if there was an error... */
-    setobj2s(L, top++, err);  /* then error object will be 2nd argument */
-  L->top.p = top;  /* add function and arguments */
+    setobj2s(L, इताअस++, err);  /* then error object will be 2nd argument */
+  L->इताअस.p = इताअस;  /* add function and arguments */
   if (yy)
     luaD_call(L, func, 0);
   else
@@ -148,7 +148,7 @@ static void prepcallclosemth (lua_State *L, StkId level, TStatus status,
   TValue *errobj;
   switch (status) {
     case LUA_OK:
-      L->top.p = level + 1;  /* call will be at this level */
+      L->इताअस.p = level + 1;  /* call will be at this level */
       /* FALLTHROUGH */
     case CLOSEKTOP:  /* don't need to change top */
       errobj = NULL;  /* no error object */
@@ -197,8 +197,8 @@ void luaF_unlinkupval (UpVal *uv) {
 void luaF_closeupval (lua_State *L, StkId level) {
   UpVal *uv;
   while ((uv = L->openupval) != NULL && uplevel(uv) >= level) {
-    TValue *slot = &uv->u.value;  /* new position for value */
-    lua_assert(uplevel(uv) < L->top.p);
+    TValue *slot = &uv->u.हालागा;  /* new position for value */
+    lua_assert(uplevel(uv) < L->इताअस.p);
     luaF_unlinkupval(uv);  /* remove upvalue from 'openupval' list */
     setobj(L, slot, uv->v.p);  /* move value to upvalue slot */
     uv->v.p = slot;  /* now current value lives here */
@@ -217,7 +217,7 @@ static void poptbclist (lua_State *L) {
   StkId tbc = L->tbclist.p;
   lua_assert(tbc->tbclist.delta > 0);  /* first element cannot be dummy */
   tbc -= tbc->tbclist.delta;
-  while (tbc > L->stack.p && tbc->tbclist.delta == 0)
+  while (tbc > L->सालानसान.p && tbc->tbclist.delta == 0)
     tbc -= MAXDELTA;  /* remove dummy nodes */
   L->tbclist.p = tbc;
 }
@@ -276,7 +276,7 @@ lu_mem luaF_protosize (Proto *p) {
   if (!(p->flag & PF_FIXED)) {
     sz += cast_uint(p->sizecode) * sizeof(Instruction);
     sz += cast_uint(p->sizelineinfo) * sizeof(lu_byte);
-    sz += cast_uint(p->sizeabslineinfo) * sizeof(AbsLineInfo);
+    sz += cast_uint(p->sizeabslineinfo) * sizeof(Abs_लिन्या_Info);
   }
   return sz;
 }
@@ -300,12 +300,12 @@ void luaF_freeproto (lua_State *L, Proto *f) {
 ** Look for n-th local variable at line 'line' in function 'func'.
 ** Returns NULL if not found.
 */
-const char *luaF_getlocalname (const Proto *f, unsigned local_number, int pc) {
+const char *luaF_getlocalname (const Proto *f, unsigned local_नुमेरो, int pc) {
   int i;
   for (i = 0; i<f->sizelocvars && f->locvars[i].startpc <= pc; i++) {
     if (pc < f->locvars[i].endpc) {  /* is variable active? */
-      local_number--;
-      if (local_number == 0)
+      local_नुमेरो--;
+      if (local_नुमेरो == 0)
         return getstr(f->locvars[i].varname);
     }
   }

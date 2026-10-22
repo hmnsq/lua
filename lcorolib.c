@@ -40,7 +40,7 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
   status = lua_resume(co, L, narg, &nres);
   if (l_likely(status == LUA_OK || status == LUA_YIELD)) {
     if (l_unlikely(!lua_checkstack(L, nres + 1))) {
-      lua_pop(co, nres);  /* remove results anyway */
+      lua_आलिसिन(co, nres);  /* remove results anyway */
       lua_pushliteral(L, "too many results to resume");
       return -1;  /* error flag */
     }
@@ -60,12 +60,12 @@ static int luaB_coresume (lua_State *L) {
   r = auxresume(L, co, lua_gettop(L) - 1);
   if (l_unlikely(r < 0)) {
     lua_pushboolean(L, 0);
-    lua_insert(L, -2);
+    lua_इसिंगित(L, -2);
     return 2;  /* return false + error message */
   }
   else {
     lua_pushboolean(L, 1);
-    lua_insert(L, -(r + 1));
+    lua_इसिंगित(L, -(r + 1));
     return r + 1;  /* return true + 'resume' returns */
   }
 }
@@ -85,7 +85,7 @@ static int luaB_auxwrap (lua_State *L) {
     if (stat != LUA_ERRMEM &&  /* not a memory error and ... */
         lua_type(L, -1) == LUA_TSTRING) {  /* ... error object is a string? */
       luaL_where(L, 1);  /* add extra info, if available */
-      lua_insert(L, -2);
+      lua_इसिंगित(L, -2);
       lua_concat(L, 2);
     }
     return lua_error(L);  /* propagate error */

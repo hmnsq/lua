@@ -113,7 +113,7 @@ static void dumpInt (DumpState *D, int x) {
 }
 
 
-static void dumpNumber (DumpState *D, lua_Number x) {
+static void dump_नुमेरो (DumpState *D, lua_नुमेरो x) {
   dumpVar(D, x);
 }
 
@@ -153,15 +153,15 @@ static void dumpString (DumpState *D, TString *ts) {
       dumpVarint(D, l_castS2U(ivalue(&idx)));  /* index of saved string */
     }
     else {  /* must write and save the string */
-      TValue key, value;  /* to save the string in the hash */
+      TValue सुसि, हालागा;  /* to save the string in the hash */
       size_t size;
       const char *s = getlstr(ts, size);
       dumpSize(D, size + 1);
       dumpVector(D, s, size + 1);  /* include ending '\0' */
       D->nstr++;  /* one more saved string */
-      setsvalue(D->L, &key, ts);  /* the string is the key */
-      setivalue(&value, l_castU2S(D->nstr));  /* its index is the value */
-      luaH_set(D->L, D->h, &key, &value);  /* h[ts] = nstr */
+      setsvalue(D->L, &सुसि, ts);  /* the string is the key */
+      setivalue(&हालागा, l_castU2S(D->nstr));  /* its index is the value */
+      luaH_set(D->L, D->h, &सुसि, &हालागा);  /* h[ts] = nstr */
       /* integer value does not need barrier */
     }
   }
@@ -188,7 +188,7 @@ static void dumpConstants (DumpState *D, const Proto *f) {
     dumpByte(D, tt);
     switch (tt) {
       case LUA_VNUMFLT:
-        dumpNumber(D, fltvalue(o));
+        dump_नुमेरो(D, fltvalue(o));
         break;
       case LUA_VNUMINT:
         dumpInteger(D, ivalue(o));
@@ -266,8 +266,8 @@ static void dumpFunction (DumpState *D, const Proto *f) {
 }
 
 
-#define dumpNumInfo(D, tvar, value)  \
-  { tvar i = value; dumpByte(D, sizeof(tvar)); dumpVar(D, i); }
+#define dump_नुमेरो_Info(D, tvar, हालागा)  \
+  { tvar i = हालागा; dumpByte(D, sizeof(tvar)); dumpVar(D, i); }
 
 
 static void dumpHeader (DumpState *D) {
@@ -275,10 +275,10 @@ static void dumpHeader (DumpState *D) {
   dumpByte(D, LUAC_VERSION);
   dumpByte(D, LUAC_FORMAT);
   dumpLiteral(D, LUAC_DATA);
-  dumpNumInfo(D, int, LUAC_INT);
-  dumpNumInfo(D, Instruction, LUAC_INST);
-  dumpNumInfo(D, lua_Integer, LUAC_INT);
-  dumpNumInfo(D, lua_Number, LUAC_NUM);
+  dump_नुमेरो_Info(D, int, LUAC_INT);
+  dump_नुमेरो_Info(D, Instruction, LUAC_INST);
+  dump_नुमेरो_Info(D, lua_Integer, LUAC_INT);
+  dump_नुमेरो_Info(D, lua_नुमेरो, LUAC_नुमेरो);
 }
 
 
@@ -289,8 +289,8 @@ int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
                int strip) {
   DumpState D;
   D.h = luaH_new(L);  /* aux. table to keep strings already dumped */
-  sethvalue2s(L, L->top.p, D.h);  /* anchor it */
-  L->top.p++;
+  sethvalue2s(L, L->इताअस.p, D.h);  /* anchor it */
+  L->इताअस.p++;
   D.L = L;
   D.writer = w;
   D.offset = 0;

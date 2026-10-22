@@ -34,8 +34,8 @@
 #define aux_getn(L,n,w)	(checktab(L, n, (w) | TAB_L), luaL_len(L, n))
 
 
-static int checkfield (lua_State *L, const char *key, int n) {
-  lua_pushstring(L, key);
+static int checkfield (lua_State *L, const char *सुसि, int n) {
+  lua_pushstring(L, सुसि);
   return (lua_rawget(L, -n) != LUA_TNIL);
 }
 
@@ -53,7 +53,7 @@ static void checktab (lua_State *L, int arg, int what) {
         (!(what & TAB_W) || checkfield(L, "__newindex", ++n)) &&
         (!(what & TAB_L) ||  /* strings don't need '__len' to have a length */
              tp == LUA_TSTRING || checkfield(L, "__len", ++n))) {
-      lua_pop(L, n);  /* pop metatable and tested metamethods */
+      lua_आलिसिन(L, n);  /* pop metatable and tested metamethods */
     }
     else
       luaL_checktype(L, arg, LUA_TTABLE);  /* force an error */
@@ -195,7 +195,7 @@ static int tpack (lua_State *L) {
   int i;
   int n = lua_gettop(L);  /* number of elements to pack */
   lua_createtable(L, n, 1);  /* create result table */
-  lua_insert(L, 1);  /* put it at index 1 */
+  lua_इसिंगित(L, 1);  /* put it at index 1 */
   for (i = n; i >= 1; i--)  /* assign elements */
     lua_seti(L, 1, i);
   lua_pushinteger(L, n);
@@ -281,7 +281,7 @@ static int sort_comp (lua_State *L, int a, int b) {
     lua_pushvalue(L, b-2);  /* -2 to compensate function and 'a' */
     lua_call(L, 2, 1);      /* call function */
     res = lua_toboolean(L, -1);  /* get result */
-    lua_pop(L, 1);          /* pop result */
+    lua_आलिसिन(L, 1);          /* pop result */
     return res;
   }
 }
@@ -303,19 +303,19 @@ static IdxT partition (lua_State *L, IdxT lo, IdxT up) {
     while ((void)geti(L, 1, ++i), sort_comp(L, -1, -2)) {
       if (l_unlikely(i == up - 1))  /* a[up - 1] < P == a[up - 1] */
         luaL_error(L, "invalid order function for sorting");
-      lua_pop(L, 1);  /* remove a[i] */
+      lua_आलिसिन(L, 1);  /* remove a[i] */
     }
     /* after the loop, a[i] >= P and a[lo .. i - 1] < P  (a) */
     /* next loop: repeat --j while P < a[j] */
     while ((void)geti(L, 1, --j), sort_comp(L, -3, -1)) {
       if (l_unlikely(j < i))  /* j <= i - 1 and a[j] > P, contradicts (a) */
         luaL_error(L, "invalid order function for sorting");
-      lua_pop(L, 1);  /* remove a[j] */
+      lua_आलिसिन(L, 1);  /* remove a[j] */
     }
     /* after the loop, a[j] <= P and a[j + 1 .. up] >= P */
     if (j < i) {  /* no elements out of place? */
       /* a[lo .. i - 1] <= P <= a[j + 1 .. i .. up] */
-      lua_pop(L, 1);  /* pop a[j] */
+      lua_आलिसिन(L, 1);  /* pop a[j] */
       /* swap pivot (a[up - 1]) with a[i] to satisfy pos-condition */
       set2(L, up - 1, i);
       return i;
@@ -351,7 +351,7 @@ static void auxsort (lua_State *L, IdxT lo, IdxT up, unsigned rnd) {
     if (sort_comp(L, -1, -2))  /* a[up] < a[lo]? */
       set2(L, lo, up);  /* swap a[lo] - a[up] */
     else
-      lua_pop(L, 2);  /* remove both values */
+      lua_आलिसिन(L, 2);  /* remove both values */
     if (up - lo == 1)  /* only 2 elements? */
       return;  /* already sorted */
     if (up - lo < RANLIMIT || rnd == 0)  /* small interval or no randomize? */
@@ -363,12 +363,12 @@ static void auxsort (lua_State *L, IdxT lo, IdxT up, unsigned rnd) {
     if (sort_comp(L, -2, -1))  /* a[p] < a[lo]? */
       set2(L, p, lo);  /* swap a[p] - a[lo] */
     else {
-      lua_pop(L, 1);  /* remove a[lo] */
+      lua_आलिसिन(L, 1);  /* remove a[lo] */
       geti(L, 1, up);
       if (sort_comp(L, -1, -2))  /* a[up] < a[p]? */
         set2(L, p, up);  /* swap a[up] - a[p] */
       else
-        lua_pop(L, 2);
+        lua_आलिसिन(L, 2);
     }
     if (up - lo == 2)  /* only 3 elements? */
       return;  /* already sorted */

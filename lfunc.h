@@ -29,7 +29,7 @@
 #define MAXUPVAL	255
 
 
-#define upisopen(up)	((up)->v.p != &(up)->u.value)
+#define upisopen(up)	((up)->v.p != &(up)->u.हालागा)
 
 
 #define uplevel(up)	check_exp(upisopen(up), cast(StkId, (up)->v.p))
@@ -59,7 +59,7 @@ LUAI_FUNC void luaF_unlinkupval (UpVal *uv);
 LUAI_FUNC lu_mem luaF_protosize (Proto *p);
 LUAI_FUNC void luaF_freeproto (lua_State *L, Proto *f);
 LUAI_FUNC const char *luaF_getlocalname (const Proto *func,
-                                         unsigned local_number, int pc);
+                                         unsigned local_नुमेरो, int pc);
 
 
 #endif

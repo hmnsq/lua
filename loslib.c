@@ -62,8 +62,8 @@
 
 #else				/* }{ */
 
-#define l_timet			lua_Number
-#define l_pushtime(L,t)		lua_pushnumber(L,(lua_Number)(t))
+#define l_timet			lua_नुमेरो
+#define l_pushtime(L,t)		lua_pushnumber(L,(lua_नुमेरो)(t))
 #define l_gettime(L,arg)	luaL_checknumber(L, arg)
 
 #endif				/* } */
@@ -187,7 +187,7 @@ static int os_getenv (lua_State *L) {
 
 
 static int os_clock (lua_State *L) {
-  lua_pushnumber(L, ((lua_Number)clock())/(lua_Number)CLOCKS_PER_SEC);
+  lua_pushnumber(L, ((lua_नुमेरो)clock())/(lua_नुमेरो)CLOCKS_PER_SEC);
   return 1;
 }
 
@@ -209,21 +209,21 @@ static int os_clock (lua_State *L) {
 ** time 0x1.e1853b0d184f6p+55 would cause an overflow when adding 1900
 ** to compute the year.
 */
-static void setfield (lua_State *L, const char *key, int value, int delta) {
+static void setfield (lua_State *L, const char *सुसि, int हालागा, int delta) {
   #if (defined(LUA_NUMTIME) && LUA_MAXINTEGER <= INT_MAX)
-    if (l_unlikely(value > LUA_MAXINTEGER - delta))
-      luaL_error(L, "field '%s' is out-of-bound", key);
+    if (l_unlikely(हालागा > LUA_MAXINTEGER - delta))
+      luaL_error(L, "field '%s' is out-of-bound", सुसि);
   #endif
-  lua_pushinteger(L, (lua_Integer)value + delta);
-  lua_setfield(L, -2, key);
+  lua_pushinteger(L, (lua_Integer)हालागा + delta);
+  lua_setfield(L, -2, सुसि);
 }
 
 
-static void setboolfield (lua_State *L, const char *key, int value) {
-  if (value < 0)  /* undefined? */
+static void setboolfield (lua_State *L, const char *सुसि, int हालागा) {
+  if (हालागा < 0)  /* undefined? */
     return;  /* does not set field */
-  lua_pushboolean(L, value);
-  lua_setfield(L, -2, key);
+  lua_pushboolean(L, हालागा);
+  lua_setfield(L, -2, सुसि);
 }
 
 
@@ -243,31 +243,31 @@ static void setallfields (lua_State *L, struct tm *stm) {
 }
 
 
-static int getboolfield (lua_State *L, const char *key) {
+static int getboolfield (lua_State *L, const char *सुसि) {
   int res;
-  res = (lua_getfield(L, -1, key) == LUA_TNIL) ? -1 : lua_toboolean(L, -1);
-  lua_pop(L, 1);
+  res = (lua_getfield(L, -1, सुसि) == LUA_TNIL) ? -1 : lua_toboolean(L, -1);
+  lua_आलिसिन(L, 1);
   return res;
 }
 
 
-static int getfield (lua_State *L, const char *key, int d, int delta) {
+static int getfield (lua_State *L, const char *सुसि, int d, int delta) {
   int isnum;
-  int t = lua_getfield(L, -1, key);  /* get field and its type */
+  int t = lua_getfield(L, -1, सुसि);  /* get field and its type */
   lua_Integer res = lua_tointegerx(L, -1, &isnum);
   if (!isnum) {  /* field is not an integer? */
     if (l_unlikely(t != LUA_TNIL))  /* some other value? */
-      return luaL_error(L, "field '%s' is not an integer", key);
+      return luaL_error(L, "field '%s' is not an integer", सुसि);
     else if (l_unlikely(d < 0))  /* absent field; no default? */
-      return luaL_error(L, "field '%s' missing in date table", key);
+      return luaL_error(L, "field '%s' missing in date table", सुसि);
     res = d;
   }
   else {
     if (!(res >= 0 ? res - delta <= INT_MAX : INT_MIN + delta <= res))
-      return luaL_error(L, "field '%s' is out-of-bound", key);
+      return luaL_error(L, "field '%s' is out-of-bound", सुसि);
     res -= delta;
   }
-  lua_pop(L, 1);
+  lua_आलिसिन(L, 1);
   return (int)res;
 }
 
@@ -383,7 +383,7 @@ static int os_time (lua_State *L) {
 static int os_difftime (lua_State *L) {
   time_t t1 = l_checktime(L, 1);
   time_t t2 = l_checktime(L, 2);
-  lua_pushnumber(L, (lua_Number)difftime(t1, t2));
+  lua_pushnumber(L, (lua_नुमेरो)difftime(t1, t2));
   return 1;
 }
 

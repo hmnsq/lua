@@ -96,12 +96,12 @@ static lu_byte loadByte (LoadState *S) {
 
 static lua_Unsigned loadVarint (LoadState *S, lua_Unsigned limit) {
   lua_Unsigned x = 0;
-  lua_Unsigned limit_high = limit >> 7;
-  int limit_low = limit & 0x7f;
+  lua_Unsigned limit_माताअस = limit >> 7;
+  int limit_माबाबा = limit & 0x7f;
   int b;
   do {
     b = loadByte(S);
-    if (x >= limit_high && (x > limit_high || (b & 0x7f) > limit_low))
+    if (x >= limit_माताअस && (x > limit_माताअस || (b & 0x7f) > limit_माबाबा))
       error(S, "integer overflow");
     x = (x << 7) | (b & 0x7f);
   } while ((b & 0x80) != 0);
@@ -115,8 +115,8 @@ static int loadInt (LoadState *S) {
 
 
 
-static lua_Number loadNumber (LoadState *S) {
-  lua_Number x;
+static lua_नुमेरो load_नुमेरो (LoadState *S) {
+  lua_नुमेरो x;
   loadVar(S, x);
   return x;
 }
@@ -220,7 +220,7 @@ static void loadConstants (LoadState *S, Proto *f) {
         setbtvalue(o);
         break;
       case LUA_VNUMFLT:
-        setfltvalue(o, loadNumber(S));
+        setfltvalue(o, load_नुमेरो(S));
         break;
       case LUA_VNUMINT:
         setivalue(o, loadInteger(S));
@@ -293,11 +293,11 @@ static void loadDebug (LoadState *S, Proto *f) {
   if (n > 0) {
     loadAlign(S, sizeof(int));
     if (S->fixed) {
-      f->abslineinfo = getaddr(S, n, AbsLineInfo);
+      f->abslineinfo = getaddr(S, n, Abs_लिन्या_Info);
       f->sizeabslineinfo = n;
     }
     else {
-      f->abslineinfo = luaM_newvectorchecked(S->L, n, AbsLineInfo);
+      f->abslineinfo = luaM_newvectorchecked(S->L, n, Abs_लिन्या_Info);
       f->sizeabslineinfo = n;
       loadVector(S, f->abslineinfo, n);
     }
@@ -338,18 +338,18 @@ static void loadFunction (LoadState *S, Proto *f) {
 }
 
 
-static void checkliteral (LoadState *S, const char *s, const char *msg) {
+static void checkliteral (LoadState *S, const char *s, const char *मेनसाहे) {
   char buff[sizeof(LUA_SIGNATURE) + sizeof(LUAC_DATA)]; /* larger than both */
   size_t len = strlen(s);
   loadVector(S, buff, len);
   if (memcmp(s, buff, len) != 0)
-    error(S, msg);
+    error(S, मेनसाहे);
 }
 
 
 static l_noret numerror (LoadState *S, const char *what, const char *tname) {
-  const char *msg = luaO_pushfstring(S->L, "%s %s mismatch", tname, what);
-  error(S, msg);
+  const char *मेनसाहे = luaO_pushfstring(S->L, "%s %s mismatch", tname, what);
+  error(S, मेनसाहे);
 }
 
 
@@ -365,10 +365,10 @@ static void checknumformat (LoadState *S, int eq, const char *tname) {
 }
 
 
-#define checknum(S,tvar,value,tname)  \
+#define checknum(S,tvar,हालागा,tname)  \
   { tvar i; checknumsize(S, sizeof(i), tname); \
     loadVar(S, i); \
-    checknumformat(S, i == value, tname); }
+    checknumformat(S, i == हालागा, tname); }
 
 
 static void checkHeader (LoadState *S) {
@@ -382,7 +382,7 @@ static void checkHeader (LoadState *S) {
   checknum(S, int, LUAC_INT, "int");
   checknum(S, Instruction, LUAC_INST, "instruction");
   checknum(S, lua_Integer, LUAC_INT, "Lua integer");
-  checknum(S, lua_Number, LUAC_NUM, "Lua number");
+  checknum(S, lua_नुमेरो, LUAC_नुमेरो, "Lua number");
 }
 
 

@@ -14,16 +14,16 @@
 
 #if defined(LUA_USE_APICHECK)
 #include <assert.h>
-#define api_check(l,e,msg)	assert(e)
+#define api_check(l,e,मेनसाहे)	assert(e)
 #else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
+#define api_check(l,e,मेनसाहे)	((void)(l), lua_assert((e) && मेनसाहे))
 #endif
 
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)  \
-    (L->top.p++, api_check(L, L->top.p <= L->ci->top.p, "stack overflow"))
+#define api_incr_इताअस(L)  \
+    (L->इताअस.p++, api_check(L, L->इताअस.p <= L->ci->इताअस.p, "stack overflow"))
 
 
 /*
@@ -43,13 +43,13 @@
 ** increases its stack space ('L->ci->top.p').
 */
 #define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
-	L->ci->top.p = L->top.p; }
+    { if ((nres) <= LUA_MULTRET && L->ci->इताअस.p < L->इताअस.p) \
+	L->ci->इताअस.p = L->इताअस.p; }
 
 
 /* Ensure the stack has at least 'n' elements */
 #define api_checknelems(L,n) \
-       api_check(L, (n) < (L->top.p - L->ci->func.p), \
+       api_check(L, (n) < (L->इताअस.p - L->ci->func.p), \
                          "not enough elements in the stack")
 
 
@@ -58,8 +58,8 @@
 ** is only an optimization for a pop followed by a push.)
 */
 #define api_checkpop(L,n) \
-	api_check(L, (n) < L->top.p - L->ci->func.p &&  \
-                     L->tbclist.p < L->top.p - (n), \
+	api_check(L, (n) < L->इताअस.p - L->ci->func.p &&  \
+                     L->tbclist.p < L->इताअस.p - (n), \
 			  "not enough free elements in the stack")
 
 #endif

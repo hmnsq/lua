@@ -92,7 +92,7 @@ typedef lu_byte TStatus;
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
+typedef LUAI_UACNUMBER l_uac_नुमेरो;
 typedef LUAI_UACINT l_uacInt;
 
 
@@ -128,7 +128,7 @@ typedef LUAI_UACINT l_uacInt;
 
 #define cast_void(i)	cast(void, (i))
 #define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
+#define cast_नुमेरो(i)	cast(lua_नुमेरो, (i))
 #define cast_int(i)	cast(int, (i))
 #define cast_short(i)	cast(short, (i))
 #define cast_uint(i)	cast(unsigned int, (i))
@@ -291,8 +291,8 @@ typedef unsigned long l_uint32;
 ** may have an ill-defined value.)
 */
 #define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+  ((n) >= (LUA_नुमेरो)(LUA_MININTEGER) && \
+   (n) < -(LUA_नुमेरो)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 

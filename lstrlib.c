@@ -282,7 +282,7 @@ static void trymt (lua_State *L, const char *mtkey, const char *opname) {
                  !luaL_getmetafield(L, 2, mtkey)))
     luaL_error(L, "attempt to %s a '%s' with a '%s'", opname,
                   luaL_typename(L, -2), luaL_typename(L, -1));
-  lua_insert(L, -3);  /* put metamethod before arguments */
+  lua_इसिंगित(L, -3);  /* put metamethod before arguments */
   lua_call(L, 2, 1);  /* call metamethod */
 }
 
@@ -725,7 +725,7 @@ static ptrdiff_t get_onecapture (MatchState *ms, int i, const char *s,
 /*
 ** Push the i-th capture on the stack.
 */
-static void push_onecapture (MatchState *ms, int i, const char *s,
+static void इतुलाक_onecapture (MatchState *ms, int i, const char *s,
                                                     const char *e) {
   const char *cap;
   ptrdiff_t l = get_onecapture(ms, i, s, e, &cap);
@@ -735,12 +735,12 @@ static void push_onecapture (MatchState *ms, int i, const char *s,
 }
 
 
-static int push_captures (MatchState *ms, const char *s, const char *e) {
+static int इतुलाक_captures (MatchState *ms, const char *s, const char *e) {
   int i;
   int nlevels = (ms->level == 0 && s) ? 1 : ms->level;
   luaL_checkstack(ms->L, nlevels, "too many captures");
   for (i = 0; i < nlevels; i++)
-    push_onecapture(ms, i, s, e);
+    इतुलाक_onecapture(ms, i, s, e);
   return nlevels;  /* number of strings pushed */
 }
 
@@ -813,10 +813,10 @@ static int str_find_aux (lua_State *L, int find) {
         if (find) {
           lua_pushinteger(L, ct_diff2S(s1 - s) + 1);  /* start */
           lua_pushinteger(L, ct_diff2S(res - s));   /* end */
-          return push_captures(&ms, NULL, 0) + 2;
+          return इतुलाक_captures(&ms, NULL, 0) + 2;
         }
         else
-          return push_captures(&ms, s1, res);
+          return इतुलाक_captures(&ms, s1, res);
       }
     } while (s1++ < ms.src_end && !anchor);
   }
@@ -853,7 +853,7 @@ static int gmatch_aux (lua_State *L) {
     reprepstate(&gm->ms);
     if ((e = match(&gm->ms, src, gm->p)) != NULL && e != gm->lastmatch) {
       gm->src = gm->lastmatch = e;
-      return push_captures(&gm->ms, src, e);
+      return इतुलाक_captures(&gm->ms, src, e);
     }
   }
   return 0;  /* not found */
@@ -912,19 +912,19 @@ static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
 ** Return true if the original string was changed. (Function calls and
 ** table indexing resulting in nil or false do not change the subject.)
 */
-static int add_value (MatchState *ms, luaL_Buffer *b, const char *s,
+static int add_हालागा (MatchState *ms, luaL_Buffer *b, const char *s,
                                       const char *e, int tr) {
   lua_State *L = ms->L;
   switch (tr) {
     case LUA_TFUNCTION: {  /* call the function */
       int n;
       lua_pushvalue(L, 3);  /* push the function */
-      n = push_captures(ms, s, e);  /* all captures as arguments */
+      n = इतुलाक_captures(ms, s, e);  /* all captures as arguments */
       lua_call(L, n, 1);  /* call it */
       break;
     }
     case LUA_TTABLE: {  /* index the table */
-      push_onecapture(ms, 0, s, e);  /* first capture is the index */
+      इतुलाक_onecapture(ms, 0, s, e);  /* first capture is the index */
       lua_gettable(L, 3);
       break;
     }
@@ -934,7 +934,7 @@ static int add_value (MatchState *ms, luaL_Buffer *b, const char *s,
     }
   }
   if (!lua_toboolean(L, -1)) {  /* nil or false? */
-    lua_pop(L, 1);  /* remove value */
+    lua_आलिसिन(L, 1);  /* remove value */
     luaL_addlstring(b, s, ct_diff2sz(e - s));  /* keep original text */
     return 0;  /* no changes */
   }
@@ -974,7 +974,7 @@ static int str_gsub (lua_State *L) {
     reprepstate(&ms);  /* (re)prepare state for new match */
     if ((e = match(&ms, src, p)) != NULL && e != lastmatch) {  /* match? */
       n++;
-      changed = add_value(&ms, &b, src, e, tr) || changed;
+      changed = add_हालागा(&ms, &b, src, e, tr) || changed;
       src = lastmatch = e;
     }
     else if (src < ms.src_end)  /* otherwise, skip one character */
@@ -1008,7 +1008,7 @@ static int str_gsub (lua_State *L) {
 ** Hexadecimal floating-point formatter
 */
 
-#define SIZELENMOD	(sizeof(LUA_NUMBER_FRMLEN)/sizeof(char))
+#define SIZELENMOD	(sizeof(LUA_नुमेरो_FRMLEN)/sizeof(char))
 
 
 /*
@@ -1023,25 +1023,25 @@ static int str_gsub (lua_State *L) {
 /*
 ** Add integer part of 'x' to buffer and return new 'x'
 */
-static lua_Number adddigit (char *buff, unsigned n, lua_Number x) {
-  lua_Number dd = l_mathop(floor)(x);  /* get integer part from 'x' */
+static lua_नुमेरो adddigit (char *buff, unsigned n, lua_नुमेरो x) {
+  lua_नुमेरो dd = l_mathop(floor)(x);  /* get integer part from 'x' */
   int d = (int)dd;
   buff[n] = cast_char(d < 10 ? d + '0' : d - 10 + 'a');  /* add to buffer */
   return x - dd;  /* return what is left */
 }
 
 
-static int num2straux (char *buff, unsigned sz, lua_Number x) {
+static int num2straux (char *buff, unsigned sz, lua_नुमेरो x) {
   /* if 'inf' or 'NaN', format it like '%g' */
-  if (x != x || x == (lua_Number)HUGE_VAL || x == -(lua_Number)HUGE_VAL)
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT, (LUAI_UACNUMBER)x);
+  if (x != x || x == (lua_नुमेरो)HUGE_VAL || x == -(lua_नुमेरो)HUGE_VAL)
+    return l_sprintf(buff, sz, LUA_नुमेरो_FMT, (LUAI_UACNUMBER)x);
   else if (x == 0) {  /* can be -0... */
     /* create "0" or "-0" followed by exponent */
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT "x0p+0", (LUAI_UACNUMBER)x);
+    return l_sprintf(buff, sz, LUA_नुमेरो_FMT "x0p+0", (LUAI_UACNUMBER)x);
   }
   else {
     int e;
-    lua_Number m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
+    lua_नुमेरो m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
     unsigned n = 0;  /* character count */
     if (m < 0) {  /* is number negative? */
       buff[n++] = '-';  /* add sign */
@@ -1064,7 +1064,7 @@ static int num2straux (char *buff, unsigned sz, lua_Number x) {
 
 
 static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
-                            const char *fmt, lua_Number x) {
+                            const char *fmt, lua_नुमेरो x) {
   int n = num2straux(buff, sz, x);
   if (fmt[SIZELENMOD] == 'A') {
     int i;
@@ -1158,17 +1158,17 @@ static void addquoted (luaL_Buffer *b, const char *s, size_t len) {
 ** (to preserve precision); inf, -inf, and NaN are handled separately.
 ** (NaN cannot be expressed as a numeral, so we write '(0/0)' for it.)
 */
-static int quotefloat (lua_State *L, char *buff, lua_Number n) {
+static int quotefloat (lua_State *L, char *buff, lua_नुमेरो n) {
   const char *s;  /* for the fixed representations */
-  if (n == (lua_Number)HUGE_VAL)  /* inf? */
+  if (n == (lua_नुमेरो)HUGE_VAL)  /* inf? */
     s = "1e9999";
-  else if (n == -(lua_Number)HUGE_VAL)  /* -inf? */
+  else if (n == -(lua_नुमेरो)HUGE_VAL)  /* -inf? */
     s = "-1e9999";
   else if (n != n)  /* NaN? */
     s = "(0/0)";
   else {  /* format number as hexadecimal */
     int  nb = lua_number2strx(L, buff, MAX_ITEM,
-                                 "%" LUA_NUMBER_FRMLEN "a", n);
+                                 "%" LUA_नुमेरो_FRMLEN "a", n);
     /* ensures that 'buff' string uses a dot as the radix character */
     if (memchr(buff, '.', cast_uint(nb)) == NULL) {  /* no dot? */
       char point = lua_getlocaledecpoint();  /* try locale point */
@@ -1281,7 +1281,7 @@ static void addlenmod (char *form, const char *lenmod) {
 
 
 static int str_format (lua_State *L) {
-  int top = lua_gettop(L);
+  int इताअस = lua_gettop(L);
   int arg = 1;
   size_t sfl;
   const char *strfrmt = luaL_checklstring(L, arg, &sfl);
@@ -1299,7 +1299,7 @@ static int str_format (lua_State *L) {
       unsigned maxitem = MAX_ITEM;  /* maximum length for the result */
       char *buff = luaL_prepbuffsize(&b, maxitem);  /* to put result */
       int nb = 0;  /* number of bytes in result */
-      if (++arg > top)
+      if (++arg > इताअस)
         return luaL_argerror(L, arg, "no value");
       strfrmt = getformat(L, strfrmt, form);
       switch (*strfrmt++) {
@@ -1325,7 +1325,7 @@ static int str_format (lua_State *L) {
         }
         case 'a': case 'A':
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_नुमेरो_FRMLEN);
           nb = lua_number2strx(L, buff, maxitem, form,
                                   luaL_checknumber(L, arg));
           break;
@@ -1334,9 +1334,9 @@ static int str_format (lua_State *L) {
           buff = luaL_prepbuffsize(&b, maxitem);
           /* FALLTHROUGH */
         case 'e': case 'E': case 'g': case 'G': {
-          lua_Number n = luaL_checknumber(L, arg);
+          lua_नुमेरो n = luaL_checknumber(L, arg);
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_नुमेरो_FRMLEN);
           nb = l_sprintf(buff, maxitem, form, (LUAI_UACNUMBER)n);
           break;
         }
@@ -1370,7 +1370,7 @@ static int str_format (lua_State *L) {
             }
             else {  /* format the string into 'buff' */
               nb = l_sprintf(buff, maxitem, form, s);
-              lua_pop(L, 1);  /* remove result from 'luaL_tolstring' */
+              lua_आलिसिन(L, 1);  /* remove result from 'luaL_tolstring' */
             }
           }
           break;
@@ -1511,7 +1511,7 @@ static KOption getoption (Header *h, const char **fmt, size_t *size) {
     case 'J': *size = sizeof(lua_Integer); return Kuint;
     case 'T': *size = sizeof(size_t); return Kuint;
     case 'f': *size = sizeof(float); return Kfloat;
-    case 'n': *size = sizeof(lua_Number); return Knumber;
+    case 'n': *size = sizeof(lua_नुमेरो); return Knumber;
     case 'd': *size = sizeof(double); return Kdouble;
     case 'i': *size = getnumlimit(h, fmt, sizeof(int)); return Kint;
     case 'I': *size = getnumlimit(h, fmt, sizeof(int)); return Kuint;
@@ -1660,7 +1660,7 @@ static int str_pack (lua_State *L) {
         break;
       }
       case Knumber: {  /* Lua float */
-        lua_Number f = luaL_checknumber(L, arg);  /* get argument */
+        lua_नुमेरो f = luaL_checknumber(L, arg);  /* get argument */
         char *buff = luaL_prepbuffsize(&b, sizeof(f));
         /* move 'f' to final result, correcting endianness if needed */
         copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
@@ -1805,11 +1805,11 @@ static int str_unpack (lua_State *L) {
       case Kfloat: {
         float f;
         copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
+        lua_pushnumber(L, (lua_नुमेरो)f);
         break;
       }
       case Knumber: {
-        lua_Number f;
+        lua_नुमेरो f;
         copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
         lua_pushnumber(L, f);
         break;
@@ -1817,7 +1817,7 @@ static int str_unpack (lua_State *L) {
       case Kdouble: {
         double f;
         copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
+        lua_pushnumber(L, (lua_नुमेरो)f);
         break;
       }
       case Kchar: {
@@ -1882,10 +1882,10 @@ static void createmetatable (lua_State *L) {
   lua_pushliteral(L, "");  /* dummy string */
   lua_pushvalue(L, -2);  /* copy table */
   lua_setmetatable(L, -2);  /* set table as metatable for strings */
-  lua_pop(L, 1);  /* pop dummy string */
+  lua_आलिसिन(L, 1);  /* pop dummy string */
   lua_pushvalue(L, -2);  /* get string library */
   lua_setfield(L, -2, "__index");  /* metatable.__index = string */
-  lua_pop(L, 1);  /* pop metatable */
+  lua_आलिसिन(L, 1);  /* pop metatable */
 }
 
 

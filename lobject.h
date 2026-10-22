@@ -46,15 +46,15 @@
 /*
 ** Union of all Lua values
 */
-typedef union Value {
+typedef union हालागा_2 {
   struct GCObject *gc;    /* collectable objects */
   void *p;         /* light userdata */
   lua_CFunction f; /* light C functions */
   lua_Integer i;   /* integer numbers */
-  lua_Number n;    /* float numbers */
+  lua_नुमेरो n;    /* float numbers */
   /* not used, but may avoid warnings for uninitialized value */
   lu_byte ub;
-} Value;
+} हालागा_2;
 
 
 /*
@@ -62,14 +62,14 @@ typedef union Value {
 ** an actual value plus a tag with its type.
 */
 
-#define TValuefields	Value value_; lu_byte tt_
+#define TValuefields	हालागा_2 हालागा_3; lu_byte tt_
 
 typedef struct TValue {
   TValuefields;
 } TValue;
 
 
-#define val_(o)		((o)->value_)
+#define val_(o)		((o)->हालागा_3)
 #define valraw(o)	(val_(o))
 
 
@@ -117,7 +117,7 @@ typedef struct TValue {
 /* main macro to copy values (from 'obj2' to 'obj1') */
 #define setobj(L,obj1,obj2) \
 	{ TValue *io1=(obj1); const TValue *io2=(obj2); \
-          io1->value_ = io2->value_; settt_(io1, io2->tt_); \
+          io1->हालागा_3 = io2->हालागा_3; settt_(io1, io2->tt_); \
 	  checkliveness(L,io1); lua_assert(!isnonstrictnil(io1)); }
 
 /*
@@ -145,17 +145,17 @@ typedef struct TValue {
 ** their real delta is always the maximum value that fits in
 ** that field.
 */
-typedef union StackValue {
+typedef union सालानसान_हालागा {
   TValue val;
   struct {
     TValuefields;
     unsigned short delta;
   } tbclist;
-} StackValue;
+} सालानसान_हालागा;
 
 
 /* index to stack elements */
-typedef StackValue *StkId;
+typedef सालानसान_हालागा *StkId;
 
 
 /*
@@ -342,7 +342,7 @@ typedef struct GCObject {
 #define ttisinteger(o)		checktag((o), LUA_VNUMINT)
 
 #define nvalue(o)	check_exp(ttisnumber(o), \
-	(ttisinteger(o) ? cast_num(ivalue(o)) : fltvalue(o)))
+	(ttisinteger(o) ? cast_नुमेरो(ivalue(o)) : fltvalue(o)))
 #define fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
 #define ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
 
@@ -575,10 +575,10 @@ typedef struct LocVar {
 ** absolute-line array, but we must traverse the 'lineinfo' array
 ** linearly to compute a line.)
 */
-typedef struct AbsLineInfo {
+typedef struct Abs_लिन्या_Info {
   int pc;
-  int line;
-} AbsLineInfo;
+  int लिन्या;
+} Abs_लिन्या_Info;
 
 
 /*
@@ -619,7 +619,7 @@ typedef struct Proto {
   struct Proto **p;  /* functions defined inside the function */
   Upvaldesc *upvalues;  /* upvalue information */
   ls_byte *lineinfo;  /* information about source lines (debug information) */
-  AbsLineInfo *abslineinfo;  /* idem */
+  Abs_लिन्या_Info *abslineinfo;  /* idem */
   LocVar *locvars;  /* information about local variables (debug information) */
   TString  *source;  /* used for debug information */
   GCObject *gclist;
@@ -688,7 +688,7 @@ typedef struct UpVal {
       struct UpVal *next;  /* linked list */
       struct UpVal **previous;
     } open;
-    TValue value;  /* the value (when closed) */
+    TValue हालागा;  /* the value (when closed) */
   } u;
 } UpVal;
 
@@ -749,27 +749,27 @@ typedef union Closure {
 ** 'TValue' allows for a smaller size for 'Node' both in 4-byte
 ** and 8-byte alignments.
 */
-typedef union Node {
-  struct NodeKey {
+typedef union बुहोल_2 {
+  struct बुहोल_सुसि {
     TValuefields;  /* fields for value */
-    lu_byte key_tt;  /* key type */
+    lu_byte सुसि_tt;  /* key type */
     int next;  /* for chaining */
-    Value key_val;  /* key value */
+    हालागा_2 सुसि_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
-} Node;
+} बुहोल_2;
 
 
 /* copy a value into a key */
-#define setnodekey(node,obj) \
-	{ Node *n_=(node); const TValue *io_=(obj); \
-	  n_->u.key_val = io_->value_; n_->u.key_tt = io_->tt_; }
+#define setnodekey(बुहोल,obj) \
+	{ बुहोल_2 *n_=(बुहोल); const TValue *io_=(obj); \
+	  n_->u.सुसि_val = io_->हालागा_3; n_->u.सुसि_tt = io_->tt_; }
 
 
 /* copy a value from a key */
-#define getnodekey(L,obj,node) \
-	{ TValue *io_=(obj); const Node *n_=(node); \
-	  io_->value_ = n_->u.key_val; io_->tt_ = n_->u.key_tt; \
+#define getnodekey(L,obj,बुहोल) \
+	{ TValue *io_=(obj); const बुहोल_2 *n_=(बुहोल); \
+	  io_->हालागा_3 = n_->u.सुसि_val; io_->tt_ = n_->u.सुसि_tt; \
 	  checkliveness(L,io_); }
 
 
@@ -779,8 +779,8 @@ typedef struct Table {
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
   unsigned int asize;  /* number of slots in 'array' array */
-  Value *array;  /* array part */
-  Node *node;
+  हालागा_2 *array;  /* array part */
+  बुहोल_2 *बुहोल;
   struct Table *metatable;
   GCObject *gclist;
 } Table;
@@ -789,16 +789,16 @@ typedef struct Table {
 /*
 ** Macros to manipulate keys inserted in nodes
 */
-#define keytt(node)		((node)->u.key_tt)
-#define keyval(node)		((node)->u.key_val)
+#define keytt(बुहोल)		((बुहोल)->u.सुसि_tt)
+#define keyval(बुहोल)		((बुहोल)->u.सुसि_val)
 
-#define keyisnil(node)		(keytt(node) == LUA_TNIL)
-#define keyisinteger(node)	(keytt(node) == LUA_VNUMINT)
-#define keyival(node)		(keyval(node).i)
-#define keyisshrstr(node)	(keytt(node) == ctb(LUA_VSHRSTR))
-#define keystrval(node)		(gco2ts(keyval(node).gc))
+#define keyisnil(बुहोल)		(keytt(बुहोल) == LUA_TNIL)
+#define keyisinteger(बुहोल)	(keytt(बुहोल) == LUA_VNUMINT)
+#define keyival(बुहोल)		(keyval(बुहोल).i)
+#define keyisshrstr(बुहोल)	(keytt(बुहोल) == ctb(LUA_VSHRSTR))
+#define keystrval(बुहोल)		(gco2ts(keyval(बुहोल).gc))
 
-#define setnilkey(node)		(keytt(node) = LUA_TNIL)
+#define setnilkey(बुहोल)		(keytt(बुहोल) = LUA_TNIL)
 
 #define keyiscollectable(n)	(keytt(n) & BIT_ISCOLLECTABLE)
 
@@ -812,8 +812,8 @@ typedef struct Table {
 ** be found when searched in a special way. ('next' needs that to find
 ** keys removed from a table during a traversal.)
 */
-#define setdeadkey(node)	(keytt(node) = LUA_TDEADKEY)
-#define keyisdead(node)		(keytt(node) == LUA_TDEADKEY)
+#define setdeadkey(बुहोल)	(keytt(बुहोल) = LUA_TDEADKEY)
+#define keyisdead(बुहोल)		(keytt(बुहोल) == LUA_TDEADKEY)
 
 /* }================================================================== */
 
@@ -835,11 +835,11 @@ typedef struct Table {
 
 
 /* macro to call 'luaO_pushvfstring' correctly */
-#define pushvfstring(L, argp, fmt, msg)	\
+#define pushvfstring(L, argp, fmt, मेनसाहे)	\
   { va_start(argp, fmt); \
-  msg = luaO_pushvfstring(L, fmt, argp); \
+  मेनसाहे = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  if (मेनसाहे == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
 LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);

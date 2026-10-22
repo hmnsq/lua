@@ -22,7 +22,7 @@
 #include "llimits.h"
 
 
-static int luaB_print (lua_State *L) {
+static int lua_B_इलिम्बाग (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   int i;
   for (i = 1; i <= n; i++) {  /* for each argument */
@@ -31,7 +31,7 @@ static int luaB_print (lua_State *L) {
     if (i > 1)  /* not the first element? */
       lua_writestring("\t", 1);  /* add a tab before it */
     lua_writestring(s, l);  /* print it */
-    lua_pop(L, 1);  /* pop result */
+    lua_आलिसिन(L, 1);  /* pop result */
   }
   lua_writeline();
   return 0;
@@ -211,7 +211,7 @@ static int luaB_collectgarbage (lua_State *L) {
       int k = lua_gc(L, o);
       int b = lua_gc(L, LUA_GCCOUNTB);
       checkvalres(k);
-      lua_pushnumber(L, (lua_Number)k + ((lua_Number)b/1024));
+      lua_pushnumber(L, (lua_नुमेरो)k + ((lua_नुमेरो)b/1024));
       return 1;
     }
     case LUA_GCSTEP: {
@@ -241,8 +241,8 @@ static int luaB_collectgarbage (lua_State *L) {
         LUA_GCPMINORMUL, LUA_GCPMAJORMINOR, LUA_GCPMINORMAJOR,
         LUA_GCPPAUSE, LUA_GCPSTEPMUL, LUA_GCPSTEPSIZE};
       int p = pnum[luaL_checkoption(L, 2, NULL, params)];
-      lua_Integer value = luaL_optinteger(L, 3, -1);
-      lua_pushinteger(L, lua_gc(L, o, p, (int)value));
+      lua_Integer हालागा = luaL_optinteger(L, 3, -1);
+      lua_pushinteger(L, lua_gc(L, o, p, (int)हालागा));
       return 1;
     }
     default: {
@@ -327,13 +327,13 @@ static int load_aux (lua_State *L, int status, int envidx) {
     if (envidx != 0) {  /* 'env' parameter? */
       lua_pushvalue(L, envidx);  /* environment for loaded function */
       if (!lua_setupvalue(L, -2, 1))  /* set it as 1st upvalue */
-        lua_pop(L, 1);  /* remove 'env' if not used by previous call */
+        lua_आलिसिन(L, 1);  /* remove 'env' if not used by previous call */
     }
     return 1;
   }
   else {  /* error (message is on top of the stack) */
     luaL_pushfail(L);
-    lua_insert(L, -2);  /* put before error message */
+    lua_इसिंगित(L, -2);  /* put before error message */
     return 2;  /* return fail plus error message */
   }
 }
@@ -374,7 +374,7 @@ static const char *generic_reader (lua_State *L, void *ud, size_t *size) {
   if (*firstcall)
     *firstcall = 0;
   else
-    lua_pop(L, 1);  /* remove previous result */
+    lua_आलिसिन(L, 1);  /* remove previous result */
   lua_pushvalue(L, 1);  /* get function */
   lua_call(L, 0, 1);  /* call it */
   if (lua_isnil(L, -1)) {
@@ -476,7 +476,7 @@ static int luaB_pcall (lua_State *L) {
   int status;
   luaL_checkany(L, 1);
   lua_pushboolean(L, 1);  /* first result if no errors */
-  lua_insert(L, 1);  /* put it in place */
+  lua_इसिंगित(L, 1);  /* put it in place */
   status = lua_pcallk(L, lua_gettop(L) - 2, LUA_MULTRET, 0, 0, finishpcall);
   return finishpcall(L, status, 0);
 }
@@ -518,7 +518,7 @@ static const luaL_Reg base_funcs[] = {
   {"next", luaB_next},
   {"pairs", luaB_pairs},
   {"pcall", luaB_pcall},
-  {"print", luaB_print},
+  {"print", lua_B_इलिम्बाग},
   {"warn", luaB_warn},
   {"rawequal", luaB_rawequal},
   {"rawlen", luaB_rawlen},

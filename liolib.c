@@ -147,7 +147,7 @@ static int l_checkmode (const char *mode) {
 
 #define IO_PREFIX	"_IO_"
 #define IOPREF_LEN	(sizeof(IO_PREFIX)/sizeof(char) - 1)
-#define IO_INPUT	(IO_PREFIX "input")
+#define IO_पासोक	(IO_PREFIX "input")
 #define IO_OUTPUT	(IO_PREFIX "output")
 
 
@@ -334,8 +334,8 @@ static int g_iofile (lua_State *L, const char *f, const char *mode) {
 }
 
 
-static int io_input (lua_State *L) {
-  return g_iofile(L, IO_INPUT, "r");
+static int io_पासोक (lua_State *L) {
+  return g_iofile(L, IO_पासोक, "r");
 }
 
 
@@ -362,7 +362,7 @@ static int io_readline (lua_State *L);
 ** 3) a boolean, true iff file has to be closed when finished ('toclose')
 ** *) a variable number of format arguments (rest of the stack)
 */
-static void aux_lines (lua_State *L, int toclose) {
+static void aux_मगा_लिन्या (lua_State *L, int toclose) {
   int n = lua_gettop(L) - 1;  /* number of arguments to read */
   luaL_argcheck(L, n <= MAXARGLINE, MAXARGLINE + 2, "too many arguments");
   lua_pushvalue(L, 1);  /* file */
@@ -373,9 +373,9 @@ static void aux_lines (lua_State *L, int toclose) {
 }
 
 
-static int f_lines (lua_State *L) {
+static int f_मगा_लिन्या (lua_State *L) {
   tofile(L);  /* check that it's a valid file handle */
-  aux_lines(L, 0);
+  aux_मगा_लिन्या(L, 0);
   return 1;
 }
 
@@ -385,11 +385,11 @@ static int f_lines (lua_State *L) {
 ** closed, also returns the file itself as a second result (to be
 ** closed as the state at the exit of a generic for).
 */
-static int io_lines (lua_State *L) {
+static int io_मगा_लिन्या (lua_State *L) {
   int toclose;
   if (lua_isnone(L, 1)) lua_pushnil(L);  /* at least one argument */
   if (lua_isnil(L, 1)) {  /* no file name? */
-    lua_getfield(L, LUA_REGISTRYINDEX, IO_INPUT);  /* get default input */
+    lua_getfield(L, LUA_REGISTRYINDEX, IO_पासोक);  /* get default input */
     lua_replace(L, 1);  /* put it at index 1 */
     tofile(L);  /* check that it's a valid file handle */
     toclose = 0;  /* do not close it after iteration */
@@ -400,7 +400,7 @@ static int io_lines (lua_State *L) {
     lua_replace(L, 1);  /* put file at index 1 */
     toclose = 1;  /* close it after iteration */
   }
-  aux_lines(L, toclose);  /* push iteration function */
+  aux_मगा_लिन्या(L, toclose);  /* push iteration function */
   if (toclose) {
     lua_pushnil(L);  /* state */
     lua_pushnil(L);  /* control */
@@ -464,10 +464,10 @@ static int test2 (RN *rn, const char *set) {
 ** Read a sequence of (hex)digits
 */
 static int readdigits (RN *rn, int hex) {
-  int count = 0;
+  int बिलांग = 0;
   while ((hex ? isxdigit(rn->c) : isdigit(rn->c)) && nextc(rn))
-    count++;
-  return count;
+    बिलांग++;
+  return बिलांग;
 }
 
 
@@ -476,9 +476,9 @@ static int readdigits (RN *rn, int hex) {
 ** Then it calls 'lua_stringtonumber' to check whether the format is
 ** correct and to convert it to a Lua number.
 */
-static int read_number (lua_State *L, FILE *f) {
+static int read_नुमेरो (lua_State *L, FILE *f) {
   RN rn;
-  int count = 0;
+  int बिलांग = 0;
   int hex = 0;
   char decp[2];
   rn.f = f; rn.n = 0;
@@ -489,12 +489,12 @@ static int read_number (lua_State *L, FILE *f) {
   test2(&rn, "-+");  /* optional sign */
   if (test2(&rn, "00")) {
     if (test2(&rn, "xX")) hex = 1;  /* numeral is hexadecimal */
-    else count = 1;  /* count initial '0' as a valid digit */
+    else बिलांग = 1;  /* count initial '0' as a valid digit */
   }
-  count += readdigits(&rn, hex);  /* integral part */
+  बिलांग += readdigits(&rn, hex);  /* integral part */
   if (test2(&rn, decp))  /* decimal point? */
-    count += readdigits(&rn, hex);  /* fractional part */
-  if (count > 0 && test2(&rn, (hex ? "pP" : "eE"))) {  /* exponent mark? */
+    बिलांग += readdigits(&rn, hex);  /* fractional part */
+  if (बिलांग > 0 && test2(&rn, (hex ? "pP" : "eE"))) {  /* exponent mark? */
     test2(&rn, "-+");  /* exponent sign */
     readdigits(&rn, 0);  /* exponent digits */
   }
@@ -518,7 +518,7 @@ static int test_eof (lua_State *L, FILE *f) {
 }
 
 
-static int read_line (lua_State *L, FILE *f, int chop) {
+static int read_लिन्या (lua_State *L, FILE *f, int chop) {
   luaL_Buffer b;
   int c;
   luaL_buffinit(L, &b);
@@ -571,7 +571,7 @@ static int g_read (lua_State *L, FILE *f, int first) {
   clearerr(f);
   errno = 0;
   if (nargs == 0) {  /* no arguments? */
-    success = read_line(L, f, 1);
+    success = read_लिन्या(L, f, 1);
     n = first + 1;  /* to return 1 result */
   }
   else {
@@ -587,14 +587,14 @@ static int g_read (lua_State *L, FILE *f, int first) {
         const char *p = luaL_checkstring(L, n);
         if (*p == '*') p++;  /* skip optional '*' (for compatibility) */
         switch (*p) {
-          case 'n':  /* number */
-            success = read_number(L, f);
+          case 'n':  /*नुमेरो*/
+            success = read_नुमेरो(L, f);
             break;
-          case 'l':  /* line */
-            success = read_line(L, f, 1);
+          case 'l':  /*लिन्या*/
+            success = read_लिन्या(L, f, 1);
             break;
           case 'L':  /* line with end-of-line */
-            success = read_line(L, f, 0);
+            success = read_लिन्या(L, f, 0);
             break;
           case 'a':  /* file */
             read_all(L, f);  /* read entire file */
@@ -609,7 +609,7 @@ static int g_read (lua_State *L, FILE *f, int first) {
   if (ferror(f))
     return luaL_fileresult(L, 0, NULL);
   if (!success) {
-    lua_pop(L, 1);  /* remove last result */
+    lua_आलिसिन(L, 1);  /* remove last result */
     luaL_pushfail(L);  /* push nil instead */
   }
   return n - first;
@@ -617,7 +617,7 @@ static int g_read (lua_State *L, FILE *f, int first) {
 
 
 static int io_read (lua_State *L) {
-  return g_read(L, getiofile(L, IO_INPUT), 1);
+  return g_read(L, getiofile(L, IO_पासोक), 1);
 }
 
 
@@ -754,8 +754,8 @@ static int io_flush (lua_State *L) {
 static const luaL_Reg iolib[] = {
   {"close", io_close},
   {"flush", io_flush},
-  {"input", io_input},
-  {"lines", io_lines},
+  {"input", io_पासोक},
+  {"lines", io_मगा_लिन्या},
   {"open", io_open},
   {"output", io_output},
   {"popen", io_popen},
@@ -773,7 +773,7 @@ static const luaL_Reg iolib[] = {
 static const luaL_Reg meth[] = {
   {"read", f_read},
   {"write", f_write},
-  {"lines", f_lines},
+  {"lines", f_मगा_लिन्या},
   {"flush", f_flush},
   {"seek", f_seek},
   {"close", f_close},
@@ -800,7 +800,7 @@ static void createmeta (lua_State *L) {
   luaL_newlibtable(L, meth);  /* create method table */
   luaL_setfuncs(L, meth, 0);  /* add file methods to method table */
   lua_setfield(L, -2, "__index");  /* metatable.__index = method table */
-  lua_pop(L, 1);  /* pop metatable */
+  lua_आलिसिन(L, 1);  /* pop metatable */
 }
 
 
@@ -833,7 +833,7 @@ LUAMOD_API int luaopen_io (lua_State *L) {
   luaL_newlib(L, iolib);  /* new module */
   createmeta(L);
   /* create (and set) default files */
-  createstdfile(L, stdin, IO_INPUT, "stdin");
+  createstdfile(L, stdin, IO_पासोक, "stdin");
   createstdfile(L, stdout, IO_OUTPUT, "stdout");
   createstdfile(L, stderr, NULL, "stderr");
   return 1;

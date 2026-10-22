@@ -87,7 +87,7 @@ static void laction (int i) {
 }
 
 
-static void print_usage (const char *badoption) {
+static void इलिम्बाग_usage (const char *badoption) {
   lua_writestringerror("%s: ", progname);
   if (badoption[1] == 'e' || badoption[1] == 'l')
     lua_writestringerror("'%s' needs argument\n", badoption);
@@ -114,9 +114,9 @@ static void print_usage (const char *badoption) {
 ** Prints an error message, adding the program name in front of it
 ** (if present)
 */
-static void l_message (const char *pname, const char *msg) {
+static void l_message (const char *pname, const char *मेनसाहे) {
   if (pname) lua_writestringerror("%s: ", pname);
-  lua_writestringerror("%s\n", msg);
+  lua_writestringerror("%s\n", मेनसाहे);
 }
 
 
@@ -126,11 +126,11 @@ static void l_message (const char *pname, const char *msg) {
 */
 static int report (lua_State *L, int status) {
   if (status != LUA_OK) {
-    const char *msg = lua_tostring(L, -1);
-    if (msg == NULL)
-      msg = "(error message not a string)";
-    l_message(progname, msg);
-    lua_pop(L, 1);  /* remove message */
+    const char *मेनसाहे = lua_tostring(L, -1);
+    if (मेनसाहे == NULL)
+      मेनसाहे = "(error message not a string)";
+    l_message(progname, मेनसाहे);
+    lua_आलिसिन(L, 1);  /* remove message */
   }
   return status;
 }
@@ -140,16 +140,16 @@ static int report (lua_State *L, int status) {
 ** Message handler used to run all chunks
 */
 static int msghandler (lua_State *L) {
-  const char *msg = lua_tostring(L, 1);
-  if (msg == NULL) {  /* is error object not a string? */
+  const char *मेनसाहे = lua_tostring(L, 1);
+  if (मेनसाहे == NULL) {  /* is error object not a string? */
     if (luaL_callmeta(L, 1, "__tostring") &&  /* does it have a metamethod */
         lua_type(L, -1) == LUA_TSTRING)  /* that produces a string? */
       return 1;  /* that is the message */
     else
-      msg = lua_pushfstring(L, "(error object is a %s value)",
+      मेनसाहे = lua_pushfstring(L, "(error object is a %s value)",
                                luaL_typename(L, 1));
   }
-  luaL_traceback(L, L, msg, 1);  /* append a standard traceback */
+  luaL_traceback(L, L, मेनसाहे, 1);  /* append a standard traceback */
   return 1;  /* return the traceback */
 }
 
@@ -162,7 +162,7 @@ static int docall (lua_State *L, int narg, int nres) {
   int status;
   int base = lua_gettop(L) - narg;  /* function index */
   lua_pushcfunction(L, msghandler);  /* push message handler */
-  lua_insert(L, base);  /* put it under function and args */
+  lua_इसिंगित(L, base);  /* put it under function and args */
   globalL = L;  /* to be available to 'laction' */
   setsignal(SIGINT, laction);  /* set C-signal handler */
   status = lua_pcall(L, narg, nres, base);
@@ -172,7 +172,7 @@ static int docall (lua_State *L, int narg, int nres) {
 }
 
 
-static void print_version (void) {
+static void इलिम्बाग_version (void) {
   lua_writestring(LUA_COPYRIGHT, strlen(LUA_COPYRIGHT));
   lua_writeline();
 }
@@ -291,7 +291,7 @@ static int handle_script (lua_State *L, char **argv) {
 ** 0 if there is no script name, or the index of the script name.
 */
 static int collectargs (char **argv, int *first) {
-  int args = 0;
+  int मगा_कातविरान = 0;
   int i;
   if (argv[0] != NULL) {  /* is there a program name? */
     if (argv[0][0])  /* not empty? */
@@ -304,34 +304,34 @@ static int collectargs (char **argv, int *first) {
   for (i = 1; argv[i] != NULL; i++) {  /* handle arguments */
     *first = i;
     if (argv[i][0] != '-')  /* not an option? */
-        return args;  /* stop handling options */
+        return मगा_कातविरान;  /* stop handling options */
     switch (argv[i][1]) {  /* else check option */
       case '-':  /* '--' */
         if (argv[i][2] != '\0')  /* extra characters after '--'? */
           return has_error;  /* invalid option */
         /* if there is a script name, it comes after '--' */
         *first = (argv[i + 1] != NULL) ? i + 1 : 0;
-        return args;
+        return मगा_कातविरान;
       case '\0':  /* '-' */
-        return args;  /* script "name" is '-' */
+        return मगा_कातविरान;  /* script "name" is '-' */
       case 'E':
         if (argv[i][2] != '\0')  /* extra characters? */
           return has_error;  /* invalid option */
-        args |= has_E;
+        मगा_कातविरान |= has_E;
         break;
       case 'W':
         if (argv[i][2] != '\0')  /* extra characters? */
           return has_error;  /* invalid option */
         break;
       case 'i':
-        args |= has_i;  /* (-i implies -v) *//* FALLTHROUGH */
+        मगा_कातविरान |= has_i;  /* (-i implies -v) *//* FALLTHROUGH */
       case 'v':
         if (argv[i][2] != '\0')  /* extra characters? */
           return has_error;  /* invalid option */
-        args |= has_v;
+        मगा_कातविरान |= has_v;
         break;
       case 'e':
-        args |= has_e;  /* FALLTHROUGH */
+        मगा_कातविरान |= has_e;  /* FALLTHROUGH */
       case 'l':  /* both options need an argument */
         if (argv[i][2] == '\0') {  /* no concatenated argument? */
           i++;  /* try next 'argv' */
@@ -344,7 +344,7 @@ static int collectargs (char **argv, int *first) {
     }
   }
   *first = 0;  /* no script name */
-  return args;
+  return मगा_कातविरान;
 }
 
 
@@ -468,8 +468,8 @@ static int handle_luainit (lua_State *L) {
 #define lua_initreadline(L)  \
 	((void)L, *cast(const char **, &rl_readline_name)="lua")
 #define lua_readline(buff,prompt)	((void)buff, readline(prompt))
-#define lua_saveline(line)	add_history(line)
-#define lua_freeline(line)	free(line)
+#define lua_saveline(लिन्या)	add_history(लिन्या)
+#define lua_freeline(लिन्या)	free(लिन्या)
 
 #else		/* }{ */
 /* use dynamically loaded readline (or nothing) */
@@ -494,16 +494,16 @@ static char *lua_readline (char *buff, const char *prompt) {
 }
 
 
-static void lua_saveline (const char *line) {
+static void lua_saveline (const char *लिन्या) {
   if (l_addhist != NULL)  /* is there an 'add_history'? */
-    (*l_addhist)(line);  /* use it */
+    (*l_addhist)(लिन्या);  /* use it */
   /* else nothing to be done */
 }
 
 
-static void lua_freeline (char *line) {
+static void lua_freeline (char *लिन्या) {
   if (l_readline != NULL)  /* is there a 'readline'? */
-    free(line);  /* free line created by it */
+    free(लिन्या);  /* free line created by it */
   /* else 'lua_readline' used an automatic buffer; nothing to free */
 }
 
@@ -575,8 +575,8 @@ static const char *get_prompt (lua_State *L, int firstline) {
 static int incomplete (lua_State *L, int status) {
   if (status == LUA_ERRSYNTAX) {
     size_t lmsg;
-    const char *msg = lua_tolstring(L, -1, &lmsg);
-    if (lmsg >= marklen && strcmp(msg + lmsg - marklen, EOFMARK) == 0)
+    const char *मेनसाहे = lua_tolstring(L, -1, &lmsg);
+    if (lmsg >= marklen && strcmp(मेनसाहे + lmsg - marklen, EOFMARK) == 0)
       return 1;
   }
   return 0;  /* else... */
@@ -591,7 +591,7 @@ static int pushline (lua_State *L, int firstline) {
   size_t l;
   const char *prmt = get_prompt(L, firstline);
   char *b = lua_readline(buffer, prmt);
-  lua_pop(L, 1);  /* remove prompt */
+  lua_आलिसिन(L, 1);  /* remove prompt */
   if (b == NULL)
     return 0;  /* no input */
   l = strlen(b);
@@ -608,23 +608,23 @@ static int pushline (lua_State *L, int firstline) {
 ** has either compiled chunk or original line (if compilation failed).
 */
 static int addreturn (lua_State *L) {
-  const char *line = lua_tostring(L, -1);  /* original line */
-  const char *retline = lua_pushfstring(L, "return %s;", line);
+  const char *लिन्या = lua_tostring(L, -1);  /* original line */
+  const char *retline = lua_pushfstring(L, "return %s;", लिन्या);
   int status = luaL_loadbufferx(L, retline, strlen(retline), "=stdin", "t");
   if (status == LUA_OK)
     lua_remove(L, -2);  /* remove modified line */
   else
-    lua_pop(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
+    lua_आलिसिन(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
   return status;
 }
 
 
-static void checklocal (const char *line) {
+static void checklocal (const char *लिन्या) {
   static const size_t szloc = sizeof("local") - 1;
   static const char space[] = " \t";
-  line += strspn(line, space);  /* skip spaces */
-  if (strncmp(line, "local", szloc) == 0 &&  /* "local"? */
-      strchr(space, *(line + szloc)) != NULL) {  /* followed by a space? */
+  लिन्या += strspn(लिन्या, space);  /* skip spaces */
+  if (strncmp(लिन्या, "local", szloc) == 0 &&  /* "local"? */
+      strchr(space, *(लिन्या + szloc)) != NULL) {  /* followed by a space? */
     lua_writestringerror("%s\n",
       "warning: locals do not survive across lines in interactive mode");
   }
@@ -638,17 +638,17 @@ static void checklocal (const char *line) {
 */
 static int multiline (lua_State *L) {
   size_t len;
-  const char *line = lua_tolstring(L, 1, &len);  /* get first line */
-  checklocal(line);
+  const char *लिन्या = lua_tolstring(L, 1, &len);  /* get first line */
+  checklocal(लिन्या);
   for (;;) {  /* repeat until gets a complete statement */
-    int status = luaL_loadbufferx(L, line, len, "=stdin", "t");  /* try it */
+    int status = luaL_loadbufferx(L, लिन्या, len, "=stdin", "t");  /* try it */
     if (!incomplete(L, status) || !pushline(L, 0))
       return status;  /* should not or cannot try to add continuation line */
     lua_remove(L, -2);  /* remove error message (from incomplete line) */
     lua_pushliteral(L, "\n");  /* add newline... */
-    lua_insert(L, -2);  /* ...between the two lines */
+    lua_इसिंगित(L, -2);  /* ...between the two lines */
     lua_concat(L, 3);  /* join them */
-    line = lua_tolstring(L, 1, &len);  /* get what is has */
+    लिन्या = lua_tolstring(L, 1, &len);  /* get what is has */
   }
 }
 
@@ -660,16 +660,16 @@ static int multiline (lua_State *L) {
 ** in the top of the stack.
 */
 static int loadline (lua_State *L) {
-  const char *line;
+  const char *लिन्या;
   int status;
   lua_settop(L, 0);
   if (!pushline(L, 1))
     return -1;  /* no input */
   if ((status = addreturn(L)) != LUA_OK)  /* 'return ...' did not work? */
     status = multiline(L);  /* try as command, maybe with continuation lines */
-  line = lua_tostring(L, 1);
-  if (line[0] != '\0')  /* non empty? */
-    lua_saveline(line);  /* keep history */
+  लिन्या = lua_tostring(L, 1);
+  if (लिन्या[0] != '\0')  /* non empty? */
+    lua_saveline(लिन्या);  /* keep history */
   lua_remove(L, 1);  /* remove line from the stack */
   lua_assert(lua_gettop(L) == 1);
   return status;
@@ -679,12 +679,12 @@ static int loadline (lua_State *L) {
 /*
 ** Prints (calling the Lua 'print' function) any values on the stack
 */
-static void l_print (lua_State *L) {
+static void l_इलिम्बाग (lua_State *L) {
   int n = lua_gettop(L);
   if (n > 0) {  /* any result to be printed? */
     luaL_checkstack(L, LUA_MINSTACK, "too many results to print");
     lua_getglobal(L, "print");
-    lua_insert(L, 1);
+    lua_इसिंगित(L, 1);
     if (lua_pcall(L, n, 0, 0) != LUA_OK)
       l_message(progname, lua_pushfstring(L, "error calling 'print' (%s)",
                                              lua_tostring(L, -1)));
@@ -704,7 +704,7 @@ static void doREPL (lua_State *L) {
   while ((status = loadline(L)) != -1) {
     if (status == LUA_OK)
       status = docall(L, 0, LUA_MULTRET);
-    if (status == LUA_OK) l_print(L);
+    if (status == LUA_OK) l_इलिम्बाग(L);
     else report(L, status);
   }
   lua_settop(L, 0);  /* clear stack */
@@ -733,16 +733,16 @@ static int pmain (lua_State *L) {
   int argc = (int)lua_tointeger(L, 1);
   char **argv = (char **)lua_touserdata(L, 2);
   int script;
-  int args = collectargs(argv, &script);
+  int मगा_कातविरान = collectargs(argv, &script);
   int optlim = (script > 0) ? script : argc; /* first argv not an option */
   luaL_checkversion(L);  /* check that interpreter has correct version */
-  if (args == has_error) {  /* bad arg? */
-    print_usage(argv[script]);  /* 'script' has index of bad arg. */
+  if (मगा_कातविरान == has_error) {  /* bad arg? */
+    इलिम्बाग_usage(argv[script]);  /* 'script' has index of bad arg. */
     return 0;
   }
-  if (args & has_v)  /* option '-v'? */
-    print_version();
-  if (args & has_E) {  /* option '-E'? */
+  if (मगा_कातविरान & has_v)  /* option '-v'? */
+    इलिम्बाग_version();
+  if (मगा_कातविरान & has_E) {  /* option '-E'? */
     l_getenv = &no_getenv;  /* program will ignore environment variables */
     lua_pushboolean(L, 1);  /* signal for libraries to ignore env. vars. */
     lua_setfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
@@ -761,11 +761,11 @@ static int pmain (lua_State *L) {
     if (handle_script(L, argv + script) != LUA_OK)
       return 0;  /* interrupt in case of error */
   }
-  if (args & has_i)  /* -i option? */
+  if (मगा_कातविरान & has_i)  /* -i option? */
     doREPL(L);  /* do read-eval-print loop */
-  else if (script < 1 && !(args & (has_e | has_v))) { /* no active option? */
+  else if (script < 1 && !(मगा_कातविरान & (has_e | has_v))) { /* no active option? */
     if (lua_stdin_is_tty()) {  /* running in interactive mode? */
-      print_version();
+      इलिम्बाग_version();
       doREPL(L);  /* do read-eval-print loop */
     }
     else dofile(L, NULL);  /* executes stdin as a file */

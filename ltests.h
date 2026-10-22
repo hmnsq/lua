@@ -128,7 +128,7 @@ LUA_API void *debug_realloc (void *ud, void *block,
 #define luai_openlibs(L)  \
   {  luaL_openlibs(L); \
      luaL_requiref(L, "T", luaB_opentests, 1); \
-     lua_pop(L, 1); }
+     lua_आलिसिन(L, 1); }
 
 
 

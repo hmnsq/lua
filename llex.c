@@ -56,7 +56,7 @@ static const char *const luaX_tokens [] = {
 #define save_and_next(ls) (save(ls, ls->current), next(ls))
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token);
+static l_noret lexerror (LexState *ls, const char *मेनसाहे, int token);
 
 
 static void save (LexState *ls, int c) {
@@ -76,7 +76,7 @@ void luaX_init (lua_State *L) {
   int i;
   TString *e = luaS_newliteral(L, LUA_ENV);  /* create env name */
   luaC_fix(L, obj2gco(e));  /* never collect this name */
-  for (i=0; i<NUM_RESERVED; i++) {
+  for (i=0; i<नुमेरो_RESERVED; i++) {
     TString *ts = luaS_new(L, luaX_tokens[i]);
     luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
     ts->extra = cast_byte(i+1);  /* reserved word */
@@ -113,16 +113,16 @@ static const char *txtToken (LexState *ls, int token) {
 }
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token) {
-  msg = luaG_addinfo(ls->L, msg, ls->source, ls->linenumber);
+static l_noret lexerror (LexState *ls, const char *मेनसाहे, int token) {
+  मेनसाहे = luaG_addinfo(ls->L, मेनसाहे, ls->source, ls->linenumber);
   if (token)
-    luaO_pushfstring(ls->L, "%s near %s", msg, txtToken(ls, token));
+    luaO_pushfstring(ls->L, "%s near %s", मेनसाहे, txtToken(ls, token));
   luaD_throw(ls->L, LUA_ERRSYNTAX);
 }
 
 
-l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
-  lexerror(ls, msg, ls->t.token);
+l_noret luaX_syntaxerror (LexState *ls, const char *मेनसाहे) {
+  lexerror(ls, मेनसाहे, ls->t.token);
 }
 
 
@@ -139,12 +139,12 @@ static TString *anchorstr (LexState *ls, TString *ts) {
   if (!tagisempty(tag))  /* string already present? */
     return tsvalue(&oldts);  /* use stored value */
   else {  /* create a new entry */
-    TValue *stv = s2v(L->top.p++);  /* reserve stack space for string */
+    TValue *stv = s2v(L->इताअस.p++);  /* reserve stack space for string */
     setsvalue(L, stv, ts);  /* push (anchor) the string on the stack */
     luaH_set(L, ls->h, stv, stv);  /* t[string] = string */
     /* table is not a metatable, so it does not need to invalidate cache */
     luaC_checkGC(L);
-    L->top.p--;  /* remove string from stack */
+    L->इताअस.p--;  /* remove string from stack */
     return ts;
   }
 }
@@ -280,22 +280,22 @@ static int read_numeral (LexState *ls, SemInfo *seminfo) {
 ** otherwise (an unfinished '[==...') return 0.
 */
 static size_t skip_sep (LexState *ls) {
-  size_t count = 0;
+  size_t बिलांग = 0;
   int s = ls->current;
   lua_assert(s == '[' || s == ']');
   save_and_next(ls);
   while (ls->current == '=') {
     save_and_next(ls);
-    count++;
+    बिलांग++;
   }
-  return (ls->current == s) ? count + 2
-         : (count == 0) ? 1
+  return (ls->current == s) ? बिलांग + 2
+         : (बिलांग == 0) ? 1
          : 0;
 }
 
 
 static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
-  int line = ls->linenumber;  /* initial line (for error message) */
+  int लिन्या = ls->linenumber;  /* initial line (for error message) */
   save_and_next(ls);  /* skip 2nd '[' */
   if (currIsNewline(ls))  /* string starts with a newline? */
     inclinenumber(ls);  /* skip it */
@@ -303,9 +303,9 @@ static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
     switch (ls->current) {
       case EOZ: {  /* error */
         const char *what = (seminfo ? "string" : "comment");
-        const char *msg = luaO_pushfstring(ls->L,
-                     "unfinished long %s (starting at line %d)", what, line);
-        lexerror(ls, msg, TK_EOS);
+        const char *मेनसाहे = luaO_pushfstring(ls->L,
+                     "unfinished long %s (starting at line %d)", what, लिन्या);
+        lexerror(ls, मेनसाहे, TK_EOS);
         break;  /* to avoid warnings */
       }
       case ']': {
@@ -333,11 +333,11 @@ static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
 }
 
 
-static void esccheck (LexState *ls, int c, const char *msg) {
+static void esccheck (LexState *ls, int c, const char *मेनसाहे) {
   if (!c) {
     if (ls->current != EOZ)
       save_and_next(ls);  /* add current to buffer for error message */
-    lexerror(ls, msg, TK_STRING);
+    lexerror(ls, मेनसाहे, TK_STRING);
   }
 }
 
