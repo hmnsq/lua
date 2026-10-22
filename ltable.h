@@ -7,7 +7,7 @@
 #ifndef ltable_h
 #define ltable_h
 
-#include "lobject.h"
+#ضمن "lobject.h"
 
 
 #define gnode(t,i)	(&(t)->node[i])
@@ -48,20 +48,20 @@
 
 #define luaH_fastgeti(t,k,res,tag) \
   { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
+    𐡄𐡍 ((u < h->asize)) { \
       tag = *getArrTag(h, u); \
-      if (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
-    else { tag = luaH_getint(h, (k), res); }}
+      𐡄𐡍 (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
+    وإلا { tag = luaH_getint(h, (k), res); }}
 
 
 #define luaH_fastseti(t,k,val,hres) \
   { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
+    𐡄𐡍 ((u < h->asize)) { \
       lu_byte *tag = getArrTag(h, u); \
-      if (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
+      𐡄𐡍 (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
         { fval2arr(h, u, tag, val); hres = HOK; } \
-      else hres = ~cast_int(u); } \
-    else { hres = luaH_psetint(h, k, val); }}
+      وإلا hres = ~cast_int(u); } \
+    وإلا { hres = luaH_psetint(h, k, val); }}
 
 
 /* results from pset */
@@ -110,7 +110,7 @@
 */
 
 /* Computes the address of the tag for the abstract C-index 'k' */
-#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + sizeof(unsigned) + (k))
+#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + حجم(unsigned) + (k))
 
 /* Computes the address of the value for the abstract C-index 'k' */
 #define getArrVal(t,k)	((t)->array - 1 - (k))
@@ -146,38 +146,38 @@
   (*tag = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
 
 
-LUAI_FUNC lu_byte luaH_get (Table *t, const TValue *key, TValue *res);
+LUAI_FUNC lu_byte luaH_get (Table *t, ثابت TValue *key, TValue *res);
 LUAI_FUNC lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res);
 LUAI_FUNC lu_byte luaH_getstr (Table *t, TString *key, TValue *res);
 LUAI_FUNC lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res);
 
 /* Special get for metamethods */
-LUAI_FUNC const TValue *luaH_Hgetshortstr (Table *t, TString *key);
+LUAI_FUNC ثابت TValue *luaH_Hgetshortstr (Table *t, TString *key);
 
-LUAI_FUNC int luaH_psetint (Table *t, lua_Integer key, TValue *val);
-LUAI_FUNC int luaH_psetshortstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_psetstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_pset (Table *t, const TValue *key, TValue *val);
+LUAI_FUNC صحيح luaH_psetint (Table *t, lua_Integer key, TValue *val);
+LUAI_FUNC صحيح luaH_psetshortstr (Table *t, TString *key, TValue *val);
+LUAI_FUNC صحيح luaH_psetstr (Table *t, TString *key, TValue *val);
+LUAI_FUNC صحيح luaH_pset (Table *t, ثابت TValue *key, TValue *val);
 
-LUAI_FUNC void luaH_setint (lua_State *L, Table *t, lua_Integer key,
+LUAI_FUNC فراغ luaH_setint (lua_State *L, Table *t, lua_Integer key,
                                                     TValue *value);
-LUAI_FUNC void luaH_set (lua_State *L, Table *t, const TValue *key,
+LUAI_FUNC فراغ luaH_set (lua_State *L, Table *t, ثابت TValue *key,
                                                  TValue *value);
 
-LUAI_FUNC void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                              TValue *value, int hres);
+LUAI_FUNC فراغ luaH_finishset (lua_State *L, Table *t, ثابت TValue *key,
+                                              TValue *value, صحيح hres);
 LUAI_FUNC Table *luaH_new (lua_State *L);
-LUAI_FUNC void luaH_resize (lua_State *L, Table *t, unsigned nasize,
+LUAI_FUNC فراغ luaH_resize (lua_State *L, Table *t, unsigned nasize,
                                                     unsigned nhsize);
-LUAI_FUNC void luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
+LUAI_FUNC فراغ luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
 LUAI_FUNC lu_mem luaH_size (Table *t);
-LUAI_FUNC void luaH_free (lua_State *L, Table *t);
-LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key);
+LUAI_FUNC فراغ luaH_free (lua_State *L, Table *t);
+LUAI_FUNC صحيح luaH_next (lua_State *L, Table *t, StkId key);
 LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, Table *t);
 
 
-#if defined(LUA_DEBUG)
-LUAI_FUNC Node *luaH_mainposition (const Table *t, const TValue *key);
+#𐡄𐡍 defined(LUA_DEBUG)
+LUAI_FUNC Node *luaH_mainposition (ثابت Table *t, ثابت TValue *key);
 #endif
 
 
