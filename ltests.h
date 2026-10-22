@@ -30,9 +30,9 @@
 
 /* test for sizes in 'l_sprintf' (make sure whole buffer is available) */
 #undef l_sprintf
-#if !defined(LUA_USE_C89)
+#ꦪꦼꦤ꧀ !defined(LUA_USE_C89)
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), snprintf(s,sz,f,i))
-#else
+#ꦭꦶꦪ
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), sprintf(s,f,i))
 #endif
 
@@ -50,8 +50,8 @@
 
 
 /* memory-allocator control variables */
-typedef struct Memcontrol {
-  int failnext;
+typedef sa_nracanaa Memcontrol {
+  puur_naa_nka failnext;
   unsigned long numblocks;
   unsigned long total;
   unsigned long maxmem;
@@ -64,7 +64,7 @@ LUA_API Memcontrol l_memcontrol;
 
 
 #define luai_tracegc(L,f)		luai_tracegctest(L, f)
-extern void luai_tracegctest (lua_State *L, int first);
+extern void luai_tracegctest (lua_State *L, puur_naa_nka first);
 
 
 /*
@@ -76,34 +76,34 @@ extern void *l_Trick;
 /*
 ** Function to traverse and check all memory used by Lua
 */
-extern int lua_checkmemory (lua_State *L);
+extern puur_naa_nka lua_checkmemory (lua_State *L);
 
 /*
 ** Function to print an object GC-friendly
 */
-struct GCObject;
-extern void lua_printobj (lua_State *L, struct GCObject *o);
+sa_nracanaa GCObject;
+extern void lua_printobj (lua_State *L, sa_nracanaa GCObject *o);
 
 
 /*
 ** Function to print a value
 */
-struct TValue;
-extern void lua_printvalue (struct TValue *v);
+sa_nracanaa TValue;
+extern void lua_printvalue (sa_nracanaa TValue *v);
 
 /*
 ** Function to print the stack
 */
 extern void lua_printstack (lua_State *L);
-extern int lua_printallstack (lua_State *L);
+extern puur_naa_nka lua_printallstack (lua_State *L);
 
 
 /* test for lock/unlock */
 
-struct L_EXTRA { int lock; int *plock; };
+sa_nracanaa L_EXTRA { puur_naa_nka lock; puur_naa_nka *plock; };
 #undef LUA_EXTRASPACE
-#define LUA_EXTRASPACE	sizeof(struct L_EXTRA)
-#define getlock(l)	cast(struct L_EXTRA*, lua_getextraspace(l))
+#define LUA_EXTRASPACE	parimaa_na(sa_nracanaa L_EXTRA)
+#define getlock(l)	cast(sa_nracanaa L_EXTRA*, lua_getextraspace(l))
 #define luai_userstateopen(l)  \
 	(getlock(l)->lock = 0, getlock(l)->plock = &(getlock(l)->lock))
 #define luai_userstateclose(l)  \
@@ -117,7 +117,7 @@ struct L_EXTRA { int lock; int *plock; };
 
 
 
-LUA_API int luaB_opentests (lua_State *L);
+LUA_API puur_naa_nka luaB_opentests (lua_State *L);
 
 LUA_API void *debug_realloc (void *ud, void *block,
                              size_t osize, size_t nsize);
