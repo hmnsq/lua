@@ -9,18 +9,18 @@
 #define lauxlib_h
 
 
-#include <stddef.h>
-#include <stdio.h>
+#ضمن <stddef.h>
+#ضمن <stdio.h>
 
-#include "luaconf.h"
-#include "lua.h"
+#ضمن "luaconf.h"
+#ضمن "lua.h"
 
 
 /* global table */
 #define LUA_GNAME	"_G"
 
 
-typedef struct luaL_Buffer luaL_Buffer;
+تعريفنوع بنية luaL_Buffer luaL_Buffer;
 
 
 /* extra error code for 'luaL_loadfilex' */
@@ -35,53 +35,53 @@ typedef struct luaL_Buffer luaL_Buffer;
 #define LUA_PRELOAD_TABLE	"_PRELOAD"
 
 
-typedef struct luaL_Reg {
-  const char *name;
+تعريفنوع بنية luaL_Reg {
+  ثابت حرف *name;
   lua_CFunction func;
 } luaL_Reg;
 
 
-#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_Number))
+#define LUAL_NUMSIZES	(حجم(lua_Integer)*16 + حجم(lua_سان))
 
-LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_Number ver, size_t sz);
+LUALIB_API فراغ (luaL_checkversion_) (lua_State *L, lua_سان ver, size_t sz);
 #define luaL_checkversion(L)  \
-	  luaL_checkversion_(L, LUA_VERSION_NUM, LUAL_NUMSIZES)
+	  luaL_checkversion_(L, LUA_VERSION_رەقەم, LUAL_NUMSIZES)
 
-LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
-LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
-LUALIB_API const char *(luaL_tolstring) (lua_State *L, int idx, size_t *len);
-LUALIB_API int (luaL_argerror) (lua_State *L, int arg, const char *extramsg);
-LUALIB_API int (luaL_typeerror) (lua_State *L, int arg, const char *tname);
-LUALIB_API const char *(luaL_checklstring) (lua_State *L, int arg,
+LUALIB_API صحيح (luaL_getmetafield) (lua_State *L, صحيح obj, ثابت حرف *e);
+LUALIB_API صحيح (luaL_callmeta) (lua_State *L, صحيح obj, ثابت حرف *e);
+LUALIB_API ثابت حرف *(luaL_tolstring) (lua_State *L, صحيح idx, size_t *len);
+LUALIB_API صحيح (luaL_argerror) (lua_State *L, صحيح arg, ثابت حرف *extramsg);
+LUALIB_API صحيح (luaL_typeerror) (lua_State *L, صحيح arg, ثابت حرف *tname);
+LUALIB_API ثابت حرف *(luaL_checklstring) (lua_State *L, صحيح arg,
                                                           size_t *l);
-LUALIB_API const char *(luaL_optlstring) (lua_State *L, int arg,
-                                          const char *def, size_t *l);
-LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int arg);
-LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int arg, lua_Number def);
+LUALIB_API ثابت حرف *(luaL_optlstring) (lua_State *L, صحيح arg,
+                                          ثابت حرف *def, size_t *l);
+LUALIB_API lua_سان (luaL_checknumber) (lua_State *L, صحيح arg);
+LUALIB_API lua_سان (luaL_optnumber) (lua_State *L, صحيح arg, lua_سان def);
 
-LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, int arg);
-LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, int arg,
+LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, صحيح arg);
+LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, صحيح arg,
                                           lua_Integer def);
 
-LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
-LUALIB_API void (luaL_checktype) (lua_State *L, int arg, int t);
-LUALIB_API void (luaL_checkany) (lua_State *L, int arg);
+LUALIB_API فراغ (luaL_checkstack) (lua_State *L, صحيح sz, ثابت حرف *ئۇچۇر);
+LUALIB_API فراغ (luaL_checktype) (lua_State *L, صحيح arg, صحيح t);
+LUALIB_API فراغ (luaL_checkany) (lua_State *L, صحيح arg);
 
-LUALIB_API int   (luaL_newmetatable) (lua_State *L, const char *tname);
-LUALIB_API void  (luaL_setmetatable) (lua_State *L, const char *tname);
-LUALIB_API void *(luaL_testudata) (lua_State *L, int ud, const char *tname);
-LUALIB_API void *(luaL_checkudata) (lua_State *L, int ud, const char *tname);
+LUALIB_API صحيح   (luaL_newmetatable) (lua_State *L, ثابت حرف *tname);
+LUALIB_API فراغ  (luaL_setmetatable) (lua_State *L, ثابت حرف *tname);
+LUALIB_API فراغ *(luaL_testudata) (lua_State *L, صحيح ud, ثابت حرف *tname);
+LUALIB_API فراغ *(luaL_checkudata) (lua_State *L, صحيح ud, ثابت حرف *tname);
 
-LUALIB_API void (luaL_where) (lua_State *L, int lvl);
-LUALIB_API int (luaL_error) (lua_State *L, const char *fmt, ...);
+LUALIB_API فراغ (luaL_where) (lua_State *L, صحيح lvl);
+LUALIB_API صحيح (luaL_error) (lua_State *L, ثابت حرف *fmt, ...);
 
-LUALIB_API int (luaL_checkoption) (lua_State *L, int arg, const char *def,
-                                   const char *const lst[]);
+LUALIB_API صحيح (luaL_checkoption) (lua_State *L, صحيح arg, ثابت حرف *def,
+                                   ثابت حرف *ثابت lst[]);
 
-LUALIB_API int (luaL_fileresult) (lua_State *L, int stat, const char *fname);
-LUALIB_API int (luaL_execresult) (lua_State *L, int stat);
+LUALIB_API صحيح (luaL_fileresult) (lua_State *L, صحيح stat, ثابت حرف *fname);
+LUALIB_API صحيح (luaL_execresult) (lua_State *L, صحيح stat);
 
-LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
+LUALIB_API فراغ *(luaL_alloc) (فراغ *ud, فراغ *ptr, size_t osize,
                                                     size_t nsize);
 
 
@@ -89,38 +89,38 @@ LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
 #define LUA_NOREF       (-2)
 #define LUA_REFNIL      (-1)
 
-LUALIB_API int (luaL_ref) (lua_State *L, int t);
-LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
+LUALIB_API صحيح (luaL_ref) (lua_State *L, صحيح t);
+LUALIB_API فراغ (luaL_unref) (lua_State *L, صحيح t, صحيح ref);
 
-LUALIB_API int (luaL_loadfilex) (lua_State *L, const char *filename,
-                                               const char *mode);
+LUALIB_API صحيح (luaL_loadfilex) (lua_State *L, ثابت حرف *filename,
+                                               ثابت حرف *mode);
 
-#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,NULL)
+#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,عدم)
 
-LUALIB_API int (luaL_loadbufferx) (lua_State *L, const char *buff, size_t sz,
-                                   const char *name, const char *mode);
-LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s);
+LUALIB_API صحيح (luaL_loadbufferx) (lua_State *L, ثابت حرف *buff, size_t sz,
+                                   ثابت حرف *name, ثابت حرف *mode);
+LUALIB_API صحيح (luaL_loadstring) (lua_State *L, ثابت حرف *s);
 
-LUALIB_API lua_State *(luaL_newstate) (void);
+LUALIB_API lua_State *(luaL_newstate) (فراغ);
 
 LUALIB_API unsigned (luaL_makeseed) (lua_State *L);
 
-LUALIB_API lua_Integer (luaL_len) (lua_State *L, int idx);
+LUALIB_API lua_Integer (luaL_len) (lua_State *L, صحيح idx);
 
-LUALIB_API void (luaL_addgsub) (luaL_Buffer *b, const char *s,
-                                     const char *p, const char *r);
-LUALIB_API const char *(luaL_gsub) (lua_State *L, const char *s,
-                                    const char *p, const char *r);
+LUALIB_API فراغ (luaL_addgsub) (luaL_Buffer *b, ثابت حرف *s,
+                                     ثابت حرف *p, ثابت حرف *r);
+LUALIB_API ثابت حرف *(luaL_gsub) (lua_State *L, ثابت حرف *s,
+                                    ثابت حرف *p, ثابت حرف *r);
 
-LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
+LUALIB_API فراغ (luaL_setfuncs) (lua_State *L, ثابت luaL_Reg *l, صحيح nup);
 
-LUALIB_API int (luaL_getsubtable) (lua_State *L, int idx, const char *fname);
+LUALIB_API صحيح (luaL_getsubtable) (lua_State *L, صحيح idx, ثابت حرف *fname);
 
-LUALIB_API void (luaL_traceback) (lua_State *L, lua_State *L1,
-                                  const char *msg, int level);
+LUALIB_API فراغ (luaL_traceback) (lua_State *L, lua_State *L1,
+                                  ثابت حرف *ئۇچۇر, صحيح level);
 
-LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
-                                 lua_CFunction openf, int glb);
+LUALIB_API فراغ (luaL_requiref) (lua_State *L, ثابت حرف *modname,
+                                 lua_CFunction openf, صحيح glb);
 
 /*
 ** ===============================================================
@@ -130,19 +130,19 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 #define luaL_newlibtable(L,l)	\
-  lua_createtable(L, 0, sizeof(l)/sizeof((l)[0]) - 1)
+  lua_createtable(L, 0, حجم(l)/حجم((l)[0]) - 1)
 
 #define luaL_newlib(L,l)  \
   (luaL_checkversion(L), luaL_newlibtable(L,l), luaL_setfuncs(L,l,0))
 
 #define luaL_argcheck(L, cond,arg,extramsg)	\
-	((void)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
+	((فراغ)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
 
 #define luaL_argexpected(L,cond,arg,tname)	\
-	((void)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
+	((فراغ)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
 
-#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
-#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
+#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), عدم))
+#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), عدم))
 
 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 
@@ -156,7 +156,7 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 #define luaL_opt(L,f,n,d)	(lua_isnoneornil(L,(n)) ? (d) : f(L,(n)))
 
-#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,NULL)
+#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,عدم)
 
 
 /*
@@ -168,9 +168,9 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 /* push the value used to represent failure/error */
-#if defined(LUA_FAILISFALSE)
+#إذا defined(LUA_FAILISFALSE)
 #define luaL_pushfail(L)	lua_pushboolean(L, 0)
-#else
+#وإلا
 #define luaL_pushfail(L)	lua_pushnil(L)
 #endif
 
@@ -182,14 +182,14 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 ** =======================================================
 */
 
-struct luaL_Buffer {
-  char *b;  /* buffer address */
+بنية luaL_Buffer {
+  حرف *b;  /* buffer address */
   size_t size;  /* buffer size */
   size_t n;  /* number of characters in buffer */
   lua_State *L;
-  union {
+  اتحاد {
     LUAI_MAXALIGN;  /* ensure maximum alignment for buffer */
-    char b[LUAL_BUFFERSIZE];  /* initial buffer */
+    حرف b[LUAL_BUFFERSIZE];  /* initial buffer */
   } init;
 };
 
@@ -199,21 +199,21 @@ struct luaL_Buffer {
 
 
 #define luaL_addchar(B,c) \
-  ((void)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
+  ((فراغ)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
    ((B)->b[(B)->n++] = (c)))
 
 #define luaL_addsize(B,s)	((B)->n += (s))
 
 #define luaL_buffsub(B,s)	((B)->n -= (s))
 
-LUALIB_API void (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
-LUALIB_API char *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
-LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
-LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
+LUALIB_API فراغ (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
+LUALIB_API حرف *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
+LUALIB_API فراغ (luaL_addlstring) (luaL_Buffer *B, ثابت حرف *s, size_t l);
+LUALIB_API فراغ (luaL_addstring) (luaL_Buffer *B, ثابت حرف *s);
+LUALIB_API فراغ (luaL_addvalue) (luaL_Buffer *B);
+LUALIB_API فراغ (luaL_pushresult) (luaL_Buffer *B);
+LUALIB_API فراغ (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
+LUALIB_API حرف *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 
 #define luaL_prepbuffer(B)	luaL_prepbuffsize(B, LUAL_BUFFERSIZE)
 
@@ -236,7 +236,7 @@ LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 #define LUA_FILEHANDLE          "FILE*"
 
 
-typedef struct luaL_Stream {
+تعريفنوع بنية luaL_Stream {
   FILE *f;  /* stream (NULL for incompletely created streams) */
   lua_CFunction closef;  /* to close stream (NULL for closed streams) */
 } luaL_Stream;
@@ -249,14 +249,14 @@ typedef struct luaL_Stream {
 ** Compatibility with deprecated conversions
 ** =============================================================
 */
-#if defined(LUA_COMPAT_APIINTCASTS)
+#إذا defined(LUA_COMPAT_APIINTCASTS)
 
 #define luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
 #define luaL_optunsigned(L,a,d)	\
 	((lua_Unsigned)luaL_optinteger(L,a,(lua_Integer)(d)))
 
-#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
-#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+#define luaL_checkint(L,n)	((صحيح)luaL_checkinteger(L, (n)))
+#define luaL_optint(L,n,d)	((صحيح)luaL_optinteger(L, (n), (d)))
 
 #define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
 #define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))

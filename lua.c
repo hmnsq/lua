@@ -6,32 +6,32 @@
 
 #define lua_c
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <string.h>
 
-#include <signal.h>
+#ضمن <signal.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ضمن "lauxlib.h"
+#ضمن "lualib.h"
+#ضمن "llimits.h"
 
 
-#if !defined(LUA_PROGNAME)
+#إذا !defined(LUA_PROGNAME)
 #define LUA_PROGNAME		"lua"
 #endif
 
-#if !defined(LUA_INIT_VAR)
+#إذا !defined(LUA_INIT_VAR)
 #define LUA_INIT_VAR		"LUA_INIT"
 #endif
 
 /* Name of the environment variable with the name of the readline library */
-#if !defined(LUA_RLLIB_VAR)
+#إذا !defined(LUA_RLLIB_VAR)
 #define LUA_RLLIB_VAR		"LUA_READLINELIB"
 #endif
 
@@ -39,27 +39,27 @@
 #define LUA_INITVARVERSION	LUA_INIT_VAR LUA_VERSUFFIX
 
 
-static lua_State *globalL = NULL;
+ساكن lua_State *globalL = عدم;
 
-static const char *progname = LUA_PROGNAME;
+ساكن ثابت حرف *progname = LUA_PROGNAME;
 
 
-#if defined(LUA_USE_POSIX)   /* { */
+#إذا defined(LUA_USE_POSIX)   /* { */
 
 /*
 ** Use 'sigaction' when available.
 */
-static void setsignal (int sig, void (*handler)(int)) {
-  struct sigaction sa;
+ساكن فراغ setsignal (صحيح sig, فراغ (*handler)(صحيح)) {
+  بنية sigaction sa;
   sa.sa_handler = handler;
   sa.sa_flags = 0;
   sigemptyset(&sa.sa_mask);  /* do not mask any signal */
-  sigaction(sig, &sa, NULL);
+  sigaction(sig, &sa, عدم);
 }
 
-#else           /* }{ */
+#وإلا           /* }{ */
 
-#define setsignal            signal
+#define setsignal            إشارة
 
 #endif                               /* } */
 
@@ -67,9 +67,9 @@ static void setsignal (int sig, void (*handler)(int)) {
 /*
 ** Hook set by signal function to stop the interpreter.
 */
-static void lstop (lua_State *L, lua_Debug *ar) {
-  (void)ar;  /* unused arg. */
-  lua_sethook(L, NULL, 0, 0);  /* reset hook */
+ساكن فراغ lstop (lua_State *L, lua_Debug *ar) {
+  (فراغ)ar;  /* unused arg. */
+  lua_sethook(L, عدم, 0, 0);  /* reset hook */
   luaL_error(L, "interrupted!");
 }
 
@@ -80,18 +80,18 @@ static void lstop (lua_State *L, lua_Debug *ar) {
 ** this function only sets a hook that, when called, will stop the
 ** interpreter.
 */
-static void laction (int i) {
-  int flag = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE | LUA_MASKCOUNT;
+ساكن فراغ laction (صحيح i) {
+  صحيح flag = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE | LUA_MASKCOUNT;
   setsignal(i, SIG_DFL); /* if another SIGINT happens, terminate process */
   lua_sethook(globalL, lstop, flag, 1);
 }
 
 
-static void print_usage (const char *badoption) {
+ساكن فراغ print_usage (ثابت حرف *badoption) {
   lua_writestringerror("%s: ", progname);
-  if (badoption[1] == 'e' || badoption[1] == 'l')
+  إذا (badoption[1] == 'e' || badoption[1] == 'l')
     lua_writestringerror("'%s' needs argument\n", badoption);
-  else
+  وإلا
     lua_writestringerror("unrecognized option '%s'\n", badoption);
   lua_writestringerror(
   "usage: %s [options] [script [args]]\n"
@@ -114,9 +114,9 @@ static void print_usage (const char *badoption) {
 ** Prints an error message, adding the program name in front of it
 ** (if present)
 */
-static void l_message (const char *pname, const char *msg) {
-  if (pname) lua_writestringerror("%s: ", pname);
-  lua_writestringerror("%s\n", msg);
+ساكن فراغ l_message (ثابت حرف *pname, ثابت حرف *ئۇچۇر) {
+  إذا (pname) lua_writestringerror("%s: ", pname);
+  lua_writestringerror("%s\n", ئۇچۇر);
 }
 
 
@@ -124,33 +124,33 @@ static void l_message (const char *pname, const char *msg) {
 ** Check whether 'status' is not OK and, if so, prints the error
 ** message on the top of the stack.
 */
-static int report (lua_State *L, int status) {
-  if (status != LUA_OK) {
-    const char *msg = lua_tostring(L, -1);
-    if (msg == NULL)
-      msg = "(error message not a string)";
-    l_message(progname, msg);
-    lua_pop(L, 1);  /* remove message */
+ساكن صحيح report (lua_State *L, صحيح status) {
+  إذا (status != LUA_OK) {
+    ثابت حرف *ئۇچۇر = lua_tostring(L, -1);
+    إذا (ئۇچۇر == عدم)
+      ئۇچۇر = "(error message not a string)";
+    l_message(progname, ئۇچۇر);
+    lua_چىقىرىش(L, 1);  /* remove message */
   }
-  return status;
+  أرجع status;
 }
 
 
 /*
 ** Message handler used to run all chunks
 */
-static int msghandler (lua_State *L) {
-  const char *msg = lua_tostring(L, 1);
-  if (msg == NULL) {  /* is error object not a string? */
-    if (luaL_callmeta(L, 1, "__tostring") &&  /* does it have a metamethod */
+ساكن صحيح msghandler (lua_State *L) {
+  ثابت حرف *ئۇچۇر = lua_tostring(L, 1);
+  إذا (ئۇچۇر == عدم) {  /* is error object not a string? */
+    إذا (luaL_callmeta(L, 1, "__tostring") &&  /* does it have a metamethod */
         lua_type(L, -1) == LUA_TSTRING)  /* that produces a string? */
-      return 1;  /* that is the message */
-    else
-      msg = lua_pushfstring(L, "(error object is a %s value)",
+      أرجع 1;  /* that is the message */
+    وإلا
+      ئۇچۇر = lua_pushfstring(L, "(error object is a %s value)",
                                luaL_typename(L, 1));
   }
-  luaL_traceback(L, L, msg, 1);  /* append a standard traceback */
-  return 1;  /* return the traceback */
+  luaL_traceback(L, L, ئۇچۇر, 1);  /* append a standard traceback */
+  أرجع 1;  /* return the traceback */
 }
 
 
@@ -158,21 +158,21 @@ static int msghandler (lua_State *L) {
 ** Interface to 'lua_pcall', which sets appropriate message function
 ** and C-signal handler. Used to run all chunks.
 */
-static int docall (lua_State *L, int narg, int nres) {
-  int status;
-  int base = lua_gettop(L) - narg;  /* function index */
+ساكن صحيح docall (lua_State *L, صحيح narg, صحيح nres) {
+  صحيح status;
+  صحيح base = lua_gettop(L) - narg;  /* function index */
   lua_pushcfunction(L, msghandler);  /* push message handler */
-  lua_insert(L, base);  /* put it under function and args */
+  lua_قىستۇرۇش(L, base);  /* put it under function and args */
   globalL = L;  /* to be available to 'laction' */
   setsignal(SIGINT, laction);  /* set C-signal handler */
   status = lua_pcall(L, narg, nres, base);
   setsignal(SIGINT, SIG_DFL); /* reset C-signal handler */
   lua_remove(L, base);  /* remove message handler from the stack */
-  return status;
+  أرجع status;
 }
 
 
-static void print_version (void) {
+ساكن فراغ print_version (فراغ) {
   lua_writestring(LUA_COPYRIGHT, strlen(LUA_COPYRIGHT));
   lua_writeline();
 }
@@ -188,11 +188,11 @@ static void print_version (void) {
 ** (If there is no interpreter's name either, 'script' is -1, so
 ** table sizes are zero.)
 */
-static void createargtable (lua_State *L, char **argv, int argc, int script) {
-  int i, narg;
+ساكن فراغ createargtable (lua_State *L, حرف **argv, صحيح argc, صحيح script) {
+  صحيح i, narg;
   narg = argc - (script + 1);  /* number of positive indices */
   lua_createtable(L, narg, script + 1);
-  for (i = 0; i < argc; i++) {
+  لكل (i = 0; i < argc; i++) {
     lua_pushstring(L, argv[i]);
     lua_rawseti(L, -2, i - script);
   }
@@ -200,19 +200,19 @@ static void createargtable (lua_State *L, char **argv, int argc, int script) {
 }
 
 
-static int dochunk (lua_State *L, int status) {
-  if (status == LUA_OK) status = docall(L, 0, 0);
-  return report(L, status);
+ساكن صحيح dochunk (lua_State *L, صحيح status) {
+  إذا (status == LUA_OK) status = docall(L, 0, 0);
+  أرجع report(L, status);
 }
 
 
-static int dofile (lua_State *L, const char *name) {
-  return dochunk(L, luaL_loadfilex(L, name, "bt"));
+ساكن صحيح dofile (lua_State *L, ثابت حرف *name) {
+  أرجع dochunk(L, luaL_loadfilex(L, name, "bt"));
 }
 
 
-static int dostring (lua_State *L, const char *s, const char *name) {
-  return dochunk(L, luaL_loadbufferx(L, s, strlen(s), name, "t"));
+ساكن صحيح dostring (lua_State *L, ثابت حرف *s, ثابت حرف *name) {
+  أرجع dochunk(L, luaL_loadbufferx(L, s, strlen(s), name, "t"));
 }
 
 
@@ -221,57 +221,57 @@ static int dostring (lua_State *L, const char *s, const char *name) {
 ** If there is no explicit modname and globname contains a '-', cut
 ** the suffix after '-' (the "version") to make the global name.
 */
-static int dolibrary (lua_State *L, char *globname) {
-  int status;
-  char *suffix = NULL;
-  char *modname = strchr(globname, '=');
-  if (modname == NULL) {  /* no explicit name? */
+ساكن صحيح dolibrary (lua_State *L, حرف *globname) {
+  صحيح status;
+  حرف *suffix = عدم;
+  حرف *modname = strchr(globname, '=');
+  إذا (modname == عدم) {  /* no explicit name? */
     modname = globname;  /* module name is equal to global name */
     suffix = strchr(modname, *LUA_IGMARK);  /* look for a suffix mark */
   }
-  else {
+  وإلا {
     *modname = '\0';  /* global name ends here */
     modname++;  /* module name starts after the '=' */
   }
   lua_getglobal(L, "require");
   lua_pushstring(L, modname);
   status = docall(L, 1, 1);  /* call 'require(modname)' */
-  if (status == LUA_OK) {
-    if (suffix != NULL)  /* is there a suffix mark? */
+  إذا (status == LUA_OK) {
+    إذا (suffix != عدم)  /* is there a suffix mark? */
       *suffix = '\0';  /* remove suffix from global name */
     lua_setglobal(L, globname);  /* globname = require(modname) */
   }
-  return report(L, status);
+  أرجع report(L, status);
 }
 
 
 /*
 ** Push on the stack the contents of table 'arg' from 1 to #arg
 */
-static int pushargs (lua_State *L) {
-  int i, n;
-  if (lua_getglobal(L, "arg") != LUA_TTABLE)
+ساكن صحيح pushargs (lua_State *L) {
+  صحيح i, n;
+  إذا (lua_getglobal(L, "arg") != LUA_TTABLE)
     luaL_error(L, "'arg' is not a table");
-  n = (int)luaL_len(L, -1);
+  n = (صحيح)luaL_len(L, -1);
   luaL_checkstack(L, n + 3, "too many arguments to script");
-  for (i = 1; i <= n; i++)
+  لكل (i = 1; i <= n; i++)
     lua_rawgeti(L, -i, i);
   lua_remove(L, -i);  /* remove table from the stack */
-  return n;
+  أرجع n;
 }
 
 
-static int handle_script (lua_State *L, char **argv) {
-  int status;
-  const char *fname = argv[0];
-  if (strcmp(fname, "-") == 0 && strcmp(argv[-1], "--") != 0)
-    fname = NULL;  /* stdin */
+ساكن صحيح handle_script (lua_State *L, حرف **argv) {
+  صحيح status;
+  ثابت حرف *fname = argv[0];
+  إذا (strcmp(fname, "-") == 0 && strcmp(argv[-1], "--") != 0)
+    fname = عدم;  /* stdin */
   status = luaL_loadfilex(L, fname, "bt");
-  if (status == LUA_OK) {
-    int n = pushargs(L);  /* push arguments to script */
+  إذا (status == LUA_OK) {
+    صحيح n = pushargs(L);  /* push arguments to script */
     status = docall(L, n, LUA_MULTRET);
   }
-  return report(L, status);
+  أرجع report(L, status);
 }
 
 
@@ -290,61 +290,61 @@ static int handle_script (lua_State *L, char **argv) {
 ** argument.  Otherwise, 'first' is -1 if there is no program name,
 ** 0 if there is no script name, or the index of the script name.
 */
-static int collectargs (char **argv, int *first) {
-  int args = 0;
-  int i;
-  if (argv[0] != NULL) {  /* is there a program name? */
-    if (argv[0][0])  /* not empty? */
+ساكن صحيح collectargs (حرف **argv, صحيح *first) {
+  صحيح args = 0;
+  صحيح i;
+  إذا (argv[0] != عدم) {  /* is there a program name? */
+    إذا (argv[0][0])  /* not empty? */
       progname = argv[0];  /* save it */
   }
-  else {  /* no program name */
+  وإلا {  /* no program name */
     *first = -1;
-    return 0;
+    أرجع 0;
   }
-  for (i = 1; argv[i] != NULL; i++) {  /* handle arguments */
+  لكل (i = 1; argv[i] != عدم; i++) {  /* handle arguments */
     *first = i;
-    if (argv[i][0] != '-')  /* not an option? */
-        return args;  /* stop handling options */
-    switch (argv[i][1]) {  /* else check option */
-      case '-':  /* '--' */
-        if (argv[i][2] != '\0')  /* extra characters after '--'? */
-          return has_error;  /* invalid option */
+    إذا (argv[i][0] != '-')  /* not an option? */
+        أرجع args;  /* stop handling options */
+    بدل (argv[i][1]) {  /* else check option */
+      حالة '-':  /* '--' */
+        إذا (argv[i][2] != '\0')  /* extra characters after '--'? */
+          أرجع has_error;  /* invalid option */
         /* if there is a script name, it comes after '--' */
-        *first = (argv[i + 1] != NULL) ? i + 1 : 0;
-        return args;
-      case '\0':  /* '-' */
-        return args;  /* script "name" is '-' */
-      case 'E':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
+        *first = (argv[i + 1] != عدم) ? i + 1 : 0;
+        أرجع args;
+      حالة '\0':  /* '-' */
+        أرجع args;  /* script "name" is '-' */
+      حالة 'E':
+        إذا (argv[i][2] != '\0')  /* extra characters? */
+          أرجع has_error;  /* invalid option */
         args |= has_E;
-        break;
-      case 'W':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
-        break;
-      case 'i':
+        اكسر;
+      حالة 'W':
+        إذا (argv[i][2] != '\0')  /* extra characters? */
+          أرجع has_error;  /* invalid option */
+        اكسر;
+      حالة 'i':
         args |= has_i;  /* (-i implies -v) *//* FALLTHROUGH */
-      case 'v':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
+      حالة 'v':
+        إذا (argv[i][2] != '\0')  /* extra characters? */
+          أرجع has_error;  /* invalid option */
         args |= has_v;
-        break;
-      case 'e':
+        اكسر;
+      حالة 'e':
         args |= has_e;  /* FALLTHROUGH */
-      case 'l':  /* both options need an argument */
-        if (argv[i][2] == '\0') {  /* no concatenated argument? */
+      حالة 'l':  /* both options need an argument */
+        إذا (argv[i][2] == '\0') {  /* no concatenated argument? */
           i++;  /* try next 'argv' */
-          if (argv[i] == NULL || argv[i][0] == '-')
-            return has_error;  /* no next argument or it is another option */
+          إذا (argv[i] == عدم || argv[i][0] == '-')
+            أرجع has_error;  /* no next argument or it is another option */
         }
-        break;
-      default:  /* invalid option */
-        return has_error;
+        اكسر;
+      افتراضي:  /* invalid option */
+        أرجع has_error;
     }
   }
   *first = 0;  /* no script name */
-  return args;
+  أرجع args;
 }
 
 
@@ -353,54 +353,54 @@ static int collectargs (char **argv, int *first) {
 ** 'W', which also affects the state.
 ** Returns 0 if some code raises an error.
 */
-static int runargs (lua_State *L, char **argv, int n) {
-  int i;
+ساكن صحيح runargs (lua_State *L, حرف **argv, صحيح n) {
+  صحيح i;
   lua_warning(L, "@off", 0);  /* by default, Lua stand-alone has warnings off */
-  for (i = 1; i < n; i++) {
-    int option = argv[i][1];
+  لكل (i = 1; i < n; i++) {
+    صحيح option = argv[i][1];
     lua_assert(argv[i][0] == '-');  /* already checked */
-    switch (option) {
-      case 'e':  case 'l': {
-        int status;
-        char *extra = argv[i] + 2;  /* both options need an argument */
-        if (*extra == '\0') extra = argv[++i];
-        lua_assert(extra != NULL);
+    بدل (option) {
+      حالة 'e':  حالة 'l': {
+        صحيح status;
+        حرف *extra = argv[i] + 2;  /* both options need an argument */
+        إذا (*extra == '\0') extra = argv[++i];
+        lua_assert(extra != عدم);
         status = (option == 'e')
                  ? dostring(L, extra, "=(command line)")
                  : dolibrary(L, extra);
-        if (status != LUA_OK) return 0;
-        break;
+        إذا (status != LUA_OK) أرجع 0;
+        اكسر;
       }
-      case 'W':
+      حالة 'W':
         lua_warning(L, "@on", 0);  /* warnings on */
-        break;
+        اكسر;
     }
   }
-  return 1;
+  أرجع 1;
 }
 
 
-static char *(*l_getenv)(const char *name);
+ساكن حرف *(*l_getenv)(ثابت حرف *name);
 
 /* Function to ignore environment variables, used by option -E */
-static char *no_getenv (const char *name) {
+ساكن حرف *no_getenv (ثابت حرف *name) {
   UNUSED(name);
-  return NULL;
+  أرجع عدم;
 }
 
 
-static int handle_luainit (lua_State *L) {
-  const char *name = "=" LUA_INITVARVERSION;
-  const char *init = l_getenv(name + 1);
-  if (init == NULL) {
+ساكن صحيح handle_luainit (lua_State *L) {
+  ثابت حرف *name = "=" LUA_INITVARVERSION;
+  ثابت حرف *init = l_getenv(name + 1);
+  إذا (init == عدم) {
     name = "=" LUA_INIT_VAR;
     init = l_getenv(name + 1);  /* try alternative name */
   }
-  if (init == NULL) return LUA_OK;
-  else if (init[0] == '@')
-    return dofile(L, init+1);
-  else
-    return dostring(L, init, name);
+  إذا (init == عدم) أرجع LUA_OK;
+  وإلا إذا (init[0] == '@')
+    أرجع dofile(L, init+1);
+  وإلا
+    أرجع dostring(L, init, name);
 }
 
 
@@ -410,12 +410,12 @@ static int handle_luainit (lua_State *L) {
 ** ===================================================================
 */
 
-#if !defined(LUA_PROMPT)
+#إذا !defined(LUA_PROMPT)
 #define LUA_PROMPT		"> "
 #define LUA_PROMPT2		">> "
 #endif
 
-#if !defined(LUA_MAXINPUT)
+#إذا !defined(LUA_MAXINPUT)
 #define LUA_MAXINPUT		512
 #endif
 
@@ -424,21 +424,21 @@ static int handle_luainit (lua_State *L) {
 ** lua_stdin_is_tty detects whether the standard input is a 'tty' (that
 ** is, whether we're running lua interactively).
 */
-#if !defined(lua_stdin_is_tty)	/* { */
+#إذا !defined(lua_stdin_is_tty)	/* { */
 
-#if defined(LUA_USE_POSIX)	/* { */
+#إذا defined(LUA_USE_POSIX)	/* { */
 
-#include <unistd.h>
+#ضمن <unistd.h>
 #define lua_stdin_is_tty()	isatty(0)
 
-#elif defined(LUA_USE_WINDOWS)	/* }{ */
+#وإلاإذا defined(LUA_USE_WINDOWS)	/* }{ */
 
-#include <io.h>
-#include <windows.h>
+#ضمن <io.h>
+#ضمن <windows.h>
 
 #define lua_stdin_is_tty()	_isatty(_fileno(stdin))
 
-#else				/* }{ */
+#وإلا				/* }{ */
 
 /* ISO C definition */
 #define lua_stdin_is_tty()	1  /* assume stdin is a tty */
@@ -456,77 +456,77 @@ static int handle_luainit (lua_State *L) {
 ** * lua_freeline defines how to free a line read by lua_readline.
 */
 
-#if !defined(lua_readline)	/* { */
+#إذا !defined(lua_readline)	/* { */
 /* Otherwise, all previously listed functions should be defined. */
 
-#if defined(LUA_USE_READLINE)	/* { */
+#إذا defined(LUA_USE_READLINE)	/* { */
 /* Lua will be linked with '-lreadline' */
 
-#include <readline/readline.h>
-#include <readline/history.h>
+#ضمن <readline/readline.h>
+#ضمن <readline/history.h>
 
 #define lua_initreadline(L)  \
-	((void)L, *cast(const char **, &rl_readline_name)="lua")
-#define lua_readline(buff,prompt)	((void)buff, readline(prompt))
-#define lua_saveline(line)	add_history(line)
-#define lua_freeline(line)	free(line)
+	((فراغ)L, *cast(ثابت حرف **, &rl_readline_name)="lua")
+#define lua_readline(buff,prompt)	((فراغ)buff, readline(prompt))
+#define lua_saveline(قۇر)	add_history(قۇر)
+#define lua_freeline(قۇر)	حرر(قۇر)
 
-#else		/* }{ */
+#وإلا		/* }{ */
 /* use dynamically loaded readline (or nothing) */
 
 /* pointer to 'readline' function (if any) */
-typedef char *(*l_readlineT) (const char *prompt);
-static l_readlineT l_readline = NULL;
+تعريفنوع حرف *(*l_readlineT) (ثابت حرف *prompt);
+ساكن l_readlineT l_readline = عدم;
 
 /* pointer to 'add_history' function (if any) */
-typedef void (*l_addhistT) (const char *string);
-static l_addhistT l_addhist = NULL;
+تعريفنوع فراغ (*l_addhistT) (ثابت حرف *string);
+ساكن l_addhistT l_addhist = عدم;
 
 
-static char *lua_readline (char *buff, const char *prompt) {
-  if (l_readline != NULL)  /* is there a 'readline'? */
-    return (*l_readline)(prompt);  /* use it */
-  else {  /* emulate 'readline' over 'buff' */
+ساكن حرف *lua_readline (حرف *buff, ثابت حرف *prompt) {
+  إذا (l_readline != عدم)  /* is there a 'readline'? */
+    أرجع (*l_readline)(prompt);  /* use it */
+  وإلا {  /* emulate 'readline' over 'buff' */
     fputs(prompt, stdout);
     fflush(stdout);  /* show prompt */
-    return fgets(buff, LUA_MAXINPUT, stdin);  /* read line */
+    أرجع fgets(buff, LUA_MAXINPUT, stdin);  /* read line */
   }
 }
 
 
-static void lua_saveline (const char *line) {
-  if (l_addhist != NULL)  /* is there an 'add_history'? */
-    (*l_addhist)(line);  /* use it */
+ساكن فراغ lua_saveline (ثابت حرف *قۇر) {
+  إذا (l_addhist != عدم)  /* is there an 'add_history'? */
+    (*l_addhist)(قۇر);  /* use it */
   /* else nothing to be done */
 }
 
 
-static void lua_freeline (char *line) {
-  if (l_readline != NULL)  /* is there a 'readline'? */
-    free(line);  /* free line created by it */
+ساكن فراغ lua_freeline (حرف *قۇر) {
+  إذا (l_readline != عدم)  /* is there a 'readline'? */
+    حرر(قۇر);  /* free line created by it */
   /* else 'lua_readline' used an automatic buffer; nothing to free */
 }
 
 
-#if defined(LUA_USE_DLOPEN) && defined(LUA_READLINELIB)		/* { */
+#إذا defined(LUA_USE_DLOPEN) && defined(LUA_READLINELIB)		/* { */
 /* try to load 'readline' dynamically */
 
-#include <dlfcn.h>
+#ضمن <dlfcn.h>
 
-static void lua_initreadline (lua_State *L) {
-  const char *rllib = l_getenv(LUA_RLLIB_VAR);  /* name of readline library */
-  void *lib;  /* library handle */
-  if (rllib == NULL)  /* no environment variable? */
+ساكن فراغ lua_initreadline (lua_State *L) {
+  ثابت حرف *rllib = l_getenv(LUA_RLLIB_VAR);  /* name of readline library */
+  فراغ *lib;  /* library handle */
+  إذا (rllib == عدم)  /* no environment variable? */
     rllib = LUA_READLINELIB;  /* use default name */
   lib = dlopen(rllib, RTLD_NOW | RTLD_LOCAL);
-  if (lib != NULL) {
-    const char **name = cast(const char**, dlsym(lib, "rl_readline_name"));
-    if (name != NULL)
+  إذا (lib != عدم) {
+    ثابت حرف **name = cast(ثابت حرف**, dlsym(lib, "rl_readline_name"));
+    إذا (name != عدم)
       *name = "lua";
     l_readline = cast(l_readlineT, cast_func(dlsym(lib, "readline")));
     l_addhist = cast(l_addhistT, cast_func(dlsym(lib, "add_history")));
-    if (l_readline != NULL)  /* could load readline function? */
-      return;  /* everything ok */
+    إذا (l_readline != عدم)  /* could load readline function? */
+      أرجع;  /* everything ok */
     /* else emit a warning */
   }
   lua_warning(L, "unable to load readline library '", 1);
@@ -534,11 +534,11 @@ static void lua_initreadline (lua_State *L) {
   lua_warning(L, "'", 0);
 }
 
-#else		/* }{ */
+#وإلا		/* }{ */
 /* no dlopen or LUA_READLINELIB undefined */
 
 /* Leave pointers with NULL */
-#define lua_initreadline(L)	((void)L)
+#define lua_initreadline(L)	((فراغ)L)
 
 #endif		/* } */
 
@@ -552,19 +552,19 @@ static void lua_initreadline (lua_State *L) {
 ** the string (or nil, if using the default value) on the stack, to keep
 ** it anchored.
 */
-static const char *get_prompt (lua_State *L, int firstline) {
-  if (lua_getglobal(L, firstline ? "_PROMPT" : "_PROMPT2") == LUA_TNIL)
-    return (firstline ? LUA_PROMPT : LUA_PROMPT2);  /* use the default */
-  else {  /* apply 'tostring' over the value */
-    const char *p = luaL_tolstring(L, -1, NULL);
+ساكن ثابت حرف *get_prompt (lua_State *L, صحيح firstline) {
+  إذا (lua_getglobal(L, firstline ? "_PROMPT" : "_PROMPT2") == LUA_TNIL)
+    أرجع (firstline ? LUA_PROMPT : LUA_PROMPT2);  /* use the default */
+  وإلا {  /* apply 'tostring' over the value */
+    ثابت حرف *p = luaL_tolstring(L, -1, عدم);
     lua_remove(L, -2);  /* remove original value */
-    return p;
+    أرجع p;
   }
 }
 
 /* mark in error messages for incomplete statements */
 #define EOFMARK		"<eof>"
-#define marklen		(sizeof(EOFMARK)/sizeof(char) - 1)
+#define marklen		(حجم(EOFMARK)/حجم(حرف) - 1)
 
 
 /*
@@ -572,34 +572,34 @@ static const char *get_prompt (lua_State *L, int firstline) {
 ** message at the top of the stack ends with the above mark for
 ** incomplete statements.
 */
-static int incomplete (lua_State *L, int status) {
-  if (status == LUA_ERRSYNTAX) {
+ساكن صحيح incomplete (lua_State *L, صحيح status) {
+  إذا (status == LUA_ERRSYNTAX) {
     size_t lmsg;
-    const char *msg = lua_tolstring(L, -1, &lmsg);
-    if (lmsg >= marklen && strcmp(msg + lmsg - marklen, EOFMARK) == 0)
-      return 1;
+    ثابت حرف *ئۇچۇر = lua_tolstring(L, -1, &lmsg);
+    إذا (lmsg >= marklen && strcmp(ئۇچۇر + lmsg - marklen, EOFMARK) == 0)
+      أرجع 1;
   }
-  return 0;  /* else... */
+  أرجع 0;  /* else... */
 }
 
 
 /*
 ** Prompt the user, read a line, and push it into the Lua stack.
 */
-static int pushline (lua_State *L, int firstline) {
-  char buffer[LUA_MAXINPUT];
+ساكن صحيح pushline (lua_State *L, صحيح firstline) {
+  حرف buffer[LUA_MAXINPUT];
   size_t l;
-  const char *prmt = get_prompt(L, firstline);
-  char *b = lua_readline(buffer, prmt);
-  lua_pop(L, 1);  /* remove prompt */
-  if (b == NULL)
-    return 0;  /* no input */
+  ثابت حرف *prmt = get_prompt(L, firstline);
+  حرف *b = lua_readline(buffer, prmt);
+  lua_چىقىرىش(L, 1);  /* remove prompt */
+  إذا (b == عدم)
+    أرجع 0;  /* no input */
   l = strlen(b);
-  if (l > 0 && b[l-1] == '\n')  /* line ends with newline? */
+  إذا (l > 0 && b[l-1] == '\n')  /* line ends with newline? */
     b[--l] = '\0';  /* remove it */
   lua_pushlstring(L, b, l);
   lua_freeline(b);
-  return 1;
+  أرجع 1;
 }
 
 
@@ -607,24 +607,24 @@ static int pushline (lua_State *L, int firstline) {
 ** Try to compile line on the stack as 'return <line>;'; on return, stack
 ** has either compiled chunk or original line (if compilation failed).
 */
-static int addreturn (lua_State *L) {
-  const char *line = lua_tostring(L, -1);  /* original line */
-  const char *retline = lua_pushfstring(L, "return %s;", line);
-  int status = luaL_loadbufferx(L, retline, strlen(retline), "=stdin", "t");
-  if (status == LUA_OK)
+ساكن صحيح addreturn (lua_State *L) {
+  ثابت حرف *قۇر = lua_tostring(L, -1);  /* original line */
+  ثابت حرف *retline = lua_pushfstring(L, "return %s;", قۇر);
+  صحيح status = luaL_loadbufferx(L, retline, strlen(retline), "=stdin", "t");
+  إذا (status == LUA_OK)
     lua_remove(L, -2);  /* remove modified line */
-  else
-    lua_pop(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
-  return status;
+  وإلا
+    lua_چىقىرىش(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
+  أرجع status;
 }
 
 
-static void checklocal (const char *line) {
-  static const size_t szloc = sizeof("local") - 1;
-  static const char space[] = " \t";
-  line += strspn(line, space);  /* skip spaces */
-  if (strncmp(line, "local", szloc) == 0 &&  /* "local"? */
-      strchr(space, *(line + szloc)) != NULL) {  /* followed by a space? */
+ساكن فراغ checklocal (ثابت حرف *قۇر) {
+  ساكن ثابت size_t szloc = حجم("local") - 1;
+  ساكن ثابت حرف space[] = " \t";
+  قۇر += strspn(قۇر, space);  /* skip spaces */
+  إذا (strncmp(قۇر, "local", szloc) == 0 &&  /* "local"? */
+      strchr(space, *(قۇر + szloc)) != عدم) {  /* followed by a space? */
     lua_writestringerror("%s\n",
       "warning: locals do not survive across lines in interactive mode");
   }
@@ -636,19 +636,19 @@ static void checklocal (const char *line) {
 ** for an incomplete statement. Start with first line already read in
 ** the stack.
 */
-static int multiline (lua_State *L) {
+ساكن صحيح multiline (lua_State *L) {
   size_t len;
-  const char *line = lua_tolstring(L, 1, &len);  /* get first line */
-  checklocal(line);
-  for (;;) {  /* repeat until gets a complete statement */
-    int status = luaL_loadbufferx(L, line, len, "=stdin", "t");  /* try it */
-    if (!incomplete(L, status) || !pushline(L, 0))
-      return status;  /* should not or cannot try to add continuation line */
+  ثابت حرف *قۇر = lua_tolstring(L, 1, &len);  /* get first line */
+  checklocal(قۇر);
+  لكل (;;) {  /* repeat until gets a complete statement */
+    صحيح status = luaL_loadbufferx(L, قۇر, len, "=stdin", "t");  /* try it */
+    إذا (!incomplete(L, status) || !pushline(L, 0))
+      أرجع status;  /* should not or cannot try to add continuation line */
     lua_remove(L, -2);  /* remove error message (from incomplete line) */
     lua_pushliteral(L, "\n");  /* add newline... */
-    lua_insert(L, -2);  /* ...between the two lines */
+    lua_قىستۇرۇش(L, -2);  /* ...between the two lines */
     lua_concat(L, 3);  /* join them */
-    line = lua_tolstring(L, 1, &len);  /* get what is has */
+    قۇر = lua_tolstring(L, 1, &len);  /* get what is has */
   }
 }
 
@@ -659,33 +659,33 @@ static int multiline (lua_State *L) {
 ** the final status of load/call with the resulting function (if any)
 ** in the top of the stack.
 */
-static int loadline (lua_State *L) {
-  const char *line;
-  int status;
+ساكن صحيح loadline (lua_State *L) {
+  ثابت حرف *قۇر;
+  صحيح status;
   lua_settop(L, 0);
-  if (!pushline(L, 1))
-    return -1;  /* no input */
-  if ((status = addreturn(L)) != LUA_OK)  /* 'return ...' did not work? */
+  إذا (!pushline(L, 1))
+    أرجع -1;  /* no input */
+  إذا ((status = addreturn(L)) != LUA_OK)  /* 'return ...' did not work? */
     status = multiline(L);  /* try as command, maybe with continuation lines */
-  line = lua_tostring(L, 1);
-  if (line[0] != '\0')  /* non empty? */
-    lua_saveline(line);  /* keep history */
+  قۇر = lua_tostring(L, 1);
+  إذا (قۇر[0] != '\0')  /* non empty? */
+    lua_saveline(قۇر);  /* keep history */
   lua_remove(L, 1);  /* remove line from the stack */
   lua_assert(lua_gettop(L) == 1);
-  return status;
+  أرجع status;
 }
 
 
 /*
 ** Prints (calling the Lua 'print' function) any values on the stack
 */
-static void l_print (lua_State *L) {
-  int n = lua_gettop(L);
-  if (n > 0) {  /* any result to be printed? */
+ساكن فراغ l_print (lua_State *L) {
+  صحيح n = lua_gettop(L);
+  إذا (n > 0) {  /* any result to be printed? */
     luaL_checkstack(L, LUA_MINSTACK, "too many results to print");
     lua_getglobal(L, "print");
-    lua_insert(L, 1);
-    if (lua_pcall(L, n, 0, 0) != LUA_OK)
+    lua_قىستۇرۇش(L, 1);
+    إذا (lua_pcall(L, n, 0, 0) != LUA_OK)
       l_message(progname, lua_pushfstring(L, "error calling 'print' (%s)",
                                              lua_tostring(L, -1)));
   }
@@ -696,16 +696,16 @@ static void l_print (lua_State *L) {
 ** Do the REPL: repeatedly read (load) a line, evaluate (call) it, and
 ** print any results.
 */
-static void doREPL (lua_State *L) {
-  int status;
-  const char *oldprogname = progname;
-  progname = NULL;  /* no 'progname' on errors in interactive mode */
+ساكن فراغ doREPL (lua_State *L) {
+  صحيح status;
+  ثابت حرف *oldprogname = progname;
+  progname = عدم;  /* no 'progname' on errors in interactive mode */
   lua_initreadline(L);
-  while ((status = loadline(L)) != -1) {
-    if (status == LUA_OK)
+  طالما ((status = loadline(L)) != -1) {
+    إذا (status == LUA_OK)
       status = docall(L, 0, LUA_MULTRET);
-    if (status == LUA_OK) l_print(L);
-    else report(L, status);
+    إذا (status == LUA_OK) l_print(L);
+    وإلا report(L, status);
   }
   lua_settop(L, 0);  /* clear stack */
   lua_writeline();
@@ -714,11 +714,11 @@ static void doREPL (lua_State *L) {
 
 /* }================================================================== */
 
-#if !defined(luai_openlibs)
-#if defined(LUA_NODEBUGLIB)
+#إذا !defined(luai_openlibs)
+#إذا defined(LUA_NODEBUGLIB)
 /* With this option, code must require the debug library before using it */
 #define luai_openlibs(L)  luaL_openselectedlibs(L, ~LUA_DBLIBK, LUA_DBLIBK)
-#else
+#وإلا
 /* The default is to open all standard libraries */
 #define luai_openlibs(L)  luaL_openselectedlibs(L, ~0, 0)
 #endif
@@ -729,58 +729,58 @@ static void doREPL (lua_State *L) {
 ** Main body of stand-alone interpreter (to be called in protected mode).
 ** Reads the options and handles them all.
 */
-static int pmain (lua_State *L) {
-  int argc = (int)lua_tointeger(L, 1);
-  char **argv = (char **)lua_touserdata(L, 2);
-  int script;
-  int args = collectargs(argv, &script);
-  int optlim = (script > 0) ? script : argc; /* first argv not an option */
+ساكن صحيح pmain (lua_State *L) {
+  صحيح argc = (صحيح)lua_tointeger(L, 1);
+  حرف **argv = (حرف **)lua_touserdata(L, 2);
+  صحيح script;
+  صحيح args = collectargs(argv, &script);
+  صحيح optlim = (script > 0) ? script : argc; /* first argv not an option */
   luaL_checkversion(L);  /* check that interpreter has correct version */
-  if (args == has_error) {  /* bad arg? */
+  إذا (args == has_error) {  /* bad arg? */
     print_usage(argv[script]);  /* 'script' has index of bad arg. */
-    return 0;
+    أرجع 0;
   }
-  if (args & has_v)  /* option '-v'? */
+  إذا (args & has_v)  /* option '-v'? */
     print_version();
-  if (args & has_E) {  /* option '-E'? */
+  إذا (args & has_E) {  /* option '-E'? */
     l_getenv = &no_getenv;  /* program will ignore environment variables */
     lua_pushboolean(L, 1);  /* signal for libraries to ignore env. vars. */
     lua_setfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
   }
-  else
+  وإلا
     l_getenv = &getenv;
   luai_openlibs(L);  /* open standard libraries */
   createargtable(L, argv, argc, script);  /* create table 'arg' */
   lua_gc(L, LUA_GCRESTART);  /* start GC... */
   lua_gc(L, LUA_GCGEN);  /* ...in generational mode */
-  if (handle_luainit(L) != LUA_OK)  /* run LUA_INIT */
-    return 0;  /* error running LUA_INIT */
-  if (!runargs(L, argv, optlim))  /* execute arguments -e, -l, and -W */
-    return 0;  /* something failed */
-  if (script > 0) {  /* execute main script (if there is one) */
-    if (handle_script(L, argv + script) != LUA_OK)
-      return 0;  /* interrupt in case of error */
+  إذا (handle_luainit(L) != LUA_OK)  /* run LUA_INIT */
+    أرجع 0;  /* error running LUA_INIT */
+  إذا (!runargs(L, argv, optlim))  /* execute arguments -e, -l, and -W */
+    أرجع 0;  /* something failed */
+  إذا (script > 0) {  /* execute main script (if there is one) */
+    إذا (handle_script(L, argv + script) != LUA_OK)
+      أرجع 0;  /* interrupt in case of error */
   }
-  if (args & has_i)  /* -i option? */
+  إذا (args & has_i)  /* -i option? */
     doREPL(L);  /* do read-eval-print loop */
-  else if (script < 1 && !(args & (has_e | has_v))) { /* no active option? */
-    if (lua_stdin_is_tty()) {  /* running in interactive mode? */
+  وإلا إذا (script < 1 && !(args & (has_e | has_v))) { /* no active option? */
+    إذا (lua_stdin_is_tty()) {  /* running in interactive mode? */
       print_version();
       doREPL(L);  /* do read-eval-print loop */
     }
-    else dofile(L, NULL);  /* executes stdin as a file */
+    وإلا dofile(L, عدم);  /* executes stdin as a file */
   }
   lua_pushboolean(L, 1);  /* signal no errors */
-  return 1;
+  أرجع 1;
 }
 
 
-int main (int argc, char **argv) {
-  int status, result;
+صحيح main (صحيح argc, حرف **argv) {
+  صحيح status, result;
   lua_State *L = luaL_newstate();  /* create state */
-  if (L == NULL) {
+  إذا (L == عدم) {
     l_message(argv[0], "cannot create state: not enough memory");
-    return EXIT_FAILURE;
+    أرجع EXIT_FAILURE;
   }
   lua_gc(L, LUA_GCSTOP);  /* stop GC while building state */
   lua_pushcfunction(L, &pmain);  /* to call 'pmain' in protected mode */
@@ -790,6 +790,6 @@ int main (int argc, char **argv) {
   result = lua_toboolean(L, -1);  /* get result */
   report(L, status);
   lua_close(L);
-  return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
+  أرجع (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

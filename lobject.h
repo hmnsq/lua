@@ -9,11 +9,11 @@
 #define lobject_h
 
 
-#include <stdarg.h>
+#ضمن <stdarg.h>
 
 
-#include "llimits.h"
-#include "lua.h"
+#ضمن "llimits.h"
+#ضمن "lua.h"
 
 
 /*
@@ -46,15 +46,15 @@
 /*
 ** Union of all Lua values
 */
-typedef union Value {
-  struct GCObject *gc;    /* collectable objects */
-  void *p;         /* light userdata */
+تعريفنوع اتحاد قىممەت_2 {
+  بنية GCObject *gc;    /* collectable objects */
+  فراغ *p;         /* light userdata */
   lua_CFunction f; /* light C functions */
   lua_Integer i;   /* integer numbers */
-  lua_Number n;    /* float numbers */
+  lua_سان n;    /* float numbers */
   /* not used, but may avoid warnings for uninitialized value */
   lu_byte ub;
-} Value;
+} قىممەت_2;
 
 
 /*
@@ -62,14 +62,14 @@ typedef union Value {
 ** an actual value plus a tag with its type.
 */
 
-#define TValuefields	Value value_; lu_byte tt_
+#define TValuefields	قىممەت_2 قىممەت_3; lu_byte tt_
 
-typedef struct TValue {
+تعريفنوع بنية TValue {
   TValuefields;
 } TValue;
 
 
-#define val_(o)		((o)->value_)
+#define val_(o)		((o)->قىممەت_3)
 #define valraw(o)	(val_(o))
 
 
@@ -104,8 +104,8 @@ typedef struct TValue {
 ** macros using this one to be used where L is not available.
 */
 #define checkliveness(L,obj) \
-	((void)L, lua_longassert(!iscollectable(obj) || \
-		(righttt(obj) && (L == NULL || !isdead(G(L),gcvalue(obj))))))
+	((فراغ)L, lua_longassert(!iscollectable(obj) || \
+		(righttt(obj) && (L == عدم || !isdead(G(L),gcvalue(obj))))))
 
 
 /* Macros to set values */
@@ -116,8 +116,8 @@ typedef struct TValue {
 
 /* main macro to copy values (from 'obj2' to 'obj1') */
 #define setobj(L,obj1,obj2) \
-	{ TValue *io1=(obj1); const TValue *io2=(obj2); \
-          io1->value_ = io2->value_; settt_(io1, io2->tt_); \
+	{ TValue *io1=(obj1); ثابت TValue *io2=(obj2); \
+          io1->قىممەت_3 = io2->قىممەت_3; settt_(io1, io2->tt_); \
 	  checkliveness(L,io1); lua_assert(!isnonstrictnil(io1)); }
 
 /*
@@ -145,24 +145,24 @@ typedef struct TValue {
 ** their real delta is always the maximum value that fits in
 ** that field.
 */
-typedef union StackValue {
+تعريفنوع اتحاد دۆۋە_قىممەت {
   TValue val;
-  struct {
+  بنية {
     TValuefields;
     unsigned short delta;
   } tbclist;
-} StackValue;
+} دۆۋە_قىممەت;
 
 
 /* index to stack elements */
-typedef StackValue *StkId;
+تعريفنوع دۆۋە_قىممەت *StkId;
 
 
 /*
 ** When reallocating the stack, change all pointers to the stack into
 ** proper offsets.
 */
-typedef union {
+تعريفنوع اتحاد {
   StkId p;  /* actual pointer */
   ptrdiff_t offset;  /* used while the stack is being reallocated */
 } StkIdRel;
@@ -230,7 +230,7 @@ typedef union {
 
 
 /* macro defining a value corresponding to an absent key */
-#define ABSTKEYCONSTANT		{NULL}, LUA_VABSTKEY
+#define ABSTKEYCONSTANT		{عدم}, LUA_VABSTKEY
 
 
 /* mark an entry as empty */
@@ -299,11 +299,11 @@ typedef union {
 ** Common Header for all collectable objects (in macro form, to be
 ** included in other objects)
 */
-#define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked
+#define CommonHeader	بنية GCObject *next; lu_byte tt; lu_byte marked
 
 
 /* Common type for all collectable objects */
-typedef struct GCObject {
+تعريفنوع بنية GCObject {
   CommonHeader;
 } GCObject;
 
@@ -342,7 +342,7 @@ typedef struct GCObject {
 #define ttisinteger(o)		checktag((o), LUA_VNUMINT)
 
 #define nvalue(o)	check_exp(ttisnumber(o), \
-	(ttisinteger(o) ? cast_num(ivalue(o)) : fltvalue(o)))
+	(ttisinteger(o) ? cast_رەقەم(ivalue(o)) : fltvalue(o)))
 #define fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
 #define ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
 
@@ -403,18 +403,18 @@ typedef struct GCObject {
 /*
 ** Header for a string value.
 */
-typedef struct TString {
+تعريفنوع بنية TString {
   CommonHeader;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   ls_byte shrlen;  /* length for short strings, negative for long strings */
-  unsigned int hash;
-  union {
+  unsigned صحيح hash;
+  اتحاد {
     size_t lnglen;  /* length for long strings */
-    struct TString *hnext;  /* linked list for hash table */
+    بنية TString *hnext;  /* linked list for hash table */
   } u;
-  char *contents;  /* pointer to content in long strings */
+  حرف *contents;  /* pointer to content in long strings */
   lua_Alloc falloc;  /* deallocation function for external strings */
-  void *ud;  /* user data for external strings */
+  فراغ *ud;  /* user data for external strings */
 } TString;
 
 
@@ -479,7 +479,7 @@ typedef struct TString {
 
 
 /* Ensures that addresses after this type are always fully aligned. */
-typedef union UValue {
+تعريفنوع اتحاد UValue {
   TValue uv;
   LUAI_MAXALIGN;  /* ensures maximum alignment for udata bytes */
 } UValue;
@@ -489,11 +489,11 @@ typedef union UValue {
 ** Header for userdata with user values;
 ** memory area follows the end of this structure.
 */
-typedef struct Udata {
+تعريفنوع بنية Udata {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
+  بنية Table *metatable;
   GCObject *gclist;
   UValue uv[1];  /* user values */
 } Udata;
@@ -508,19 +508,19 @@ typedef struct Udata {
 ** this representation. (The 'bindata' field in its end ensures correct
 ** alignment for binary data following this header.)
 */
-typedef struct Udata0 {
+تعريفنوع بنية Udata0 {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
-  union {LUAI_MAXALIGN;} bindata;
+  بنية Table *metatable;
+  اتحاد {LUAI_MAXALIGN;} bindata;
 } Udata0;
 
 
 /* compute the offset of the memory area of a userdata */
 #define udatamemoffset(nuv) \
        ((nuv) == 0 ? offsetof(Udata0, bindata)  \
-		   : offsetof(Udata, uv) + (sizeof(UValue) * (nuv)))
+		   : offsetof(Udata, uv) + (حجم(UValue) * (nuv)))
 
 /* get the address of the memory block inside 'Udata' */
 #define getudatamem(u)	(cast_charp(u) + udatamemoffset((u)->nuvalue))
@@ -540,13 +540,13 @@ typedef struct Udata0 {
 #define LUA_VPROTO	makevariant(LUA_TPROTO, 0)
 
 
-typedef l_uint32 Instruction;
+تعريفنوع l_uint32 Instruction;
 
 
 /*
 ** Description of an upvalue for function prototypes
 */
-typedef struct Upvaldesc {
+تعريفنوع بنية Upvaldesc {
   TString *name;  /* upvalue name (for debug information) */
   lu_byte instack;  /* whether it is in stack (register) */
   lu_byte idx;  /* index of upvalue (in stack or in outer function's list) */
@@ -558,10 +558,10 @@ typedef struct Upvaldesc {
 ** Description of a local variable for function prototypes
 ** (used for debug information)
 */
-typedef struct LocVar {
+تعريفنوع بنية LocVar {
   TString *varname;
-  int startpc;  /* first point where variable is active */
-  int endpc;    /* first point where variable is dead */
+  صحيح startpc;  /* first point where variable is active */
+  صحيح endpc;    /* first point where variable is dead */
 } LocVar;
 
 
@@ -575,10 +575,10 @@ typedef struct LocVar {
 ** absolute-line array, but we must traverse the 'lineinfo' array
 ** linearly to compute a line.)
 */
-typedef struct AbsLineInfo {
-  int pc;
-  int line;
-} AbsLineInfo;
+تعريفنوع بنية Abs_قۇر_Info {
+  صحيح pc;
+  صحيح قۇر;
+} Abs_قۇر_Info;
 
 
 /*
@@ -600,26 +600,26 @@ typedef struct AbsLineInfo {
 /*
 ** Function Prototypes
 */
-typedef struct Proto {
+تعريفنوع بنية Proto {
   CommonHeader;
   lu_byte numparams;  /* number of fixed (named) parameters */
   lu_byte flag;
   lu_byte maxstacksize;  /* number of registers needed by this function */
-  int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of 'k' */
-  int sizecode;
-  int sizelineinfo;
-  int sizep;  /* size of 'p' */
-  int sizelocvars;
-  int sizeabslineinfo;  /* size of 'abslineinfo' */
-  int linedefined;  /* debug information  */
-  int lastlinedefined;  /* debug information  */
+  صحيح sizeupvalues;  /* size of 'upvalues' */
+  صحيح sizek;  /* size of 'k' */
+  صحيح sizecode;
+  صحيح sizelineinfo;
+  صحيح sizep;  /* size of 'p' */
+  صحيح sizelocvars;
+  صحيح sizeabslineinfo;  /* size of 'abslineinfo' */
+  صحيح linedefined;  /* debug information  */
+  صحيح lastlinedefined;  /* debug information  */
   TValue *k;  /* constants used by the function */
   Instruction *code;  /* opcodes */
-  struct Proto **p;  /* functions defined inside the function */
+  بنية Proto **p;  /* functions defined inside the function */
   Upvaldesc *upvalues;  /* upvalue information */
   ls_byte *lineinfo;  /* information about source lines (debug information) */
-  AbsLineInfo *abslineinfo;  /* idem */
+  Abs_قۇر_Info *abslineinfo;  /* idem */
   LocVar *locvars;  /* information about local variables (debug information) */
   TString  *source;  /* used for debug information */
   GCObject *gclist;
@@ -677,18 +677,18 @@ typedef struct Proto {
 /*
 ** Upvalues for Lua closures
 */
-typedef struct UpVal {
+تعريفنوع بنية UpVal {
   CommonHeader;
-  union {
+  اتحاد {
     TValue *p;  /* points to stack or to its own value */
     ptrdiff_t offset;  /* used while the stack is being reallocated */
   } v;
-  union {
-    struct {  /* (when open) */
-      struct UpVal *next;  /* linked list */
-      struct UpVal **previous;
+  اتحاد {
+    بنية {  /* (when open) */
+      بنية UpVal *next;  /* linked list */
+      بنية UpVal **previous;
     } open;
-    TValue value;  /* the value (when closed) */
+    TValue قىممەت;  /* the value (when closed) */
   } u;
 } UpVal;
 
@@ -697,21 +697,21 @@ typedef struct UpVal {
 #define ClosureHeader \
 	CommonHeader; lu_byte nupvalues; GCObject *gclist
 
-typedef struct CClosure {
+تعريفنوع بنية CClosure {
   ClosureHeader;
   lua_CFunction f;
   TValue upvalue[1];  /* list of upvalues */
 } CClosure;
 
 
-typedef struct LClosure {
+تعريفنوع بنية LClosure {
   ClosureHeader;
-  struct Proto *p;
+  بنية Proto *p;
   UpVal *upvals[1];  /* list of upvalues */
 } LClosure;
 
 
-typedef union Closure {
+تعريفنوع اتحاد Closure {
   CClosure c;
   LClosure l;
 } Closure;
@@ -749,39 +749,39 @@ typedef union Closure {
 ** 'TValue' allows for a smaller size for 'Node' both in 4-byte
 ** and 8-byte alignments.
 */
-typedef union Node {
-  struct NodeKey {
+تعريفنوع اتحاد تۈگۈن_2 {
+  بنية تۈگۈن_ئاچقۇچ {
     TValuefields;  /* fields for value */
-    lu_byte key_tt;  /* key type */
-    int next;  /* for chaining */
-    Value key_val;  /* key value */
+    lu_byte ئاچقۇچ_tt;  /* key type */
+    صحيح next;  /* for chaining */
+    قىممەت_2 ئاچقۇچ_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
-} Node;
+} تۈگۈن_2;
 
 
 /* copy a value into a key */
-#define setnodekey(node,obj) \
-	{ Node *n_=(node); const TValue *io_=(obj); \
-	  n_->u.key_val = io_->value_; n_->u.key_tt = io_->tt_; }
+#define setnodekey(تۈگۈن,obj) \
+	{ تۈگۈن_2 *n_=(تۈگۈن); ثابت TValue *io_=(obj); \
+	  n_->u.ئاچقۇچ_val = io_->قىممەت_3; n_->u.ئاچقۇچ_tt = io_->tt_; }
 
 
 /* copy a value from a key */
-#define getnodekey(L,obj,node) \
-	{ TValue *io_=(obj); const Node *n_=(node); \
-	  io_->value_ = n_->u.key_val; io_->tt_ = n_->u.key_tt; \
+#define getnodekey(L,obj,تۈگۈن) \
+	{ TValue *io_=(obj); ثابت تۈگۈن_2 *n_=(تۈگۈن); \
+	  io_->قىممەت_3 = n_->u.ئاچقۇچ_val; io_->tt_ = n_->u.ئاچقۇچ_tt; \
 	  checkliveness(L,io_); }
 
 
 
-typedef struct Table {
+تعريفنوع بنية Table {
   CommonHeader;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
-  unsigned int asize;  /* number of slots in 'array' array */
-  Value *array;  /* array part */
-  Node *node;
-  struct Table *metatable;
+  unsigned صحيح asize;  /* number of slots in 'array' array */
+  قىممەت_2 *array;  /* array part */
+  تۈگۈن_2 *تۈگۈن;
+  بنية Table *metatable;
   GCObject *gclist;
 } Table;
 
@@ -789,21 +789,21 @@ typedef struct Table {
 /*
 ** Macros to manipulate keys inserted in nodes
 */
-#define keytt(node)		((node)->u.key_tt)
-#define keyval(node)		((node)->u.key_val)
+#define keytt(تۈگۈن)		((تۈگۈن)->u.ئاچقۇچ_tt)
+#define keyval(تۈگۈن)		((تۈگۈن)->u.ئاچقۇچ_val)
 
-#define keyisnil(node)		(keytt(node) == LUA_TNIL)
-#define keyisinteger(node)	(keytt(node) == LUA_VNUMINT)
-#define keyival(node)		(keyval(node).i)
-#define keyisshrstr(node)	(keytt(node) == ctb(LUA_VSHRSTR))
-#define keystrval(node)		(gco2ts(keyval(node).gc))
+#define keyisnil(تۈگۈن)		(keytt(تۈگۈن) == LUA_TNIL)
+#define keyisinteger(تۈگۈن)	(keytt(تۈگۈن) == LUA_VNUMINT)
+#define keyival(تۈگۈن)		(keyval(تۈگۈن).i)
+#define keyisshrstr(تۈگۈن)	(keytt(تۈگۈن) == ctb(LUA_VSHRSTR))
+#define keystrval(تۈگۈن)		(gco2ts(keyval(تۈگۈن).gc))
 
-#define setnilkey(node)		(keytt(node) = LUA_TNIL)
+#define setnilkey(تۈگۈن)		(keytt(تۈگۈن) = LUA_TNIL)
 
 #define keyiscollectable(n)	(keytt(n) & BIT_ISCOLLECTABLE)
 
 #define gckey(n)	(keyval(n).gc)
-#define gckeyN(n)	(keyiscollectable(n) ? gckey(n) : NULL)
+#define gckeyN(n)	(keyiscollectable(n) ? gckey(n) : عدم)
 
 
 /*
@@ -812,8 +812,8 @@ typedef struct Table {
 ** be found when searched in a special way. ('next' needs that to find
 ** keys removed from a table during a traversal.)
 */
-#define setdeadkey(node)	(keytt(node) = LUA_TDEADKEY)
-#define keyisdead(node)		(keytt(node) == LUA_TDEADKEY)
+#define setdeadkey(تۈگۈن)	(keytt(تۈگۈن) = LUA_TDEADKEY)
+#define keyisdead(تۈگۈن)		(keytt(تۈگۈن) == LUA_TDEADKEY)
 
 /* }================================================================== */
 
@@ -835,30 +835,30 @@ typedef struct Table {
 
 
 /* macro to call 'luaO_pushvfstring' correctly */
-#define pushvfstring(L, argp, fmt, msg)	\
+#define pushvfstring(L, argp, fmt, ئۇچۇر)	\
   { va_start(argp, fmt); \
-  msg = luaO_pushvfstring(L, fmt, argp); \
+  ئۇچۇر = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  إذا (ئۇچۇر == عدم) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
-LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);
-LUAI_FUNC lu_byte luaO_ceillog2 (unsigned int x);
-LUAI_FUNC lu_byte luaO_codeparam (unsigned int p);
+LUAI_FUNC صحيح luaO_utf8esc (حرف *buff, l_uint32 x);
+LUAI_FUNC lu_byte luaO_ceillog2 (unsigned صحيح x);
+LUAI_FUNC lu_byte luaO_codeparam (unsigned صحيح p);
 LUAI_FUNC l_mem luaO_applyparam (lu_byte p, l_mem x);
 
-LUAI_FUNC int luaO_rawarith (lua_State *L, int op, const TValue *p1,
-                             const TValue *p2, TValue *res);
-LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
-                           const TValue *p2, StkId res);
-LUAI_FUNC size_t luaO_str2num (const char *s, TValue *o);
-LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, char *buff);
-LUAI_FUNC lu_byte luaO_hexavalue (int c);
-LUAI_FUNC void luaO_tostring (lua_State *L, TValue *obj);
-LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
+LUAI_FUNC صحيح luaO_rawarith (lua_State *L, صحيح op, ثابت TValue *p1,
+                             ثابت TValue *p2, TValue *res);
+LUAI_FUNC فراغ luaO_arith (lua_State *L, صحيح op, ثابت TValue *p1,
+                           ثابت TValue *p2, StkId res);
+LUAI_FUNC size_t luaO_str2num (ثابت حرف *s, TValue *o);
+LUAI_FUNC unsigned luaO_tostringbuff (ثابت TValue *obj, حرف *buff);
+LUAI_FUNC lu_byte luaO_hexavalue (صحيح c);
+LUAI_FUNC فراغ luaO_tostring (lua_State *L, TValue *obj);
+LUAI_FUNC ثابت حرف *luaO_pushvfstring (lua_State *L, ثابت حرف *fmt,
                                                        va_list argp);
-LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
-LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
+LUAI_FUNC ثابت حرف *luaO_pushfstring (lua_State *L, ثابت حرف *fmt, ...);
+LUAI_FUNC فراغ luaO_chunkid (حرف *out, ثابت حرف *source, size_t srclen);
 
 
 #endif
