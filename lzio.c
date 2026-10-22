@@ -7,83 +7,83 @@
 #define lzio_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#অন্তর্ভাব "lprefix.h"
 
 
-#include <string.h>
+#অন্তর্ভাব <string.h>
 
-#include "lua.h"
+#অন্তর্ভাব "lua.h"
 
-#include "lapi.h"
-#include "llimits.h"
-#include "lmem.h"
-#include "lstate.h"
-#include "lzio.h"
+#অন্তর্ভাব "lapi.h"
+#অন্তর্ভাব "llimits.h"
+#অন্তর্ভাব "lmem.h"
+#অন্তর্ভাব "lstate.h"
+#অন্তর্ভাব "lzio.h"
 
 
-int luaZ_fill (ZIO *z) {
+পূর্ণাঙ্ক luaZ_fill (ZIO *z) {
   size_t size;
   lua_State *L = z->L;
-  const char *buff;
+  ধ্রুব বর্ণ *buff;
   lua_unlock(L);
   buff = z->reader(L, z->data, &size);
   lua_lock(L);
-  if (buff == NULL || size == 0)
-    return EOZ;
+  যদি (buff == রিক্ত || size == 0)
+    প্রত্যাগম EOZ;
   z->n = size - 1;  /* discount char being returned */
   z->p = buff;
-  return cast_uchar(*(z->p++));
+  প্রত্যাগম cast_uchar(*(z->p++));
 }
 
 
-void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, void *data) {
+শূন্য luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, শূন্য *data) {
   z->L = L;
   z->reader = reader;
   z->data = data;
   z->n = 0;
-  z->p = NULL;
+  z->p = রিক্ত;
 }
 
 
 /* --------------------------------------------------------------- read --- */
 
-static int checkbuffer (ZIO *z) {
-  if (z->n == 0) {  /* no bytes in buffer? */
-    if (luaZ_fill(z) == EOZ)  /* try to read more */
-      return 0;  /* no more input */
-    else {
+স্থির পূর্ণাঙ্ক checkbuffer (ZIO *z) {
+  যদি (z->n == 0) {  /* no bytes in buffer? */
+    যদি (luaZ_fill(z) == EOZ)  /* try to read more */
+      প্রত্যাগম 0;  /* no more input */
+    অন্যথা {
       z->n++;  /* luaZ_fill consumed first byte; put it back */
       z->p--;
     }
   }
-  return 1;  /* now buffer has something */
+  প্রত্যাগম 1;  /* now buffer has something */
 }
 
 
-size_t luaZ_read (ZIO *z, void *b, size_t n) {
-  while (n) {
+size_t luaZ_read (ZIO *z, শূন্য *b, size_t n) {
+  যাবত্ (n) {
     size_t m;
-    if (!checkbuffer(z))
-      return n;  /* no more input; return number of missing bytes */
+    যদি (!checkbuffer(z))
+      প্রত্যাগম n;  /* no more input; return number of missing bytes */
     m = (n <= z->n) ? n : z->n;  /* min. between n and z->n */
     memcpy(b, z->p, m);
     z->n -= m;
     z->p += m;
-    b = (char *)b + m;
+    b = (বর্ণ *)b + m;
     n -= m;
   }
-  return 0;
+  প্রত্যাগম 0;
 }
 
 
-const void *luaZ_getaddr (ZIO* z, size_t n) {
-  const void *res;
-  if (!checkbuffer(z))
-    return NULL;  /* no more input */
-  if (z->n < n)  /* not enough bytes? */
-    return NULL;  /* block not whole; cannot give an address */
+ধ্রুব শূন্য *luaZ_getaddr (ZIO* z, size_t n) {
+  ধ্রুব শূন্য *res;
+  যদি (!checkbuffer(z))
+    প্রত্যাগম রিক্ত;  /* no more input */
+  যদি (z->n < n)  /* not enough bytes? */
+    প্রত্যাগম রিক্ত;  /* block not whole; cannot give an address */
   res = z->p;  /* get block address */
   z->n -= n;  /* consume these bytes */
   z->p += n;
-  return res;
+  প্রত্যাগম res;
 }

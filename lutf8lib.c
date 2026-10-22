@@ -7,18 +7,18 @@
 #define lutf8lib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#অন্তর্ভাব "lprefix.h"
 
 
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
+#অন্তর্ভাব <limits.h>
+#অন্তর্ভাব <stdlib.h>
+#অন্তর্ভাব <string.h>
 
-#include "lua.h"
+#অন্তর্ভাব "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#অন্তর্ভাব "lauxlib.h"
+#অন্তর্ভাব "lualib.h"
+#অন্তর্ভাব "llimits.h"
 
 
 #define MAXUNICODE	0x10FFFFu
@@ -35,10 +35,10 @@
 
 /* from strlib */
 /* translate a relative string position: negative means back from end */
-static lua_Integer u_posrelat (lua_Integer pos, size_t len) {
-  if (pos >= 0) return pos;
-  else if (0u - (size_t)pos > len) return 0;
-  else return (lua_Integer)len + pos + 1;
+স্থির lua_Integer u_posrelat (lua_Integer pos, size_t len) {
+  যদি (pos >= 0) প্রত্যাগম pos;
+  অন্যথা যদি (0u - (size_t)pos > len) প্রত্যাগম 0;
+  অন্যথা প্রত্যাগম (lua_Integer)len + pos + 1;
 }
 
 
@@ -49,36 +49,36 @@ static lua_Integer u_posrelat (lua_Integer pos, size_t len) {
 ** entry forces an error for non-ASCII bytes with no continuation
 ** bytes (count == 0).
 */
-static const char *utf8_decode (const char *s, l_uint32 *val, int strict) {
-  static const l_uint32 limits[] =
+স্থির ধ্রুব বর্ণ *utf8_decode (ধ্রুব বর্ণ *s, l_uint32 *val, পূর্ণাঙ্ক strict) {
+  স্থির ধ্রুব l_uint32 limits[] =
         {~(l_uint32)0, 0x80, 0x800, 0x10000u, 0x200000u, 0x4000000u};
-  unsigned int c = (unsigned char)s[0];
+  unsigned পূর্ণাঙ্ক c = (unsigned বর্ণ)s[0];
   l_uint32 res = 0;  /* final result */
-  if (c < 0x80)  /* ASCII? */
+  যদি (c < 0x80)  /* ASCII? */
     res = c;
-  else if (c >= 0xfe)  /* c >= 1111 1110b ? */
-    return NULL;  /* would need six or more continuation bytes */
-  else {
-    int count = 0;  /* to count number of continuation bytes */
-    for (; c & 0x40; c <<= 1) {  /* while it needs continuation bytes... */
-      unsigned int cc = (unsigned char)s[++count];  /* read next byte */
-      if (!iscont(cc))  /* not a continuation byte? */
-        return NULL;  /* invalid byte sequence */
+  অন্যথা যদি (c >= 0xfe)  /* c >= 1111 1110b ? */
+    প্রত্যাগম রিক্ত;  /* would need six or more continuation bytes */
+  অন্যথা {
+    পূর্ণাঙ্ক গুনতি = 0;  /* to count number of continuation bytes */
+    প্রতি (; c & 0x40; c <<= 1) {  /* while it needs continuation bytes... */
+      unsigned পূর্ণাঙ্ক cc = (unsigned বর্ণ)s[++গুনতি];  /* read next byte */
+      যদি (!iscont(cc))  /* not a continuation byte? */
+        প্রত্যাগম রিক্ত;  /* invalid byte sequence */
       res = (res << 6) | (cc & 0x3F);  /* add lower 6 bits from cont. byte */
     }
-    lua_assert(count <= 5);
-    res |= ((l_uint32)(c & 0x7F) << (count * 5));  /* add first byte */
-    if (res > MAXUTF || res < limits[count])
-      return NULL;  /* invalid byte sequence */
-    s += count;  /* skip continuation bytes read */
+    lua_assert(গুনতি <= 5);
+    res |= ((l_uint32)(c & 0x7F) << (গুনতি * 5));  /* add first byte */
+    যদি (res > MAXUTF || res < limits[গুনতি])
+      প্রত্যাগম রিক্ত;  /* invalid byte sequence */
+    s += গুনতি;  /* skip continuation bytes read */
   }
-  if (strict) {
+  যদি (strict) {
     /* check for invalid code points; too large or surrogates */
-    if (res > MAXUNICODE || (0xD800u <= res && res <= 0xDFFFu))
-      return NULL;
+    যদি (res > MAXUNICODE || (0xD800u <= res && res <= 0xDFFFu))
+      প্রত্যাগম রিক্ত;
   }
-  if (val) *val = res;
-  return s + 1;  /* +1 to include first byte */
+  যদি (val) *val = res;
+  প্রত্যাগম s + 1;  /* +1 to include first byte */
 }
 
 
@@ -87,29 +87,29 @@ static const char *utf8_decode (const char *s, l_uint32 *val, int strict) {
 ** start in the range [i,j], or nil + current position if 's' is not
 ** well formed in that interval
 */
-static int utflen (lua_State *L) {
+স্থির পূর্ণাঙ্ক utflen (lua_State *L) {
   lua_Integer n = 0;  /* counter for the number of characters */
   size_t len;  /* string length in bytes */
-  const char *s = luaL_checklstring(L, 1, &len);
+  ধ্রুব বর্ণ *s = luaL_checklstring(L, 1, &len);
   lua_Integer posi = u_posrelat(luaL_optinteger(L, 2, 1), len);
   lua_Integer posj = u_posrelat(luaL_optinteger(L, 3, -1), len);
-  int lax = lua_toboolean(L, 4);
+  পূর্ণাঙ্ক lax = lua_toboolean(L, 4);
   luaL_argcheck(L, 1 <= posi && --posi <= (lua_Integer)len, 2,
                    "initial position out of bounds");
   luaL_argcheck(L, --posj < (lua_Integer)len, 3,
                    "final position out of bounds");
-  while (posi <= posj) {
-    const char *s1 = utf8_decode(s + posi, NULL, !lax);
-    if (s1 == NULL) {  /* conversion error? */
+  যাবত্ (posi <= posj) {
+    ধ্রুব বর্ণ *s1 = utf8_decode(s + posi, রিক্ত, !lax);
+    যদি (s1 == রিক্ত) {  /* conversion error? */
       luaL_pushfail(L);  /* return fail ... */
       lua_pushinteger(L, posi + 1);  /* ... and current position */
-      return 2;
+      প্রত্যাগম 2;
     }
     posi = ct_diff2S(s1 - s);
     n++;
   }
   lua_pushinteger(L, n);
-  return 1;
+  প্রত্যাগম 1;
 }
 
 
@@ -117,36 +117,36 @@ static int utflen (lua_State *L) {
 ** codepoint(s, [i, [j [, lax]]]) -> returns codepoints for all
 ** characters that start in the range [i,j]
 */
-static int codepoint (lua_State *L) {
+স্থির পূর্ণাঙ্ক codepoint (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ধ্রুব বর্ণ *s = luaL_checklstring(L, 1, &len);
   lua_Integer posi = u_posrelat(luaL_optinteger(L, 2, 1), len);
   lua_Integer pose = u_posrelat(luaL_optinteger(L, 3, posi), len);
-  int lax = lua_toboolean(L, 4);
-  int n;
-  const char *se;
+  পূর্ণাঙ্ক lax = lua_toboolean(L, 4);
+  পূর্ণাঙ্ক n;
+  ধ্রুব বর্ণ *se;
   luaL_argcheck(L, posi >= 1, 2, "out of bounds");
   luaL_argcheck(L, pose <= (lua_Integer)len, 3, "out of bounds");
-  if (posi > pose) return 0;  /* empty interval; return no values */
-  if (pose - posi >= INT_MAX)  /* (lua_Integer -> int) overflow? */
-    return luaL_error(L, "string slice too long");
-  n = (int)(pose -  posi) + 1;  /* upper bound for number of returns */
+  যদি (posi > pose) প্রত্যাগম 0;  /* empty interval; return no values */
+  যদি (pose - posi >= INT_MAX)  /* (lua_Integer -> int) overflow? */
+    প্রত্যাগম luaL_error(L, "string slice too long");
+  n = (পূর্ণাঙ্ক)(pose -  posi) + 1;  /* upper bound for number of returns */
   luaL_checkstack(L, n, "string slice too long");
   n = 0;  /* count the number of returns */
   se = s + pose;  /* string end */
-  for (s += posi - 1; s < se;) {
+  প্রতি (s += posi - 1; s < se;) {
     l_uint32 code;
     s = utf8_decode(s, &code, !lax);
-    if (s == NULL)
-      return luaL_error(L, MSGInvalid);
+    যদি (s == রিক্ত)
+      প্রত্যাগম luaL_error(L, MSGInvalid);
     lua_pushinteger(L, l_castU2S(code));
     n++;
   }
-  return n;
+  প্রত্যাগম n;
 }
 
 
-static void pushutfchar (lua_State *L, int arg) {
+স্থির শূন্য pushutfchar (lua_State *L, পূর্ণাঙ্ক arg) {
   lua_Unsigned code = (lua_Unsigned)luaL_checkinteger(L, arg);
   luaL_argcheck(L, code <= MAXUTF, arg, "value out of range");
   lua_pushfstring(L, "%U", cast(unsigned long, code));
@@ -156,21 +156,21 @@ static void pushutfchar (lua_State *L, int arg) {
 /*
 ** utfchar(n1, n2, ...)  -> char(n1)..char(n2)...
 */
-static int utfchar (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  if (n == 1)  /* optimize common case of single char */
+স্থির পূর্ণাঙ্ক utfchar (lua_State *L) {
+  পূর্ণাঙ্ক n = lua_gettop(L);  /* number of arguments */
+  যদি (n == 1)  /* optimize common case of single char */
     pushutfchar(L, 1);
-  else {
-    int i;
+  অন্যথা {
+    পূর্ণাঙ্ক i;
     luaL_Buffer b;
     luaL_buffinit(L, &b);
-    for (i = 1; i <= n; i++) {
+    প্রতি (i = 1; i <= n; i++) {
       pushutfchar(L, i);
       luaL_addvalue(&b);
     }
     luaL_pushresult(&b);
   }
-  return 1;
+  প্রত্যাগম 1;
 }
 
 
@@ -178,94 +178,94 @@ static int utfchar (lua_State *L) {
 ** offset(s, n, [i])  -> indices where n-th character counting from
 **   position 'i' starts and ends; 0 means character at 'i'.
 */
-static int byteoffset (lua_State *L) {
+স্থির পূর্ণাঙ্ক byteoffset (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ধ্রুব বর্ণ *s = luaL_checklstring(L, 1, &len);
   lua_Integer n  = luaL_checkinteger(L, 2);
   lua_Integer posi = (n >= 0) ? 1 : cast_st2S(len) + 1;
   posi = u_posrelat(luaL_optinteger(L, 3, posi), len);
   luaL_argcheck(L, 1 <= posi && --posi <= (lua_Integer)len, 3,
                    "position out of bounds");
-  if (n == 0) {
+  যদি (n == 0) {
     /* find beginning of current byte sequence */
-    while (posi > 0 && iscontp(s + posi)) posi--;
+    যাবত্ (posi > 0 && iscontp(s + posi)) posi--;
   }
-  else {
-    if (iscontp(s + posi))
-      return luaL_error(L, "initial position is a continuation byte");
-    if (n < 0) {
-      while (n < 0 && posi > 0) {  /* move back */
-        do {  /* find beginning of previous character */
+  অন্যথা {
+    যদি (iscontp(s + posi))
+      প্রত্যাগম luaL_error(L, "initial position is a continuation byte");
+    যদি (n < 0) {
+      যাবত্ (n < 0 && posi > 0) {  /* move back */
+        কুরু {  /* find beginning of previous character */
           posi--;
-        } while (posi > 0 && iscontp(s + posi));
+        } যাবত্ (posi > 0 && iscontp(s + posi));
         n++;
       }
     }
-    else {
+    অন্যথা {
       n--;  /* do not move for 1st character */
-      while (n > 0 && posi < (lua_Integer)len) {
-        do {  /* find beginning of next character */
+      যাবত্ (n > 0 && posi < (lua_Integer)len) {
+        কুরু {  /* find beginning of next character */
           posi++;
-        } while (iscontp(s + posi));  /* (cannot pass final '\0') */
+        } যাবত্ (iscontp(s + posi));  /* (cannot pass final '\0') */
         n--;
       }
     }
   }
-  if (n != 0) {  /* did not find given character? */
+  যদি (n != 0) {  /* did not find given character? */
     luaL_pushfail(L);
-    return 1;
+    প্রত্যাগম 1;
   }
   lua_pushinteger(L, posi + 1);  /* initial position */
-  if ((s[posi] & 0x80) != 0) {  /* multi-byte character? */
-    if (iscont(s[posi]))
-      return luaL_error(L, "initial position is a continuation byte");
-    while (iscontp(s + posi + 1))
+  যদি ((s[posi] & 0x80) != 0) {  /* multi-byte character? */
+    যদি (iscont(s[posi]))
+      প্রত্যাগম luaL_error(L, "initial position is a continuation byte");
+    যাবত্ (iscontp(s + posi + 1))
       posi++;  /* skip to last continuation byte */
   }
   /* else one-byte character: final position is the initial one */
   lua_pushinteger(L, posi + 1);  /* 'posi' now is the final position */
-  return 2;
+  প্রত্যাগম 2;
 }
 
 
-static int iter_aux (lua_State *L, int strict) {
+স্থির পূর্ণাঙ্ক iter_aux (lua_State *L, পূর্ণাঙ্ক strict) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ধ্রুব বর্ণ *s = luaL_checklstring(L, 1, &len);
   lua_Unsigned n = (lua_Unsigned)lua_tointeger(L, 2);
-  if (n < len) {
-    while (iscontp(s + n)) n++;  /* go to next character */
+  যদি (n < len) {
+    যাবত্ (iscontp(s + n)) n++;  /* go to next character */
   }
-  if (n >= len)  /* (also handles original 'n' being negative) */
-    return 0;  /* no more codepoints */
-  else {
+  যদি (n >= len)  /* (also handles original 'n' being negative) */
+    প্রত্যাগম 0;  /* no more codepoints */
+  অন্যথা {
     l_uint32 code;
-    const char *next = utf8_decode(s + n, &code, strict);
-    if (next == NULL || iscontp(next))
-      return luaL_error(L, MSGInvalid);
+    ধ্রুব বর্ণ *next = utf8_decode(s + n, &code, strict);
+    যদি (next == রিক্ত || iscontp(next))
+      প্রত্যাগম luaL_error(L, MSGInvalid);
     lua_pushinteger(L, l_castU2S(n + 1));
     lua_pushinteger(L, l_castU2S(code));
-    return 2;
+    প্রত্যাগম 2;
   }
 }
 
 
-static int iter_auxstrict (lua_State *L) {
-  return iter_aux(L, 1);
+স্থির পূর্ণাঙ্ক iter_auxstrict (lua_State *L) {
+  প্রত্যাগম iter_aux(L, 1);
 }
 
-static int iter_auxlax (lua_State *L) {
-  return iter_aux(L, 0);
+স্থির পূর্ণাঙ্ক iter_auxlax (lua_State *L) {
+  প্রত্যাগম iter_aux(L, 0);
 }
 
 
-static int iter_codes (lua_State *L) {
-  int lax = lua_toboolean(L, 2);
-  const char *s = luaL_checkstring(L, 1);
+স্থির পূর্ণাঙ্ক iter_codes (lua_State *L) {
+  পূর্ণাঙ্ক lax = lua_toboolean(L, 2);
+  ধ্রুব বর্ণ *s = luaL_checkstring(L, 1);
   luaL_argcheck(L, !iscontp(s), 1, MSGInvalid);
   lua_pushcfunction(L, lax ? iter_auxlax : iter_auxstrict);
   lua_pushvalue(L, 1);
   lua_pushinteger(L, 0);
-  return 3;
+  প্রত্যাগম 3;
 }
 
 
@@ -273,22 +273,22 @@ static int iter_codes (lua_State *L) {
 #define UTF8PATT	"[\0-\x7F\xC2-\xFD][\x80-\xBF]*"
 
 
-static const luaL_Reg funcs[] = {
+স্থির ধ্রুব luaL_Reg funcs[] = {
   {"offset", byteoffset},
   {"codepoint", codepoint},
   {"char", utfchar},
   {"len", utflen},
   {"codes", iter_codes},
   /* placeholders */
-  {"charpattern", NULL},
-  {NULL, NULL}
+  {"charpattern", রিক্ত},
+  {রিক্ত, রিক্ত}
 };
 
 
-LUAMOD_API int luaopen_utf8 (lua_State *L) {
+LUAMOD_API পূর্ণাঙ্ক luaopen_utf8 (lua_State *L) {
   luaL_newlib(L, funcs);
-  lua_pushlstring(L, UTF8PATT, sizeof(UTF8PATT)/sizeof(char) - 1);
+  lua_pushlstring(L, UTF8PATT, পরিমাণ(UTF8PATT)/পরিমাণ(বর্ণ) - 1);
   lua_setfield(L, -2, "charpattern");
-  return 1;
+  প্রত্যাগম 1;
 }
 

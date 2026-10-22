@@ -8,10 +8,10 @@
 #define lmem_h
 
 
-#include <stddef.h>
+#অন্তর্ভাব <stddef.h>
 
-#include "llimits.h"
-#include "lua.h"
+#অন্তর্ভাব "llimits.h"
+#অন্তর্ভাব "lua.h"
 
 
 #define luaM_error(L)	luaD_throw(L, LUA_ERRMEM)
@@ -29,7 +29,7 @@
 ** avoiding this warning but also this optimization.)
 */
 #define luaM_testsize(n,e)  \
-	(sizeof(n) >= sizeof(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
+	(পরিমাণ(n) >= পরিমাণ(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
 
 #define luaM_checksize(L,n,e)  \
 	(luaM_testsize(n,e) ? luaM_toobig(L) : cast_void(0))
@@ -42,55 +42,55 @@
 ** 'int' and that 'int' is not larger than 'size_t'.)
 */
 #define luaM_limitN(n,t)  \
-  ((cast_sizet(n) <= MAX_SIZET/sizeof(t)) ? (n) :  \
-     cast_int((MAX_SIZET/sizeof(t))))
+  ((cast_sizet(n) <= MAX_SIZET/পরিমাণ(t)) ? (n) :  \
+     cast_int((MAX_SIZET/পরিমাণ(t))))
 
 
 /*
 ** Arrays of chars do not need any test
 */
 #define luaM_reallocvchar(L,b,on,n)  \
-  cast_charp(luaM_saferealloc_(L, (b), (on)*sizeof(char), (n)*sizeof(char)))
+  cast_charp(luaM_saferealloc_(L, (b), (on)*পরিমাণ(বর্ণ), (n)*পরিমাণ(বর্ণ)))
 
 #define luaM_freemem(L, b, s)	luaM_free_(L, (b), (s))
-#define luaM_free(L, b)		luaM_free_(L, (b), sizeof(*(b)))
-#define luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*sizeof(*(b)))
+#define luaM_free(L, b)		luaM_free_(L, (b), পরিমাণ(*(b)))
+#define luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*পরিমাণ(*(b)))
 
-#define luaM_new(L,t)		cast(t*, luaM_malloc_(L, sizeof(t), 0))
+#define luaM_new(L,t)		cast(t*, luaM_malloc_(L, পরিমাণ(t), 0))
 #define luaM_newvector(L,n,t)  \
-	cast(t*, luaM_malloc_(L, cast_sizet(n)*sizeof(t), 0))
+	cast(t*, luaM_malloc_(L, cast_sizet(n)*পরিমাণ(t), 0))
 #define luaM_newvectorchecked(L,n,t) \
-  (luaM_checksize(L,n,sizeof(t)), luaM_newvector(L,n,t))
+  (luaM_checksize(L,n,পরিমাণ(t)), luaM_newvector(L,n,t))
 
 #define luaM_newobject(L,tag,s)	luaM_malloc_(L, (s), tag)
 
-#define luaM_newblock(L, size)	luaM_newvector(L, size, char)
+#define luaM_newblock(L, size)	luaM_newvector(L, size, বর্ণ)
 
 #define luaM_growvector(L,v,nelems,size,t,limit,e) \
-	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(size),sizeof(t), \
+	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(size),পরিমাণ(t), \
                          luaM_limitN(limit,t),e)))
 
 #define luaM_reallocvector(L, v,oldn,n,t) \
-   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * sizeof(t), \
-                                  cast_sizet(n) * sizeof(t))))
+   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * পরিমাণ(t), \
+                                  cast_sizet(n) * পরিমাণ(t))))
 
 #define luaM_shrinkvector(L,v,size,fs,t) \
-   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(size), fs, sizeof(t))))
+   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(size), fs, পরিমাণ(t))))
 
 LUAI_FUNC l_noret luaM_toobig (lua_State *L);
 
 /* not to be called directly */
-LUAI_FUNC void *luaM_realloc_ (lua_State *L, void *block, size_t oldsize,
+LUAI_FUNC শূন্য *luaM_realloc_ (lua_State *L, শূন্য *block, size_t oldsize,
                                                           size_t size);
-LUAI_FUNC void *luaM_saferealloc_ (lua_State *L, void *block, size_t oldsize,
+LUAI_FUNC শূন্য *luaM_saferealloc_ (lua_State *L, শূন্য *block, size_t oldsize,
                                                               size_t size);
-LUAI_FUNC void luaM_free_ (lua_State *L, void *block, size_t osize);
-LUAI_FUNC void *luaM_growaux_ (lua_State *L, void *block, int nelems,
-                               int *size, unsigned size_elem, int limit,
-                               const char *what);
-LUAI_FUNC void *luaM_shrinkvector_ (lua_State *L, void *block, int *nelem,
-                                    int final_n, unsigned size_elem);
-LUAI_FUNC void *luaM_malloc_ (lua_State *L, size_t size, int tag);
+LUAI_FUNC শূন্য luaM_free_ (lua_State *L, শূন্য *block, size_t osize);
+LUAI_FUNC শূন্য *luaM_growaux_ (lua_State *L, শূন্য *block, পূর্ণাঙ্ক nelems,
+                               পূর্ণাঙ্ক *size, unsigned size_elem, পূর্ণাঙ্ক limit,
+                               ধ্রুব বর্ণ *what);
+LUAI_FUNC শূন্য *luaM_shrinkvector_ (lua_State *L, শূন্য *block, পূর্ণাঙ্ক *nelem,
+                                    পূর্ণাঙ্ক final_n, unsigned size_elem);
+LUAI_FUNC শূন্য *luaM_malloc_ (lua_State *L, size_t size, পূর্ণাঙ্ক tag);
 
 #endif
 

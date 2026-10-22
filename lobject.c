@@ -7,35 +7,35 @@
 #define lobject_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#অন্তর্ভাব "lprefix.h"
 
 
-#include <float.h>
-#include <locale.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#অন্তর্ভাব <float.h>
+#অন্তর্ভাব <locale.h>
+#অন্তর্ভাব <math.h>
+#অন্তর্ভাব <stdarg.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <stdlib.h>
+#অন্তর্ভাব <string.h>
 
-#include "lua.h"
+#অন্তর্ভাব "lua.h"
 
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "lvm.h"
+#অন্তর্ভাব "lctype.h"
+#অন্তর্ভাব "ldebug.h"
+#অন্তর্ভাব "ldo.h"
+#অন্তর্ভাব "lmem.h"
+#অন্তর্ভাব "lobject.h"
+#অন্তর্ভাব "lstate.h"
+#অন্তর্ভাব "lstring.h"
+#অন্তর্ভাব "lvm.h"
 
 
 /*
 ** Computes ceil(log2(x)), which is the smallest integer n such that
 ** x <= (1 << n).
 */
-lu_byte luaO_ceillog2 (unsigned int x) {
-  static const lu_byte log_2[256] = {  /* log_2[i - 1] = ceil(log2(i)) */
+lu_byte luaO_ceillog2 (unsigned পূর্ণাঙ্ক x) {
+  স্থির ধ্রুব lu_byte log_2[256] = {  /* log_2[i - 1] = ceil(log2(i)) */
     0,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
@@ -45,10 +45,10 @@ lu_byte luaO_ceillog2 (unsigned int x) {
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
   };
-  int l = 0;
+  পূর্ণাঙ্ক l = 0;
   x--;
-  while (x >= 256) { l += 8; x >>= 8; }
-  return cast_byte(l + log_2[x]);
+  যাবত্ (x >= 256) { l += 8; x >>= 8; }
+  প্রত্যাগম cast_byte(l + log_2[x]);
 }
 
 /*
@@ -59,19 +59,19 @@ lu_byte luaO_ceillog2 (unsigned int x) {
 ** to signal that. So, the real value is (1xxxx) * 2^(eeee - 7 - 1) if
 ** eeee != 0, and (xxxx) * 2^-7 otherwise (subnormal numbers).
 */
-lu_byte luaO_codeparam (unsigned int p) {
-  if (p >= (cast(lu_mem, 0x1F) << (0xF - 7 - 1)) * 100u)  /* overflow? */
-    return 0xFF;  /* return maximum value */
-  else {
+lu_byte luaO_codeparam (unsigned পূর্ণাঙ্ক p) {
+  যদি (p >= (cast(lu_mem, 0x1F) << (0xF - 7 - 1)) * 100u)  /* overflow? */
+    প্রত্যাগম 0xFF;  /* return maximum value */
+  অন্যথা {
     p = (cast(l_uint32, p) * 128 + 99) / 100;  /* round up the division */
-    if (p < 0x10) {  /* subnormal number? */
+    যদি (p < 0x10) {  /* subnormal number? */
       /* exponent bits are already zero; nothing else to do */
-      return cast_byte(p);
+      প্রত্যাগম cast_byte(p);
     }
-    else {  /* p >= 0x10 implies ceil(log2(p + 1)) >= 5 */
+    অন্যথা {  /* p >= 0x10 implies ceil(log2(p + 1)) >= 5 */
       /* preserve 5 bits in 'p' */
       unsigned log = luaO_ceillog2(p + 1) - 5u;
-      return cast_byte(((p >> log) - 0x10) | ((log + 1) << 4));
+      প্রত্যাগম cast_byte(((p >> log) - 0x10) | ((log + 1) << 4));
     }
   }
 }
@@ -87,125 +87,125 @@ lu_byte luaO_codeparam (unsigned int p) {
 ** overflow, so we check which order is best.
 */
 l_mem luaO_applyparam (lu_byte p, l_mem x) {
-  int m = p & 0xF;  /* mantissa */
-  int e = (p >> 4);  /* exponent */
+  পূর্ণাঙ্ক m = p & 0xF;  /* mantissa */
+  পূর্ণাঙ্ক e = (p >> 4);  /* exponent */
   lua_assert(x >= 0);
-  if (e > 0) {  /* normalized? */
+  যদি (e > 0) {  /* normalized? */
     e--;  /* correct exponent */
     m += 0x10;  /* correct mantissa; maximum value is 0x1F */
   }
   e -= 7;  /* correct excess-7 */
-  if (e >= 0) {
-    if (x < (MAX_LMEM / 0x1F) >> e)  /* no overflow? */
-      return (x * m) << e;  /* order doesn't matter here */
-    else  /* real overflow */
-      return MAX_LMEM;
+  যদি (e >= 0) {
+    যদি (x < (MAX_LMEM / 0x1F) >> e)  /* no overflow? */
+      প্রত্যাগম (x * m) << e;  /* order doesn't matter here */
+    অন্যথা  /* real overflow */
+      প্রত্যাগম MAX_LMEM;
   }
-  else {  /* negative exponent */
+  অন্যথা {  /* negative exponent */
     e = -e;
-    if (x < MAX_LMEM / 0x1F)  /* multiplication cannot overflow? */
-      return (x * m) >> e;  /* multiplying first gives more precision */
-    else if ((x >> e) <  MAX_LMEM / 0x1F)  /* cannot overflow after shift? */
-      return (x >> e) * m;
-    else  /* real overflow */
-      return MAX_LMEM;
+    যদি (x < MAX_LMEM / 0x1F)  /* multiplication cannot overflow? */
+      প্রত্যাগম (x * m) >> e;  /* multiplying first gives more precision */
+    অন্যথা যদি ((x >> e) <  MAX_LMEM / 0x1F)  /* cannot overflow after shift? */
+      প্রত্যাগম (x >> e) * m;
+    অন্যথা  /* real overflow */
+      প্রত্যাগম MAX_LMEM;
   }
 }
 
 
-static lua_Integer intarith (lua_State *L, int op, lua_Integer v1,
+স্থির lua_Integer intarith (lua_State *L, পূর্ণাঙ্ক op, lua_Integer v1,
                                                    lua_Integer v2) {
-  switch (op) {
-    case LUA_OPADD: return intop(+, v1, v2);
-    case LUA_OPSUB:return intop(-, v1, v2);
-    case LUA_OPMUL:return intop(*, v1, v2);
-    case LUA_OPMOD: return luaV_mod(L, v1, v2);
-    case LUA_OPIDIV: return luaV_idiv(L, v1, v2);
-    case LUA_OPBAND: return intop(&, v1, v2);
-    case LUA_OPBOR: return intop(|, v1, v2);
-    case LUA_OPBXOR: return intop(^, v1, v2);
-    case LUA_OPSHL: return luaV_shiftl(v1, v2);
-    case LUA_OPSHR: return luaV_shiftr(v1, v2);
-    case LUA_OPUNM: return intop(-, 0, v1);
-    case LUA_OPBNOT: return intop(^, ~l_castS2U(0), v1);
-    default: lua_assert(0); return 0;
+  বিকল্প (op) {
+    পক্ষ LUA_OPADD: প্রত্যাগম intop(+, v1, v2);
+    পক্ষ LUA_OPSUB:প্রত্যাগম intop(-, v1, v2);
+    পক্ষ LUA_OPMUL:প্রত্যাগম intop(*, v1, v2);
+    পক্ষ LUA_OPMOD: প্রত্যাগম luaV_mod(L, v1, v2);
+    পক্ষ LUA_OPIDIV: প্রত্যাগম luaV_idiv(L, v1, v2);
+    পক্ষ LUA_OPBAND: প্রত্যাগম intop(&, v1, v2);
+    পক্ষ LUA_OPBOR: প্রত্যাগম intop(|, v1, v2);
+    পক্ষ LUA_OPBXOR: প্রত্যাগম intop(^, v1, v2);
+    পক্ষ LUA_OPSHL: প্রত্যাগম luaV_shiftl(v1, v2);
+    পক্ষ LUA_OPSHR: প্রত্যাগম luaV_shiftr(v1, v2);
+    পক্ষ LUA_OPUNM: প্রত্যাগম intop(-, 0, v1);
+    পক্ষ LUA_OPBNOT: প্রত্যাগম intop(^, ~l_castS2U(0), v1);
+    স্বভাব: lua_assert(0); প্রত্যাগম 0;
   }
 }
 
 
-static lua_Number numarith (lua_State *L, int op, lua_Number v1,
-                                                  lua_Number v2) {
-  switch (op) {
-    case LUA_OPADD: return luai_numadd(L, v1, v2);
-    case LUA_OPSUB: return luai_numsub(L, v1, v2);
-    case LUA_OPMUL: return luai_nummul(L, v1, v2);
-    case LUA_OPDIV: return luai_numdiv(L, v1, v2);
-    case LUA_OPPOW: return luai_numpow(L, v1, v2);
-    case LUA_OPIDIV: return luai_numidiv(L, v1, v2);
-    case LUA_OPUNM: return luai_numunm(L, v1);
-    case LUA_OPMOD: return luaV_modf(L, v1, v2);
-    default: lua_assert(0); return 0;
+স্থির lua_সংখ্যা numarith (lua_State *L, পূর্ণাঙ্ক op, lua_সংখ্যা v1,
+                                                  lua_সংখ্যা v2) {
+  বিকল্প (op) {
+    পক্ষ LUA_OPADD: প্রত্যাগম luai_numadd(L, v1, v2);
+    পক্ষ LUA_OPSUB: প্রত্যাগম luai_numsub(L, v1, v2);
+    পক্ষ LUA_OPMUL: প্রত্যাগম luai_nummul(L, v1, v2);
+    পক্ষ LUA_OPDIV: প্রত্যাগম luai_numdiv(L, v1, v2);
+    পক্ষ LUA_OPPOW: প্রত্যাগম luai_numpow(L, v1, v2);
+    পক্ষ LUA_OPIDIV: প্রত্যাগম luai_numidiv(L, v1, v2);
+    পক্ষ LUA_OPUNM: প্রত্যাগম luai_numunm(L, v1);
+    পক্ষ LUA_OPMOD: প্রত্যাগম luaV_modf(L, v1, v2);
+    স্বভাব: lua_assert(0); প্রত্যাগম 0;
   }
 }
 
 
-int luaO_rawarith (lua_State *L, int op, const TValue *p1, const TValue *p2,
+পূর্ণাঙ্ক luaO_rawarith (lua_State *L, পূর্ণাঙ্ক op, ধ্রুব TValue *p1, ধ্রুব TValue *p2,
                    TValue *res) {
-  switch (op) {
-    case LUA_OPBAND: case LUA_OPBOR: case LUA_OPBXOR:
-    case LUA_OPSHL: case LUA_OPSHR:
-    case LUA_OPBNOT: {  /* operate only on integers */
+  বিকল্প (op) {
+    পক্ষ LUA_OPBAND: পক্ষ LUA_OPBOR: পক্ষ LUA_OPBXOR:
+    পক্ষ LUA_OPSHL: পক্ষ LUA_OPSHR:
+    পক্ষ LUA_OPBNOT: {  /* operate only on integers */
       lua_Integer i1; lua_Integer i2;
-      if (tointegerns(p1, &i1) && tointegerns(p2, &i2)) {
+      যদি (tointegerns(p1, &i1) && tointegerns(p2, &i2)) {
         setivalue(res, intarith(L, op, i1, i2));
-        return 1;
+        প্রত্যাগম 1;
       }
-      else return 0;  /* fail */
+      অন্যথা প্রত্যাগম 0;  /* fail */
     }
-    case LUA_OPDIV: case LUA_OPPOW: {  /* operate only on floats */
-      lua_Number n1; lua_Number n2;
-      if (tonumberns(p1, n1) && tonumberns(p2, n2)) {
+    পক্ষ LUA_OPDIV: পক্ষ LUA_OPPOW: {  /* operate only on floats */
+      lua_সংখ্যা n1; lua_সংখ্যা n2;
+      যদি (tonumberns(p1, n1) && tonumberns(p2, n2)) {
         setfltvalue(res, numarith(L, op, n1, n2));
-        return 1;
+        প্রত্যাগম 1;
       }
-      else return 0;  /* fail */
+      অন্যথা প্রত্যাগম 0;  /* fail */
     }
-    default: {  /* other operations */
-      lua_Number n1; lua_Number n2;
-      if (ttisinteger(p1) && ttisinteger(p2)) {
+    স্বভাব: {  /* other operations */
+      lua_সংখ্যা n1; lua_সংখ্যা n2;
+      যদি (ttisinteger(p1) && ttisinteger(p2)) {
         setivalue(res, intarith(L, op, ivalue(p1), ivalue(p2)));
-        return 1;
+        প্রত্যাগম 1;
       }
-      else if (tonumberns(p1, n1) && tonumberns(p2, n2)) {
+      অন্যথা যদি (tonumberns(p1, n1) && tonumberns(p2, n2)) {
         setfltvalue(res, numarith(L, op, n1, n2));
-        return 1;
+        প্রত্যাগম 1;
       }
-      else return 0;  /* fail */
+      অন্যথা প্রত্যাগম 0;  /* fail */
     }
   }
 }
 
 
-void luaO_arith (lua_State *L, int op, const TValue *p1, const TValue *p2,
+শূন্য luaO_arith (lua_State *L, পূর্ণাঙ্ক op, ধ্রুব TValue *p1, ধ্রুব TValue *p2,
                  StkId res) {
-  if (!luaO_rawarith(L, op, p1, p2, s2v(res))) {
+  যদি (!luaO_rawarith(L, op, p1, p2, s2v(res))) {
     /* could not perform raw operation; try metamethod */
     luaT_trybinTM(L, p1, p2, res, cast(TMS, (op - LUA_OPADD) + TM_ADD));
   }
 }
 
 
-lu_byte luaO_hexavalue (int c) {
+lu_byte luaO_hexavalue (পূর্ণাঙ্ক c) {
   lua_assert(lisxdigit(c));
-  if (lisdigit(c)) return cast_byte(c - '0');
-  else return cast_byte((ltolower(c) - 'a') + 10);
+  যদি (lisdigit(c)) প্রত্যাগম cast_byte(c - '0');
+  অন্যথা প্রত্যাগম cast_byte((ltolower(c) - 'a') + 10);
 }
 
 
-static int isneg (const char **s) {
-  if (**s == '-') { (*s)++; return 1; }
-  else if (**s == '+') (*s)++;
-  return 0;
+স্থির পূর্ণাঙ্ক isneg (ধ্রুব বর্ণ **s) {
+  যদি (**s == '-') { (*s)++; প্রত্যাগম 1; }
+  অন্যথা যদি (**s == '+') (*s)++;
+  প্রত্যাগম 0;
 }
 
 
@@ -216,7 +216,7 @@ static int isneg (const char **s) {
 ** ===================================================================
 */
 
-#if !defined(lua_strx2number)
+#যদি !defined(lua_strx2number)
 
 /* maximum number of significant digits to read (to avoid overflows
    even with single floats) */
@@ -226,53 +226,53 @@ static int isneg (const char **s) {
 ** convert a hexadecimal numeric string to a number, following
 ** C99 specification for 'strtod'
 */
-static lua_Number lua_strx2number (const char *s, char **endptr) {
-  int dot = lua_getlocaledecpoint();
-  lua_Number r = l_mathop(0.0);  /* result (accumulator) */
-  int sigdig = 0;  /* number of significant digits */
-  int nosigdig = 0;  /* number of non-significant digits */
-  int e = 0;  /* exponent correction */
-  int neg;  /* 1 if number is negative */
-  int hasdot = 0;  /* true after seen a dot */
+স্থির lua_সংখ্যা lua_strx2number (ধ্রুব বর্ণ *s, বর্ণ **endptr) {
+  পূর্ণাঙ্ক dot = lua_getlocaledecpoint();
+  lua_সংখ্যা r = l_mathop(0.0);  /* result (accumulator) */
+  পূর্ণাঙ্ক sigdig = 0;  /* number of significant digits */
+  পূর্ণাঙ্ক nosigdig = 0;  /* number of non-significant digits */
+  পূর্ণাঙ্ক e = 0;  /* exponent correction */
+  পূর্ণাঙ্ক neg;  /* 1 if number is negative */
+  পূর্ণাঙ্ক hasdot = 0;  /* true after seen a dot */
   *endptr = cast_charp(s);  /* nothing is valid yet */
-  while (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
+  যাবত্ (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
   neg = isneg(&s);  /* check sign */
-  if (!(*s == '0' && (*(s + 1) == 'x' || *(s + 1) == 'X')))  /* check '0x' */
-    return l_mathop(0.0);  /* invalid format (no '0x') */
-  for (s += 2; ; s++) {  /* skip '0x' and read numeral */
-    if (*s == dot) {
-      if (hasdot) break;  /* second dot? stop loop */
-      else hasdot = 1;
+  যদি (!(*s == '0' && (*(s + 1) == 'x' || *(s + 1) == 'X')))  /* check '0x' */
+    প্রত্যাগম l_mathop(0.0);  /* invalid format (no '0x') */
+  প্রতি (s += 2; ; s++) {  /* skip '0x' and read numeral */
+    যদি (*s == dot) {
+      যদি (hasdot) ভঙ্গ;  /* second dot? stop loop */
+      অন্যথা hasdot = 1;
     }
-    else if (lisxdigit(cast_uchar(*s))) {
-      if (sigdig == 0 && *s == '0')  /* non-significant digit (zero)? */
+    অন্যথা যদি (lisxdigit(cast_uchar(*s))) {
+      যদি (sigdig == 0 && *s == '0')  /* non-significant digit (zero)? */
         nosigdig++;
-      else if (++sigdig <= MAXSIGDIG)  /* can read it without overflow? */
+      অন্যথা যদি (++sigdig <= MAXSIGDIG)  /* can read it without overflow? */
           r = (r * l_mathop(16.0)) + luaO_hexavalue(*s);
-      else e++;  /* too many digits; ignore, but still count for exponent */
-      if (hasdot) e--;  /* decimal digit? correct exponent */
+      অন্যথা e++;  /* too many digits; ignore, but still count for exponent */
+      যদি (hasdot) e--;  /* decimal digit? correct exponent */
     }
-    else break;  /* neither a dot nor a digit */
+    অন্যথা ভঙ্গ;  /* neither a dot nor a digit */
   }
-  if (nosigdig + sigdig == 0)  /* no digits? */
-    return l_mathop(0.0);  /* invalid format */
+  যদি (nosigdig + sigdig == 0)  /* no digits? */
+    প্রত্যাগম l_mathop(0.0);  /* invalid format */
   *endptr = cast_charp(s);  /* valid up to here */
   e *= 4;  /* each digit multiplies/divides value by 2^4 */
-  if (*s == 'p' || *s == 'P') {  /* exponent part? */
-    int exp1 = 0;  /* exponent value */
-    int neg1;  /* exponent sign */
+  যদি (*s == 'p' || *s == 'P') {  /* exponent part? */
+    পূর্ণাঙ্ক exp1 = 0;  /* exponent value */
+    পূর্ণাঙ্ক neg1;  /* exponent sign */
     s++;  /* skip 'p' */
     neg1 = isneg(&s);  /* sign */
-    if (!lisdigit(cast_uchar(*s)))
-      return l_mathop(0.0);  /* invalid; must have at least one digit */
-    while (lisdigit(cast_uchar(*s)))  /* read exponent */
+    যদি (!lisdigit(cast_uchar(*s)))
+      প্রত্যাগম l_mathop(0.0);  /* invalid; must have at least one digit */
+    যাবত্ (lisdigit(cast_uchar(*s)))  /* read exponent */
       exp1 = exp1 * 10 + *(s++) - '0';
-    if (neg1) exp1 = -exp1;
+    যদি (neg1) exp1 = -exp1;
     e += exp1;
     *endptr = cast_charp(s);  /* valid up to here */
   }
-  if (neg) r = -r;
-  return l_mathop(ldexp)(r, e);
+  যদি (neg) r = -r;
+  প্রত্যাগম l_mathop(ldexp)(r, e);
 }
 
 #endif
@@ -280,7 +280,7 @@ static lua_Number lua_strx2number (const char *s, char **endptr) {
 
 
 /* maximum length of a numeral to be converted to a number */
-#if !defined (L_MAXLENNUM)
+#যদি !defined (L_MAXLENNUM)
 #define L_MAXLENNUM	200
 #endif
 
@@ -289,13 +289,13 @@ static lua_Number lua_strx2number (const char *s, char **endptr) {
 ** fail or the address of the ending '\0' on success. ('mode' == 'x')
 ** means a hexadecimal numeral.
 */
-static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
-  char *endptr;
+স্থির ধ্রুব বর্ণ *l_str2dloc (ধ্রুব বর্ণ *s, lua_সংখ্যা *result, পূর্ণাঙ্ক mode) {
+  বর্ণ *endptr;
   *result = (mode == 'x') ? lua_strx2number(s, &endptr)  /* try to convert */
                           : lua_str2number(s, &endptr);
-  if (endptr == s) return NULL;  /* nothing recognized? */
-  while (lisspace(cast_uchar(*endptr))) endptr++;  /* skip trailing spaces */
-  return (*endptr == '\0') ? endptr : NULL;  /* OK iff no trailing chars */
+  যদি (endptr == s) প্রত্যাগম রিক্ত;  /* nothing recognized? */
+  যাবত্ (lisspace(cast_uchar(*endptr))) endptr++;  /* skip trailing spaces */
+  প্রত্যাগম (*endptr == '\0') ? endptr : রিক্ত;  /* OK iff no trailing chars */
 }
 
 
@@ -312,93 +312,93 @@ static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
 ** - 'x' means a hexadecimal numeral
 ** - '.' just optimizes the search for the common case (no special chars)
 */
-static const char *l_str2d (const char *s, lua_Number *result) {
-  const char *endptr;
-  const char *pmode = strpbrk(s, ".xXnN");  /* look for special chars */
-  int mode = pmode ? ltolower(cast_uchar(*pmode)) : 0;
-  if (mode == 'n')  /* reject 'inf' and 'nan' */
-    return NULL;
+স্থির ধ্রুব বর্ণ *l_str2d (ধ্রুব বর্ণ *s, lua_সংখ্যা *result) {
+  ধ্রুব বর্ণ *endptr;
+  ধ্রুব বর্ণ *pmode = strpbrk(s, ".xXnN");  /* look for special chars */
+  পূর্ণাঙ্ক mode = pmode ? ltolower(cast_uchar(*pmode)) : 0;
+  যদি (mode == 'n')  /* reject 'inf' and 'nan' */
+    প্রত্যাগম রিক্ত;
   endptr = l_str2dloc(s, result, mode);  /* try to convert */
-  if (endptr == NULL) {  /* failed? may be a different locale */
-    char buff[L_MAXLENNUM + 1];
-    const char *pdot = strchr(s, '.');
-    if (pdot == NULL || strlen(s) > L_MAXLENNUM)
-      return NULL;  /* string too long or no dot; fail */
+  যদি (endptr == রিক্ত) {  /* failed? may be a different locale */
+    বর্ণ buff[L_MAXLENNUM + 1];
+    ধ্রুব বর্ণ *pdot = strchr(s, '.');
+    যদি (pdot == রিক্ত || strlen(s) > L_MAXLENNUM)
+      প্রত্যাগম রিক্ত;  /* string too long or no dot; fail */
     strcpy(buff, s);  /* copy string to buffer */
     buff[pdot - s] = lua_getlocaledecpoint();  /* correct decimal point */
     endptr = l_str2dloc(buff, result, mode);  /* try again */
-    if (endptr != NULL)
+    যদি (endptr != রিক্ত)
       endptr = s + (endptr - buff);  /* make relative to 's' */
   }
-  return endptr;
+  প্রত্যাগম endptr;
 }
 
 
 #define MAXBY10		cast(lua_Unsigned, LUA_MAXINTEGER / 10)
 #define MAXLASTD	cast_int(LUA_MAXINTEGER % 10)
 
-static const char *l_str2int (const char *s, lua_Integer *result) {
+স্থির ধ্রুব বর্ণ *l_str2int (ধ্রুব বর্ণ *s, lua_Integer *result) {
   lua_Unsigned a = 0;
-  int empty = 1;
-  int neg;
-  while (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
+  পূর্ণাঙ্ক empty = 1;
+  পূর্ণাঙ্ক neg;
+  যাবত্ (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
   neg = isneg(&s);
-  if (s[0] == '0' &&
+  যদি (s[0] == '0' &&
       (s[1] == 'x' || s[1] == 'X')) {  /* hex? */
     s += 2;  /* skip '0x' */
-    for (; lisxdigit(cast_uchar(*s)); s++) {
+    প্রতি (; lisxdigit(cast_uchar(*s)); s++) {
       a = a * 16 + luaO_hexavalue(*s);
       empty = 0;
     }
   }
-  else {  /* decimal */
-    for (; lisdigit(cast_uchar(*s)); s++) {
-      int d = *s - '0';
-      if (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* overflow? */
-        return NULL;  /* do not accept it (as integer) */
+  অন্যথা {  /* decimal */
+    প্রতি (; lisdigit(cast_uchar(*s)); s++) {
+      পূর্ণাঙ্ক d = *s - '0';
+      যদি (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* overflow? */
+        প্রত্যাগম রিক্ত;  /* do not accept it (as integer) */
       a = a * 10 + cast_uint(d);
       empty = 0;
     }
   }
-  while (lisspace(cast_uchar(*s))) s++;  /* skip trailing spaces */
-  if (empty || *s != '\0') return NULL;  /* something wrong in the numeral */
-  else {
+  যাবত্ (lisspace(cast_uchar(*s))) s++;  /* skip trailing spaces */
+  যদি (empty || *s != '\0') প্রত্যাগম রিক্ত;  /* something wrong in the numeral */
+  অন্যথা {
     *result = l_castU2S((neg) ? 0u - a : a);
-    return s;
+    প্রত্যাগম s;
   }
 }
 
 
-size_t luaO_str2num (const char *s, TValue *o) {
-  lua_Integer i; lua_Number n;
-  const char *e;
-  if ((e = l_str2int(s, &i)) != NULL) {  /* try as an integer */
+size_t luaO_str2num (ধ্রুব বর্ণ *s, TValue *o) {
+  lua_Integer i; lua_সংখ্যা n;
+  ধ্রুব বর্ণ *e;
+  যদি ((e = l_str2int(s, &i)) != রিক্ত) {  /* try as an integer */
     setivalue(o, i);
   }
-  else if ((e = l_str2d(s, &n)) != NULL) {  /* else try as a float */
+  অন্যথা যদি ((e = l_str2d(s, &n)) != রিক্ত) {  /* else try as a float */
     setfltvalue(o, n);
   }
-  else
-    return 0;  /* conversion failed */
-  return ct_diff2sz(e - s) + 1;  /* success; return string size */
+  অন্যথা
+    প্রত্যাগম 0;  /* conversion failed */
+  প্রত্যাগম ct_diff2sz(e - s) + 1;  /* success; return string size */
 }
 
 
-int luaO_utf8esc (char *buff, l_uint32 x) {
-  int n = 1;  /* number of bytes put in buffer (backwards) */
+পূর্ণাঙ্ক luaO_utf8esc (বর্ণ *buff, l_uint32 x) {
+  পূর্ণাঙ্ক n = 1;  /* number of bytes put in buffer (backwards) */
   lua_assert(x <= 0x7FFFFFFFu);
-  if (x < 0x80)  /* ASCII? */
+  যদি (x < 0x80)  /* ASCII? */
     buff[UTF8BUFFSZ - 1] = cast_char(x);
-  else {  /* need continuation bytes */
-    unsigned int mfb = 0x3f;  /* maximum that fits in first byte */
-    do {  /* add continuation bytes */
+  অন্যথা {  /* need continuation bytes */
+    unsigned পূর্ণাঙ্ক mfb = 0x3f;  /* maximum that fits in first byte */
+    কুরু {  /* add continuation bytes */
       buff[UTF8BUFFSZ - (n++)] = cast_char(0x80 | (x & 0x3f));
       x >>= 6;  /* remove added bits */
       mfb >>= 1;  /* now there is one less bit available in first byte */
-    } while (x > mfb);  /* still needs continuation byte? */
+    } যাবত্ (x > mfb);  /* still needs continuation byte? */
     buff[UTF8BUFFSZ - n] = cast_char((~mfb << 1) | x);  /* add first byte */
   }
-  return n;
+  প্রত্যাগম n;
 }
 
 
@@ -411,7 +411,7 @@ int luaO_utf8esc (char *buff, l_uint32 x) {
 ** digits, the final '\0', plus the significant digits, which are
 ** approximately the *_DIG attribute.
 */
-#if LUA_N2SBUFFSZ < (20 + l_floatatt(DIG))
+#যদি LUA_N2SBUFFSZ < (20 + l_floatatt(DIG))
 #error "invalid value for LUA_N2SBUFFSZ"
 #endif
 
@@ -425,45 +425,45 @@ int luaO_utf8esc (char *buff, l_uint32 x) {
 ** like an integer (without a decimal point or an exponent), add ".0" to
 ** its end.
 */
-static int tostringbuffFloat (lua_Number n, char *buff) {
+স্থির পূর্ণাঙ্ক tostringbuffFloat (lua_সংখ্যা n, বর্ণ *buff) {
   /* first conversion */
-  int len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT,
+  পূর্ণাঙ্ক len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_সংখ্যা_FMT,
                             (LUAI_UACNUMBER)n);
-  lua_Number check = lua_str2number(buff, NULL);  /* read it back */
-  if (check != n) {  /* not enough precision? */
+  lua_সংখ্যা check = lua_str2number(buff, রিক্ত);  /* read it back */
+  যদি (check != n) {  /* not enough precision? */
     /* convert again with more precision */
-    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT_N,
+    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_সংখ্যা_FMT_N,
                           (LUAI_UACNUMBER)n);
   }
   /* looks like an integer? */
-  if (buff[strspn(buff, "-0123456789")] == '\0') {
+  যদি (buff[strspn(buff, "-0123456789")] == '\0') {
     buff[len++] = lua_getlocaledecpoint();
     buff[len++] = '0';  /* adds '.0' to result */
   }
-  return len;
+  প্রত্যাগম len;
 }
 
 
 /*
 ** Convert a number object to a string, adding it to a buffer.
 */
-unsigned luaO_tostringbuff (const TValue *obj, char *buff) {
-  int len;
+unsigned luaO_tostringbuff (ধ্রুব TValue *obj, বর্ণ *buff) {
+  পূর্ণাঙ্ক len;
   lua_assert(ttisnumber(obj));
-  if (ttisinteger(obj))
+  যদি (ttisinteger(obj))
     len = lua_integer2str(buff, LUA_N2SBUFFSZ, ivalue(obj));
-  else
+  অন্যথা
     len = tostringbuffFloat(fltvalue(obj), buff);
   lua_assert(len < LUA_N2SBUFFSZ);
-  return cast_uint(len);
+  প্রত্যাগম cast_uint(len);
 }
 
 
 /*
 ** Convert a number object to a Lua string, replacing the value at 'obj'
 */
-void luaO_tostring (lua_State *L, TValue *obj) {
-  char buff[LUA_N2SBUFFSZ];
+শূন্য luaO_tostring (lua_State *L, TValue *obj) {
+  বর্ণ buff[LUA_N2SBUFFSZ];
   unsigned len = luaO_tostringbuff(obj, buff);
   setsvalue(L, obj, luaS_newlstr(L, buff, len));
 }
@@ -488,20 +488,20 @@ void luaO_tostring (lua_State *L, TValue *obj) {
 ** Buffer used by 'luaO_pushvfstring'. 'err' signals an error while
 ** building result (memory error [1] or buffer overflow [2]).
 */
-typedef struct BuffFS {
+প্রকারনির্দেশ সংরচনা BuffFS {
   lua_State *L;
-  char *b;
+  বর্ণ *b;
   size_t buffsize;
   size_t blen;  /* length of string in 'buff' */
-  int err;
-  char space[BUFVFS];  /* initial buffer */
+  পূর্ণাঙ্ক err;
+  বর্ণ space[BUFVFS];  /* initial buffer */
 } BuffFS;
 
 
-static void initbuff (lua_State *L, BuffFS *buff) {
+স্থির শূন্য initbuff (lua_State *L, BuffFS *buff) {
   buff->L = L;
   buff->b = buff->space;
-  buff->buffsize = sizeof(buff->space);
+  buff->buffsize = পরিমাণ(buff->space);
   buff->blen = 0;
   buff->err = 0;
 }
@@ -511,65 +511,65 @@ static void initbuff (lua_State *L, BuffFS *buff) {
 ** Push final result from 'luaO_pushvfstring'. This function may raise
 ** errors explicitly or through memory errors, so it must run protected.
 */
-static void pushbuff (lua_State *L, void *ud) {
+স্থির শূন্য pushbuff (lua_State *L, শূন্য *ud) {
   BuffFS *buff = cast(BuffFS*, ud);
-  switch (buff->err) {
-    case 1:  /* memory error */
+  বিকল্প (buff->err) {
+    পক্ষ 1:  /* memory error */
       luaD_throw(L, LUA_ERRMEM);
-      break;
-    case 2:  /* length overflow: Add "..." at the end of result */
-      if (buff->buffsize - buff->blen < 3)
+      ভঙ্গ;
+    পক্ষ 2:  /* length overflow: Add "..." at the end of result */
+      যদি (buff->buffsize - buff->blen < 3)
         strcpy(buff->b + buff->blen - 3, "...");  /* 'blen' must be > 3 */
-      else {  /* there is enough space left for the "..." */
+      অন্যথা {  /* there is enough space left for the "..." */
         strcpy(buff->b + buff->blen, "...");
         buff->blen += 3;
       }
       /* FALLTHROUGH */
-    default: {  /* no errors, but it can raise one creating the new string */
+    স্বভাব: {  /* no errors, but it can raise one creating the new string */
       TString *ts = luaS_newlstr(L, buff->b, buff->blen);
-      setsvalue2s(L, L->top.p, ts);
-      L->top.p++;
+      setsvalue2s(L, L->শীর্ষ.p, ts);
+      L->শীর্ষ.p++;
     }
   }
 }
 
 
-static const char *clearbuff (BuffFS *buff) {
+স্থির ধ্রুব বর্ণ *clearbuff (BuffFS *buff) {
   lua_State *L = buff->L;
-  const char *res;
-  if (luaD_rawrunprotected(L, pushbuff, buff) != LUA_OK)  /* errors? */
-    res = NULL;  /* error message is on the top of the stack */
-  else
-    res = getstr(tsvalue(s2v(L->top.p - 1)));
-  if (buff->b != buff->space)  /* using dynamic buffer? */
+  ধ্রুব বর্ণ *res;
+  যদি (luaD_rawrunprotected(L, pushbuff, buff) != LUA_OK)  /* errors? */
+    res = রিক্ত;  /* error message is on the top of the stack */
+  অন্যথা
+    res = getstr(tsvalue(s2v(L->শীর্ষ.p - 1)));
+  যদি (buff->b != buff->space)  /* using dynamic buffer? */
     luaM_freearray(L, buff->b, buff->buffsize);  /* free it */
-  return res;
+  প্রত্যাগম res;
 }
 
 
-static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
-  size_t left = buff->buffsize - buff->blen;  /* space left in the buffer */
-  if (buff->err)  /* do nothing else after an error */
-    return;
-  if (slen > left) {  /* new string doesn't fit into current buffer? */
-    if (slen > ((MAX_SIZE/2) - buff->blen)) {  /* overflow? */
-      memcpy(buff->b + buff->blen, str, left);  /* copy what it can */
+স্থির শূন্য addstr2buff (BuffFS *buff, ধ্রুব বর্ণ *str, size_t slen) {
+  size_t বাম = buff->buffsize - buff->blen;  /* space left in the buffer */
+  যদি (buff->err)  /* do nothing else after an error */
+    প্রত্যাগম;
+  যদি (slen > বাম) {  /* new string doesn't fit into current buffer? */
+    যদি (slen > ((MAX_SIZE/2) - buff->blen)) {  /* overflow? */
+      memcpy(buff->b + buff->blen, str, বাম);  /* copy what it can */
       buff->blen = buff->buffsize;
       buff->err = 2;  /* doesn't add anything else */
-      return;
+      প্রত্যাগম;
     }
-    else {
+    অন্যথা {
       size_t newsize = buff->buffsize + slen;  /* limited to MAX_SIZE/2 */
-      char *newb =
+      বর্ণ *newb =
         (buff->b == buff->space)  /* still using static space? */
-        ? luaM_reallocvector(buff->L, NULL, 0, newsize, char)
+        ? luaM_reallocvector(buff->L, রিক্ত, 0, newsize, বর্ণ)
         : luaM_reallocvector(buff->L, buff->b, buff->buffsize, newsize,
-                                                               char);
-      if (newb == NULL) {  /* allocation error? */
+                                                               বর্ণ);
+      যদি (newb == রিক্ত) {  /* allocation error? */
         buff->err = 1;  /* signal a memory error */
-        return;
+        প্রত্যাগম;
       }
-      if (buff->b == buff->space)  /* new buffer (not reallocated)? */
+      যদি (buff->b == buff->space)  /* new buffer (not reallocated)? */
         memcpy(newb, buff->b, buff->blen);  /* copy previous content */
       buff->b = newb;  /* set new (larger) buffer... */
       buff->buffsize = newsize;  /* ...and its new size */
@@ -583,9 +583,9 @@ static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
 /*
 ** Add a numeral to the buffer.
 */
-static void addnum2buff (BuffFS *buff, TValue *num) {
-  char numbuff[LUA_N2SBUFFSZ];
-  unsigned len = luaO_tostringbuff(num, numbuff);
+স্থির শূন্য addnum2buff (BuffFS *buff, TValue *অঙ্ক) {
+  বর্ণ numbuff[LUA_N2SBUFFSZ];
+  unsigned len = luaO_tostringbuff(অঙ্ক, numbuff);
   addstr2buff(buff, numbuff, len);
 }
 
@@ -594,81 +594,81 @@ static void addnum2buff (BuffFS *buff, TValue *num) {
 ** this function handles only '%d', '%c', '%f', '%p', '%s', and '%%'
    conventional formats, plus Lua-specific '%I' and '%U'
 */
-const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
+ধ্রুব বর্ণ *luaO_pushvfstring (lua_State *L, ধ্রুব বর্ণ *fmt, va_list argp) {
   BuffFS buff;  /* holds last part of the result */
-  const char *e;  /* points to next '%' */
+  ধ্রুব বর্ণ *e;  /* points to next '%' */
   initbuff(L, &buff);
-  while ((e = strchr(fmt, '%')) != NULL) {
+  যাবত্ ((e = strchr(fmt, '%')) != রিক্ত) {
     addstr2buff(&buff, fmt, ct_diff2sz(e - fmt));  /* add 'fmt' up to '%' */
-    switch (*(e + 1)) {  /* conversion specifier */
-      case 's': {  /* zero-terminated string */
-        const char *s = va_arg(argp, char *);
-        if (s == NULL) s = "(null)";
+    বিকল্প (*(e + 1)) {  /* conversion specifier */
+      পক্ষ 's': {  /* zero-terminated string */
+        ধ্রুব বর্ণ *s = va_arg(argp, বর্ণ *);
+        যদি (s == রিক্ত) s = "(null)";
         addstr2buff(&buff, s, strlen(s));
-        break;
+        ভঙ্গ;
       }
-      case 'c': {  /* an 'int' as a character */
-        char c = cast_char(va_arg(argp, int));
-        addstr2buff(&buff, &c, sizeof(char));
-        break;
+      পক্ষ 'c': {  /* an 'int' as a character */
+        বর্ণ c = cast_char(va_arg(argp, পূর্ণাঙ্ক));
+        addstr2buff(&buff, &c, পরিমাণ(বর্ণ));
+        ভঙ্গ;
       }
-      case 'd': {  /* an 'int' */
-        TValue num;
-        setivalue(&num, va_arg(argp, int));
-        addnum2buff(&buff, &num);
-        break;
+      পক্ষ 'd': {  /* an 'int' */
+        TValue অঙ্ক;
+        setivalue(&অঙ্ক, va_arg(argp, পূর্ণাঙ্ক));
+        addnum2buff(&buff, &অঙ্ক);
+        ভঙ্গ;
       }
-      case 'I': {  /* a 'lua_Integer' */
-        TValue num;
-        setivalue(&num, cast_Integer(va_arg(argp, l_uacInt)));
-        addnum2buff(&buff, &num);
-        break;
+      পক্ষ 'I': {  /* a 'lua_Integer' */
+        TValue অঙ্ক;
+        setivalue(&অঙ্ক, cast_Integer(va_arg(argp, l_uacInt)));
+        addnum2buff(&buff, &অঙ্ক);
+        ভঙ্গ;
       }
-      case 'f': {  /* a 'lua_Number' */
-        TValue num;
-        setfltvalue(&num, cast_num(va_arg(argp, l_uacNumber)));
-        addnum2buff(&buff, &num);
-        break;
+      পক্ষ 'f': {  /* a 'lua_Number' */
+        TValue অঙ্ক;
+        setfltvalue(&অঙ্ক, cast_অঙ্ক(va_arg(argp, l_uac_সংখ্যা)));
+        addnum2buff(&buff, &অঙ্ক);
+        ভঙ্গ;
       }
-      case 'p': {  /* a pointer */
-        char bf[LUA_N2SBUFFSZ];  /* enough space for '%p' */
-        void *p = va_arg(argp, void *);
-        int len = lua_pointer2str(bf, LUA_N2SBUFFSZ, p);
+      পক্ষ 'p': {  /* a pointer */
+        বর্ণ bf[LUA_N2SBUFFSZ];  /* enough space for '%p' */
+        শূন্য *p = va_arg(argp, শূন্য *);
+        পূর্ণাঙ্ক len = lua_pointer2str(bf, LUA_N2SBUFFSZ, p);
         addstr2buff(&buff, bf, cast_uint(len));
-        break;
+        ভঙ্গ;
       }
-      case 'U': {  /* an 'unsigned long' as a UTF-8 sequence */
-        char bf[UTF8BUFFSZ];
+      পক্ষ 'U': {  /* an 'unsigned long' as a UTF-8 sequence */
+        বর্ণ bf[UTF8BUFFSZ];
         unsigned long arg = va_arg(argp, unsigned long);
-        int len = luaO_utf8esc(bf, cast(l_uint32, arg));
+        পূর্ণাঙ্ক len = luaO_utf8esc(bf, cast(l_uint32, arg));
         addstr2buff(&buff, bf + UTF8BUFFSZ - len, cast_uint(len));
-        break;
+        ভঙ্গ;
       }
-      case '%': {
+      পক্ষ '%': {
         addstr2buff(&buff, "%", 1);
-        break;
+        ভঙ্গ;
       }
-      default: {
+      স্বভাব: {
         addstr2buff(&buff, e, 2);  /* keep unknown format in the result */
-        break;
+        ভঙ্গ;
       }
     }
     fmt = e + 2;  /* skip '%' and the specifier */
   }
   addstr2buff(&buff, fmt, strlen(fmt));  /* rest of 'fmt' */
-  return clearbuff(&buff);  /* empty buffer into a new string */
+  প্রত্যাগম clearbuff(&buff);  /* empty buffer into a new string */
 }
 
 
-const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
-  const char *msg;
+ধ্রুব বর্ণ *luaO_pushfstring (lua_State *L, ধ্রুব বর্ণ *fmt, ...) {
+  ধ্রুব বর্ণ *বার্তা;
   va_list argp;
   va_start(argp, fmt);
-  msg = luaO_pushvfstring(L, fmt, argp);
+  বার্তা = luaO_pushvfstring(L, fmt, argp);
   va_end(argp);
-  if (msg == NULL)  /* error? */
+  যদি (বার্তা == রিক্ত)  /* error? */
     luaD_throw(L, LUA_ERRMEM);
-  return msg;
+  প্রত্যাগম বার্তা;
 }
 
 /* }================================================================== */
@@ -678,42 +678,42 @@ const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
 #define PRE	"[string \""
 #define POS	"\"]"
 
-#define addstr(a,b,l)	( memcpy(a,b,(l) * sizeof(char)), a += (l) )
+#define addstr(a,b,l)	( memcpy(a,b,(l) * পরিমাণ(বর্ণ)), a += (l) )
 
-void luaO_chunkid (char *out, const char *source, size_t srclen) {
+শূন্য luaO_chunkid (বর্ণ *out, ধ্রুব বর্ণ *source, size_t srclen) {
   size_t bufflen = LUA_IDSIZE;  /* free space in buffer */
-  if (*source == '=') {  /* 'literal' source */
-    if (srclen <= bufflen)  /* small enough? */
-      memcpy(out, source + 1, srclen * sizeof(char));
-    else {  /* truncate it */
+  যদি (*source == '=') {  /* 'literal' source */
+    যদি (srclen <= bufflen)  /* small enough? */
+      memcpy(out, source + 1, srclen * পরিমাণ(বর্ণ));
+    অন্যথা {  /* truncate it */
       addstr(out, source + 1, bufflen - 1);
       *out = '\0';
     }
   }
-  else if (*source == '@') {  /* file name */
-    if (srclen <= bufflen)  /* small enough? */
-      memcpy(out, source + 1, srclen * sizeof(char));
-    else {  /* add '...' before rest of name */
+  অন্যথা যদি (*source == '@') {  /* file name */
+    যদি (srclen <= bufflen)  /* small enough? */
+      memcpy(out, source + 1, srclen * পরিমাণ(বর্ণ));
+    অন্যথা {  /* add '...' before rest of name */
       addstr(out, RETS, LL(RETS));
       bufflen -= LL(RETS);
-      memcpy(out, source + 1 + srclen - bufflen, bufflen * sizeof(char));
+      memcpy(out, source + 1 + srclen - bufflen, bufflen * পরিমাণ(বর্ণ));
     }
   }
-  else {  /* string; format as [string "source"] */
-    const char *nl = strchr(source, '\n');  /* find first new line (if any) */
+  অন্যথা {  /* string; format as [string "source"] */
+    ধ্রুব বর্ণ *nl = strchr(source, '\n');  /* find first new line (if any) */
     addstr(out, PRE, LL(PRE));  /* add prefix */
     bufflen -= LL(PRE RETS POS) + 1;  /* save space for prefix+suffix+'\0' */
-    if (srclen < bufflen && nl == NULL) {  /* small one-line source? */
+    যদি (srclen < bufflen && nl == রিক্ত) {  /* small one-line source? */
       addstr(out, source, srclen);  /* keep it */
     }
-    else {
-      if (nl != NULL)
+    অন্যথা {
+      যদি (nl != রিক্ত)
         srclen = ct_diff2sz(nl - source);  /* stop at first newline */
-      if (srclen > bufflen) srclen = bufflen;
+      যদি (srclen > bufflen) srclen = bufflen;
       addstr(out, source, srclen);
       addstr(out, RETS, LL(RETS));
     }
-    memcpy(out, POS, (LL(POS) + 1) * sizeof(char));
+    memcpy(out, POS, (LL(POS) + 1) * পরিমাণ(বর্ণ));
   }
 }
 

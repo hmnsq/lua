@@ -7,10 +7,10 @@
 #ifndef llex_h
 #define llex_h
 
-#include <limits.h>
+#অন্তর্ভাব <limits.h>
 
-#include "lobject.h"
-#include "lzio.h"
+#অন্তর্ভাব "lobject.h"
+#অন্তর্ভাব "lzio.h"
 
 
 /*
@@ -20,7 +20,7 @@
 #define FIRST_RESERVED	(UCHAR_MAX + 1)
 
 
-#if !defined(LUA_ENV)
+#যদি !defined(LUA_ENV)
 #define LUA_ENV		"_ENV"
 #endif
 
@@ -29,7 +29,7 @@
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER RESERVED"
 */
-enum RESERVED {
+গণনা RESERVED {
   /* terminal symbols denoted by reserved words */
   TK_AND = FIRST_RESERVED, TK_BREAK,
   TK_DO, TK_ELSE, TK_ELSEIF, TK_END, TK_FALSE, TK_FOR, TK_FUNCTION,
@@ -43,36 +43,36 @@ enum RESERVED {
 };
 
 /* number of reserved words */
-#define NUM_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
+#define অঙ্ক_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
 
 
-typedef union {
-  lua_Number r;
+প্রকারনির্দেশ সঙ্ঘ {
+  lua_সংখ্যা r;
   lua_Integer i;
   TString *ts;
 } SemInfo;  /* semantics information */
 
 
-typedef struct Token {
-  int token;
+প্রকারনির্দেশ সংরচনা Token {
+  পূর্ণাঙ্ক token;
   SemInfo seminfo;
 } Token;
 
 
 /* state of the scanner plus state of the parser when shared by all
    functions */
-typedef struct LexState {
-  int current;  /* current character (charint) */
-  int linenumber;  /* input line counter */
-  int lastline;  /* line of last token 'consumed' */
+প্রকারনির্দেশ সংরচনা LexState {
+  পূর্ণাঙ্ক current;  /* current character (charint) */
+  পূর্ণাঙ্ক linenumber;  /* input line counter */
+  পূর্ণাঙ্ক lastline;  /* line of last token 'consumed' */
   Token t;  /* current token */
   Token lookahead;  /* look ahead token */
-  struct FuncState *fs;  /* current function (parser) */
-  struct lua_State *L;
+  সংরচনা FuncState *fs;  /* current function (parser) */
+  সংরচনা lua_State *L;
   ZIO *z;  /* input stream */
   Mbuffer *buff;  /* buffer for tokens */
   Table *h;  /* to avoid collection/reuse strings */
-  struct Dyndata *dyd;  /* dynamic structures used by the parser */
+  সংরচনা Dyndata *dyd;  /* dynamic structures used by the parser */
   TString *source;  /* current source name */
   TString *envn;  /* environment variable name */
   TString *brkn;  /* "break" name (used as a label) */
@@ -80,14 +80,14 @@ typedef struct LexState {
 } LexState;
 
 
-LUAI_FUNC void luaX_init (lua_State *L);
-LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
-                              TString *source, int firstchar);
-LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l);
-LUAI_FUNC void luaX_next (LexState *ls);
-LUAI_FUNC int luaX_lookahead (LexState *ls);
-LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const char *s);
-LUAI_FUNC const char *luaX_token2str (LexState *ls, int token);
+LUAI_FUNC শূন্য luaX_init (lua_State *L);
+LUAI_FUNC শূন্য luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
+                              TString *source, পূর্ণাঙ্ক firstchar);
+LUAI_FUNC TString *luaX_newstring (LexState *ls, ধ্রুব বর্ণ *str, size_t l);
+LUAI_FUNC শূন্য luaX_next (LexState *ls);
+LUAI_FUNC পূর্ণাঙ্ক luaX_lookahead (LexState *ls);
+LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, ধ্রুব বর্ণ *s);
+LUAI_FUNC ধ্রুব বর্ণ *luaX_token2str (LexState *ls, পূর্ণাঙ্ক token);
 
 
 #endif
