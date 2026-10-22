@@ -7,134 +7,134 @@
 #define lmathlib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
+#ضمن <float.h>
+#ضمن <limits.h>
+#ضمن <math.h>
+#ضمن <stdlib.h>
+#ضمن <time.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ضمن "lauxlib.h"
+#ضمن "lualib.h"
+#ضمن "llimits.h"
 
 
 #undef PI
 #define PI	(l_mathop(3.141592653589793238462643383279502884))
 
 
-static int math_abs (lua_State *L) {
-  if (lua_isinteger(L, 1)) {
+ساكن صحيح math_abs (lua_State *L) {
+  إذا (lua_isinteger(L, 1)) {
     lua_Integer n = lua_tointeger(L, 1);
-    if (n < 0) n = (lua_Integer)(0u - (lua_Unsigned)n);
+    إذا (n < 0) n = (lua_Integer)(0u - (lua_Unsigned)n);
     lua_pushinteger(L, n);
   }
-  else
+  وإلا
     lua_pushnumber(L, l_mathop(fabs)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_sin (lua_State *L) {
+ساكن صحيح math_sin (lua_State *L) {
   lua_pushnumber(L, l_mathop(sin)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_cos (lua_State *L) {
+ساكن صحيح math_cos (lua_State *L) {
   lua_pushnumber(L, l_mathop(cos)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_tan (lua_State *L) {
+ساكن صحيح math_tan (lua_State *L) {
   lua_pushnumber(L, l_mathop(tan)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_asin (lua_State *L) {
+ساكن صحيح math_asin (lua_State *L) {
   lua_pushnumber(L, l_mathop(asin)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_acos (lua_State *L) {
+ساكن صحيح math_acos (lua_State *L) {
   lua_pushnumber(L, l_mathop(acos)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_atan (lua_State *L) {
-  lua_Number y = luaL_checknumber(L, 1);
-  lua_Number x = luaL_optnumber(L, 2, 1);
+ساكن صحيح math_atan (lua_State *L) {
+  lua_لمب y = luaL_checknumber(L, 1);
+  lua_لمب x = luaL_optnumber(L, 2, 1);
   lua_pushnumber(L, l_mathop(atan2)(y, x));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_toint (lua_State *L) {
-  int valid;
+ساكن صحيح math_toint (lua_State *L) {
+  صحيح valid;
   lua_Integer n = lua_tointegerx(L, 1, &valid);
-  if (l_likely(valid))
+  إذا (l_likely(valid))
     lua_pushinteger(L, n);
-  else {
+  وإلا {
     luaL_checkany(L, 1);
     luaL_pushfail(L);  /* value is not convertible to integer */
   }
-  return 1;
+  أرجع 1;
 }
 
 
-static void pushnumint (lua_State *L, lua_Number d) {
+ساكن فراغ pushnumint (lua_State *L, lua_لمب d) {
   lua_Integer n;
-  if (lua_numbertointeger(d, &n))  /* does 'd' fit in an integer? */
+  إذا (lua_numbertointeger(d, &n))  /* does 'd' fit in an integer? */
     lua_pushinteger(L, n);  /* result is integer */
-  else
+  وإلا
     lua_pushnumber(L, d);  /* result is float */
 }
 
 
-static int math_floor (lua_State *L) {
-  if (lua_isinteger(L, 1))
+ساكن صحيح math_floor (lua_State *L) {
+  إذا (lua_isinteger(L, 1))
     lua_settop(L, 1);  /* integer is its own floor */
-  else {
-    lua_Number d = l_mathop(floor)(luaL_checknumber(L, 1));
+  وإلا {
+    lua_لمب d = l_mathop(floor)(luaL_checknumber(L, 1));
     pushnumint(L, d);
   }
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_ceil (lua_State *L) {
-  if (lua_isinteger(L, 1))
+ساكن صحيح math_ceil (lua_State *L) {
+  إذا (lua_isinteger(L, 1))
     lua_settop(L, 1);  /* integer is its own ceiling */
-  else {
-    lua_Number d = l_mathop(ceil)(luaL_checknumber(L, 1));
+  وإلا {
+    lua_لمب d = l_mathop(ceil)(luaL_checknumber(L, 1));
     pushnumint(L, d);
   }
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_fmod (lua_State *L) {
-  if (lua_isinteger(L, 1) && lua_isinteger(L, 2)) {
+ساكن صحيح math_fmod (lua_State *L) {
+  إذا (lua_isinteger(L, 1) && lua_isinteger(L, 2)) {
     lua_Integer d = lua_tointeger(L, 2);
-    if ((lua_Unsigned)d + 1u <= 1u) {  /* special cases: -1 or 0 */
+    إذا ((lua_Unsigned)d + 1u <= 1u) {  /* special cases: -1 or 0 */
       luaL_argcheck(L, d != 0, 2, "zero");
       lua_pushinteger(L, 0);  /* avoid overflow with 0x80000... / -1 */
     }
-    else
+    وإلا
       lua_pushinteger(L, lua_tointeger(L, 1) % d);
   }
-  else
+  وإلا
     lua_pushnumber(L, l_mathop(fmod)(luaL_checknumber(L, 1),
                                      luaL_checknumber(L, 2)));
-  return 1;
+  أرجع 1;
 }
 
 
@@ -143,130 +143,130 @@ static int math_fmod (lua_State *L) {
 ** (which is not compatible with 'float*') when lua_Number is not
 ** 'double'.
 */
-static int math_modf (lua_State *L) {
-  if (lua_isinteger(L ,1)) {
+ساكن صحيح math_modf (lua_State *L) {
+  إذا (lua_isinteger(L ,1)) {
     lua_settop(L, 1);  /* number is its own integer part */
     lua_pushnumber(L, 0);  /* no fractional part */
   }
-  else {
-    lua_Number n = luaL_checknumber(L, 1);
+  وإلا {
+    lua_لمب n = luaL_checknumber(L, 1);
     /* integer part (rounds toward zero) */
-    lua_Number ip = (n < 0) ? l_mathop(ceil)(n) : l_mathop(floor)(n);
+    lua_لمب ip = (n < 0) ? l_mathop(ceil)(n) : l_mathop(floor)(n);
     pushnumint(L, ip);
     /* fractional part (test needed for inf/-inf) */
     lua_pushnumber(L, (n == ip) ? l_mathop(0.0) : (n - ip));
   }
-  return 2;
+  أرجع 2;
 }
 
 
-static int math_sqrt (lua_State *L) {
+ساكن صحيح math_sqrt (lua_State *L) {
   lua_pushnumber(L, l_mathop(sqrt)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_ult (lua_State *L) {
+ساكن صحيح math_ult (lua_State *L) {
   lua_Integer a = luaL_checkinteger(L, 1);
   lua_Integer b = luaL_checkinteger(L, 2);
   lua_pushboolean(L, (lua_Unsigned)a < (lua_Unsigned)b);
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_log (lua_State *L) {
-  lua_Number x = luaL_checknumber(L, 1);
-  lua_Number res;
-  if (lua_isnoneornil(L, 2))
+ساكن صحيح math_log (lua_State *L) {
+  lua_لمب x = luaL_checknumber(L, 1);
+  lua_لمب res;
+  إذا (lua_isnoneornil(L, 2))
     res = l_mathop(log)(x);
-  else {
-    lua_Number base = luaL_checknumber(L, 2);
-#if !defined(LUA_USE_C89)
-    if (base == l_mathop(2.0))
+  وإلا {
+    lua_لمب base = luaL_checknumber(L, 2);
+#إذا !defined(LUA_USE_C89)
+    إذا (base == l_mathop(2.0))
       res = l_mathop(log2)(x);
-    else
+    وإلا
 #endif
-    if (base == l_mathop(10.0))
+    إذا (base == l_mathop(10.0))
       res = l_mathop(log10)(x);
-    else
+    وإلا
       res = l_mathop(log)(x)/l_mathop(log)(base);
   }
   lua_pushnumber(L, res);
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_exp (lua_State *L) {
+ساكن صحيح math_exp (lua_State *L) {
   lua_pushnumber(L, l_mathop(exp)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_deg (lua_State *L) {
+ساكن صحيح math_deg (lua_State *L) {
   lua_pushnumber(L, luaL_checknumber(L, 1) * (l_mathop(180.0) / PI));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_rad (lua_State *L) {
+ساكن صحيح math_rad (lua_State *L) {
   lua_pushnumber(L, luaL_checknumber(L, 1) * (PI / l_mathop(180.0)));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_frexp (lua_State *L) {
-  lua_Number x = luaL_checknumber(L, 1);
-  int ep;
+ساكن صحيح math_frexp (lua_State *L) {
+  lua_لمب x = luaL_checknumber(L, 1);
+  صحيح ep;
   lua_pushnumber(L, l_mathop(frexp)(x, &ep));
   lua_pushinteger(L, ep);
-  return 2;
+  أرجع 2;
 }
 
 
-static int math_ldexp (lua_State *L) {
-  lua_Number x = luaL_checknumber(L, 1);
-  int ep = (int)luaL_checkinteger(L, 2);
+ساكن صحيح math_ldexp (lua_State *L) {
+  lua_لمب x = luaL_checknumber(L, 1);
+  صحيح ep = (صحيح)luaL_checkinteger(L, 2);
   lua_pushnumber(L, l_mathop(ldexp)(x, ep));
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_min (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  int imin = 1;  /* index of current minimum value */
-  int i;
+ساكن صحيح math_min (lua_State *L) {
+  صحيح n = lua_gettop(L);  /* number of arguments */
+  صحيح imin = 1;  /* index of current minimum value */
+  صحيح i;
   luaL_argcheck(L, n >= 1, 1, "value expected");
-  for (i = 2; i <= n; i++) {
-    if (lua_compare(L, i, imin, LUA_OPLT))
+  لكل (i = 2; i <= n; i++) {
+    إذا (lua_compare(L, i, imin, LUA_OPLT))
       imin = i;
   }
   lua_pushvalue(L, imin);
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_max (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  int imax = 1;  /* index of current maximum value */
-  int i;
+ساكن صحيح math_max (lua_State *L) {
+  صحيح n = lua_gettop(L);  /* number of arguments */
+  صحيح imax = 1;  /* index of current maximum value */
+  صحيح i;
   luaL_argcheck(L, n >= 1, 1, "value expected");
-  for (i = 2; i <= n; i++) {
-    if (lua_compare(L, imax, i, LUA_OPLT))
+  لكل (i = 2; i <= n; i++) {
+    إذا (lua_compare(L, imax, i, LUA_OPLT))
       imax = i;
   }
   lua_pushvalue(L, imax);
-  return 1;
+  أرجع 1;
 }
 
 
-static int math_type (lua_State *L) {
-  if (lua_type(L, 1) == LUA_TNUMBER)
+ساكن صحيح math_type (lua_State *L) {
+  إذا (lua_type(L, 1) == LUA_TNUMBER)
     lua_pushstring(L, (lua_isinteger(L, 1)) ? "integer" : "float");
-  else {
+  وإلا {
     luaL_checkany(L, 1);
     luaL_pushfail(L);
   }
-  return 1;
+  أرجع 1;
 }
 
 
@@ -289,7 +289,7 @@ static int math_type (lua_State *L) {
 /* number of binary digits in the mantissa of a float */
 #define FIGS	l_floatatt(MANT_DIG)
 
-#if FIGS > 64
+#إذا FIGS > 64
 /* there are only 64 random bits; use them all */
 #undef FIGS
 #define FIGS	64
@@ -300,23 +300,23 @@ static int math_type (lua_State *L) {
 ** LUA_RAND32 forces the use of 32-bit integers in the implementation
 ** of the PRN generator (mainly for testing).
 */
-#if !defined(LUA_RAND32) && !defined(Rand64)
+#إذا !defined(LUA_RAND32) && !defined(Rand64)
 
 /* try to find an integer type with at least 64 bits */
 
-#if ((ULONG_MAX >> 31) >> 31) >= 3
+#إذا ((ULONG_MAX >> 31) >> 31) >= 3
 
 /* 'long' has at least 64 bits */
 #define Rand64		unsigned long
 #define SRand64		long
 
-#elif !defined(LUA_USE_C89) && defined(LLONG_MAX)
+#وإلاإذا !defined(LUA_USE_C89) && defined(LLONG_MAX)
 
 /* there is a 'long long' type (which must have at least 64 bits) */
 #define Rand64		unsigned long long
 #define SRand64		long long
 
-#elif ((LUA_MAXUNSIGNED >> 31) >> 31) >= 3
+#وإلاإذا ((LUA_MAXUNSIGNED >> 31) >> 31) >= 3
 
 /* 'lua_Unsigned' has at least 64 bits */
 #define Rand64		lua_Unsigned
@@ -327,7 +327,7 @@ static int math_type (lua_State *L) {
 #endif
 
 
-#if defined(Rand64)  /* { */
+#إذا defined(Rand64)  /* { */
 
 /*
 ** Standard implementation, using 64-bit integers.
@@ -341,11 +341,11 @@ static int math_type (lua_State *L) {
 
 
 /* rotate left 'x' by 'n' bits */
-static Rand64 rotl (Rand64 x, int n) {
-  return (x << n) | (trim64(x) >> (64 - n));
+ساكن Rand64 rotl (Rand64 x, صحيح n) {
+  أرجع (x << n) | (trim64(x) >> (64 - n));
 }
 
-static Rand64 nextrand (Rand64 *state) {
+ساكن Rand64 nextrand (Rand64 *state) {
   Rand64 state0 = state[0];
   Rand64 state1 = state[1];
   Rand64 state2 = state[2] ^ state0;
@@ -355,7 +355,7 @@ static Rand64 nextrand (Rand64 *state) {
   state[1] = state1 ^ state2;
   state[2] = state2 ^ (state1 << 17);
   state[3] = rotl(state3, 45);
-  return res;
+  أرجع res;
 }
 
 
@@ -376,13 +376,13 @@ static Rand64 nextrand (Rand64 *state) {
 /* 2^(-FIGS) == 2^-1 / 2^(FIGS-1) */
 #define scaleFIG	(l_mathop(0.5) / ((Rand64)1 << (FIGS - 1)))
 
-static lua_Number I2d (Rand64 x) {
+ساكن lua_لمب I2d (Rand64 x) {
   SRand64 sx = (SRand64)(trim64(x) >> shift64_FIG);
-  lua_Number res = (lua_Number)(sx) * scaleFIG;
-  if (sx < 0)
+  lua_لمب res = (lua_لمب)(sx) * scaleFIG;
+  إذا (sx < 0)
     res += l_mathop(1.0);  /* correct the two's complement if negative */
   lua_assert(0 <= res && res < 1);
-  return res;
+  أرجع res;
 }
 
 /* convert a 'Rand64' to a 'lua_Unsigned' */
@@ -392,12 +392,12 @@ static lua_Number I2d (Rand64 x) {
 #define Int2I(x)	((Rand64)(x))
 
 
-#else	/* no 'Rand64'   }{ */
+#وإلا	/* no 'Rand64'   }{ */
 
 /*
 ** Use two 32-bit integers to represent a 64-bit quantity.
 */
-typedef struct Rand64 {
+تعريفنوع بنية Rand64 {
   l_uint32 h;  /* higher half */
   l_uint32 l;  /* lower half */
 } Rand64;
@@ -418,62 +418,62 @@ typedef struct Rand64 {
 */
 
 /* build a new Rand64 value */
-static Rand64 packI (l_uint32 h, l_uint32 l) {
+ساكن Rand64 packI (l_uint32 h, l_uint32 l) {
   Rand64 result;
   result.h = h;
   result.l = l;
-  return result;
+  أرجع result;
 }
 
 /* return i << n */
-static Rand64 Ishl (Rand64 i, int n) {
+ساكن Rand64 Ishl (Rand64 i, صحيح n) {
   lua_assert(n > 0 && n < 32);
-  return packI((i.h << n) | (trim32(i.l) >> (32 - n)), i.l << n);
+  أرجع packI((i.h << n) | (trim32(i.l) >> (32 - n)), i.l << n);
 }
 
 /* i1 ^= i2 */
-static void Ixor (Rand64 *i1, Rand64 i2) {
+ساكن فراغ Ixor (Rand64 *i1, Rand64 i2) {
   i1->h ^= i2.h;
   i1->l ^= i2.l;
 }
 
 /* return i1 + i2 */
-static Rand64 Iadd (Rand64 i1, Rand64 i2) {
+ساكن Rand64 Iadd (Rand64 i1, Rand64 i2) {
   Rand64 result = packI(i1.h + i2.h, i1.l + i2.l);
-  if (trim32(result.l) < trim32(i1.l))  /* carry? */
+  إذا (trim32(result.l) < trim32(i1.l))  /* carry? */
     result.h++;
-  return result;
+  أرجع result;
 }
 
 /* return i * 5 */
-static Rand64 times5 (Rand64 i) {
-  return Iadd(Ishl(i, 2), i);  /* i * 5 == (i << 2) + i */
+ساكن Rand64 times5 (Rand64 i) {
+  أرجع Iadd(Ishl(i, 2), i);  /* i * 5 == (i << 2) + i */
 }
 
 /* return i * 9 */
-static Rand64 times9 (Rand64 i) {
-  return Iadd(Ishl(i, 3), i);  /* i * 9 == (i << 3) + i */
+ساكن Rand64 times9 (Rand64 i) {
+  أرجع Iadd(Ishl(i, 3), i);  /* i * 9 == (i << 3) + i */
 }
 
 /* return 'i' rotated left 'n' bits */
-static Rand64 rotl (Rand64 i, int n) {
+ساكن Rand64 rotl (Rand64 i, صحيح n) {
   lua_assert(n > 0 && n < 32);
-  return packI((i.h << n) | (trim32(i.l) >> (32 - n)),
+  أرجع packI((i.h << n) | (trim32(i.l) >> (32 - n)),
                (trim32(i.h) >> (32 - n)) | (i.l << n));
 }
 
 /* for offsets larger than 32, rotate right by 64 - offset */
-static Rand64 rotl1 (Rand64 i, int n) {
+ساكن Rand64 rotl1 (Rand64 i, صحيح n) {
   lua_assert(n > 32 && n < 64);
   n = 64 - n;
-  return packI((trim32(i.h) >> n) | (i.l << (32 - n)),
+  أرجع packI((trim32(i.h) >> n) | (i.l << (32 - n)),
                (i.h << (32 - n)) | (trim32(i.l) >> n));
 }
 
 /*
 ** implementation of 'xoshiro256**' algorithm on 'Rand64' values
 */
-static Rand64 nextrand (Rand64 *state) {
+ساكن Rand64 nextrand (Rand64 *state) {
   Rand64 res = times9(rotl(times5(state[1]), 7));
   Rand64 t = Ishl(state[1], 17);
   Ixor(&state[2], state[0]);
@@ -482,7 +482,7 @@ static Rand64 nextrand (Rand64 *state) {
   Ixor(&state[0], state[3]);
   Ixor(&state[2], t);
   state[3] = rotl1(state[3], 45);
-  return res;
+  أرجع res;
 }
 
 
@@ -494,7 +494,7 @@ static Rand64 nextrand (Rand64 *state) {
 #define UONE		((l_uint32)1)
 
 
-#if FIGS <= 32
+#إذا FIGS <= 32
 
 /* 2^(-FIGS) */
 #define scaleFIG       (l_mathop(0.5) / (UONE << (FIGS - 1)))
@@ -503,12 +503,12 @@ static Rand64 nextrand (Rand64 *state) {
 ** get up to 32 bits from higher half, shifting right to
 ** throw out the extra bits.
 */
-static lua_Number I2d (Rand64 x) {
-  lua_Number h = (lua_Number)(trim32(x.h) >> (32 - FIGS));
-  return h * scaleFIG;
+ساكن lua_لمب I2d (Rand64 x) {
+  lua_لمب h = (lua_لمب)(trim32(x.h) >> (32 - FIGS));
+  أرجع h * scaleFIG;
 }
 
-#else	/* 32 < FIGS <= 64 */
+#وإلا	/* 32 < FIGS <= 64 */
 
 /* 2^(-FIGS) = 1.0 / 2^30 / 2^3 / 2^(FIGS-33) */
 #define scaleFIG  \
@@ -518,31 +518,31 @@ static lua_Number I2d (Rand64 x) {
 ** use FIGS - 32 bits from lower half, throwing out the other
 ** (32 - (FIGS - 32)) = (64 - FIGS) bits
 */
-#define shiftLOW	(64 - FIGS)
+#define shift_كس	(64 - FIGS)
 
 /*
 ** higher 32 bits go after those (FIGS - 32) bits: shiftHI = 2^(FIGS - 32)
 */
-#define shiftHI		((lua_Number)(UONE << (FIGS - 33)) * l_mathop(2.0))
+#define shiftHI		((lua_لمب)(UONE << (FIGS - 33)) * l_mathop(2.0))
 
 
-static lua_Number I2d (Rand64 x) {
-  lua_Number h = (lua_Number)trim32(x.h) * shiftHI;
-  lua_Number l = (lua_Number)(trim32(x.l) >> shiftLOW);
-  return (h + l) * scaleFIG;
+ساكن lua_لمب I2d (Rand64 x) {
+  lua_لمب h = (lua_لمب)trim32(x.h) * shiftHI;
+  lua_لمب l = (lua_لمب)(trim32(x.l) >> shift_كس);
+  أرجع (h + l) * scaleFIG;
 }
 
 #endif
 
 
 /* convert a 'Rand64' to a 'lua_Unsigned' */
-static lua_Unsigned I2UInt (Rand64 x) {
-  return (((lua_Unsigned)trim32(x.h) << 31) << 1) | (lua_Unsigned)trim32(x.l);
+ساكن lua_Unsigned I2UInt (Rand64 x) {
+  أرجع (((lua_Unsigned)trim32(x.h) << 31) << 1) | (lua_Unsigned)trim32(x.l);
 }
 
 /* convert a 'lua_Unsigned' to a 'Rand64' */
-static Rand64 Int2I (lua_Unsigned n) {
-  return packI((l_uint32)((n >> 31) >> 1), (l_uint32)n);
+ساكن Rand64 Int2I (lua_Unsigned n) {
+  أرجع packI((l_uint32)((n >> 31) >> 1), (l_uint32)n);
 }
 
 #endif  /* } */
@@ -551,7 +551,7 @@ static Rand64 Int2I (lua_Unsigned n) {
 /*
 ** A state uses four 'Rand64' values.
 */
-typedef struct {
+تعريفنوع بنية {
   Rand64 s[4];
 } RanState;
 
@@ -566,98 +566,98 @@ typedef struct {
 ** is inside [0, n], we are done. Otherwise, we try with another 'ran',
 ** until we have a result inside the interval.
 */
-static lua_Unsigned project (lua_Unsigned ran, lua_Unsigned n,
+ساكن lua_Unsigned project (lua_Unsigned ran, lua_Unsigned n,
                              RanState *state) {
   lua_Unsigned lim = n;  /* to compute the Mersenne number */
-  int sh;  /* how much to spread bits to the right in 'lim' */
+  صحيح sh;  /* how much to spread bits to the right in 'lim' */
   /* spread '1' bits in 'lim' until it becomes a Mersenne number */
-  for (sh = 1; (lim & (lim + 1)) != 0; sh *= 2)
+  لكل (sh = 1; (lim & (lim + 1)) != 0; sh *= 2)
     lim |= (lim >> sh);  /* spread '1's to the right */
-  while ((ran &= lim) > n)  /* project 'ran' into [0..lim] and test */
+  طالما ((ran &= lim) > n)  /* project 'ran' into [0..lim] and test */
     ran = I2UInt(nextrand(state->s));  /* not inside [0..n]? try again */
-  return ran;
+  أرجع ran;
 }
 
 
-static int math_random (lua_State *L) {
-  lua_Integer low, up;
+ساكن صحيح math_random (lua_State *L) {
+  lua_Integer كس, up;
   lua_Unsigned p;
   RanState *state = (RanState *)lua_touserdata(L, lua_upvalueindex(1));
   Rand64 rv = nextrand(state->s);  /* next pseudo-random value */
-  switch (lua_gettop(L)) {  /* check number of arguments */
-    case 0: {  /* no arguments */
+  بدل (lua_gettop(L)) {  /* check number of arguments */
+    حالة 0: {  /* no arguments */
       lua_pushnumber(L, I2d(rv));  /* float between 0 and 1 */
-      return 1;
+      أرجع 1;
     }
-    case 1: {  /* only upper limit */
-      low = 1;
+    حالة 1: {  /* only upper limit */
+      كس = 1;
       up = luaL_checkinteger(L, 1);
-      if (up == 0) {  /* single 0 as argument? */
+      إذا (up == 0) {  /* single 0 as argument? */
         lua_pushinteger(L, l_castU2S(I2UInt(rv)));  /* full random integer */
-        return 1;
+        أرجع 1;
       }
-      break;
+      اكسر;
     }
-    case 2: {  /* lower and upper limits */
-      low = luaL_checkinteger(L, 1);
+    حالة 2: {  /* lower and upper limits */
+      كس = luaL_checkinteger(L, 1);
       up = luaL_checkinteger(L, 2);
-      break;
+      اكسر;
     }
-    default: return luaL_error(L, "wrong number of arguments");
+    افتراضي: أرجع luaL_error(L, "wrong number of arguments");
   }
   /* random integer in the interval [low, up] */
-  luaL_argcheck(L, low <= up, 1, "interval is empty");
+  luaL_argcheck(L, كس <= up, 1, "interval is empty");
   /* project random integer into the interval [0, up - low] */
-  p = project(I2UInt(rv), l_castS2U(up) - l_castS2U(low), state);
-  lua_pushinteger(L, l_castU2S(p + l_castS2U(low)));
-  return 1;
+  p = project(I2UInt(rv), l_castS2U(up) - l_castS2U(كس), state);
+  lua_pushinteger(L, l_castU2S(p + l_castS2U(كس)));
+  أرجع 1;
 }
 
 
-static void setseed (lua_State *L, Rand64 *state,
+ساكن فراغ setseed (lua_State *L, Rand64 *state,
                      lua_Unsigned n1, lua_Unsigned n2) {
-  int i;
+  صحيح i;
   state[0] = Int2I(n1);
   state[1] = Int2I(0xff);  /* avoid a zero state */
   state[2] = Int2I(n2);
   state[3] = Int2I(0);
-  for (i = 0; i < 16; i++)
+  لكل (i = 0; i < 16; i++)
     nextrand(state);  /* discard initial values to "spread" seed */
   lua_pushinteger(L, l_castU2S(n1));
   lua_pushinteger(L, l_castU2S(n2));
 }
 
 
-static int math_randomseed (lua_State *L) {
+ساكن صحيح math_randomseed (lua_State *L) {
   RanState *state = (RanState *)lua_touserdata(L, lua_upvalueindex(1));
   lua_Unsigned n1, n2;
-  if (lua_isnone(L, 1)) {
+  إذا (lua_isnone(L, 1)) {
     n1 = luaL_makeseed(L);  /* "random" seed */
     n2 = I2UInt(nextrand(state->s));  /* in case seed is not that random... */
   }
-  else {
+  وإلا {
     n1 = l_castS2U(luaL_checkinteger(L, 1));
     n2 = l_castS2U(luaL_optinteger(L, 2, 0));
   }
   setseed(L, state->s, n1, n2);
-  return 2;  /* return seeds */
+  أرجع 2;  /* return seeds */
 }
 
 
-static const luaL_Reg randfuncs[] = {
+ساكن ثابت luaL_Reg randfuncs[] = {
   {"random", math_random},
   {"randomseed", math_randomseed},
-  {NULL, NULL}
+  {عدم, عدم}
 };
 
 
 /*
 ** Register the random functions and initialize their state.
 */
-static void setrandfunc (lua_State *L) {
-  RanState *state = (RanState *)lua_newuserdatauv(L, sizeof(RanState), 0);
+ساكن فراغ setrandfunc (lua_State *L) {
+  RanState *state = (RanState *)lua_newuserdatauv(L, حجم(RanState), 0);
   setseed(L, state->s, luaL_makeseed(L), 0);  /* initialize with random seed */
-  lua_pop(L, 2);  /* remove pushed seeds */
+  lua_چرو(L, 2);  /* remove pushed seeds */
   luaL_setfuncs(L, randfuncs, 1);
 }
 
@@ -669,33 +669,33 @@ static void setrandfunc (lua_State *L) {
 ** Deprecated functions (for compatibility only)
 ** ===================================================================
 */
-#if defined(LUA_COMPAT_MATHLIB)
+#إذا defined(LUA_COMPAT_MATHLIB)
 
-static int math_cosh (lua_State *L) {
+ساكن صحيح math_cosh (lua_State *L) {
   lua_pushnumber(L, l_mathop(cosh)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
-static int math_sinh (lua_State *L) {
+ساكن صحيح math_sinh (lua_State *L) {
   lua_pushnumber(L, l_mathop(sinh)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
-static int math_tanh (lua_State *L) {
+ساكن صحيح math_tanh (lua_State *L) {
   lua_pushnumber(L, l_mathop(tanh)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
-static int math_pow (lua_State *L) {
-  lua_Number x = luaL_checknumber(L, 1);
-  lua_Number y = luaL_checknumber(L, 2);
+ساكن صحيح math_pow (lua_State *L) {
+  lua_لمب x = luaL_checknumber(L, 1);
+  lua_لمب y = luaL_checknumber(L, 2);
   lua_pushnumber(L, l_mathop(pow)(x, y));
-  return 1;
+  أرجع 1;
 }
 
-static int math_log10 (lua_State *L) {
+ساكن صحيح math_log10 (lua_State *L) {
   lua_pushnumber(L, l_mathop(log10)(luaL_checknumber(L, 1)));
-  return 1;
+  أرجع 1;
 }
 
 #endif
@@ -703,7 +703,7 @@ static int math_log10 (lua_State *L) {
 
 
 
-static const luaL_Reg mathlib[] = {
+ساكن ثابت luaL_Reg mathlib[] = {
   {"abs", math_abs},
   {"acos", math_acos},
   {"asin", math_asin},
@@ -727,7 +727,7 @@ static const luaL_Reg mathlib[] = {
   {"sqrt", math_sqrt},
   {"tan", math_tan},
   {"type", math_type},
-#if defined(LUA_COMPAT_MATHLIB)
+#إذا defined(LUA_COMPAT_MATHLIB)
   {"atan2", math_atan},
   {"cosh", math_cosh},
   {"sinh", math_sinh},
@@ -736,30 +736,30 @@ static const luaL_Reg mathlib[] = {
   {"log10", math_log10},
 #endif
   /* placeholders */
-  {"random", NULL},
-  {"randomseed", NULL},
-  {"pi", NULL},
-  {"huge", NULL},
-  {"maxinteger", NULL},
-  {"mininteger", NULL},
-  {NULL, NULL}
+  {"random", عدم},
+  {"randomseed", عدم},
+  {"pi", عدم},
+  {"huge", عدم},
+  {"maxinteger", عدم},
+  {"mininteger", عدم},
+  {عدم, عدم}
 };
 
 
 /*
 ** Open math library
 */
-LUAMOD_API int luaopen_math (lua_State *L) {
+LUAMOD_API صحيح luaopen_math (lua_State *L) {
   luaL_newlib(L, mathlib);
   lua_pushnumber(L, PI);
   lua_setfield(L, -2, "pi");
-  lua_pushnumber(L, (lua_Number)HUGE_VAL);
+  lua_pushnumber(L, (lua_لمب)HUGE_VAL);
   lua_setfield(L, -2, "huge");
   lua_pushinteger(L, LUA_MAXINTEGER);
   lua_setfield(L, -2, "maxinteger");
   lua_pushinteger(L, LUA_MININTEGER);
   lua_setfield(L, -2, "mininteger");
   setrandfunc(L);
-  return 1;
+  أرجع 1;
 }
 
