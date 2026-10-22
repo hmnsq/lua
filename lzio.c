@@ -7,83 +7,83 @@
 #define lzio_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <string.h>
+#ضمن <string.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lapi.h"
-#include "llimits.h"
-#include "lmem.h"
-#include "lstate.h"
-#include "lzio.h"
+#ضمن "lapi.h"
+#ضمن "llimits.h"
+#ضمن "lmem.h"
+#ضمن "lstate.h"
+#ضمن "lzio.h"
 
 
-int luaZ_fill (ZIO *z) {
+صحيح luaZ_fill (ZIO *z) {
   size_t size;
   lua_State *L = z->L;
-  const char *buff;
+  ثابت حرف *buff;
   lua_unlock(L);
   buff = z->reader(L, z->data, &size);
   lua_lock(L);
-  if (buff == NULL || size == 0)
-    return EOZ;
+  إذا (buff == عدم || size == 0)
+    إرجاع EOZ;
   z->n = size - 1;  /* discount char being returned */
   z->p = buff;
-  return cast_uchar(*(z->p++));
+  إرجاع cast_uchar(*(z->p++));
 }
 
 
-void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, void *data) {
+فراغ luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, فراغ *data) {
   z->L = L;
   z->reader = reader;
   z->data = data;
   z->n = 0;
-  z->p = NULL;
+  z->p = عدم;
 }
 
 
 /* --------------------------------------------------------------- read --- */
 
-static int checkbuffer (ZIO *z) {
-  if (z->n == 0) {  /* no bytes in buffer? */
-    if (luaZ_fill(z) == EOZ)  /* try to read more */
-      return 0;  /* no more input */
-    else {
+ساكن صحيح checkbuffer (ZIO *z) {
+  إذا (z->n == 0) {  /* no bytes in buffer? */
+    إذا (luaZ_fill(z) == EOZ)  /* try to read more */
+      إرجاع 0;  /* no more input */
+    وإلا {
       z->n++;  /* luaZ_fill consumed first byte; put it back */
       z->p--;
     }
   }
-  return 1;  /* now buffer has something */
+  إرجاع 1;  /* now buffer has something */
 }
 
 
-size_t luaZ_read (ZIO *z, void *b, size_t n) {
-  while (n) {
+size_t luaZ_read (ZIO *z, فراغ *b, size_t n) {
+  بينما (n) {
     size_t m;
-    if (!checkbuffer(z))
-      return n;  /* no more input; return number of missing bytes */
+    إذا (!checkbuffer(z))
+      إرجاع n;  /* no more input; return number of missing bytes */
     m = (n <= z->n) ? n : z->n;  /* min. between n and z->n */
     memcpy(b, z->p, m);
     z->n -= m;
     z->p += m;
-    b = (char *)b + m;
+    b = (حرف *)b + m;
     n -= m;
   }
-  return 0;
+  إرجاع 0;
 }
 
 
-const void *luaZ_getaddr (ZIO* z, size_t n) {
-  const void *res;
-  if (!checkbuffer(z))
-    return NULL;  /* no more input */
-  if (z->n < n)  /* not enough bytes? */
-    return NULL;  /* block not whole; cannot give an address */
+ثابت فراغ *luaZ_getaddr (ZIO* z, size_t n) {
+  ثابت فراغ *res;
+  إذا (!checkbuffer(z))
+    إرجاع عدم;  /* no more input */
+  إذا (z->n < n)  /* not enough bytes? */
+    إرجاع عدم;  /* block not whole; cannot give an address */
   res = z->p;  /* get block address */
   z->n -= n;  /* consume these bytes */
   z->p += n;
-  return res;
+  إرجاع res;
 }
