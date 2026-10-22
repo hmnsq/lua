@@ -7,25 +7,25 @@
 #define llex_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include <locale.h>
-#include <string.h>
+#അന്തര്ഭാവ <locale.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "llex.h"
-#include "lobject.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lzio.h"
+#അന്തര്ഭാവ "lctype.h"
+#അന്തര്ഭാവ "ldebug.h"
+#അന്തര്ഭാവ "ldo.h"
+#അന്തര്ഭാവ "lgc.h"
+#അന്തര്ഭാവ "llex.h"
+#അന്തര്ഭാവ "lobject.h"
+#അന്തര്ഭാവ "lparser.h"
+#അന്തര്ഭാവ "lstate.h"
+#അന്തര്ഭാവ "lstring.h"
+#അന്തര്ഭാവ "ltable.h"
+#അന്തര്ഭാവ "lzio.h"
 
 
 
@@ -33,7 +33,7 @@
 
 
 /* minimum size for string buffer */
-#if !defined(LUA_MINBUFFER)
+#എങ്കിൽ !defined(LUA_MINBUFFER)
 #define LUA_MINBUFFER   32
 #endif
 
@@ -42,7 +42,7 @@
 
 
 /* ORDER RESERVED */
-static const char *const luaX_tokens [] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം luaX_tokens [] = {
     "and", "break", "do", "else", "elseif",
     "end", "false", "for", "function", "global", "goto", "if",
     "in", "local", "nil", "not", "or", "repeat",
@@ -56,14 +56,14 @@ static const char *const luaX_tokens [] = {
 #define save_and_next(ls) (save(ls, ls->current), next(ls))
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token);
+സ്ഥിതം l_noret lexerror (LexState *ls, സ്ഥിരം അക്ഷരം *സന്ദേശം, പൂർണ്ണസംഖ്യ token);
 
 
-static void save (LexState *ls, int c) {
+സ്ഥിതം ശൂന്യം save (LexState *ls, പൂർണ്ണസംഖ്യ c) {
   Mbuffer *b = ls->buff;
-  if (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
+  എങ്കിൽ (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
     size_t newsize = luaZ_sizebuffer(b);  /* get old size */;
-    if (newsize >= (MAX_SIZE/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
+    എങ്കിൽ (newsize >= (MAX_SIZE/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
       lexerror(ls, "lexical element too long", 0);
     newsize += (newsize >> 1);  /* new size is 1.5 times the old one */
     luaZ_resizebuffer(ls->L, b, newsize);
@@ -72,11 +72,11 @@ static void save (LexState *ls, int c) {
 }
 
 
-void luaX_init (lua_State *L) {
-  int i;
+ശൂന്യം luaX_init (lua_State *L) {
+  പൂർണ്ണസംഖ്യ i;
   TString *e = luaS_newliteral(L, LUA_ENV);  /* create env name */
   luaC_fix(L, obj2gco(e));  /* never collect this name */
-  for (i=0; i<NUM_RESERVED; i++) {
+  വേണ്ടി (i=0; i<അക്കം_RESERVED; i++) {
     TString *ts = luaS_new(L, luaX_tokens[i]);
     luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
     ts->extra = cast_byte(i+1);  /* reserved word */
@@ -84,45 +84,45 @@ void luaX_init (lua_State *L) {
 }
 
 
-const char *luaX_token2str (LexState *ls, int token) {
-  if (token < FIRST_RESERVED) {  /* single-byte symbols? */
-    if (lisprint(token))
-      return luaO_pushfstring(ls->L, "'%c'", token);
-    else  /* control character */
-      return luaO_pushfstring(ls->L, "'<\\%d>'", token);
+സ്ഥിരം അക്ഷരം *luaX_token2str (LexState *ls, പൂർണ്ണസംഖ്യ token) {
+  എങ്കിൽ (token < FIRST_RESERVED) {  /* single-byte symbols? */
+    എങ്കിൽ (lisprint(token))
+      തിരികെ luaO_pushfstring(ls->L, "'%c'", token);
+    അല്ലെങ്കിൽ  /* control character */
+      തിരികെ luaO_pushfstring(ls->L, "'<\\%d>'", token);
   }
-  else {
-    const char *s = luaX_tokens[token - FIRST_RESERVED];
-    if (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
-      return luaO_pushfstring(ls->L, "'%s'", s);
-    else  /* names, strings, and numerals */
-      return s;
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം അക്ഷരം *s = luaX_tokens[token - FIRST_RESERVED];
+    എങ്കിൽ (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
+      തിരികെ luaO_pushfstring(ls->L, "'%s'", s);
+    അല്ലെങ്കിൽ  /* names, strings, and numerals */
+      തിരികെ s;
   }
 }
 
 
-static const char *txtToken (LexState *ls, int token) {
-  switch (token) {
-    case TK_NAME: case TK_STRING:
-    case TK_FLT: case TK_INT:
+സ്ഥിതം സ്ഥിരം അക്ഷരം *txtToken (LexState *ls, പൂർണ്ണസംഖ്യ token) {
+  തിരഞ്ഞെടുപ്പ് (token) {
+    അവസ്ഥ TK_NAME: അവസ്ഥ TK_STRING:
+    അവസ്ഥ TK_FLT: അവസ്ഥ TK_INT:
       save(ls, '\0');
-      return luaO_pushfstring(ls->L, "'%s'", luaZ_buffer(ls->buff));
-    default:
-      return luaX_token2str(ls, token);
+      തിരികെ luaO_pushfstring(ls->L, "'%s'", luaZ_buffer(ls->buff));
+    സ്ഥിരസ്ഥിതി:
+      തിരികെ luaX_token2str(ls, token);
   }
 }
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token) {
-  msg = luaG_addinfo(ls->L, msg, ls->source, ls->linenumber);
-  if (token)
-    luaO_pushfstring(ls->L, "%s near %s", msg, txtToken(ls, token));
+സ്ഥിതം l_noret lexerror (LexState *ls, സ്ഥിരം അക്ഷരം *സന്ദേശം, പൂർണ്ണസംഖ്യ token) {
+  സന്ദേശം = luaG_addinfo(ls->L, സന്ദേശം, ls->source, ls->linenumber);
+  എങ്കിൽ (token)
+    luaO_pushfstring(ls->L, "%s near %s", സന്ദേശം, txtToken(ls, token));
   luaD_throw(ls->L, LUA_ERRSYNTAX);
 }
 
 
-l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
-  lexerror(ls, msg, ls->t.token);
+l_noret luaX_syntaxerror (LexState *ls, സ്ഥിരം അക്ഷരം *സന്ദേശം) {
+  lexerror(ls, സന്ദേശം, ls->t.token);
 }
 
 
@@ -132,20 +132,20 @@ l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
 ** somewhere. It also internalizes long strings, ensuring there is only
 ** one copy of each unique string.
 */
-static TString *anchorstr (LexState *ls, TString *ts) {
+സ്ഥിതം TString *anchorstr (LexState *ls, TString *ts) {
   lua_State *L = ls->L;
   TValue oldts;
-  int tag = luaH_getstr(ls->h, ts, &oldts);
-  if (!tagisempty(tag))  /* string already present? */
-    return tsvalue(&oldts);  /* use stored value */
-  else {  /* create a new entry */
-    TValue *stv = s2v(L->top.p++);  /* reserve stack space for string */
+  പൂർണ്ണസംഖ്യ tag = luaH_getstr(ls->h, ts, &oldts);
+  എങ്കിൽ (!tagisempty(tag))  /* string already present? */
+    തിരികെ tsvalue(&oldts);  /* use stored value */
+  അല്ലെങ്കിൽ {  /* create a new entry */
+    TValue *stv = s2v(L->മുകൾ.p++);  /* reserve stack space for string */
     setsvalue(L, stv, ts);  /* push (anchor) the string on the stack */
     luaH_set(L, ls->h, stv, stv);  /* t[string] = string */
     /* table is not a metatable, so it does not need to invalidate cache */
     luaC_checkGC(L);
-    L->top.p--;  /* remove string from stack */
-    return ts;
+    L->മുകൾ.p--;  /* remove string from stack */
+    തിരികെ ts;
   }
 }
 
@@ -153,8 +153,8 @@ static TString *anchorstr (LexState *ls, TString *ts) {
 /*
 ** Creates a new string and anchors it in scanner's table.
 */
-TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
-  return anchorstr(ls, luaS_newlstr(ls->L, str, l));
+TString *luaX_newstring (LexState *ls, സ്ഥിരം അക്ഷരം *str, size_t l) {
+  തിരികെ anchorstr(ls, luaS_newlstr(ls->L, str, l));
 }
 
 
@@ -162,25 +162,25 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
 ** increment line number and skips newline sequence (any of
 ** \n, \r, \n\r, or \r\n)
 */
-static void inclinenumber (LexState *ls) {
-  int old = ls->current;
+സ്ഥിതം ശൂന്യം inclinenumber (LexState *ls) {
+  പൂർണ്ണസംഖ്യ old = ls->current;
   lua_assert(currIsNewline(ls));
   next(ls);  /* skip '\n' or '\r' */
-  if (currIsNewline(ls) && ls->current != old)
+  എങ്കിൽ (currIsNewline(ls) && ls->current != old)
     next(ls);  /* skip '\n\r' or '\r\n' */
-  if (++ls->linenumber >= INT_MAX)
+  എങ്കിൽ (++ls->linenumber >= INT_MAX)
     lexerror(ls, "chunk has too many lines", 0);
 }
 
 
-void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
-                    int firstchar) {
+ശൂന്യം luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
+                    പൂർണ്ണസംഖ്യ firstchar) {
   ls->t.token = 0;
   ls->L = L;
   ls->current = firstchar;
   ls->lookahead.token = TK_EOS;  /* no look-ahead token */
   ls->z = z;
-  ls->fs = NULL;
+  ls->fs = ശൂന്യ;
   ls->linenumber = 1;
   ls->lastline = 1;
   ls->source = source;
@@ -188,7 +188,7 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
      so they cannot be collected */
   ls->envn = luaS_newliteral(L, LUA_ENV);  /* get env string */
   ls->brkn = luaS_newliteral(L, "break");  /* get "break" string */
-#if LUA_COMPAT_GLOBAL
+#എങ്കിൽ LUA_COMPAT_GLOBAL
   /* compatibility mode: "global" is not a reserved word */
   ls->glbn = luaS_newliteral(L, "global");  /* get "global" string */
   ls->glbn->extra = 0;  /* mark it as not reserved */
@@ -205,12 +205,12 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
 */
 
 
-static int check_next1 (LexState *ls, int c) {
-  if (ls->current == c) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ check_next1 (LexState *ls, പൂർണ്ണസംഖ്യ c) {
+  എങ്കിൽ (ls->current == c) {
     next(ls);
-    return 1;
+    തിരികെ 1;
   }
-  else return 0;
+  അല്ലെങ്കിൽ തിരികെ 0;
 }
 
 
@@ -218,13 +218,13 @@ static int check_next1 (LexState *ls, int c) {
 ** Check whether current char is in set 'set' (with two chars) and
 ** saves it
 */
-static int check_next2 (LexState *ls, const char *set) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ check_next2 (LexState *ls, സ്ഥിരം അക്ഷരം *set) {
   lua_assert(set[2] == '\0');
-  if (ls->current == set[0] || ls->current == set[1]) {
+  എങ്കിൽ (ls->current == set[0] || ls->current == set[1]) {
     save_and_next(ls);
-    return 1;
+    തിരികെ 1;
   }
-  else return 0;
+  അല്ലെങ്കിൽ തിരികെ 0;
 }
 
 
@@ -241,34 +241,34 @@ static int check_next2 (LexState *ls, const char *set) {
 **
 ** The caller might have already read an initial dot.
 */
-static int read_numeral (LexState *ls, SemInfo *seminfo) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ read_numeral (LexState *ls, SemInfo *seminfo) {
   TValue obj;
-  const char *expo = "Ee";
-  int first = ls->current;
+  സ്ഥിരം അക്ഷരം *expo = "Ee";
+  പൂർണ്ണസംഖ്യ first = ls->current;
   lua_assert(lisdigit(ls->current));
   save_and_next(ls);
-  if (first == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
+  എങ്കിൽ (first == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
     expo = "Pp";
-  for (;;) {
-    if (check_next2(ls, expo))  /* exponent mark? */
+  വേണ്ടി (;;) {
+    എങ്കിൽ (check_next2(ls, expo))  /* exponent mark? */
       check_next2(ls, "-+");  /* optional exponent sign */
-    else if (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
+    അല്ലെങ്കിൽ എങ്കിൽ (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
       save_and_next(ls);
-    else break;
+    അല്ലെങ്കിൽ നിർത്തുക;
   }
-  if (lislalpha(ls->current))  /* is numeral touching a letter? */
+  എങ്കിൽ (lislalpha(ls->current))  /* is numeral touching a letter? */
     save_and_next(ls);  /* force an error */
   save(ls, '\0');
-  if (luaO_str2num(luaZ_buffer(ls->buff), &obj) == 0)  /* format error? */
+  എങ്കിൽ (luaO_str2num(luaZ_buffer(ls->buff), &obj) == 0)  /* format error? */
     lexerror(ls, "malformed number", TK_FLT);
-  if (ttisinteger(&obj)) {
+  എങ്കിൽ (ttisinteger(&obj)) {
     seminfo->i = ivalue(&obj);
-    return TK_INT;
+    തിരികെ TK_INT;
   }
-  else {
+  അല്ലെങ്കിൽ {
     lua_assert(ttisfloat(&obj));
     seminfo->r = fltvalue(&obj);
-    return TK_FLT;
+    തിരികെ TK_FLT;
   }
 }
 
@@ -279,81 +279,81 @@ static int read_numeral (LexState *ls, SemInfo *seminfo) {
 ** return 1 if it is a single bracket (no '='s and no 2nd bracket);
 ** otherwise (an unfinished '[==...') return 0.
 */
-static size_t skip_sep (LexState *ls) {
-  size_t count = 0;
-  int s = ls->current;
+സ്ഥിതം size_t skip_sep (LexState *ls) {
+  size_t എണ്ണം = 0;
+  പൂർണ്ണസംഖ്യ s = ls->current;
   lua_assert(s == '[' || s == ']');
   save_and_next(ls);
-  while (ls->current == '=') {
+  ആകുമ്പോൾ (ls->current == '=') {
     save_and_next(ls);
-    count++;
+    എണ്ണം++;
   }
-  return (ls->current == s) ? count + 2
-         : (count == 0) ? 1
+  തിരികെ (ls->current == s) ? എണ്ണം + 2
+         : (എണ്ണം == 0) ? 1
          : 0;
 }
 
 
-static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
-  int line = ls->linenumber;  /* initial line (for error message) */
+സ്ഥിതം ശൂന്യം read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
+  പൂർണ്ണസംഖ്യ വരി = ls->linenumber;  /* initial line (for error message) */
   save_and_next(ls);  /* skip 2nd '[' */
-  if (currIsNewline(ls))  /* string starts with a newline? */
+  എങ്കിൽ (currIsNewline(ls))  /* string starts with a newline? */
     inclinenumber(ls);  /* skip it */
-  for (;;) {
-    switch (ls->current) {
-      case EOZ: {  /* error */
-        const char *what = (seminfo ? "string" : "comment");
-        const char *msg = luaO_pushfstring(ls->L,
-                     "unfinished long %s (starting at line %d)", what, line);
-        lexerror(ls, msg, TK_EOS);
-        break;  /* to avoid warnings */
+  വേണ്ടി (;;) {
+    തിരഞ്ഞെടുപ്പ് (ls->current) {
+      അവസ്ഥ EOZ: {  /* error */
+        സ്ഥിരം അക്ഷരം *what = (seminfo ? "string" : "comment");
+        സ്ഥിരം അക്ഷരം *സന്ദേശം = luaO_pushfstring(ls->L,
+                     "unfinished long %s (starting at line %d)", what, വരി);
+        lexerror(ls, സന്ദേശം, TK_EOS);
+        നിർത്തുക;  /* to avoid warnings */
       }
-      case ']': {
-        if (skip_sep(ls) == sep) {
+      അവസ്ഥ ']': {
+        എങ്കിൽ (skip_sep(ls) == sep) {
           save_and_next(ls);  /* skip 2nd ']' */
-          goto endloop;
+          പോകുക endloop;
         }
-        break;
+        നിർത്തുക;
       }
-      case '\n': case '\r': {
+      അവസ്ഥ '\n': അവസ്ഥ '\r': {
         save(ls, '\n');
         inclinenumber(ls);
-        if (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
-        break;
+        എങ്കിൽ (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
+        നിർത്തുക;
       }
-      default: {
-        if (seminfo) save_and_next(ls);
-        else next(ls);
+      സ്ഥിരസ്ഥിതി: {
+        എങ്കിൽ (seminfo) save_and_next(ls);
+        അല്ലെങ്കിൽ next(ls);
       }
     }
   } endloop:
-  if (seminfo)
+  എങ്കിൽ (seminfo)
     seminfo->ts = luaX_newstring(ls, luaZ_buffer(ls->buff) + sep,
                                      luaZ_bufflen(ls->buff) - 2 * sep);
 }
 
 
-static void esccheck (LexState *ls, int c, const char *msg) {
-  if (!c) {
-    if (ls->current != EOZ)
+സ്ഥിതം ശൂന്യം esccheck (LexState *ls, പൂർണ്ണസംഖ്യ c, സ്ഥിരം അക്ഷരം *സന്ദേശം) {
+  എങ്കിൽ (!c) {
+    എങ്കിൽ (ls->current != EOZ)
       save_and_next(ls);  /* add current to buffer for error message */
-    lexerror(ls, msg, TK_STRING);
+    lexerror(ls, സന്ദേശം, TK_STRING);
   }
 }
 
 
-static int gethexa (LexState *ls) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gethexa (LexState *ls) {
   save_and_next(ls);
   esccheck (ls, lisxdigit(ls->current), "hexadecimal digit expected");
-  return luaO_hexavalue(ls->current);
+  തിരികെ luaO_hexavalue(ls->current);
 }
 
 
-static int readhexaesc (LexState *ls) {
-  int r = gethexa(ls);
+സ്ഥിതം പൂർണ്ണസംഖ്യ readhexaesc (LexState *ls) {
+  പൂർണ്ണസംഖ്യ r = gethexa(ls);
   r = (r << 4) + gethexa(ls);
   luaZ_buffremove(ls->buff, 2);  /* remove saved chars from buffer */
-  return r;
+  തിരികെ r;
 }
 
 
@@ -362,13 +362,13 @@ static int readhexaesc (LexState *ls) {
 ** for error reporting in case of errors; 'i' counts the number of
 ** saved characters, so that they can be removed if case of success.
 */
-static l_uint32 readutf8esc (LexState *ls) {
+സ്ഥിതം l_uint32 readutf8esc (LexState *ls) {
   l_uint32 r;
-  int i = 4;  /* number of chars to be removed: start with #"\u{X" */
+  പൂർണ്ണസംഖ്യ i = 4;  /* number of chars to be removed: start with #"\u{X" */
   save_and_next(ls);  /* skip 'u' */
   esccheck(ls, ls->current == '{', "missing '{'");
   r = cast_uint(gethexa(ls));  /* must have at least one digit */
-  while (cast_void(save_and_next(ls)), lisxdigit(ls->current)) {
+  ആകുമ്പോൾ (cast_void(save_and_next(ls)), lisxdigit(ls->current)) {
     i++;
     esccheck(ls, r <= (0x7FFFFFFFu >> 4), "UTF-8 value too large");
     r = (r << 4) + luaO_hexavalue(ls->current);
@@ -376,73 +376,73 @@ static l_uint32 readutf8esc (LexState *ls) {
   esccheck(ls, ls->current == '}', "missing '}'");
   next(ls);  /* skip '}' */
   luaZ_buffremove(ls->buff, i);  /* remove saved chars from buffer */
-  return r;
+  തിരികെ r;
 }
 
 
-static void utf8esc (LexState *ls) {
-  char buff[UTF8BUFFSZ];
-  int n = luaO_utf8esc(buff, readutf8esc(ls));
-  for (; n > 0; n--)  /* add 'buff' to string */
+സ്ഥിതം ശൂന്യം utf8esc (LexState *ls) {
+  അക്ഷരം buff[UTF8BUFFSZ];
+  പൂർണ്ണസംഖ്യ n = luaO_utf8esc(buff, readutf8esc(ls));
+  വേണ്ടി (; n > 0; n--)  /* add 'buff' to string */
     save(ls, buff[UTF8BUFFSZ - n]);
 }
 
 
-static int readdecesc (LexState *ls) {
-  int i;
-  int r = 0;  /* result accumulator */
-  for (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
+സ്ഥിതം പൂർണ്ണസംഖ്യ readdecesc (LexState *ls) {
+  പൂർണ്ണസംഖ്യ i;
+  പൂർണ്ണസംഖ്യ r = 0;  /* result accumulator */
+  വേണ്ടി (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
     r = 10*r + ls->current - '0';
     save_and_next(ls);
   }
   esccheck(ls, r <= UCHAR_MAX, "decimal escape too large");
   luaZ_buffremove(ls->buff, i);  /* remove read digits from buffer */
-  return r;
+  തിരികെ r;
 }
 
 
-static void read_string (LexState *ls, int del, SemInfo *seminfo) {
+സ്ഥിതം ശൂന്യം read_string (LexState *ls, പൂർണ്ണസംഖ്യ del, SemInfo *seminfo) {
   save_and_next(ls);  /* keep delimiter (for error messages) */
-  while (ls->current != del) {
-    switch (ls->current) {
-      case EOZ:
+  ആകുമ്പോൾ (ls->current != del) {
+    തിരഞ്ഞെടുപ്പ് (ls->current) {
+      അവസ്ഥ EOZ:
         lexerror(ls, "unfinished string", TK_EOS);
-        break;  /* to avoid warnings */
-      case '\n':
-      case '\r':
+        നിർത്തുക;  /* to avoid warnings */
+      അവസ്ഥ '\n':
+      അവസ്ഥ '\r':
         lexerror(ls, "unfinished string", TK_STRING);
-        break;  /* to avoid warnings */
-      case '\\': {  /* escape sequences */
-        int c;  /* final character to be saved */
+        നിർത്തുക;  /* to avoid warnings */
+      അവസ്ഥ '\\': {  /* escape sequences */
+        പൂർണ്ണസംഖ്യ c;  /* final character to be saved */
         save_and_next(ls);  /* keep '\\' for error messages */
-        switch (ls->current) {
-          case 'a': c = '\a'; goto read_save;
-          case 'b': c = '\b'; goto read_save;
-          case 'f': c = '\f'; goto read_save;
-          case 'n': c = '\n'; goto read_save;
-          case 'r': c = '\r'; goto read_save;
-          case 't': c = '\t'; goto read_save;
-          case 'v': c = '\v'; goto read_save;
-          case 'x': c = readhexaesc(ls); goto read_save;
-          case 'u': utf8esc(ls);  goto no_save;
-          case '\n': case '\r':
-            inclinenumber(ls); c = '\n'; goto only_save;
-          case '\\': case '\"': case '\'':
-            c = ls->current; goto read_save;
-          case EOZ: goto no_save;  /* will raise an error next loop */
-          case 'z': {  /* zap following span of spaces */
+        തിരഞ്ഞെടുപ്പ് (ls->current) {
+          അവസ്ഥ 'a': c = '\a'; പോകുക read_save;
+          അവസ്ഥ 'b': c = '\b'; പോകുക read_save;
+          അവസ്ഥ 'f': c = '\f'; പോകുക read_save;
+          അവസ്ഥ 'n': c = '\n'; പോകുക read_save;
+          അവസ്ഥ 'r': c = '\r'; പോകുക read_save;
+          അവസ്ഥ 't': c = '\t'; പോകുക read_save;
+          അവസ്ഥ 'v': c = '\v'; പോകുക read_save;
+          അവസ്ഥ 'x': c = readhexaesc(ls); പോകുക read_save;
+          അവസ്ഥ 'u': utf8esc(ls);  പോകുക no_save;
+          അവസ്ഥ '\n': അവസ്ഥ '\r':
+            inclinenumber(ls); c = '\n'; പോകുക only_save;
+          അവസ്ഥ '\\': അവസ്ഥ '\"': അവസ്ഥ '\'':
+            c = ls->current; പോകുക read_save;
+          അവസ്ഥ EOZ: പോകുക no_save;  /* will raise an error next loop */
+          അവസ്ഥ 'z': {  /* zap following span of spaces */
             luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
             next(ls);  /* skip the 'z' */
-            while (lisspace(ls->current)) {
-              if (currIsNewline(ls)) inclinenumber(ls);
-              else next(ls);
+            ആകുമ്പോൾ (lisspace(ls->current)) {
+              എങ്കിൽ (currIsNewline(ls)) inclinenumber(ls);
+              അല്ലെങ്കിൽ next(ls);
             }
-            goto no_save;
+            പോകുക no_save;
           }
-          default: {
+          സ്ഥിരസ്ഥിതി: {
             esccheck(ls, lisdigit(ls->current), "invalid escape sequence");
             c = readdecesc(ls);  /* digital escape '\ddd' */
-            goto only_save;
+            പോകുക only_save;
           }
         }
        read_save:
@@ -452,9 +452,9 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
          luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
          save(ls, c);
          /* go through */
-       no_save: break;
+       no_save: നിർത്തുക;
       }
-      default:
+      സ്ഥിരസ്ഥിതി:
         save_and_next(ls);
     }
   }
@@ -464,120 +464,120 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
 }
 
 
-static int llex (LexState *ls, SemInfo *seminfo) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ llex (LexState *ls, SemInfo *seminfo) {
   luaZ_resetbuffer(ls->buff);
-  for (;;) {
-    switch (ls->current) {
-      case '\n': case '\r': {  /* line breaks */
+  വേണ്ടി (;;) {
+    തിരഞ്ഞെടുപ്പ് (ls->current) {
+      അവസ്ഥ '\n': അവസ്ഥ '\r': {  /* line breaks */
         inclinenumber(ls);
-        break;
+        നിർത്തുക;
       }
-      case ' ': case '\f': case '\t': case '\v': {  /* spaces */
+      അവസ്ഥ ' ': അവസ്ഥ '\f': അവസ്ഥ '\t': അവസ്ഥ '\v': {  /* spaces */
         next(ls);
-        break;
+        നിർത്തുക;
       }
-      case '-': {  /* '-' or '--' (comment) */
+      അവസ്ഥ '-': {  /* '-' or '--' (comment) */
         next(ls);
-        if (ls->current != '-') return '-';
+        എങ്കിൽ (ls->current != '-') തിരികെ '-';
         /* else is a comment */
         next(ls);
-        if (ls->current == '[') {  /* long comment? */
+        എങ്കിൽ (ls->current == '[') {  /* long comment? */
           size_t sep = skip_sep(ls);
           luaZ_resetbuffer(ls->buff);  /* 'skip_sep' may dirty the buffer */
-          if (sep >= 2) {
-            read_long_string(ls, NULL, sep);  /* skip long comment */
+          എങ്കിൽ (sep >= 2) {
+            read_long_string(ls, ശൂന്യ, sep);  /* skip long comment */
             luaZ_resetbuffer(ls->buff);  /* previous call may dirty the buff. */
-            break;
+            നിർത്തുക;
           }
         }
         /* else short comment */
-        while (!currIsNewline(ls) && ls->current != EOZ)
+        ആകുമ്പോൾ (!currIsNewline(ls) && ls->current != EOZ)
           next(ls);  /* skip until end of line (or end of file) */
-        break;
+        നിർത്തുക;
       }
-      case '[': {  /* long string or simply '[' */
+      അവസ്ഥ '[': {  /* long string or simply '[' */
         size_t sep = skip_sep(ls);
-        if (sep >= 2) {
+        എങ്കിൽ (sep >= 2) {
           read_long_string(ls, seminfo, sep);
-          return TK_STRING;
+          തിരികെ TK_STRING;
         }
-        else if (sep == 0)  /* '[=...' missing second bracket? */
+        അല്ലെങ്കിൽ എങ്കിൽ (sep == 0)  /* '[=...' missing second bracket? */
           lexerror(ls, "invalid long string delimiter", TK_STRING);
-        return '[';
+        തിരികെ '[';
       }
-      case '=': {
+      അവസ്ഥ '=': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_EQ;  /* '==' */
-        else return '=';
+        എങ്കിൽ (check_next1(ls, '=')) തിരികെ TK_EQ;  /* '==' */
+        അല്ലെങ്കിൽ തിരികെ '=';
       }
-      case '<': {
+      അവസ്ഥ '<': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_LE;  /* '<=' */
-        else if (check_next1(ls, '<')) return TK_SHL;  /* '<<' */
-        else return '<';
+        എങ്കിൽ (check_next1(ls, '=')) തിരികെ TK_LE;  /* '<=' */
+        അല്ലെങ്കിൽ എങ്കിൽ (check_next1(ls, '<')) തിരികെ TK_SHL;  /* '<<' */
+        അല്ലെങ്കിൽ തിരികെ '<';
       }
-      case '>': {
+      അവസ്ഥ '>': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_GE;  /* '>=' */
-        else if (check_next1(ls, '>')) return TK_SHR;  /* '>>' */
-        else return '>';
+        എങ്കിൽ (check_next1(ls, '=')) തിരികെ TK_GE;  /* '>=' */
+        അല്ലെങ്കിൽ എങ്കിൽ (check_next1(ls, '>')) തിരികെ TK_SHR;  /* '>>' */
+        അല്ലെങ്കിൽ തിരികെ '>';
       }
-      case '/': {
+      അവസ്ഥ '/': {
         next(ls);
-        if (check_next1(ls, '/')) return TK_IDIV;  /* '//' */
-        else return '/';
+        എങ്കിൽ (check_next1(ls, '/')) തിരികെ TK_IDIV;  /* '//' */
+        അല്ലെങ്കിൽ തിരികെ '/';
       }
-      case '~': {
+      അവസ്ഥ '~': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_NE;  /* '~=' */
-        else return '~';
+        എങ്കിൽ (check_next1(ls, '=')) തിരികെ TK_NE;  /* '~=' */
+        അല്ലെങ്കിൽ തിരികെ '~';
       }
-      case ':': {
+      അവസ്ഥ ':': {
         next(ls);
-        if (check_next1(ls, ':')) return TK_DBCOLON;  /* '::' */
-        else return ':';
+        എങ്കിൽ (check_next1(ls, ':')) തിരികെ TK_DBCOLON;  /* '::' */
+        അല്ലെങ്കിൽ തിരികെ ':';
       }
-      case '"': case '\'': {  /* short literal strings */
+      അവസ്ഥ '"': അവസ്ഥ '\'': {  /* short literal strings */
         read_string(ls, ls->current, seminfo);
-        return TK_STRING;
+        തിരികെ TK_STRING;
       }
-      case '.': {  /* '.', '..', '...', or number */
+      അവസ്ഥ '.': {  /* '.', '..', '...', or number */
         save_and_next(ls);
-        if (check_next1(ls, '.')) {
-          if (check_next1(ls, '.'))
-            return TK_DOTS;   /* '...' */
-          else return TK_CONCAT;   /* '..' */
+        എങ്കിൽ (check_next1(ls, '.')) {
+          എങ്കിൽ (check_next1(ls, '.'))
+            തിരികെ TK_DOTS;   /* '...' */
+          അല്ലെങ്കിൽ തിരികെ TK_CONCAT;   /* '..' */
         }
-        else if (!lisdigit(ls->current)) return '.';
-        else return read_numeral(ls, seminfo);
+        അല്ലെങ്കിൽ എങ്കിൽ (!lisdigit(ls->current)) തിരികെ '.';
+        അല്ലെങ്കിൽ തിരികെ read_numeral(ls, seminfo);
       }
-      case '0': case '1': case '2': case '3': case '4':
-      case '5': case '6': case '7': case '8': case '9': {
-        return read_numeral(ls, seminfo);
+      അവസ്ഥ '0': അവസ്ഥ '1': അവസ്ഥ '2': അവസ്ഥ '3': അവസ്ഥ '4':
+      അവസ്ഥ '5': അവസ്ഥ '6': അവസ്ഥ '7': അവസ്ഥ '8': അവസ്ഥ '9': {
+        തിരികെ read_numeral(ls, seminfo);
       }
-      case EOZ: {
-        return TK_EOS;
+      അവസ്ഥ EOZ: {
+        തിരികെ TK_EOS;
       }
-      default: {
-        if (lislalpha(ls->current)) {  /* identifier or reserved word? */
+      സ്ഥിരസ്ഥിതി: {
+        എങ്കിൽ (lislalpha(ls->current)) {  /* identifier or reserved word? */
           TString *ts;
-          do {
+          ചെയ്യുക {
             save_and_next(ls);
-          } while (lislalnum(ls->current));
+          } ആകുമ്പോൾ (lislalnum(ls->current));
           /* find or create string */
           ts = luaS_newlstr(ls->L, luaZ_buffer(ls->buff),
                                    luaZ_bufflen(ls->buff));
-          if (isreserved(ts))   /* reserved word? */
-            return ts->extra - 1 + FIRST_RESERVED;
-          else {
+          എങ്കിൽ (isreserved(ts))   /* reserved word? */
+            തിരികെ ts->extra - 1 + FIRST_RESERVED;
+          അല്ലെങ്കിൽ {
             seminfo->ts = anchorstr(ls, ts);
-            return TK_NAME;
+            തിരികെ TK_NAME;
           }
         }
-        else {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
-          int c = ls->current;
+        അല്ലെങ്കിൽ {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
+          പൂർണ്ണസംഖ്യ c = ls->current;
           next(ls);
-          return c;
+          തിരികെ c;
         }
       }
     }
@@ -585,20 +585,20 @@ static int llex (LexState *ls, SemInfo *seminfo) {
 }
 
 
-void luaX_next (LexState *ls) {
+ശൂന്യം luaX_next (LexState *ls) {
   ls->lastline = ls->linenumber;
-  if (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
+  എങ്കിൽ (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
     ls->t = ls->lookahead;  /* use this one */
     ls->lookahead.token = TK_EOS;  /* and discharge it */
   }
-  else
+  അല്ലെങ്കിൽ
     ls->t.token = llex(ls, &ls->t.seminfo);  /* read next token */
 }
 
 
-int luaX_lookahead (LexState *ls) {
+പൂർണ്ണസംഖ്യ luaX_lookahead (LexState *ls) {
   lua_assert(ls->lookahead.token == TK_EOS);
   ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);
-  return ls->lookahead.token;
+  തിരികെ ls->lookahead.token;
 }
 

@@ -7,25 +7,25 @@
 #define lctype_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include "lctype.h"
+#അന്തര്ഭാവ "lctype.h"
 
-#if !LUA_USE_CTYPE	/* { */
+#എങ്കിൽ !LUA_USE_CTYPE	/* { */
 
-#include <limits.h>
+#അന്തര്ഭാവ <limits.h>
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#എങ്കിൽ defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
 #define NONA		0x01
-#else
+#അല്ലെങ്കിൽ
 #define NONA		0x00	/* default */
 #endif
 
 
-LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
+LUAI_DDEF സ്ഥിരം lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  /* EOZ */
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,	/* 0. */
   0x00,  0x08,  0x08,  0x08,  0x08,  0x08,  0x00,  0x00,

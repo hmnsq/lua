@@ -1,10 +1,10 @@
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
 
-int luaopen_lib2 (lua_State *L);
+പൂർണ്ണസംഖ്യ luaopen_lib2 (lua_State *L);
 
-LUAMOD_API int luaopen_lib21 (lua_State *L) {
-  return luaopen_lib2(L);
+LUAMOD_API പൂർണ്ണസംഖ്യ luaopen_lib21 (lua_State *L) {
+  തിരികെ luaopen_lib2(L);
 }
 
 

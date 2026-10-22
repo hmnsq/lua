@@ -8,31 +8,31 @@
 #define lapi_h
 
 
-#include "llimits.h"
-#include "lstate.h"
+#അന്തര്ഭാവ "llimits.h"
+#അന്തര്ഭാവ "lstate.h"
 
 
-#if defined(LUA_USE_APICHECK)
-#include <assert.h>
-#define api_check(l,e,msg)	assert(e)
-#else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
+#എങ്കിൽ defined(LUA_USE_APICHECK)
+#അന്തര്ഭാവ <assert.h>
+#define api_check(l,e,സന്ദേശം)	പ്രതിജ്ഞാ(e)
+#അല്ലെങ്കിൽ	/* for testing */
+#define api_check(l,e,സന്ദേശം)	((ശൂന്യം)(l), lua_assert((e) && സന്ദേശം))
 #endif
 
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)  \
-    (L->top.p++, api_check(L, L->top.p <= L->ci->top.p, "stack overflow"))
+#define api_incr_മുകൾ(L)  \
+    (L->മുകൾ.p++, api_check(L, L->മുകൾ.p <= L->ci->മുകൾ.p, "stack overflow"))
 
 
 /*
 ** macros that are executed whenever program enters the Lua core
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
-#if !defined(lua_lock)
-#define lua_lock(L)	((void) 0)
-#define lua_unlock(L)	((void) 0)
+#എങ്കിൽ !defined(lua_lock)
+#define lua_lock(L)	((ശൂന്യം) 0)
+#define lua_unlock(L)	((ശൂന്യം) 0)
 #endif
 
 
@@ -43,13 +43,13 @@
 ** increases its stack space ('L->ci->top.p').
 */
 #define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
-	L->ci->top.p = L->top.p; }
+    { എങ്കിൽ ((nres) <= LUA_MULTRET && L->ci->മുകൾ.p < L->മുകൾ.p) \
+	L->ci->മുകൾ.p = L->മുകൾ.p; }
 
 
 /* Ensure the stack has at least 'n' elements */
 #define api_checknelems(L,n) \
-       api_check(L, (n) < (L->top.p - L->ci->func.p), \
+       api_check(L, (n) < (L->മുകൾ.p - L->ci->func.p), \
                          "not enough elements in the stack")
 
 
@@ -58,8 +58,8 @@
 ** is only an optimization for a pop followed by a push.)
 */
 #define api_checkpop(L,n) \
-	api_check(L, (n) < L->top.p - L->ci->func.p &&  \
-                     L->tbclist.p < L->top.p - (n), \
+	api_check(L, (n) < L->മുകൾ.p - L->ci->func.p &&  \
+                     L->tbclist.p < L->മുകൾ.p - (n), \
 			  "not enough free elements in the stack")
 
 #endif

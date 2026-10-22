@@ -7,10 +7,10 @@
 #ifndef llex_h
 #define llex_h
 
-#include <limits.h>
+#അന്തര്ഭാവ <limits.h>
 
-#include "lobject.h"
-#include "lzio.h"
+#അന്തര്ഭാവ "lobject.h"
+#അന്തര്ഭാവ "lzio.h"
 
 
 /*
@@ -20,7 +20,7 @@
 #define FIRST_RESERVED	(UCHAR_MAX + 1)
 
 
-#if !defined(LUA_ENV)
+#എങ്കിൽ !defined(LUA_ENV)
 #define LUA_ENV		"_ENV"
 #endif
 
@@ -29,7 +29,7 @@
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER RESERVED"
 */
-enum RESERVED {
+എണ്ണൽ RESERVED {
   /* terminal symbols denoted by reserved words */
   TK_AND = FIRST_RESERVED, TK_BREAK,
   TK_DO, TK_ELSE, TK_ELSEIF, TK_END, TK_FALSE, TK_FOR, TK_FUNCTION,
@@ -43,36 +43,36 @@ enum RESERVED {
 };
 
 /* number of reserved words */
-#define NUM_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
+#define അക്കം_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
 
 
-typedef union {
-  lua_Number r;
+തരനിർവചനം സംഘം {
+  lua_സംഖ്യ r;
   lua_Integer i;
   TString *ts;
 } SemInfo;  /* semantics information */
 
 
-typedef struct Token {
-  int token;
+തരനിർവചനം ഘടന Token {
+  പൂർണ്ണസംഖ്യ token;
   SemInfo seminfo;
 } Token;
 
 
 /* state of the scanner plus state of the parser when shared by all
    functions */
-typedef struct LexState {
-  int current;  /* current character (charint) */
-  int linenumber;  /* input line counter */
-  int lastline;  /* line of last token 'consumed' */
+തരനിർവചനം ഘടന LexState {
+  പൂർണ്ണസംഖ്യ current;  /* current character (charint) */
+  പൂർണ്ണസംഖ്യ linenumber;  /* input line counter */
+  പൂർണ്ണസംഖ്യ lastline;  /* line of last token 'consumed' */
   Token t;  /* current token */
   Token lookahead;  /* look ahead token */
-  struct FuncState *fs;  /* current function (parser) */
-  struct lua_State *L;
+  ഘടന FuncState *fs;  /* current function (parser) */
+  ഘടന lua_State *L;
   ZIO *z;  /* input stream */
   Mbuffer *buff;  /* buffer for tokens */
   Table *h;  /* to avoid collection/reuse strings */
-  struct Dyndata *dyd;  /* dynamic structures used by the parser */
+  ഘടന Dyndata *dyd;  /* dynamic structures used by the parser */
   TString *source;  /* current source name */
   TString *envn;  /* environment variable name */
   TString *brkn;  /* "break" name (used as a label) */
@@ -80,14 +80,14 @@ typedef struct LexState {
 } LexState;
 
 
-LUAI_FUNC void luaX_init (lua_State *L);
-LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
-                              TString *source, int firstchar);
-LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l);
-LUAI_FUNC void luaX_next (LexState *ls);
-LUAI_FUNC int luaX_lookahead (LexState *ls);
-LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const char *s);
-LUAI_FUNC const char *luaX_token2str (LexState *ls, int token);
+LUAI_FUNC ശൂന്യം luaX_init (lua_State *L);
+LUAI_FUNC ശൂന്യം luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
+                              TString *source, പൂർണ്ണസംഖ്യ firstchar);
+LUAI_FUNC TString *luaX_newstring (LexState *ls, സ്ഥിരം അക്ഷരം *str, size_t l);
+LUAI_FUNC ശൂന്യം luaX_next (LexState *ls);
+LUAI_FUNC പൂർണ്ണസംഖ്യ luaX_lookahead (LexState *ls);
+LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, സ്ഥിരം അക്ഷരം *s);
+LUAI_FUNC സ്ഥിരം അക്ഷരം *luaX_token2str (LexState *ls, പൂർണ്ണസംഖ്യ token);
 
 
 #endif

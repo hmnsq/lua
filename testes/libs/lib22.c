@@ -1,45 +1,45 @@
 /* implementation for lib2-v2 */
 
-#include <string.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "lua.h"
-#include "lauxlib.h"
+#അന്തര്ഭാവ "lua.h"
+#അന്തര്ഭാവ "lauxlib.h"
 
-static int id (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ id (lua_State *L) {
   lua_pushboolean(L, 1);
-  lua_insert(L, 1);
-  return lua_gettop(L);
+  lua_തിരുകുക(L, 1);
+  തിരികെ lua_gettop(L);
 }
 
 
-struct STR {
-  void *ud;
+ഘടന STR {
+  ശൂന്യം *ud;
   lua_Alloc allocf;
 };
 
 
-static void *t_freestr (void *ud, void *ptr, size_t osize, size_t nsize) {
-  struct STR *blk = (struct STR*)ptr - 1;
-  blk->allocf(blk->ud, blk, sizeof(struct STR) + osize, 0);
-  return NULL;
+സ്ഥിതം ശൂന്യം *t_freestr (ശൂന്യം *ud, ശൂന്യം *ptr, size_t osize, size_t nsize) {
+  ഘടന STR *blk = (ഘടന STR*)ptr - 1;
+  blk->allocf(blk->ud, blk, വലുപ്പം(ഘടന STR) + osize, 0);
+  തിരികെ ശൂന്യ;
 }
 
 
-static int newstr (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ newstr (lua_State *L) {
   size_t len;
-  const char *str = luaL_checklstring(L, 1, &len);
-  void *ud;
+  സ്ഥിരം അക്ഷരം *str = luaL_checklstring(L, 1, &len);
+  ശൂന്യം *ud;
   lua_Alloc allocf = lua_getallocf(L, &ud);
-  struct STR *blk = (struct STR*)allocf(ud, NULL, 0,
-                                        len + 1 + sizeof(struct STR));
-  if (blk == NULL) {  /* allocation error? */
+  ഘടന STR *blk = (ഘടന STR*)allocf(ud, ശൂന്യ, 0,
+                                        len + 1 + വലുപ്പം(ഘടന STR));
+  എങ്കിൽ (blk == ശൂന്യ) {  /* allocation error? */
     lua_pushliteral(L, "not enough memory");
     lua_error(L);  /* raise a memory error */
   }
   blk->ud = ud;  blk->allocf = allocf;
   memcpy(blk + 1, str, len + 1);
-  lua_pushexternalstring(L, (char *)(blk + 1), len, t_freestr, L);
-  return 1;
+  lua_pushexternalstring(L, (അക്ഷരം *)(blk + 1), len, t_freestr, L);
+  തിരികെ 1;
 }
 
 
@@ -48,7 +48,7 @@ static int newstr (lua_State *L) {
 ** will test that the library code is still available (to deallocate
 ** this string) when closing the state.
 */
-static void initstr (lua_State *L) {
+സ്ഥിതം ശൂന്യം initstr (lua_State *L) {
   lua_pushcfunction(L, newstr);
   lua_pushstring(L,
      "012345678901234567890123456789012345678901234567890123456789");
@@ -57,20 +57,20 @@ static void initstr (lua_State *L) {
 }
 
 
-static const struct luaL_Reg funcs[] = {
+സ്ഥിതം സ്ഥിരം ഘടന luaL_Reg funcs[] = {
   {"id", id},
   {"newstr", newstr},
-  {NULL, NULL}
+  {ശൂന്യ, ശൂന്യ}
 };
 
 
-LUAMOD_API int luaopen_lib2 (lua_State *L) {
+LUAMOD_API പൂർണ്ണസംഖ്യ luaopen_lib2 (lua_State *L) {
   lua_settop(L, 2);
   lua_setglobal(L, "y");  /* y gets 2nd parameter */
   lua_setglobal(L, "x");  /* x gets 1st parameter */
   initstr(L);
   luaL_newlib(L, funcs);
-  return 1;
+  തിരികെ 1;
 }
 
 

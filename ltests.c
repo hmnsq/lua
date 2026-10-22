@@ -7,64 +7,64 @@
 #define ltests_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include <limits.h>
-#include <setjmp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <setjmp.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
-#include "lapi.h"
-#include "lauxlib.h"
-#include "lcode.h"
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lmem.h"
-#include "lopcodes.h"
-#include "lopnames.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lualib.h"
+#അന്തര്ഭാവ "lapi.h"
+#അന്തര്ഭാവ "lauxlib.h"
+#അന്തര്ഭാവ "lcode.h"
+#അന്തര്ഭാവ "lctype.h"
+#അന്തര്ഭാവ "ldebug.h"
+#അന്തര്ഭാവ "ldo.h"
+#അന്തര്ഭാവ "lfunc.h"
+#അന്തര്ഭാവ "lmem.h"
+#അന്തര്ഭാവ "lopcodes.h"
+#അന്തര്ഭാവ "lopnames.h"
+#അന്തര്ഭാവ "lstate.h"
+#അന്തര്ഭാവ "lstring.h"
+#അന്തര്ഭാവ "ltable.h"
+#അന്തര്ഭാവ "lualib.h"
 
 
 
 /*
 ** The whole module only makes sense with LUA_DEBUG on
 */
-#if defined(LUA_DEBUG)
+#എങ്കിൽ defined(LUA_DEBUG)
 
 
-void *l_Trick = 0;
+ശൂന്യം *l_Trick = 0;
 
 
 #define obj_at(L,k)	s2v(L->ci->func.p + (k))
 
 
-static int runC (lua_State *L, lua_State *L1, const char *pc);
+സ്ഥിതം പൂർണ്ണസംഖ്യ runC (lua_State *L, lua_State *L1, സ്ഥിരം അക്ഷരം *pc);
 
 
-static void setnameval (lua_State *L, const char *name, int val) {
+സ്ഥിതം ശൂന്യം setnameval (lua_State *L, സ്ഥിരം അക്ഷരം *name, പൂർണ്ണസംഖ്യ val) {
   lua_pushinteger(L, val);
   lua_setfield(L, -2, name);
 }
 
 
-static void pushobject (lua_State *L, const TValue *o) {
-  setobj2s(L, L->top.p, o);
-  api_incr_top(L);
+സ്ഥിതം ശൂന്യം pushobject (lua_State *L, സ്ഥിരം TValue *o) {
+  setobj2s(L, L->മുകൾ.p, o);
+  api_incr_മുകൾ(L);
 }
 
 
-static void badexit (const char *fmt, const char *s1, const char *s2) {
+സ്ഥിതം ശൂന്യം badexit (സ്ഥിരം അക്ഷരം *fmt, സ്ഥിരം അക്ഷരം *s1, സ്ഥിരം അക്ഷരം *s2) {
   fprintf(stderr, fmt, s1);
-  if (s2)
+  എങ്കിൽ (s2)
     fprintf(stderr, "extra info: %s\n", s2);
   /* avoid assertion failures when exiting */
   l_memcontrol.numblocks = l_memcontrol.total = 0;
@@ -72,12 +72,12 @@ static void badexit (const char *fmt, const char *s1, const char *s2) {
 }
 
 
-static int tpanic (lua_State *L) {
-  const char *msg = (lua_type(L, -1) == LUA_TSTRING)
+സ്ഥിതം പൂർണ്ണസംഖ്യ tpanic (lua_State *L) {
+  സ്ഥിരം അക്ഷരം *സന്ദേശം = (lua_type(L, -1) == LUA_TSTRING)
                   ? lua_tostring(L, -1)
                   : "error object is not a string";
-  return (badexit("PANIC: unprotected error in call to Lua API (%s)\n",
-                   msg, NULL),
+  തിരികെ (badexit("PANIC: unprotected error in call to Lua API (%s)\n",
+                   സന്ദേശം, ശൂന്യ),
           0);  /* do not return to Lua */
 }
 
@@ -92,63 +92,63 @@ static int tpanic (lua_State *L) {
 ** - 1.allow: all messages are shown;
 ** - 2.store: all warnings go to the global '_WARN';
 */
-static void warnf (void *ud, const char *msg, int tocont) {
+സ്ഥിതം ശൂന്യം warnf (ശൂന്യം *ud, സ്ഥിരം അക്ഷരം *സന്ദേശം, പൂർണ്ണസംഖ്യ tocont) {
   lua_State *L = cast(lua_State *, ud);
-  static char buff[200] = "";  /* should be enough for tests... */
-  static int onoff = 0;
-  static int mode = 0;  /* start in normal mode */
-  static int lasttocont = 0;
-  if (!lasttocont && !tocont && *msg == '@') {  /* control message? */
-    if (buff[0] != '\0')
-      badexit("Control warning during warning: %s\naborting...\n", msg, buff);
-    if (strcmp(msg, "@off") == 0)
+  സ്ഥിതം അക്ഷരം buff[200] = "";  /* should be enough for tests... */
+  സ്ഥിതം പൂർണ്ണസംഖ്യ onoff = 0;
+  സ്ഥിതം പൂർണ്ണസംഖ്യ mode = 0;  /* start in normal mode */
+  സ്ഥിതം പൂർണ്ണസംഖ്യ lasttocont = 0;
+  എങ്കിൽ (!lasttocont && !tocont && *സന്ദേശം == '@') {  /* control message? */
+    എങ്കിൽ (buff[0] != '\0')
+      badexit("Control warning during warning: %s\naborting...\n", സന്ദേശം, buff);
+    എങ്കിൽ (strcmp(സന്ദേശം, "@off") == 0)
       onoff = 0;
-    else if (strcmp(msg, "@on") == 0)
+    അല്ലെങ്കിൽ എങ്കിൽ (strcmp(സന്ദേശം, "@on") == 0)
       onoff = 1;
-    else if (strcmp(msg, "@normal") == 0)
+    അല്ലെങ്കിൽ എങ്കിൽ (strcmp(സന്ദേശം, "@normal") == 0)
       mode = 0;
-    else if (strcmp(msg, "@allow") == 0)
+    അല്ലെങ്കിൽ എങ്കിൽ (strcmp(സന്ദേശം, "@allow") == 0)
       mode = 1;
-    else if (strcmp(msg, "@store") == 0)
+    അല്ലെങ്കിൽ എങ്കിൽ (strcmp(സന്ദേശം, "@store") == 0)
       mode = 2;
-    else
+    അല്ലെങ്കിൽ
       badexit("Invalid control warning in test mode: %s\naborting...\n",
-              msg, NULL);
-    return;
+              സന്ദേശം, ശൂന്യ);
+    തിരികെ;
   }
   lasttocont = tocont;
-  if (strlen(msg) >= sizeof(buff) - strlen(buff))
-    badexit("warnf-buffer overflow (%s)\n", msg, buff);
-  strcat(buff, msg);  /* add new message to current warning */
-  if (!tocont) {  /* message finished? */
+  എങ്കിൽ (strlen(സന്ദേശം) >= വലുപ്പം(buff) - strlen(buff))
+    badexit("warnf-buffer overflow (%s)\n", സന്ദേശം, buff);
+  strcat(buff, സന്ദേശം);  /* add new message to current warning */
+  എങ്കിൽ (!tocont) {  /* message finished? */
     lua_unlock(L);
     luaL_checkstack(L, 1, "warn stack space");
     lua_getglobal(L, "_WARN");
-    if (!lua_toboolean(L, -1))
-      lua_pop(L, 1);  /* ok, no previous unexpected warning */
-    else {
+    എങ്കിൽ (!lua_toboolean(L, -1))
+      lua_എടുക്കുക(L, 1);  /* ok, no previous unexpected warning */
+    അല്ലെങ്കിൽ {
       badexit("Unhandled warning in store mode: %s\naborting...\n",
               lua_tostring(L, -1), buff);
     }
     lua_lock(L);
-    switch (mode) {
-      case 0: {  /* normal */
-        if (buff[0] != '#' && onoff)  /* unexpected warning? */
+    തിരഞ്ഞെടുപ്പ് (mode) {
+      അവസ്ഥ 0: {  /* normal */
+        എങ്കിൽ (buff[0] != '#' && onoff)  /* unexpected warning? */
           badexit("Unexpected warning in test mode: %s\naborting...\n",
-                  buff, NULL);
+                  buff, ശൂന്യ);
       }  /* FALLTHROUGH */
-      case 1: {  /* allow */
-        if (onoff)
+      അവസ്ഥ 1: {  /* allow */
+        എങ്കിൽ (onoff)
           fprintf(stderr, "Lua warning: %s\n", buff);  /* print warning */
-        break;
+        നിർത്തുക;
       }
-      case 2: {  /* store */
+      അവസ്ഥ 2: {  /* store */
         lua_unlock(L);
         luaL_checkstack(L, 1, "warn stack space");
         lua_pushstring(L, buff);
         lua_setglobal(L, "_WARN");  /* assign message to global '_WARN' */
         lua_lock(L);
-        break;
+        നിർത്തുക;
       }
     }
     buff[0] = '\0';  /* prepare buffer for next warning */
@@ -164,22 +164,22 @@ static void warnf (void *ud, const char *msg, int tocont) {
 
 #define MARK		0x55  /* 01010101 (a nice pattern) */
 
-typedef union memHeader {
+തരനിർവചനം സംഘം memHeader {
   LUAI_MAXALIGN;
-  struct {
+  ഘടന {
     size_t size;
-    int type;
+    പൂർണ്ണസംഖ്യ type;
   } d;
 } memHeader;
 
 
-#if !defined(EXTERNMEMCHECK)
+#എങ്കിൽ !defined(EXTERNMEMCHECK)
 
 /* full memory check */
 #define MARKSIZE	16  /* size of marks after each block */
 #define fillmem(mem,size)	memset(mem, -MARK, size)
 
-#else
+#അല്ലെങ്കിൽ
 
 /* external memory check: don't do it twice */
 #define MARKSIZE	0
@@ -193,79 +193,79 @@ Memcontrol l_memcontrol =
    {0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL}};
 
 
-static void freeblock (Memcontrol *mc, memHeader *block) {
-  if (block) {
+സ്ഥിതം ശൂന്യം freeblock (Memcontrol *mc, memHeader *block) {
+  എങ്കിൽ (block) {
     size_t size = block->d.size;
-    int i;
-    for (i = 0; i < MARKSIZE; i++)  /* check marks after block */
+    പൂർണ്ണസംഖ്യ i;
+    വേണ്ടി (i = 0; i < MARKSIZE; i++)  /* check marks after block */
       lua_assert(*(cast_charp(block + 1) + size + i) == MARK);
     mc->objcount[block->d.type]--;
-    fillmem(block, sizeof(memHeader) + size + MARKSIZE);  /* erase block */
-    free(block);  /* actually free block */
+    fillmem(block, വലുപ്പം(memHeader) + size + MARKSIZE);  /* erase block */
+    സ്വതന്ത്രം(block);  /* actually free block */
     mc->numblocks--;  /* update counts */
     mc->total -= size;
   }
 }
 
 
-void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
+ശൂന്യം *debug_realloc (ശൂന്യം *ud, ശൂന്യം *b, size_t oldsize, size_t size) {
   Memcontrol *mc = cast(Memcontrol *, ud);
   memHeader *block = cast(memHeader *, b);
-  int type;
-  if (mc->memlimit == 0) {  /* first time? */
-    char *limit = getenv("MEMLIMIT");  /* initialize memory limit */
-    mc->memlimit = limit ? strtoul(limit, NULL, 10) : ULONG_MAX;
+  പൂർണ്ണസംഖ്യ type;
+  എങ്കിൽ (mc->memlimit == 0) {  /* first time? */
+    അക്ഷരം *limit = getenv("MEMLIMIT");  /* initialize memory limit */
+    mc->memlimit = limit ? strtoul(limit, ശൂന്യ, 10) : ULONG_MAX;
   }
-  if (block == NULL) {
+  എങ്കിൽ (block == ശൂന്യ) {
     type = (oldsize < LUA_NUMTYPES) ? cast_int(oldsize) : 0;
     oldsize = 0;
   }
-  else {
+  അല്ലെങ്കിൽ {
     block--;  /* go to real header */
     type = block->d.type;
     lua_assert(oldsize == block->d.size);
   }
-  if (size == 0) {
+  എങ്കിൽ (size == 0) {
     freeblock(mc, block);
-    return NULL;
+    തിരികെ ശൂന്യ;
   }
-  if (mc->failnext) {
+  എങ്കിൽ (mc->failnext) {
     mc->failnext = 0;
-    return NULL;  /* fake a single memory allocation error */
+    തിരികെ ശൂന്യ;  /* fake a single memory allocation error */
   }
-  if (mc->countlimit != ~0UL && size != oldsize) {  /* count limit in use? */
-    if (mc->countlimit == 0)
-      return NULL;  /* fake a memory allocation error */
+  എങ്കിൽ (mc->countlimit != ~0UL && size != oldsize) {  /* count limit in use? */
+    എങ്കിൽ (mc->countlimit == 0)
+      തിരികെ ശൂന്യ;  /* fake a memory allocation error */
     mc->countlimit--;
   }
-  if (size > oldsize && mc->total+size-oldsize > mc->memlimit)
-    return NULL;  /* fake a memory allocation error */
-  else {
+  എങ്കിൽ (size > oldsize && mc->total+size-oldsize > mc->memlimit)
+    തിരികെ ശൂന്യ;  /* fake a memory allocation error */
+  അല്ലെങ്കിൽ {
     memHeader *newblock;
-    int i;
+    പൂർണ്ണസംഖ്യ i;
     size_t commonsize = (oldsize < size) ? oldsize : size;
-    size_t realsize = sizeof(memHeader) + size + MARKSIZE;
-    if (realsize < size) return NULL;  /* arithmetic overflow! */
+    size_t realsize = വലുപ്പം(memHeader) + size + MARKSIZE;
+    എങ്കിൽ (realsize < size) തിരികെ ശൂന്യ;  /* arithmetic overflow! */
     newblock = cast(memHeader *, malloc(realsize));  /* alloc a new block */
-    if (newblock == NULL)
-      return NULL;  /* really out of memory? */
-    if (block) {
+    എങ്കിൽ (newblock == ശൂന്യ)
+      തിരികെ ശൂന്യ;  /* really out of memory? */
+    എങ്കിൽ (block) {
       memcpy(newblock + 1, block + 1, commonsize);  /* copy old contents */
       freeblock(mc, block);  /* erase (and check) old copy */
     }
     /* initialize new part of the block with something weird */
     fillmem(cast_charp(newblock + 1) + commonsize, size - commonsize);
     /* initialize marks after block */
-    for (i = 0; i < MARKSIZE; i++)
+    വേണ്ടി (i = 0; i < MARKSIZE; i++)
       *(cast_charp(newblock + 1) + size + i) = MARK;
     newblock->d.size = size;
     newblock->d.type = type;
     mc->total += size;
-    if (mc->total > mc->maxmem)
+    എങ്കിൽ (mc->total > mc->maxmem)
       mc->maxmem = mc->total;
     mc->numblocks++;
     mc->objcount[type]++;
-    return newblock + 1;
+    തിരികെ newblock + 1;
   }
 }
 
@@ -283,7 +283,7 @@ void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
 ** ======================================================================
 */
 
-#include <assert.h>
+#അന്തര്ഭാവ <assert.h>
 
 /*
 ** Check GC invariants. For incremental mode, a black object cannot
@@ -294,92 +294,92 @@ void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
 ** continue to be visited in all collections, and therefore can point to
 ** new objects. They, and only they, are old but gray.)
 */
-static int testobjref1 (global_State *g, GCObject *f, GCObject *t) {
-  if (isdead(g,t)) return 0;
-  if (issweepphase(g))
-    return 1;  /* no invariants */
-  else if (g->gckind != KGC_GENMINOR)
-    return !(isblack(f) && iswhite(t));  /* basic incremental invariant */
-  else {  /* generational mode */
-    if ((getage(f) == G_OLD && isblack(f)) && !isold(t))
-      return 0;
-    if ((getage(f) == G_OLD1 || getage(f) == G_TOUCHED2) &&
+സ്ഥിതം പൂർണ്ണസംഖ്യ testobjref1 (global_State *g, GCObject *f, GCObject *t) {
+  എങ്കിൽ (isdead(g,t)) തിരികെ 0;
+  എങ്കിൽ (issweepphase(g))
+    തിരികെ 1;  /* no invariants */
+  അല്ലെങ്കിൽ എങ്കിൽ (g->gckind != KGC_GENMINOR)
+    തിരികെ !(isblack(f) && iswhite(t));  /* basic incremental invariant */
+  അല്ലെങ്കിൽ {  /* generational mode */
+    എങ്കിൽ ((getage(f) == G_OLD && isblack(f)) && !isold(t))
+      തിരികെ 0;
+    എങ്കിൽ ((getage(f) == G_OLD1 || getage(f) == G_TOUCHED2) &&
          getage(t) == G_NEW)
-      return 0;
-    return 1;
+      തിരികെ 0;
+    തിരികെ 1;
   }
 }
 
 
-static void printobj (global_State *g, GCObject *o) {
+സ്ഥിതം ശൂന്യം printobj (global_State *g, GCObject *o) {
   printf("||%s(%p)-%c%c(%02X)||",
-           ttypename(novariant(o->tt)), (void *)o,
+           ttypename(novariant(o->tt)), (ശൂന്യം *)o,
            isdead(g,o) ? 'd' : isblack(o) ? 'b' : iswhite(o) ? 'w' : 'g',
            "ns01oTt"[getage(o)], o->marked);
-  if (o->tt == LUA_VSHRSTR || o->tt == LUA_VLNGSTR)
+  എങ്കിൽ (o->tt == LUA_VSHRSTR || o->tt == LUA_VLNGSTR)
     printf(" '%s'", getstr(gco2ts(o)));
 }
 
 
-void lua_printobj (lua_State *L, struct GCObject *o) {
+ശൂന്യം lua_printobj (lua_State *L, ഘടന GCObject *o) {
   printobj(G(L), o);
 }
 
 
-void lua_printvalue (TValue *v) {
-  switch (ttypetag(v)) {
-    case LUA_VNUMINT: case LUA_VNUMFLT: {
-      char buff[LUA_N2SBUFFSZ];
+ശൂന്യം lua_printvalue (TValue *v) {
+  തിരഞ്ഞെടുപ്പ് (ttypetag(v)) {
+    അവസ്ഥ LUA_VNUMINT: അവസ്ഥ LUA_VNUMFLT: {
+      അക്ഷരം buff[LUA_N2SBUFFSZ];
       unsigned len = luaO_tostringbuff(v, buff);
       buff[len] = '\0';
       printf("%s", buff);
-      break;
+      നിർത്തുക;
     }
-    case LUA_VSHRSTR:
-      printf("'%s'", getstr(tsvalue(v))); break;
-    case LUA_VLNGSTR:
-      printf("'%.30s...'", getstr(tsvalue(v))); break;
-    case LUA_VFALSE:
-      printf("%s", "false"); break;
-    case LUA_VTRUE:
-      printf("%s", "true"); break;
-    case LUA_VLIGHTUSERDATA:
-      printf("light udata: %p", pvalue(v)); break;
-    case LUA_VUSERDATA:
-      printf("full udata: %p", uvalue(v)); break;
-    case LUA_VNIL:
-      printf("nil"); break;
-    case LUA_VLCF:
-      printf("light C function: %p", fvalue(v)); break;
-    case LUA_VCCL:
-      printf("C closure: %p", clCvalue(v)); break;
-    case LUA_VLCL:
-      printf("Lua function: %p", clLvalue(v)); break;
-    case LUA_VTHREAD:
-      printf("thread: %p", thvalue(v)); break;
-    case LUA_VTABLE:
-      printf("table: %p", hvalue(v)); break;
-    default:
+    അവസ്ഥ LUA_VSHRSTR:
+      printf("'%s'", getstr(tsvalue(v))); നിർത്തുക;
+    അവസ്ഥ LUA_VLNGSTR:
+      printf("'%.30s...'", getstr(tsvalue(v))); നിർത്തുക;
+    അവസ്ഥ LUA_VFALSE:
+      printf("%s", "false"); നിർത്തുക;
+    അവസ്ഥ LUA_VTRUE:
+      printf("%s", "true"); നിർത്തുക;
+    അവസ്ഥ LUA_VLIGHTUSERDATA:
+      printf("light udata: %p", pvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VUSERDATA:
+      printf("full udata: %p", uvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VNIL:
+      printf("nil"); നിർത്തുക;
+    അവസ്ഥ LUA_VLCF:
+      printf("light C function: %p", fvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VCCL:
+      printf("C closure: %p", clCvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VLCL:
+      printf("Lua function: %p", clLvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VTHREAD:
+      printf("thread: %p", thvalue(v)); നിർത്തുക;
+    അവസ്ഥ LUA_VTABLE:
+      printf("table: %p", hvalue(v)); നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
       lua_assert(0);
   }
 }
 
 
-static int testobjref (global_State *g, GCObject *f, GCObject *t) {
-  int r1 = testobjref1(g, f, t);
-  if (!r1) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ testobjref (global_State *g, GCObject *f, GCObject *t) {
+  പൂർണ്ണസംഖ്യ r1 = testobjref1(g, f, t);
+  എങ്കിൽ (!r1) {
     printf("%d(%02X) - ", g->gcstate, g->currentwhite);
     printobj(g, f);
     printf("  ->  ");
     printobj(g, t);
     printf("\n");
   }
-  return r1;
+  തിരികെ r1;
 }
 
 
-static void checkobjref (global_State *g, GCObject *f, GCObject *t) {
-    assert(testobjref(g, f, t));
+സ്ഥിതം ശൂന്യം checkobjref (global_State *g, GCObject *f, GCObject *t) {
+    പ്രതിജ്ഞാ(testobjref(g, f, t));
 }
 
 
@@ -389,30 +389,30 @@ static void checkobjref (global_State *g, GCObject *f, GCObject *t) {
 ** definition must be a macro.)  Most checks need this version, because
 ** the check may run while an object is still being created.
 */
-#define checkobjrefN(g,f,t)	{ if (t) checkobjref(g,f,obj2gco(t)); }
+#define checkobjrefN(g,f,t)	{ എങ്കിൽ (t) checkobjref(g,f,obj2gco(t)); }
 
 
-static void checkvalref (global_State *g, GCObject *f, const TValue *t) {
-  assert(!iscollectable(t) || (righttt(t) && testobjref(g, f, gcvalue(t))));
+സ്ഥിതം ശൂന്യം checkvalref (global_State *g, GCObject *f, സ്ഥിരം TValue *t) {
+  പ്രതിജ്ഞാ(!iscollectable(t) || (righttt(t) && testobjref(g, f, gcvalue(t))));
 }
 
 
-static void checktable (global_State *g, Table *h) {
-  unsigned int i;
-  unsigned int asize = h->asize;
-  Node *n, *limit = gnode(h, sizenode(h));
+സ്ഥിതം ശൂന്യം checktable (global_State *g, Table *h) {
+  unsigned പൂർണ്ണസംഖ്യ i;
+  unsigned പൂർണ്ണസംഖ്യ asize = h->asize;
+  കണ്ണി_2 *n, *limit = gnode(h, sizenode(h));
   GCObject *hgc = obj2gco(h);
   checkobjrefN(g, hgc, h->metatable);
-  for (i = 0; i < asize; i++) {
+  വേണ്ടി (i = 0; i < asize; i++) {
     TValue aux;
     arr2obj(h, i, &aux);
     checkvalref(g, hgc, &aux);
   }
-  for (n = gnode(h, 0); n < limit; n++) {
-    if (!isempty(gval(n))) {
+  വേണ്ടി (n = gnode(h, 0); n < limit; n++) {
+    എങ്കിൽ (!isempty(gval(n))) {
       TValue k;
       getnodekey(mainthread(g), &k, n);
-      assert(!keyisnil(n));
+      പ്രതിജ്ഞാ(!keyisnil(n));
       checkvalref(g, hgc, &k);
       checkvalref(g, hgc, gval(n));
     }
@@ -420,124 +420,124 @@ static void checktable (global_State *g, Table *h) {
 }
 
 
-static void checkudata (global_State *g, Udata *u) {
-  int i;
+സ്ഥിതം ശൂന്യം checkudata (global_State *g, Udata *u) {
+  പൂർണ്ണസംഖ്യ i;
   GCObject *hgc = obj2gco(u);
   checkobjrefN(g, hgc, u->metatable);
-  for (i = 0; i < u->nuvalue; i++)
+  വേണ്ടി (i = 0; i < u->nuvalue; i++)
     checkvalref(g, hgc, &u->uv[i].uv);
 }
 
 
-static void checkproto (global_State *g, Proto *f) {
-  int i;
+സ്ഥിതം ശൂന്യം checkproto (global_State *g, Proto *f) {
+  പൂർണ്ണസംഖ്യ i;
   GCObject *fgc = obj2gco(f);
   checkobjrefN(g, fgc, f->source);
-  for (i=0; i<f->sizek; i++) {
-    if (iscollectable(f->k + i))
+  വേണ്ടി (i=0; i<f->sizek; i++) {
+    എങ്കിൽ (iscollectable(f->k + i))
       checkobjref(g, fgc, gcvalue(f->k + i));
   }
-  for (i=0; i<f->sizeupvalues; i++)
+  വേണ്ടി (i=0; i<f->sizeupvalues; i++)
     checkobjrefN(g, fgc, f->upvalues[i].name);
-  for (i=0; i<f->sizep; i++)
+  വേണ്ടി (i=0; i<f->sizep; i++)
     checkobjrefN(g, fgc, f->p[i]);
-  for (i=0; i<f->sizelocvars; i++)
+  വേണ്ടി (i=0; i<f->sizelocvars; i++)
     checkobjrefN(g, fgc, f->locvars[i].varname);
 }
 
 
-static void checkCclosure (global_State *g, CClosure *cl) {
+സ്ഥിതം ശൂന്യം checkCclosure (global_State *g, CClosure *cl) {
   GCObject *clgc = obj2gco(cl);
-  int i;
-  for (i = 0; i < cl->nupvalues; i++)
+  പൂർണ്ണസംഖ്യ i;
+  വേണ്ടി (i = 0; i < cl->nupvalues; i++)
     checkvalref(g, clgc, &cl->upvalue[i]);
 }
 
 
-static void checkLclosure (global_State *g, LClosure *cl) {
+സ്ഥിതം ശൂന്യം checkLclosure (global_State *g, LClosure *cl) {
   GCObject *clgc = obj2gco(cl);
-  int i;
+  പൂർണ്ണസംഖ്യ i;
   checkobjrefN(g, clgc, cl->p);
-  for (i=0; i<cl->nupvalues; i++) {
+  വേണ്ടി (i=0; i<cl->nupvalues; i++) {
     UpVal *uv = cl->upvals[i];
-    if (uv) {
+    എങ്കിൽ (uv) {
       checkobjrefN(g, clgc, uv);
-      if (!upisopen(uv))
+      എങ്കിൽ (!upisopen(uv))
         checkvalref(g, obj2gco(uv), uv->v.p);
     }
   }
 }
 
 
-static int lua_checkpc (CallInfo *ci) {
-  if (!isLua(ci)) return 1;
-  else {
+സ്ഥിതം പൂർണ്ണസംഖ്യ lua_checkpc (CallInfo *ci) {
+  എങ്കിൽ (!isLua(ci)) തിരികെ 1;
+  അല്ലെങ്കിൽ {
     StkId f = ci->func.p;
     Proto *p = clLvalue(s2v(f))->p;
-    return p->code <= ci->u.l.savedpc &&
+    തിരികെ p->code <= ci->u.l.savedpc &&
            ci->u.l.savedpc <= p->code + p->sizecode;
   }
 }
 
 
-static void check_stack (global_State *g, lua_State *L1) {
+സ്ഥിതം ശൂന്യം check_അട്ടി (global_State *g, lua_State *L1) {
   StkId o;
   CallInfo *ci;
   UpVal *uv;
-  assert(!isdead(g, L1));
-  if (L1->stack.p == NULL) {  /* incomplete thread? */
-    assert(L1->openupval == NULL && L1->ci == NULL);
-    return;
+  പ്രതിജ്ഞാ(!isdead(g, L1));
+  എങ്കിൽ (L1->അട്ടി.p == ശൂന്യ) {  /* incomplete thread? */
+    പ്രതിജ്ഞാ(L1->openupval == ശൂന്യ && L1->ci == ശൂന്യ);
+    തിരികെ;
   }
-  for (uv = L1->openupval; uv != NULL; uv = uv->u.open.next)
-    assert(upisopen(uv));  /* must be open */
-  assert(L1->top.p <= L1->stack_last.p);
-  assert(L1->tbclist.p <= L1->top.p);
-  for (ci = L1->ci; ci != NULL; ci = ci->previous) {
-    assert(ci->top.p <= L1->stack_last.p);
-    assert(lua_checkpc(ci));
+  വേണ്ടി (uv = L1->openupval; uv != ശൂന്യ; uv = uv->u.open.next)
+    പ്രതിജ്ഞാ(upisopen(uv));  /* must be open */
+  പ്രതിജ്ഞാ(L1->മുകൾ.p <= L1->അട്ടി_last.p);
+  പ്രതിജ്ഞാ(L1->tbclist.p <= L1->മുകൾ.p);
+  വേണ്ടി (ci = L1->ci; ci != ശൂന്യ; ci = ci->previous) {
+    പ്രതിജ്ഞാ(ci->മുകൾ.p <= L1->അട്ടി_last.p);
+    പ്രതിജ്ഞാ(lua_checkpc(ci));
   }
-  for (o = L1->stack.p; o < L1->stack_last.p; o++)
+  വേണ്ടി (o = L1->അട്ടി.p; o < L1->അട്ടി_last.p; o++)
     checkliveness(L1, s2v(o));  /* entire stack must have valid values */
 }
 
 
-static void checkrefs (global_State *g, GCObject *o) {
-  switch (o->tt) {
-    case LUA_VUSERDATA: {
+സ്ഥിതം ശൂന്യം checkrefs (global_State *g, GCObject *o) {
+  തിരഞ്ഞെടുപ്പ് (o->tt) {
+    അവസ്ഥ LUA_VUSERDATA: {
       checkudata(g, gco2u(o));
-      break;
+      നിർത്തുക;
     }
-    case LUA_VUPVAL: {
+    അവസ്ഥ LUA_VUPVAL: {
       checkvalref(g, o, gco2upv(o)->v.p);
-      break;
+      നിർത്തുക;
     }
-    case LUA_VTABLE: {
+    അവസ്ഥ LUA_VTABLE: {
       checktable(g, gco2t(o));
-      break;
+      നിർത്തുക;
     }
-    case LUA_VTHREAD: {
-      check_stack(g, gco2th(o));
-      break;
+    അവസ്ഥ LUA_VTHREAD: {
+      check_അട്ടി(g, gco2th(o));
+      നിർത്തുക;
     }
-    case LUA_VLCL: {
+    അവസ്ഥ LUA_VLCL: {
       checkLclosure(g, gco2lcl(o));
-      break;
+      നിർത്തുക;
     }
-    case LUA_VCCL: {
+    അവസ്ഥ LUA_VCCL: {
       checkCclosure(g, gco2ccl(o));
-      break;
+      നിർത്തുക;
     }
-    case LUA_VPROTO: {
+    അവസ്ഥ LUA_VPROTO: {
       checkproto(g, gco2p(o));
-      break;
+      നിർത്തുക;
     }
-    case LUA_VSHRSTR:
-    case LUA_VLNGSTR: {
-      assert(!isgray(o));  /* strings are never gray */
-      break;
+    അവസ്ഥ LUA_VSHRSTR:
+    അവസ്ഥ LUA_VLNGSTR: {
+      പ്രതിജ്ഞാ(!isgray(o));  /* strings are never gray */
+      നിർത്തുക;
     }
-    default: assert(0);
+    സ്ഥിരസ്ഥിതി: പ്രതിജ്ഞാ(0);
   }
 }
 
@@ -554,67 +554,67 @@ static void checkrefs (global_State *g, GCObject *o) {
 **     threads, and open upvalues.
 **   * 'touched1' objects must be gray.
 */
-static void checkobject (global_State *g, GCObject *o, int maybedead,
-                         int listage) {
-  if (isdead(g, o))
-    assert(maybedead);
-  else {
-    assert(g->gcstate != GCSpause || iswhite(o));
-    if (g->gckind == KGC_GENMINOR) {  /* generational mode? */
-      assert(getage(o) >= listage);
-      if (isold(o)) {
-        assert(!iswhite(o));
-        assert(isblack(o) ||
+സ്ഥിതം ശൂന്യം checkobject (global_State *g, GCObject *o, പൂർണ്ണസംഖ്യ maybedead,
+                         പൂർണ്ണസംഖ്യ listage) {
+  എങ്കിൽ (isdead(g, o))
+    പ്രതിജ്ഞാ(maybedead);
+  അല്ലെങ്കിൽ {
+    പ്രതിജ്ഞാ(g->gcstate != GCSpause || iswhite(o));
+    എങ്കിൽ (g->gckind == KGC_GENMINOR) {  /* generational mode? */
+      പ്രതിജ്ഞാ(getage(o) >= listage);
+      എങ്കിൽ (isold(o)) {
+        പ്രതിജ്ഞാ(!iswhite(o));
+        പ്രതിജ്ഞാ(isblack(o) ||
         getage(o) == G_TOUCHED1 ||
         getage(o) == G_OLD0 ||
         o->tt == LUA_VTHREAD ||
         (o->tt == LUA_VUPVAL && upisopen(gco2upv(o))));
       }
-      assert(getage(o) != G_TOUCHED1 || isgray(o));
+      പ്രതിജ്ഞാ(getage(o) != G_TOUCHED1 || isgray(o));
     }
     checkrefs(g, o);
   }
 }
 
 
-static l_mem checkgraylist (global_State *g, GCObject *o) {
-  int total = 0;  /* count number of elements in the list */
+സ്ഥിതം l_mem checkgraylist (global_State *g, GCObject *o) {
+  പൂർണ്ണസംഖ്യ total = 0;  /* count number of elements in the list */
   cast_void(g);  /* better to keep it if we need to print an object */
-  while (o) {
-    assert(!!isgray(o) ^ (getage(o) == G_TOUCHED2));
-    assert(!testbit(o->marked, TESTBIT));
-    if (keepinvariant(g))
+  ആകുമ്പോൾ (o) {
+    പ്രതിജ്ഞാ(!!isgray(o) ^ (getage(o) == G_TOUCHED2));
+    പ്രതിജ്ഞാ(!testbit(o->marked, TESTBIT));
+    എങ്കിൽ (keepinvariant(g))
       l_setbit(o->marked, TESTBIT);  /* mark that object is in a gray list */
     total++;
-    switch (o->tt) {
-      case LUA_VTABLE: o = gco2t(o)->gclist; break;
-      case LUA_VLCL: o = gco2lcl(o)->gclist; break;
-      case LUA_VCCL: o = gco2ccl(o)->gclist; break;
-      case LUA_VTHREAD: o = gco2th(o)->gclist; break;
-      case LUA_VPROTO: o = gco2p(o)->gclist; break;
-      case LUA_VUSERDATA:
-        assert(gco2u(o)->nuvalue > 0);
+    തിരഞ്ഞെടുപ്പ് (o->tt) {
+      അവസ്ഥ LUA_VTABLE: o = gco2t(o)->gclist; നിർത്തുക;
+      അവസ്ഥ LUA_VLCL: o = gco2lcl(o)->gclist; നിർത്തുക;
+      അവസ്ഥ LUA_VCCL: o = gco2ccl(o)->gclist; നിർത്തുക;
+      അവസ്ഥ LUA_VTHREAD: o = gco2th(o)->gclist; നിർത്തുക;
+      അവസ്ഥ LUA_VPROTO: o = gco2p(o)->gclist; നിർത്തുക;
+      അവസ്ഥ LUA_VUSERDATA:
+        പ്രതിജ്ഞാ(gco2u(o)->nuvalue > 0);
         o = gco2u(o)->gclist;
-        break;
-      default: assert(0);  /* other objects cannot be in a gray list */
+        നിർത്തുക;
+      സ്ഥിരസ്ഥിതി: പ്രതിജ്ഞാ(0);  /* other objects cannot be in a gray list */
     }
   }
-  return total;
+  തിരികെ total;
 }
 
 
 /*
 ** Check objects in gray lists.
 */
-static l_mem checkgrays (global_State *g) {
+സ്ഥിതം l_mem checkgrays (global_State *g) {
   l_mem total = 0;  /* count number of elements in all lists */
-  if (!keepinvariant(g)) return total;
+  എങ്കിൽ (!keepinvariant(g)) തിരികെ total;
   total += checkgraylist(g, g->gray);
   total += checkgraylist(g, g->grayagain);
   total += checkgraylist(g, g->weak);
   total += checkgraylist(g, g->allweak);
   total += checkgraylist(g, g->ephemeron);
-  return total;
+  തിരികെ total;
 }
 
 
@@ -623,68 +623,68 @@ static l_mem checkgrays (global_State *g) {
 ** 'count' and check its TESTBIT. (It must have been previously set by
 ** 'checkgraylist'.)
 */
-static void incifingray (global_State *g, GCObject *o, l_mem *count) {
-  if (!keepinvariant(g))
-    return;  /* gray lists not being kept in these phases */
-  if (o->tt == LUA_VUPVAL) {
+സ്ഥിതം ശൂന്യം incifingray (global_State *g, GCObject *o, l_mem *എണ്ണം) {
+  എങ്കിൽ (!keepinvariant(g))
+    തിരികെ;  /* gray lists not being kept in these phases */
+  എങ്കിൽ (o->tt == LUA_VUPVAL) {
     /* only open upvalues can be gray */
-    assert(!isgray(o) || upisopen(gco2upv(o)));
-    return;  /* upvalues are never in gray lists */
+    പ്രതിജ്ഞാ(!isgray(o) || upisopen(gco2upv(o)));
+    തിരികെ;  /* upvalues are never in gray lists */
   }
   /* these are the ones that must be in gray lists */
-  if (isgray(o) || getage(o) == G_TOUCHED2) {
-    (*count)++;
-    assert(testbit(o->marked, TESTBIT));
+  എങ്കിൽ (isgray(o) || getage(o) == G_TOUCHED2) {
+    (*എണ്ണം)++;
+    പ്രതിജ്ഞാ(testbit(o->marked, TESTBIT));
     resetbit(o->marked, TESTBIT);  /* prepare for next cycle */
   }
 }
 
 
-static l_mem checklist (global_State *g, int maybedead, int tof,
+സ്ഥിതം l_mem checklist (global_State *g, പൂർണ്ണസംഖ്യ maybedead, പൂർണ്ണസംഖ്യ tof,
   GCObject *newl, GCObject *survival, GCObject *old, GCObject *reallyold) {
   GCObject *o;
   l_mem total = 0;  /* number of object that should be in  gray lists */
-  for (o = newl; o != survival; o = o->next) {
+  വേണ്ടി (o = newl; o != survival; o = o->next) {
     checkobject(g, o, maybedead, G_NEW);
     incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    പ്രതിജ്ഞാ(!tof == !tofinalize(o));
   }
-  for (o = survival; o != old; o = o->next) {
+  വേണ്ടി (o = survival; o != old; o = o->next) {
     checkobject(g, o, 0, G_SURVIVAL);
     incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    പ്രതിജ്ഞാ(!tof == !tofinalize(o));
   }
-  for (o = old; o != reallyold; o = o->next) {
+  വേണ്ടി (o = old; o != reallyold; o = o->next) {
     checkobject(g, o, 0, G_OLD1);
     incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    പ്രതിജ്ഞാ(!tof == !tofinalize(o));
   }
-  for (o = reallyold; o != NULL; o = o->next) {
+  വേണ്ടി (o = reallyold; o != ശൂന്യ; o = o->next) {
     checkobject(g, o, 0, G_OLD);
     incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    പ്രതിജ്ഞാ(!tof == !tofinalize(o));
   }
-  return total;
+  തിരികെ total;
 }
 
 
-int lua_checkmemory (lua_State *L) {
+പൂർണ്ണസംഖ്യ lua_checkmemory (lua_State *L) {
   global_State *g = G(L);
   GCObject *o;
-  int maybedead;
+  പൂർണ്ണസംഖ്യ maybedead;
   l_mem totalin;  /* total of objects that are in gray lists */
   l_mem totalshould;  /* total of objects that should be in gray lists */
-  if (keepinvariant(g)) {
-    assert(!iswhite(mainthread(g)));
-    assert(!iswhite(gcvalue(&g->l_registry)));
+  എങ്കിൽ (keepinvariant(g)) {
+    പ്രതിജ്ഞാ(!iswhite(mainthread(g)));
+    പ്രതിജ്ഞാ(!iswhite(gcvalue(&g->l_registry)));
   }
-  assert(!isdead(g, gcvalue(&g->l_registry)));
-  assert(g->sweepgc == NULL || issweepphase(g));
+  പ്രതിജ്ഞാ(!isdead(g, gcvalue(&g->l_registry)));
+  പ്രതിജ്ഞാ(g->sweepgc == ശൂന്യ || issweepphase(g));
   totalin = checkgrays(g);
 
   /* check 'fixedgc' list */
-  for (o = g->fixedgc; o != NULL; o = o->next) {
-    assert(o->tt == LUA_VSHRSTR && isgray(o) && getage(o) == G_OLD);
+  വേണ്ടി (o = g->fixedgc; o != ശൂന്യ; o = o->next) {
+    പ്രതിജ്ഞാ(o->tt == LUA_VSHRSTR && isgray(o) && getage(o) == G_OLD);
   }
 
   /* check 'allgc' list */
@@ -697,15 +697,15 @@ int lua_checkmemory (lua_State *L) {
                               g->finobjsur, g->finobjold1, g->finobjrold);
 
   /* check 'tobefnz' list */
-  for (o = g->tobefnz; o != NULL; o = o->next) {
+  വേണ്ടി (o = g->tobefnz; o != ശൂന്യ; o = o->next) {
     checkobject(g, o, 0, G_NEW);
     incifingray(g, o, &totalshould);
-    assert(tofinalize(o));
-    assert(o->tt == LUA_VUSERDATA || o->tt == LUA_VTABLE);
+    പ്രതിജ്ഞാ(tofinalize(o));
+    പ്രതിജ്ഞാ(o->tt == LUA_VUSERDATA || o->tt == LUA_VTABLE);
   }
-  if (keepinvariant(g))
-    assert(totalin == totalshould);
-  return 0;
+  എങ്കിൽ (keepinvariant(g))
+    പ്രതിജ്ഞാ(totalin == totalshould);
+  തിരികെ 0;
 }
 
 /* }====================================================== */
@@ -719,66 +719,66 @@ int lua_checkmemory (lua_State *L) {
 */
 
 
-static char *buildop (Proto *p, int pc, char *buff) {
-  char *obuff = buff;
+സ്ഥിതം അക്ഷരം *buildop (Proto *p, പൂർണ്ണസംഖ്യ pc, അക്ഷരം *buff) {
+  അക്ഷരം *obuff = buff;
   Instruction i = p->code[pc];
   OpCode o = GET_OPCODE(i);
-  const char *name = opnames[o];
-  int line = luaG_getfuncline(p, pc);
-  int lineinfo = (p->lineinfo != NULL) ? p->lineinfo[pc] : 0;
-  if (lineinfo == ABSLINEINFO)
+  സ്ഥിരം അക്ഷരം *name = opnames[o];
+  പൂർണ്ണസംഖ്യ വരി = luaG_getfuncline(p, pc);
+  പൂർണ്ണസംഖ്യ lineinfo = (p->lineinfo != ശൂന്യ) ? p->lineinfo[pc] : 0;
+  എങ്കിൽ (lineinfo == ABSLINEINFO)
     buff += sprintf(buff, "(__");
-  else
+  അല്ലെങ്കിൽ
     buff += sprintf(buff, "(%2d", lineinfo);
-  buff += sprintf(buff, " - %4d) %4d - ", line, pc);
-  switch (getOpMode(o)) {
-    case iABC:
+  buff += sprintf(buff, " - %4d) %4d - ", വരി, pc);
+  തിരഞ്ഞെടുപ്പ് (getOpMode(o)) {
+    അവസ്ഥ iABC:
       sprintf(buff, "%-12s%4d %4d %4d%s", name,
               GETARG_A(i), GETARG_B(i), GETARG_C(i),
               GETARG_k(i) ? " (k)" : "");
-      break;
-    case ivABC:
+      നിർത്തുക;
+    അവസ്ഥ ivABC:
       sprintf(buff, "%-12s%4d %4d %4d%s", name,
               GETARG_A(i), GETARG_vB(i), GETARG_vC(i),
               GETARG_k(i) ? " (k)" : "");
-      break;
-    case iABx:
+      നിർത്തുക;
+    അവസ്ഥ iABx:
       sprintf(buff, "%-12s%4d %4d", name, GETARG_A(i), GETARG_Bx(i));
-      break;
-    case iAsBx:
+      നിർത്തുക;
+    അവസ്ഥ iAsBx:
       sprintf(buff, "%-12s%4d %4d", name, GETARG_A(i), GETARG_sBx(i));
-      break;
-    case iAx:
+      നിർത്തുക;
+    അവസ്ഥ iAx:
       sprintf(buff, "%-12s%4d", name, GETARG_Ax(i));
-      break;
-    case isJ:
+      നിർത്തുക;
+    അവസ്ഥ isJ:
       sprintf(buff, "%-12s%4d", name, GETARG_sJ(i));
-      break;
+      നിർത്തുക;
   }
-  return obuff;
+  തിരികെ obuff;
 }
 
 
-#if 0
-void luaI_printcode (Proto *pt, int size) {
-  int pc;
-  for (pc=0; pc<size; pc++) {
-    char buff[100];
+#എങ്കിൽ 0
+ശൂന്യം luaI_printcode (Proto *pt, പൂർണ്ണസംഖ്യ size) {
+  പൂർണ്ണസംഖ്യ pc;
+  വേണ്ടി (pc=0; pc<size; pc++) {
+    അക്ഷരം buff[100];
     printf("%s\n", buildop(pt, pc, buff));
   }
   printf("-------\n");
 }
 
 
-void luaI_printinst (Proto *pt, int pc) {
-  char buff[100];
+ശൂന്യം luaI_printinst (Proto *pt, പൂർണ്ണസംഖ്യ pc) {
+  അക്ഷരം buff[100];
   printf("%s\n", buildop(pt, pc, buff));
 }
 #endif
 
 
-static int listcode (lua_State *L) {
-  int pc;
+സ്ഥിതം പൂർണ്ണസംഖ്യ listcode (lua_State *L) {
+  പൂർണ്ണസംഖ്യ pc;
   Proto *p;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
@@ -786,87 +786,87 @@ static int listcode (lua_State *L) {
   lua_newtable(L);
   setnameval(L, "maxstack", p->maxstacksize);
   setnameval(L, "numparams", p->numparams);
-  for (pc=0; pc<p->sizecode; pc++) {
-    char buff[100];
+  വേണ്ടി (pc=0; pc<p->sizecode; pc++) {
+    അക്ഷരം buff[100];
     lua_pushinteger(L, pc+1);
     lua_pushstring(L, buildop(p, pc, buff));
     lua_settable(L, -3);
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int printcode (lua_State *L) {
-  int pc;
+സ്ഥിതം പൂർണ്ണസംഖ്യ printcode (lua_State *L) {
+  പൂർണ്ണസംഖ്യ pc;
   Proto *p;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
   printf("maxstack: %d\n", p->maxstacksize);
   printf("numparams: %d\n", p->numparams);
-  for (pc=0; pc<p->sizecode; pc++) {
-    char buff[100];
+  വേണ്ടി (pc=0; pc<p->sizecode; pc++) {
+    അക്ഷരം buff[100];
     printf("%s\n", buildop(p, pc, buff));
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int listk (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ listk (lua_State *L) {
   Proto *p;
-  int i;
+  പൂർണ്ണസംഖ്യ i;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
   lua_createtable(L, p->sizek, 0);
-  for (i=0; i<p->sizek; i++) {
+  വേണ്ടി (i=0; i<p->sizek; i++) {
     pushobject(L, p->k+i);
     lua_rawseti(L, -2, i+1);
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int listabslineinfo (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ listabslineinfo (lua_State *L) {
   Proto *p;
-  int i;
+  പൂർണ്ണസംഖ്യ i;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
-  luaL_argcheck(L, p->abslineinfo != NULL, 1, "function has no debug info");
+  luaL_argcheck(L, p->abslineinfo != ശൂന്യ, 1, "function has no debug info");
   lua_createtable(L, 2 * p->sizeabslineinfo, 0);
-  for (i=0; i < p->sizeabslineinfo; i++) {
+  വേണ്ടി (i=0; i < p->sizeabslineinfo; i++) {
     lua_pushinteger(L, p->abslineinfo[i].pc);
     lua_rawseti(L, -2, 2 * i + 1);
-    lua_pushinteger(L, p->abslineinfo[i].line);
+    lua_pushinteger(L, p->abslineinfo[i].വരി);
     lua_rawseti(L, -2, 2 * i + 2);
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int listlocals (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ listlocals (lua_State *L) {
   Proto *p;
-  int pc = cast_int(luaL_checkinteger(L, 2)) - 1;
-  int i = 0;
-  const char *name;
+  പൂർണ്ണസംഖ്യ pc = cast_int(luaL_checkinteger(L, 2)) - 1;
+  പൂർണ്ണസംഖ്യ i = 0;
+  സ്ഥിരം അക്ഷരം *name;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
-  while ((name = luaF_getlocalname(p, cast_uint(++i), pc)) != NULL)
+  ആകുമ്പോൾ ((name = luaF_getlocalname(p, cast_uint(++i), pc)) != ശൂന്യ)
     lua_pushstring(L, name);
-  return i-1;
+  തിരികെ i-1;
 }
 
 /* }====================================================== */
 
 
 
-void lua_printstack (lua_State *L) {
-  int i;
-  int n = lua_gettop(L);
+ശൂന്യം lua_printstack (lua_State *L) {
+  പൂർണ്ണസംഖ്യ i;
+  പൂർണ്ണസംഖ്യ n = lua_gettop(L);
   printf("stack: >>\n");
-  for (i = 1; i <= n; i++) {
+  വേണ്ടി (i = 1; i <= n; i++) {
     printf("%3d: ", i);
     lua_printvalue(s2v(L->ci->func.p + i));
     printf("\n");
@@ -875,17 +875,17 @@ void lua_printstack (lua_State *L) {
 }
 
 
-int lua_printallstack (lua_State *L) {
+പൂർണ്ണസംഖ്യ lua_printallstack (lua_State *L) {
   StkId p;
-  int i = 1;
+  പൂർണ്ണസംഖ്യ i = 1;
   CallInfo *ci = &L->base_ci;
   printf("stack: >>\n");
-  for (p = L->stack.p; p < L->top.p; p++) {
-    if (ci != NULL && p == ci->func.p) {
+  വേണ്ടി (p = L->അട്ടി.p; p < L->മുകൾ.p; p++) {
+    എങ്കിൽ (ci != ശൂന്യ && p == ci->func.p) {
       printf("  ---\n");
-      if (ci == L->ci)
-        ci = NULL;  /* printed last frame */
-      else
+      എങ്കിൽ (ci == L->ci)
+        ci = ശൂന്യ;  /* printed last frame */
+      അല്ലെങ്കിൽ
         ci = ci->next;
     }
     printf("%3d: ", i++);
@@ -893,164 +893,164 @@ int lua_printallstack (lua_State *L) {
     printf("\n");
   }
   printf("<<\n");
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int get_limits (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ get_limits (lua_State *L) {
   lua_createtable(L, 0, 5);
   setnameval(L, "IS32INT", LUAI_IS32INT);
   setnameval(L, "MAXARG_Ax", MAXARG_Ax);
   setnameval(L, "MAXARG_Bx", MAXARG_Bx);
   setnameval(L, "OFFSET_sBx", OFFSET_sBx);
-  setnameval(L, "NUM_OPCODES", NUM_OPCODES);
-  return 1;
+  setnameval(L, "NUM_OPCODES", അക്കം_OPCODES);
+  തിരികെ 1;
 }
 
 
-static int get_sizes (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ get_sizes (lua_State *L) {
   lua_newtable(L);
-  setnameval(L, "Lua state", sizeof(lua_State));
-  setnameval(L, "global state", sizeof(global_State));
-  setnameval(L, "TValue", sizeof(TValue));
-  setnameval(L, "Node", sizeof(Node));
-  setnameval(L, "stack Value", sizeof(StackValue));
-  return 1;
+  setnameval(L, "Lua state", വലുപ്പം(lua_State));
+  setnameval(L, "global state", വലുപ്പം(global_State));
+  setnameval(L, "TValue", വലുപ്പം(TValue));
+  setnameval(L, "Node", വലുപ്പം(കണ്ണി_2));
+  setnameval(L, "stack Value", വലുപ്പം(അട്ടി_മൂല്യം));
+  തിരികെ 1;
 }
 
 
-static int mem_query (lua_State *L) {
-  if (lua_isnone(L, 1)) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ mem_query (lua_State *L) {
+  എങ്കിൽ (lua_isnone(L, 1)) {
     lua_pushinteger(L, cast_Integer(l_memcontrol.total));
     lua_pushinteger(L, cast_Integer(l_memcontrol.numblocks));
     lua_pushinteger(L, cast_Integer(l_memcontrol.maxmem));
-    return 3;
+    തിരികെ 3;
   }
-  else if (lua_isnumber(L, 1)) {
+  അല്ലെങ്കിൽ എങ്കിൽ (lua_isnumber(L, 1)) {
     unsigned long limit = cast(unsigned long, luaL_checkinteger(L, 1));
-    if (limit == 0) limit = ULONG_MAX;
+    എങ്കിൽ (limit == 0) limit = ULONG_MAX;
     l_memcontrol.memlimit = limit;
-    return 0;
+    തിരികെ 0;
   }
-  else {
-    const char *t = luaL_checkstring(L, 1);
-    int i;
-    for (i = LUA_NUMTYPES - 1; i >= 0; i--) {
-      if (strcmp(t, ttypename(i)) == 0) {
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം അക്ഷരം *t = luaL_checkstring(L, 1);
+    പൂർണ്ണസംഖ്യ i;
+    വേണ്ടി (i = LUA_NUMTYPES - 1; i >= 0; i--) {
+      എങ്കിൽ (strcmp(t, ttypename(i)) == 0) {
         lua_pushinteger(L, cast_Integer(l_memcontrol.objcount[i]));
-        return 1;
+        തിരികെ 1;
       }
     }
-    return luaL_error(L, "unknown type '%s'", t);
+    തിരികെ luaL_error(L, "unknown type '%s'", t);
   }
 }
 
 
-static int alloc_count (lua_State *L) {
-  if (lua_isnone(L, 1))
+സ്ഥിതം പൂർണ്ണസംഖ്യ alloc_എണ്ണം (lua_State *L) {
+  എങ്കിൽ (lua_isnone(L, 1))
     l_memcontrol.countlimit = cast(unsigned long, ~0L);
-  else
+  അല്ലെങ്കിൽ
     l_memcontrol.countlimit = cast(unsigned long, luaL_checkinteger(L, 1));
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int alloc_failnext (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ alloc_failnext (lua_State *L) {
   UNUSED(L);
   l_memcontrol.failnext = 1;
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int settrick (lua_State *L) {
-  if (ttisnil(obj_at(L, 1)))
-    l_Trick = NULL;
-  else
+സ്ഥിതം പൂർണ്ണസംഖ്യ settrick (lua_State *L) {
+  എങ്കിൽ (ttisnil(obj_at(L, 1)))
+    l_Trick = ശൂന്യ;
+  അല്ലെങ്കിൽ
     l_Trick = gcvalue(obj_at(L, 1));
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int gc_color (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gc_color (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
+  എങ്കിൽ (!iscollectable(o))
     lua_pushstring(L, "no collectable");
-  else {
+  അല്ലെങ്കിൽ {
     GCObject *obj = gcvalue(o);
     lua_pushstring(L, isdead(G(L), obj) ? "dead" :
                       iswhite(obj) ? "white" :
                       isblack(obj) ? "black" : "gray");
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int gc_age (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gc_age (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
+  എങ്കിൽ (!iscollectable(o))
     lua_pushstring(L, "no collectable");
-  else {
-    static const char *gennames[] = {"new", "survival", "old0", "old1",
+  അല്ലെങ്കിൽ {
+    സ്ഥിതം സ്ഥിരം അക്ഷരം *gennames[] = {"new", "survival", "old0", "old1",
                                      "old", "touched1", "touched2"};
     GCObject *obj = gcvalue(o);
     lua_pushstring(L, gennames[getage(obj)]);
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int gc_printobj (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gc_printobj (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
+  എങ്കിൽ (!iscollectable(o))
     printf("no collectable\n");
-  else {
+  അല്ലെങ്കിൽ {
     GCObject *obj = gcvalue(o);
     printobj(G(L), obj);
     printf("\n");
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static const char *const statenames[] = {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം statenames[] = {
   "propagate", "enteratomic", "atomic", "sweepallgc", "sweepfinobj",
   "sweeptobefnz", "sweepend", "callfin", "pause", ""};
 
-static int gc_state (lua_State *L) {
-  static const int states[] = {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gc_state (lua_State *L) {
+  സ്ഥിതം സ്ഥിരം പൂർണ്ണസംഖ്യ states[] = {
     GCSpropagate, GCSenteratomic, GCSatomic, GCSswpallgc, GCSswpfinobj,
     GCSswptobefnz, GCSswpend, GCScallfin, GCSpause, -1};
-  int option = states[luaL_checkoption(L, 1, "", statenames)];
+  പൂർണ്ണസംഖ്യ option = states[luaL_checkoption(L, 1, "", statenames)];
   global_State *g = G(L);
-  if (option == -1) {
+  എങ്കിൽ (option == -1) {
     lua_pushstring(L, statenames[g->gcstate]);
-    return 1;
+    തിരികെ 1;
   }
-  else {
-    if (g->gckind != KGC_INC)
+  അല്ലെങ്കിൽ {
+    എങ്കിൽ (g->gckind != KGC_INC)
       luaL_error(L, "cannot change states in generational mode");
     lua_lock(L);
-    if (option < g->gcstate) {  /* must cross 'pause'? */
+    എങ്കിൽ (option < g->gcstate) {  /* must cross 'pause'? */
       luaC_runtilstate(L, GCSpause, 1);  /* run until pause */
     }
     luaC_runtilstate(L, option, 0);  /* do not skip propagation state */
     lua_assert(g->gcstate == option);
     lua_unlock(L);
-    return 0;
+    തിരികെ 0;
   }
 }
 
 
-static int tracinggc = 0;
-void luai_tracegctest (lua_State *L, int first) {
-  if (!tracinggc) return;
-  else {
+സ്ഥിതം പൂർണ്ണസംഖ്യ tracinggc = 0;
+ശൂന്യം luai_tracegctest (lua_State *L, പൂർണ്ണസംഖ്യ first) {
+  എങ്കിൽ (!tracinggc) തിരികെ;
+  അല്ലെങ്കിൽ {
     global_State *g = G(L);
     lua_unlock(L);
     g->gcstp = GCSTPGC;
@@ -1064,112 +1064,112 @@ void luai_tracegctest (lua_State *L, int first) {
 }
 
 
-static int tracegc (lua_State *L) {
-  if (lua_isnil(L, 1))
+സ്ഥിതം പൂർണ്ണസംഖ്യ tracegc (lua_State *L) {
+  എങ്കിൽ (lua_isnil(L, 1))
     tracinggc = 0;
-  else {
+  അല്ലെങ്കിൽ {
     tracinggc = 1;
     lua_setfield(L, LUA_REGISTRYINDEX, "tracegc");
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int hash_query (lua_State *L) {
-  if (lua_isnone(L, 2)) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ hash_query (lua_State *L) {
+  എങ്കിൽ (lua_isnone(L, 2)) {
     TString *ts;
     luaL_argcheck(L, lua_type(L, 1) == LUA_TSTRING, 1, "string expected");
     ts = tsvalue(obj_at(L, 1));
-    if (ts->tt == LUA_VLNGSTR)
+    എങ്കിൽ (ts->tt == LUA_VLNGSTR)
       luaS_hashlongstr(ts);  /* make sure long string has a hash */
     lua_pushinteger(L, cast_int(ts->hash));
   }
-  else {
+  അല്ലെങ്കിൽ {
     TValue *o = obj_at(L, 1);
     Table *t;
     luaL_checktype(L, 2, LUA_TTABLE);
     t = hvalue(obj_at(L, 2));
-    lua_pushinteger(L, cast_Integer(luaH_mainposition(t, o) - t->node));
+    lua_pushinteger(L, cast_Integer(luaH_mainposition(t, o) - t->കണ്ണി));
   }
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int stacklevel (lua_State *L) {
-  int a = 0;
-  lua_pushinteger(L, cast_Integer(L->top.p - L->stack.p));
+സ്ഥിതം പൂർണ്ണസംഖ്യ stacklevel (lua_State *L) {
+  പൂർണ്ണസംഖ്യ a = 0;
+  lua_pushinteger(L, cast_Integer(L->മുകൾ.p - L->അട്ടി.p));
   lua_pushinteger(L, stacksize(L));
   lua_pushinteger(L, cast_Integer(L->nCcalls));
   lua_pushinteger(L, L->nci);
   lua_pushinteger(L, (lua_Integer)(size_t)&a);
-  return 5;
+  തിരികെ 5;
 }
 
 
-static int resetCI (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ resetCI (lua_State *L) {
   CallInfo *ci = L->ci;
-  while (ci->next != NULL) {
+  ആകുമ്പോൾ (ci->next != ശൂന്യ) {
     CallInfo *tofree = ci->next;
     ci->next = ci->next->next;
     luaM_free(L, tofree);
     L->nci--;
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int reallocstack (lua_State *L) {
-  int n = cast_int(luaL_checkinteger(L, 1));
+സ്ഥിതം പൂർണ്ണസംഖ്യ reallocstack (lua_State *L) {
+  പൂർണ്ണസംഖ്യ n = cast_int(luaL_checkinteger(L, 1));
   lua_lock(L);
-  luaD_reallocstack(L, cast_int(L->top.p - L->stack.p) + n, 1);
+  luaD_reallocstack(L, cast_int(L->മുകൾ.p - L->അട്ടി.p) + n, 1);
   lua_unlock(L);
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int table_query (lua_State *L) {
-  const Table *t;
-  int i = cast_int(luaL_optinteger(L, 2, -1));
-  unsigned int asize;
+സ്ഥിതം പൂർണ്ണസംഖ്യ table_query (lua_State *L) {
+  സ്ഥിരം Table *t;
+  പൂർണ്ണസംഖ്യ i = cast_int(luaL_optinteger(L, 2, -1));
+  unsigned പൂർണ്ണസംഖ്യ asize;
   luaL_checktype(L, 1, LUA_TTABLE);
   t = hvalue(obj_at(L, 1));
   asize = t->asize;
-  if (i == -1) {
+  എങ്കിൽ (i == -1) {
     lua_pushinteger(L, cast_Integer(asize));
     lua_pushinteger(L, cast_Integer(allocsizenode(t)));
     lua_pushinteger(L, cast_Integer(asize > 0 ? *lenhint(t) : 0));
-    return 3;
+    തിരികെ 3;
   }
-  else if (cast_uint(i) < asize) {
+  അല്ലെങ്കിൽ എങ്കിൽ (cast_uint(i) < asize) {
     lua_pushinteger(L, i);
-    if (!tagisempty(*getArrTag(t, i)))
-      arr2obj(t, cast_uint(i), s2v(L->top.p));
-    else
-      setnilvalue2s(L->top.p);
-    api_incr_top(L);
+    എങ്കിൽ (!tagisempty(*getArrTag(t, i)))
+      arr2obj(t, cast_uint(i), s2v(L->മുകൾ.p));
+    അല്ലെങ്കിൽ
+      setnilvalue2s(L->മുകൾ.p);
+    api_incr_മുകൾ(L);
     lua_pushnil(L);
   }
-  else if (cast_uint(i -= cast_int(asize)) < sizenode(t)) {
+  അല്ലെങ്കിൽ എങ്കിൽ (cast_uint(i -= cast_int(asize)) < sizenode(t)) {
     TValue k;
     getnodekey(L, &k, gnode(t, i));
-    if (!isempty(gval(gnode(t, i))) ||
+    എങ്കിൽ (!isempty(gval(gnode(t, i))) ||
         ttisnil(&k) ||
         ttisnumber(&k)) {
       pushobject(L, &k);
     }
-    else
+    അല്ലെങ്കിൽ
       lua_pushliteral(L, "<undef>");
-    if (!isempty(gval(gnode(t, i))))
+    എങ്കിൽ (!isempty(gval(gnode(t, i))))
       pushobject(L, gval(gnode(t, i)));
-    else
+    അല്ലെങ്കിൽ
       lua_pushnil(L);
-    lua_pushinteger(L, gnext(&t->node[i]));
+    lua_pushinteger(L, gnext(&t->കണ്ണി[i]));
   }
-  return 3;
+  തിരികെ 3;
 }
 
 
-static int gc_query (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ gc_query (lua_State *L) {
   global_State *g = G(L);
   lua_pushstring(L, g->gckind == KGC_INC ? "inc"
                   : g->gckind == KGC_GENMAJOR ? "genmajor"
@@ -1179,285 +1179,285 @@ static int gc_query (lua_State *L) {
   lua_pushinteger(L, cast_st2S(g->GCdebt));
   lua_pushinteger(L, cast_st2S(g->GCmarked));
   lua_pushinteger(L, cast_st2S(g->GCmajorminor));
-  return 6;
+  തിരികെ 6;
 }
 
 
-static int test_codeparam (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_codeparam (lua_State *L) {
   lua_Integer p = luaL_checkinteger(L, 1);
   lua_pushinteger(L, luaO_codeparam(cast_uint(p)));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int test_applyparam (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ test_applyparam (lua_State *L) {
   lua_Integer p = luaL_checkinteger(L, 1);
   lua_Integer x = luaL_checkinteger(L, 2);
   lua_pushinteger(L, cast_Integer(luaO_applyparam(cast_byte(p), x)));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int string_query (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ string_query (lua_State *L) {
   stringtable *tb = &G(L)->strt;
-  int s = cast_int(luaL_optinteger(L, 1, 0)) - 1;
-  if (s == -1) {
+  പൂർണ്ണസംഖ്യ s = cast_int(luaL_optinteger(L, 1, 0)) - 1;
+  എങ്കിൽ (s == -1) {
     lua_pushinteger(L ,tb->size);
     lua_pushinteger(L ,tb->nuse);
-    return 2;
+    തിരികെ 2;
   }
-  else if (s < tb->size) {
+  അല്ലെങ്കിൽ എങ്കിൽ (s < tb->size) {
     TString *ts;
-    int n = 0;
-    for (ts = tb->hash[s]; ts != NULL; ts = ts->u.hnext) {
-      setsvalue2s(L, L->top.p, ts);
-      api_incr_top(L);
+    പൂർണ്ണസംഖ്യ n = 0;
+    വേണ്ടി (ts = tb->hash[s]; ts != ശൂന്യ; ts = ts->u.hnext) {
+      setsvalue2s(L, L->മുകൾ.p, ts);
+      api_incr_മുകൾ(L);
       n++;
     }
-    return n;
+    തിരികെ n;
   }
-  else return 0;
+  അല്ലെങ്കിൽ തിരികെ 0;
 }
 
 
-static int getreftable (lua_State *L) {
-  if (lua_istable(L, 2))  /* is there a table as second argument? */
-    return 2;  /* use it as the table */
-  else
-    return LUA_REGISTRYINDEX;  /* default is to use the register */
+സ്ഥിതം പൂർണ്ണസംഖ്യ getreftable (lua_State *L) {
+  എങ്കിൽ (lua_istable(L, 2))  /* is there a table as second argument? */
+    തിരികെ 2;  /* use it as the table */
+  അല്ലെങ്കിൽ
+    തിരികെ LUA_REGISTRYINDEX;  /* default is to use the register */
 }
 
 
-static int tref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+സ്ഥിതം പൂർണ്ണസംഖ്യ tref (lua_State *L) {
+  പൂർണ്ണസംഖ്യ t = getreftable(L);
+  പൂർണ്ണസംഖ്യ level = lua_gettop(L);
   luaL_checkany(L, 1);
   lua_pushvalue(L, 1);
   lua_pushinteger(L, luaL_ref(L, t));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level+1);  /* +1 for result */
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int getref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+സ്ഥിതം പൂർണ്ണസംഖ്യ getref (lua_State *L) {
+  പൂർണ്ണസംഖ്യ t = getreftable(L);
+  പൂർണ്ണസംഖ്യ level = lua_gettop(L);
   lua_rawgeti(L, t, luaL_checkinteger(L, 1));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level+1);
-  return 1;
+  തിരികെ 1;
 }
 
-static int unref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+സ്ഥിതം പൂർണ്ണസംഖ്യ unref (lua_State *L) {
+  പൂർണ്ണസംഖ്യ t = getreftable(L);
+  പൂർണ്ണസംഖ്യ level = lua_gettop(L);
   luaL_unref(L, t, cast_int(luaL_checkinteger(L, 1)));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level);
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int upvalue (lua_State *L) {
-  int n = cast_int(luaL_checkinteger(L, 2));
+സ്ഥിതം പൂർണ്ണസംഖ്യ upvalue (lua_State *L) {
+  പൂർണ്ണസംഖ്യ n = cast_int(luaL_checkinteger(L, 2));
   luaL_checktype(L, 1, LUA_TFUNCTION);
-  if (lua_isnone(L, 3)) {
-    const char *name = lua_getupvalue(L, 1, n);
-    if (name == NULL) return 0;
+  എങ്കിൽ (lua_isnone(L, 3)) {
+    സ്ഥിരം അക്ഷരം *name = lua_getupvalue(L, 1, n);
+    എങ്കിൽ (name == ശൂന്യ) തിരികെ 0;
     lua_pushstring(L, name);
-    return 2;
+    തിരികെ 2;
   }
-  else {
-    const char *name = lua_setupvalue(L, 1, n);
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം അക്ഷരം *name = lua_setupvalue(L, 1, n);
     lua_pushstring(L, name);
-    return 1;
+    തിരികെ 1;
   }
 }
 
 
-static int newuserdata (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ newuserdata (lua_State *L) {
   size_t size = cast_sizet(luaL_optinteger(L, 1, 0));
-  int nuv = cast_int(luaL_optinteger(L, 2, 0));
-  char *p = cast_charp(lua_newuserdatauv(L, size, nuv));
-  while (size--) *p++ = '\0';
-  return 1;
+  പൂർണ്ണസംഖ്യ nuv = cast_int(luaL_optinteger(L, 2, 0));
+  അക്ഷരം *p = cast_charp(lua_newuserdatauv(L, size, nuv));
+  ആകുമ്പോൾ (size--) *p++ = '\0';
+  തിരികെ 1;
 }
 
 
-static int pushuserdata (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ pushuserdata (lua_State *L) {
   lua_Integer u = luaL_checkinteger(L, 1);
   lua_pushlightuserdata(L, cast_voidp(cast_sizet(u)));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int udataval (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ udataval (lua_State *L) {
   lua_pushinteger(L, cast_st2S(cast_sizet(lua_touserdata(L, 1))));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int doonnewstack (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ doonnewstack (lua_State *L) {
   lua_State *L1 = lua_newthread(L);
   size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
-  int status = luaL_loadbufferx(L1, s, l, s, "t");
-  if (status == LUA_OK)
+  സ്ഥിരം അക്ഷരം *s = luaL_checklstring(L, 1, &l);
+  പൂർണ്ണസംഖ്യ status = luaL_loadbufferx(L1, s, l, s, "t");
+  എങ്കിൽ (status == LUA_OK)
     status = lua_pcall(L1, 0, 0, 0);
   lua_pushinteger(L, status);
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int s2d (lua_State *L) {
-  lua_pushnumber(L, cast_num(*cast(const double *, luaL_checkstring(L, 1))));
-  return 1;
+സ്ഥിതം പൂർണ്ണസംഖ്യ s2d (lua_State *L) {
+  lua_pushnumber(L, cast_അക്കം(*cast(സ്ഥിരം ഇരട്ട *, luaL_checkstring(L, 1))));
+  തിരികെ 1;
 }
 
 
-static int d2s (lua_State *L) {
-  double d = cast(double, luaL_checknumber(L, 1));
-  lua_pushlstring(L, cast_charp(&d), sizeof(d));
-  return 1;
+സ്ഥിതം പൂർണ്ണസംഖ്യ d2s (lua_State *L) {
+  ഇരട്ട d = cast(ഇരട്ട, luaL_checknumber(L, 1));
+  lua_pushlstring(L, cast_charp(&d), വലുപ്പം(d));
+  തിരികെ 1;
 }
 
 
-static int num2int (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ num2int (lua_State *L) {
   lua_pushinteger(L, lua_tointeger(L, 1));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int makeseed (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ makeseed (lua_State *L) {
   lua_pushinteger(L, cast_Integer(luaL_makeseed(L)));
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int newstate (lua_State *L) {
-  void *ud;
+സ്ഥിതം പൂർണ്ണസംഖ്യ newstate (lua_State *L) {
+  ശൂന്യം *ud;
   lua_Alloc f = lua_getallocf(L, &ud);
   lua_State *L1 = lua_newstate(f, ud, 0);
-  if (L1) {
+  എങ്കിൽ (L1) {
     lua_atpanic(L1, tpanic);
     lua_pushlightuserdata(L, L1);
   }
-  else
+  അല്ലെങ്കിൽ
     lua_pushnil(L);
-  return 1;
+  തിരികെ 1;
 }
 
 
-static lua_State *getstate (lua_State *L) {
+സ്ഥിതം lua_State *getstate (lua_State *L) {
   lua_State *L1 = cast(lua_State *, lua_touserdata(L, 1));
-  luaL_argcheck(L, L1 != NULL, 1, "state expected");
-  return L1;
+  luaL_argcheck(L, L1 != ശൂന്യ, 1, "state expected");
+  തിരികെ L1;
 }
 
 
-static int loadlib (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ loadlib (lua_State *L) {
   lua_State *L1 = getstate(L);
-  int load = cast_int(luaL_checkinteger(L, 2));
-  int preload = cast_int(luaL_checkinteger(L, 3));
+  പൂർണ്ണസംഖ്യ load = cast_int(luaL_checkinteger(L, 2));
+  പൂർണ്ണസംഖ്യ preload = cast_int(luaL_checkinteger(L, 3));
   luaL_openselectedlibs(L1, load, preload);
   luaL_requiref(L1, "T", luaB_opentests, 0);
   lua_assert(lua_type(L1, -1) == LUA_TTABLE);
   /* 'requiref' should not reload module already loaded... */
-  luaL_requiref(L1, "T", NULL, 1);  /* seg. fault if it reloads */
+  luaL_requiref(L1, "T", ശൂന്യ, 1);  /* seg. fault if it reloads */
   /* ...but should return the same module */
   lua_assert(lua_compare(L1, -1, -2, LUA_OPEQ));
-  return 0;
+  തിരികെ 0;
 }
 
-static int closestate (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ closestate (lua_State *L) {
   lua_State *L1 = getstate(L);
   lua_close(L1);
-  return 0;
+  തിരികെ 0;
 }
 
-static int doremote (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ doremote (lua_State *L) {
   lua_State *L1 = getstate(L);
   size_t lcode;
-  const char *code = luaL_checklstring(L, 2, &lcode);
-  int status;
+  സ്ഥിരം അക്ഷരം *code = luaL_checklstring(L, 2, &lcode);
+  പൂർണ്ണസംഖ്യ status;
   lua_settop(L1, 0);
   status = luaL_loadbufferx(L1, code, lcode, code, "t");
-  if (status == LUA_OK)
+  എങ്കിൽ (status == LUA_OK)
     status = lua_pcall(L1, 0, LUA_MULTRET, 0);
-  if (status != LUA_OK) {
+  എങ്കിൽ (status != LUA_OK) {
     lua_pushnil(L);
     lua_pushstring(L, lua_tostring(L1, -1));
     lua_pushinteger(L, status);
-    return 3;
+    തിരികെ 3;
   }
-  else {
-    int i = 0;
-    while (!lua_isnone(L1, ++i))
+  അല്ലെങ്കിൽ {
+    പൂർണ്ണസംഖ്യ i = 0;
+    ആകുമ്പോൾ (!lua_isnone(L1, ++i))
       lua_pushstring(L, lua_tostring(L1, i));
-    lua_pop(L1, i-1);
-    return i-1;
+    lua_എടുക്കുക(L1, i-1);
+    തിരികെ i-1;
   }
 }
 
 
-static int log2_aux (lua_State *L) {
-  unsigned int x = (unsigned int)luaL_checkinteger(L, 1);
+സ്ഥിതം പൂർണ്ണസംഖ്യ log2_aux (lua_State *L) {
+  unsigned പൂർണ്ണസംഖ്യ x = (unsigned പൂർണ്ണസംഖ്യ)luaL_checkinteger(L, 1);
   lua_pushinteger(L, luaO_ceillog2(x));
-  return 1;
+  തിരികെ 1;
 }
 
 
-struct Aux { jmp_buf jb; const char *paniccode; lua_State *L; };
+ഘടന Aux { jmp_buf jb; സ്ഥിരം അക്ഷരം *paniccode; lua_State *L; };
 
 /*
 ** does a long-jump back to "main program".
 */
-static int panicback (lua_State *L) {
-  struct Aux *b;
+സ്ഥിതം പൂർണ്ണസംഖ്യ panicback (lua_State *L) {
+  ഘടന Aux *b;
   lua_checkstack(L, 1);  /* open space for 'Aux' struct */
   lua_getfield(L, LUA_REGISTRYINDEX, "_jmpbuf");  /* get 'Aux' struct */
-  b = (struct Aux *)lua_touserdata(L, -1);
-  lua_pop(L, 1);  /* remove 'Aux' struct */
+  b = (ഘടന Aux *)lua_touserdata(L, -1);
+  lua_എടുക്കുക(L, 1);  /* remove 'Aux' struct */
   runC(b->L, L, b->paniccode);  /* run optional panic code */
   longjmp(b->jb, 1);
-  return 1;  /* to avoid warnings */
+  തിരികെ 1;  /* to avoid warnings */
 }
 
-static int checkpanic (lua_State *L) {
-  struct Aux b;
-  void *ud;
+സ്ഥിതം പൂർണ്ണസംഖ്യ checkpanic (lua_State *L) {
+  ഘടന Aux b;
+  ശൂന്യം *ud;
   lua_State *L1;
-  const char *code = luaL_checkstring(L, 1);
+  സ്ഥിരം അക്ഷരം *code = luaL_checkstring(L, 1);
   lua_Alloc f = lua_getallocf(L, &ud);
   b.paniccode = luaL_optstring(L, 2, "");
   b.L = L;
   L1 = lua_newstate(f, ud, 0);  /* create new state */
-  if (L1 == NULL) {  /* error? */
+  എങ്കിൽ (L1 == ശൂന്യ) {  /* error? */
     lua_pushstring(L, MEMERRMSG);
-    return 1;
+    തിരികെ 1;
   }
   lua_atpanic(L1, panicback);  /* set its panic function */
   lua_pushlightuserdata(L1, &b);
   lua_setfield(L1, LUA_REGISTRYINDEX, "_jmpbuf");  /* store 'Aux' struct */
-  if (setjmp(b.jb) == 0) {  /* set jump buffer */
+  എങ്കിൽ (setjmp(b.jb) == 0) {  /* set jump buffer */
     runC(L, L1, code);  /* run code unprotected */
     lua_pushliteral(L, "no errors");
   }
-  else {  /* error handling */
+  അല്ലെങ്കിൽ {  /* error handling */
     /* move error message to original state */
     lua_pushstring(L, lua_tostring(L1, -1));
   }
   lua_close(L1);
-  return 1;
+  തിരികെ 1;
 }
 
 
-static int externKstr (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ externKstr (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
-  lua_pushexternalstring(L, s, len, NULL, NULL);
-  return 1;
+  സ്ഥിരം അക്ഷരം *s = luaL_checklstring(L, 1, &len);
+  lua_pushexternalstring(L, s, len, ശൂന്യ, ശൂന്യ);
+  തിരികെ 1;
 }
 
 
@@ -1466,22 +1466,22 @@ static int externKstr (lua_State *L) {
 ** create an external string using that buffer. Use the allocation
 ** function from Lua to create and free the buffer.
 */
-static int externstr (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ externstr (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
-  void *ud;
+  സ്ഥിരം അക്ഷരം *s = luaL_checklstring(L, 1, &len);
+  ശൂന്യം *ud;
   lua_Alloc allocf = lua_getallocf(L, &ud);  /* get allocation function */
   /* create the buffer */
-  char *buff = cast_charp((*allocf)(ud, NULL, 0, len + 1));
-  if (buff == NULL) {  /* memory error? */
+  അക്ഷരം *buff = cast_charp((*allocf)(ud, ശൂന്യ, 0, len + 1));
+  എങ്കിൽ (buff == ശൂന്യ) {  /* memory error? */
     lua_pushliteral(L, "not enough memory");
     lua_error(L);  /* raise a memory error */
   }
   /* copy string content to buffer, including ending 0 */
-  memcpy(buff, s, (len + 1) * sizeof(char));
+  memcpy(buff, s, (len + 1) * വലുപ്പം(അക്ഷരം));
   /* create external string */
   lua_pushexternalstring(L, buff, len, allocf, ud);
-  return 1;
+  തിരികെ 1;
 }
 
 
@@ -1493,101 +1493,101 @@ static int externstr (lua_State *L) {
 */
 
 
-static void sethookaux (lua_State *L, int mask, int count, const char *code);
+സ്ഥിതം ശൂന്യം sethookaux (lua_State *L, പൂർണ്ണസംഖ്യ mask, പൂർണ്ണസംഖ്യ എണ്ണം, സ്ഥിരം അക്ഷരം *code);
 
-static const char *const delimits = " \t\n,;";
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം delimits = " \t\n,;";
 
-static void skip (const char **pc) {
-  for (;;) {
-    if (**pc != '\0' && strchr(delimits, **pc)) (*pc)++;
-    else if (**pc == '#') {  /* comment? */
-      while (**pc != '\n' && **pc != '\0') (*pc)++;  /* until end-of-line */
+സ്ഥിതം ശൂന്യം skip (സ്ഥിരം അക്ഷരം **pc) {
+  വേണ്ടി (;;) {
+    എങ്കിൽ (**pc != '\0' && strchr(delimits, **pc)) (*pc)++;
+    അല്ലെങ്കിൽ എങ്കിൽ (**pc == '#') {  /* comment? */
+      ആകുമ്പോൾ (**pc != '\n' && **pc != '\0') (*pc)++;  /* until end-of-line */
     }
-    else break;
+    അല്ലെങ്കിൽ നിർത്തുക;
   }
 }
 
-static int getnum_aux (lua_State *L, lua_State *L1, const char **pc) {
-  int res = 0;
-  int sig = 1;
+സ്ഥിതം പൂർണ്ണസംഖ്യ getnum_aux (lua_State *L, lua_State *L1, സ്ഥിരം അക്ഷരം **pc) {
+  പൂർണ്ണസംഖ്യ res = 0;
+  പൂർണ്ണസംഖ്യ sig = 1;
   skip(pc);
-  if (**pc == '.') {
+  എങ്കിൽ (**pc == '.') {
     res = cast_int(lua_tointeger(L1, -1));
-    lua_pop(L1, 1);
+    lua_എടുക്കുക(L1, 1);
     (*pc)++;
-    return res;
+    തിരികെ res;
   }
-  else if (**pc == '*') {
+  അല്ലെങ്കിൽ എങ്കിൽ (**pc == '*') {
     res = lua_gettop(L1);
     (*pc)++;
-    return res;
+    തിരികെ res;
   }
-  else if (**pc == '!') {
+  അല്ലെങ്കിൽ എങ്കിൽ (**pc == '!') {
     (*pc)++;
-    if (**pc == 'G')
+    എങ്കിൽ (**pc == 'G')
       res = LUA_RIDX_GLOBALS;
-    else if (**pc == 'M')
+    അല്ലെങ്കിൽ എങ്കിൽ (**pc == 'M')
       res = LUA_RIDX_MAINTHREAD;
-    else lua_assert(0);
+    അല്ലെങ്കിൽ lua_assert(0);
     (*pc)++;
-    return res;
+    തിരികെ res;
   }
-  else if (**pc == '-') {
+  അല്ലെങ്കിൽ എങ്കിൽ (**pc == '-') {
     sig = -1;
     (*pc)++;
   }
-  if (!lisdigit(cast_uchar(**pc)))
+  എങ്കിൽ (!lisdigit(cast_uchar(**pc)))
     luaL_error(L, "number expected (%s)", *pc);
-  while (lisdigit(cast_uchar(**pc))) res = res*10 + (*(*pc)++) - '0';
-  return sig*res;
+  ആകുമ്പോൾ (lisdigit(cast_uchar(**pc))) res = res*10 + (*(*pc)++) - '0';
+  തിരികെ sig*res;
 }
 
-static const char *getstring_aux (lua_State *L, char *buff, const char **pc) {
-  int i = 0;
+സ്ഥിതം സ്ഥിരം അക്ഷരം *getstring_aux (lua_State *L, അക്ഷരം *buff, സ്ഥിരം അക്ഷരം **pc) {
+  പൂർണ്ണസംഖ്യ i = 0;
   skip(pc);
-  if (**pc == '"' || **pc == '\'') {  /* quoted string? */
-    int quote = *(*pc)++;
-    while (**pc != quote) {
-      if (**pc == '\0') luaL_error(L, "unfinished string in C script");
+  എങ്കിൽ (**pc == '"' || **pc == '\'') {  /* quoted string? */
+    പൂർണ്ണസംഖ്യ quote = *(*pc)++;
+    ആകുമ്പോൾ (**pc != quote) {
+      എങ്കിൽ (**pc == '\0') luaL_error(L, "unfinished string in C script");
       buff[i++] = *(*pc)++;
     }
     (*pc)++;
   }
-  else {
-    while (**pc != '\0' && !strchr(delimits, **pc))
+  അല്ലെങ്കിൽ {
+    ആകുമ്പോൾ (**pc != '\0' && !strchr(delimits, **pc))
       buff[i++] = *(*pc)++;
   }
   buff[i] = '\0';
-  return buff;
+  തിരികെ buff;
 }
 
 
-static int getindex_aux (lua_State *L, lua_State *L1, const char **pc) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ getindex_aux (lua_State *L, lua_State *L1, സ്ഥിരം അക്ഷരം **pc) {
   skip(pc);
-  switch (*(*pc)++) {
-    case 'R': return LUA_REGISTRYINDEX;
-    case 'U': return lua_upvalueindex(getnum_aux(L, L1, pc));
-    default: {
-      int n;
+  തിരഞ്ഞെടുപ്പ് (*(*pc)++) {
+    അവസ്ഥ 'R': തിരികെ LUA_REGISTRYINDEX;
+    അവസ്ഥ 'U': തിരികെ lua_upvalueindex(getnum_aux(L, L1, pc));
+    സ്ഥിരസ്ഥിതി: {
+      പൂർണ്ണസംഖ്യ n;
       (*pc)--;  /* to read again */
       n = getnum_aux(L, L1, pc);
-      if (n == 0) return 0;
-      else return lua_absindex(L1, n);
+      എങ്കിൽ (n == 0) തിരികെ 0;
+      അല്ലെങ്കിൽ തിരികെ lua_absindex(L1, n);
     }
   }
 }
 
 
-static const char *const statcodes[] = {"OK", "YIELD", "ERRRUN",
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം statcodes[] = {"OK", "YIELD", "ERRRUN",
     "ERRSYNTAX", MEMERRMSG, "ERRERR"};
 
 /*
 ** Avoid these stat codes from being collected, to avoid possible
 ** memory error when pushing them.
 */
-static void regcodes (lua_State *L) {
-  unsigned int i;
-  for (i = 0; i < sizeof(statcodes) / sizeof(statcodes[0]); i++) {
+സ്ഥിതം ശൂന്യം regcodes (lua_State *L) {
+  unsigned പൂർണ്ണസംഖ്യ i;
+  വേണ്ടി (i = 0; i < വലുപ്പം(statcodes) / വലുപ്പം(statcodes[0]); i++) {
     lua_pushboolean(L, 1);
     lua_setfield(L, LUA_REGISTRYINDEX, statcodes[i]);
   }
@@ -1601,8 +1601,8 @@ static void regcodes (lua_State *L) {
 #define getindex	(getindex_aux(L, L1, &pc))
 
 
-static int testC (lua_State *L);
-static int Cfunck (lua_State *L, int status, lua_KContext ctx);
+സ്ഥിതം പൂർണ്ണസംഖ്യ testC (lua_State *L);
+സ്ഥിതം പൂർണ്ണസംഖ്യ Cfunck (lua_State *L, പൂർണ്ണസംഖ്യ status, lua_KContext ctx);
 
 /*
 ** arithmetic operation encoding for 'arith' instruction
@@ -1612,451 +1612,451 @@ static int Cfunck (lua_State *L, int status, lua_KContext ctx);
 ** LUA_OPUNM   -> _
 ** LUA_OPBNOT  -> !
 */
-static const char ops[] = "+-*%^/\\&|~<>_!";
+സ്ഥിതം സ്ഥിരം അക്ഷരം ops[] = "+-*%^/\\&|~<>_!";
 
-static int runC (lua_State *L, lua_State *L1, const char *pc) {
-  char buff[300];
-  int status = 0;
-  if (pc == NULL) return luaL_error(L, "attempt to runC null script");
-  for (;;) {
-    const char *inst = getstring;
-    if EQ("") return 0;
-    else if EQ("absindex") {
+സ്ഥിതം പൂർണ്ണസംഖ്യ runC (lua_State *L, lua_State *L1, സ്ഥിരം അക്ഷരം *pc) {
+  അക്ഷരം buff[300];
+  പൂർണ്ണസംഖ്യ status = 0;
+  എങ്കിൽ (pc == ശൂന്യ) തിരികെ luaL_error(L, "attempt to runC null script");
+  വേണ്ടി (;;) {
+    സ്ഥിരം അക്ഷരം *inst = getstring;
+    എങ്കിൽ EQ("") തിരികെ 0;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("absindex") {
       lua_pushinteger(L1, getindex);
     }
-    else if EQ("append") {
-      int t = getindex;
-      int i = cast_int(lua_rawlen(L1, t));
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("append") {
+      പൂർണ്ണസംഖ്യ t = getindex;
+      പൂർണ്ണസംഖ്യ i = cast_int(lua_rawlen(L1, t));
       lua_rawseti(L1, t, i + 1);
     }
-    else if EQ("arith") {
-      int op;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("arith") {
+      പൂർണ്ണസംഖ്യ op;
       skip(&pc);
       op = cast_int(strchr(ops, *pc++) - ops);
       lua_arith(L1, op);
     }
-    else if EQ("call") {
-      int narg = getnum;
-      int nres = getnum;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("call") {
+      പൂർണ്ണസംഖ്യ narg = getnum;
+      പൂർണ്ണസംഖ്യ nres = getnum;
       lua_call(L1, narg, nres);
     }
-    else if EQ("callk") {
-      int narg = getnum;
-      int nres = getnum;
-      int i = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("callk") {
+      പൂർണ്ണസംഖ്യ narg = getnum;
+      പൂർണ്ണസംഖ്യ nres = getnum;
+      പൂർണ്ണസംഖ്യ i = getindex;
       lua_callk(L1, narg, nres, i, Cfunck);
     }
-    else if EQ("checkstack") {
-      int sz = getnum;
-      const char *msg = getstring;
-      if (*msg == '\0')
-        msg = NULL;  /* to test 'luaL_checkstack' with no message */
-      luaL_checkstack(L1, sz, msg);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("checkstack") {
+      പൂർണ്ണസംഖ്യ sz = getnum;
+      സ്ഥിരം അക്ഷരം *സന്ദേശം = getstring;
+      എങ്കിൽ (*സന്ദേശം == '\0')
+        സന്ദേശം = ശൂന്യ;  /* to test 'luaL_checkstack' with no message */
+      luaL_checkstack(L1, sz, സന്ദേശം);
     }
-    else if EQ("rawcheckstack") {
-      int sz = getnum;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawcheckstack") {
+      പൂർണ്ണസംഖ്യ sz = getnum;
       lua_pushboolean(L1, lua_checkstack(L1, sz));
     }
-    else if EQ("compare") {
-      const char *opt = getstring;  /* EQ, LT, or LE */
-      int op = (opt[0] == 'E') ? LUA_OPEQ
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("compare") {
+      സ്ഥിരം അക്ഷരം *opt = getstring;  /* EQ, LT, or LE */
+      പൂർണ്ണസംഖ്യ op = (opt[0] == 'E') ? LUA_OPEQ
                                : (opt[1] == 'T') ? LUA_OPLT : LUA_OPLE;
-      int a = getindex;
-      int b = getindex;
+      പൂർണ്ണസംഖ്യ a = getindex;
+      പൂർണ്ണസംഖ്യ b = getindex;
       lua_pushboolean(L1, lua_compare(L1, a, b, op));
     }
-    else if EQ("concat") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("concat") {
       lua_concat(L1, getnum);
     }
-    else if EQ("copy") {
-      int f = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("copy") {
+      പൂർണ്ണസംഖ്യ f = getindex;
       lua_copy(L1, f, getindex);
     }
-    else if EQ("func2num") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("func2num") {
       lua_CFunction func = lua_tocfunction(L1, getindex);
       lua_pushinteger(L1, cast_st2S(cast_sizet(func)));
     }
-    else if EQ("getfield") {
-      int t = getindex;
-      int tp = lua_getfield(L1, t, getstring);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("getfield") {
+      പൂർണ്ണസംഖ്യ t = getindex;
+      പൂർണ്ണസംഖ്യ tp = lua_getfield(L1, t, getstring);
       lua_assert(tp == lua_type(L1, -1));
     }
-    else if EQ("getglobal") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("getglobal") {
       lua_getglobal(L1, getstring);
     }
-    else if EQ("getmetatable") {
-      if (lua_getmetatable(L1, getindex) == 0)
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("getmetatable") {
+      എങ്കിൽ (lua_getmetatable(L1, getindex) == 0)
         lua_pushnil(L1);
     }
-    else if EQ("gettable") {
-      int tp = lua_gettable(L1, getindex);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("gettable") {
+      പൂർണ്ണസംഖ്യ tp = lua_gettable(L1, getindex);
       lua_assert(tp == lua_type(L1, -1));
     }
-    else if EQ("gettop") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("gettop") {
       lua_pushinteger(L1, lua_gettop(L1));
     }
-    else if EQ("gsub") {
-      int a = getnum; int b = getnum; int c = getnum;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("gsub") {
+      പൂർണ്ണസംഖ്യ a = getnum; പൂർണ്ണസംഖ്യ b = getnum; പൂർണ്ണസംഖ്യ c = getnum;
       luaL_gsub(L1, lua_tostring(L1, a),
                     lua_tostring(L1, b),
                     lua_tostring(L1, c));
     }
-    else if EQ("insert") {
-      lua_insert(L1, getnum);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("insert") {
+      lua_തിരുകുക(L1, getnum);
     }
-    else if EQ("iscfunction") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("iscfunction") {
       lua_pushboolean(L1, lua_iscfunction(L1, getindex));
     }
-    else if EQ("isfunction") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isfunction") {
       lua_pushboolean(L1, lua_isfunction(L1, getindex));
     }
-    else if EQ("isnil") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isnil") {
       lua_pushboolean(L1, lua_isnil(L1, getindex));
     }
-    else if EQ("isnull") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isnull") {
       lua_pushboolean(L1, lua_isnone(L1, getindex));
     }
-    else if EQ("isnumber") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isnumber") {
       lua_pushboolean(L1, lua_isnumber(L1, getindex));
     }
-    else if EQ("isstring") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isstring") {
       lua_pushboolean(L1, lua_isstring(L1, getindex));
     }
-    else if EQ("istable") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("istable") {
       lua_pushboolean(L1, lua_istable(L1, getindex));
     }
-    else if EQ("isudataval") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isudataval") {
       lua_pushboolean(L1, lua_islightuserdata(L1, getindex));
     }
-    else if EQ("isuserdata") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isuserdata") {
       lua_pushboolean(L1, lua_isuserdata(L1, getindex));
     }
-    else if EQ("len") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("len") {
       lua_len(L1, getindex);
     }
-    else if EQ("Llen") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("Llen") {
       lua_pushinteger(L1, luaL_len(L1, getindex));
     }
-    else if EQ("loadfile") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("loadfile") {
       luaL_loadfilex(L1, luaL_checkstring(L1, getnum), "t");
     }
-    else if EQ("loadstring") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("loadstring") {
       size_t slen;
-      const char *s = luaL_checklstring(L1, getnum, &slen);
-      const char *name = getstring;
-      const char *mode = getstring;
+      സ്ഥിരം അക്ഷരം *s = luaL_checklstring(L1, getnum, &slen);
+      സ്ഥിരം അക്ഷരം *name = getstring;
+      സ്ഥിരം അക്ഷരം *mode = getstring;
       luaL_loadbufferx(L1, s, slen, name, mode);
     }
-    else if EQ("newmetatable") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("newmetatable") {
       lua_pushboolean(L1, luaL_newmetatable(L1, getstring));
     }
-    else if EQ("newtable") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("newtable") {
       lua_newtable(L1);
     }
-    else if EQ("newthread") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("newthread") {
       lua_newthread(L1);
     }
-    else if EQ("resetthread") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("resetthread") {
       lua_pushinteger(L1, lua_resetthread(L1));  /* deprecated */
     }
-    else if EQ("newuserdata") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("newuserdata") {
       lua_newuserdata(L1, cast_sizet(getnum));
     }
-    else if EQ("next") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("next") {
       lua_next(L1, -2);
     }
-    else if EQ("objsize") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("objsize") {
       lua_pushinteger(L1, l_castU2S(lua_rawlen(L1, getindex)));
     }
-    else if EQ("pcall") {
-      int narg = getnum;
-      int nres = getnum;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pcall") {
+      പൂർണ്ണസംഖ്യ narg = getnum;
+      പൂർണ്ണസംഖ്യ nres = getnum;
       status = lua_pcall(L1, narg, nres, getnum);
     }
-    else if EQ("pcallk") {
-      int narg = getnum;
-      int nres = getnum;
-      int i = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pcallk") {
+      പൂർണ്ണസംഖ്യ narg = getnum;
+      പൂർണ്ണസംഖ്യ nres = getnum;
+      പൂർണ്ണസംഖ്യ i = getindex;
       status = lua_pcallk(L1, narg, nres, 0, i, Cfunck);
     }
-    else if EQ("pop") {
-      lua_pop(L1, getnum);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pop") {
+      lua_എടുക്കുക(L1, getnum);
     }
-    else if EQ("printstack") {
-      int n = getnum;
-      if (n != 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("printstack") {
+      പൂർണ്ണസംഖ്യ n = getnum;
+      എങ്കിൽ (n != 0) {
         lua_printvalue(s2v(L->ci->func.p + n));
         printf("\n");
       }
-      else lua_printstack(L1);
+      അല്ലെങ്കിൽ lua_printstack(L1);
     }
-    else if EQ("print") {
-      const char *msg = getstring;
-      printf("%s\n", msg);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("print") {
+      സ്ഥിരം അക്ഷരം *സന്ദേശം = getstring;
+      printf("%s\n", സന്ദേശം);
     }
-    else if EQ("warningC") {
-      const char *msg = getstring;
-      lua_warning(L1, msg, 1);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("warningC") {
+      സ്ഥിരം അക്ഷരം *സന്ദേശം = getstring;
+      lua_warning(L1, സന്ദേശം, 1);
     }
-    else if EQ("warning") {
-      const char *msg = getstring;
-      lua_warning(L1, msg, 0);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("warning") {
+      സ്ഥിരം അക്ഷരം *സന്ദേശം = getstring;
+      lua_warning(L1, സന്ദേശം, 0);
     }
-    else if EQ("pushbool") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushbool") {
       lua_pushboolean(L1, getnum);
     }
-    else if EQ("pushcclosure") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushcclosure") {
       lua_pushcclosure(L1, testC, getnum);
     }
-    else if EQ("pushint") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushint") {
       lua_pushinteger(L1, getnum);
     }
-    else if EQ("pushnil") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushnil") {
       lua_pushnil(L1);
     }
-    else if EQ("pushnum") {
-      lua_pushnumber(L1, (lua_Number)getnum);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushnum") {
+      lua_pushnumber(L1, (lua_സംഖ്യ)getnum);
     }
-    else if EQ("pushstatus") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushstatus") {
       lua_pushstring(L1, statcodes[status]);
     }
-    else if EQ("pushstring") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushstring") {
       lua_pushstring(L1, getstring);
     }
-    else if EQ("pushupvalueindex") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushupvalueindex") {
       lua_pushinteger(L1, lua_upvalueindex(getnum));
     }
-    else if EQ("pushvalue") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushvalue") {
       lua_pushvalue(L1, getindex);
     }
-    else if EQ("pushfstringI") {
-      lua_pushfstring(L1, lua_tostring(L, -2), (int)lua_tointeger(L, -1));
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushfstringI") {
+      lua_pushfstring(L1, lua_tostring(L, -2), (പൂർണ്ണസംഖ്യ)lua_tointeger(L, -1));
     }
-    else if EQ("pushfstringS") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushfstringS") {
       lua_pushfstring(L1, lua_tostring(L, -2), lua_tostring(L, -1));
     }
-    else if EQ("pushfstringP") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("pushfstringP") {
       lua_pushfstring(L1, lua_tostring(L, -2), lua_topointer(L, -1));
     }
-    else if EQ("rawget") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawget") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawget(L1, t);
     }
-    else if EQ("rawgeti") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawgeti") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawgeti(L1, t, getnum);
     }
-    else if EQ("rawgetp") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawgetp") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawgetp(L1, t, cast_voidp(cast_sizet(getnum)));
     }
-    else if EQ("rawset") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawset") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawset(L1, t);
     }
-    else if EQ("rawseti") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawseti") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawseti(L1, t, getnum);
     }
-    else if EQ("rawsetp") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rawsetp") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_rawsetp(L1, t, cast_voidp(cast_sizet(getnum)));
     }
-    else if EQ("remove") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("remove") {
       lua_remove(L1, getnum);
     }
-    else if EQ("replace") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("replace") {
       lua_replace(L1, getindex);
     }
-    else if EQ("resume") {
-      int i = getindex;
-      int nres;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("resume") {
+      പൂർണ്ണസംഖ്യ i = getindex;
+      പൂർണ്ണസംഖ്യ nres;
       status = lua_resume(lua_tothread(L1, i), L, getnum, &nres);
     }
-    else if EQ("traceback") {
-      const char *msg = getstring;
-      int level = getnum;
-      luaL_traceback(L1, L1, msg, level);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("traceback") {
+      സ്ഥിരം അക്ഷരം *സന്ദേശം = getstring;
+      പൂർണ്ണസംഖ്യ level = getnum;
+      luaL_traceback(L1, L1, സന്ദേശം, level);
     }
-    else if EQ("threadstatus") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("threadstatus") {
       lua_pushstring(L1, statcodes[lua_status(L1)]);
     }
-    else if EQ("alloccount") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("alloccount") {
       l_memcontrol.countlimit = cast_uint(getnum);
     }
-    else if EQ("return") {
-      int n = getnum;
-      if (L1 != L) {
-        int i;
-        for (i = 0; i < n; i++) {
-          int idx = -(n - i);
-          switch (lua_type(L1, idx)) {
-            case LUA_TBOOLEAN:
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("return") {
+      പൂർണ്ണസംഖ്യ n = getnum;
+      എങ്കിൽ (L1 != L) {
+        പൂർണ്ണസംഖ്യ i;
+        വേണ്ടി (i = 0; i < n; i++) {
+          പൂർണ്ണസംഖ്യ idx = -(n - i);
+          തിരഞ്ഞെടുപ്പ് (lua_type(L1, idx)) {
+            അവസ്ഥ LUA_TBOOLEAN:
               lua_pushboolean(L, lua_toboolean(L1, idx));
-              break;
-            default:
+              നിർത്തുക;
+            സ്ഥിരസ്ഥിതി:
               lua_pushstring(L, lua_tostring(L1, idx));
-              break;
+              നിർത്തുക;
           }
         }
       }
-      return n;
+      തിരികെ n;
     }
-    else if EQ("rotate") {
-      int i = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("rotate") {
+      പൂർണ്ണസംഖ്യ i = getindex;
       lua_rotate(L1, i, getnum);
     }
-    else if EQ("setfield") {
-      int t = getindex;
-      const char *s = getstring;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("setfield") {
+      പൂർണ്ണസംഖ്യ t = getindex;
+      സ്ഥിരം അക്ഷരം *s = getstring;
       lua_setfield(L1, t, s);
     }
-    else if EQ("seti") {
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("seti") {
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_seti(L1, t, getnum);
     }
-    else if EQ("setglobal") {
-      const char *s = getstring;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("setglobal") {
+      സ്ഥിരം അക്ഷരം *s = getstring;
       lua_setglobal(L1, s);
     }
-    else if EQ("sethook") {
-      int mask = getnum;
-      int count = getnum;
-      const char *s = getstring;
-      sethookaux(L1, mask, count, s);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("sethook") {
+      പൂർണ്ണസംഖ്യ mask = getnum;
+      പൂർണ്ണസംഖ്യ എണ്ണം = getnum;
+      സ്ഥിരം അക്ഷരം *s = getstring;
+      sethookaux(L1, mask, എണ്ണം, s);
     }
-    else if EQ("setmetatable") {
-      int idx = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("setmetatable") {
+      പൂർണ്ണസംഖ്യ idx = getindex;
       lua_setmetatable(L1, idx);
     }
-    else if EQ("settable") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("settable") {
       lua_settable(L1, getindex);
     }
-    else if EQ("settop") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("settop") {
       lua_settop(L1, getnum);
     }
-    else if EQ("testudata") {
-      int i = getindex;
-      lua_pushboolean(L1, luaL_testudata(L1, i, getstring) != NULL);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("testudata") {
+      പൂർണ്ണസംഖ്യ i = getindex;
+      lua_pushboolean(L1, luaL_testudata(L1, i, getstring) != ശൂന്യ);
     }
-    else if EQ("error") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("error") {
       lua_error(L1);
     }
-    else if EQ("abort") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("abort") {
       abort();
     }
-    else if EQ("throw") {
-#if defined(__cplusplus)
-static struct X { int x; } x;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("throw") {
+#എങ്കിൽ defined(__cplusplus)
+സ്ഥിതം ഘടന X { പൂർണ്ണസംഖ്യ x; } x;
       throw x;
-#else
+#അല്ലെങ്കിൽ
       luaL_error(L1, "C++");
 #endif
-      break;
+      നിർത്തുക;
     }
-    else if EQ("tobool") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("tobool") {
       lua_pushboolean(L1, lua_toboolean(L1, getindex));
     }
-    else if EQ("tocfunction") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("tocfunction") {
       lua_pushcfunction(L1, lua_tocfunction(L1, getindex));
     }
-    else if EQ("tointeger") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("tointeger") {
       lua_pushinteger(L1, lua_tointeger(L1, getindex));
     }
-    else if EQ("tonumber") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("tonumber") {
       lua_pushnumber(L1, lua_tonumber(L1, getindex));
     }
-    else if EQ("topointer") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("topointer") {
       lua_pushlightuserdata(L1, cast_voidp(lua_topointer(L1, getindex)));
     }
-    else if EQ("touserdata") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("touserdata") {
       lua_pushlightuserdata(L1, lua_touserdata(L1, getindex));
     }
-    else if EQ("tostring") {
-      const char *s = lua_tostring(L1, getindex);
-      const char *s1 = lua_pushstring(L1, s);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("tostring") {
+      സ്ഥിരം അക്ഷരം *s = lua_tostring(L1, getindex);
+      സ്ഥിരം അക്ഷരം *s1 = lua_pushstring(L1, s);
       cast_void(s1);  /* to avoid warnings */
-      lua_longassert((s == NULL && s1 == NULL) || strcmp(s, s1) == 0);
+      lua_longassert((s == ശൂന്യ && s1 == ശൂന്യ) || strcmp(s, s1) == 0);
     }
-    else if EQ("Ltolstring") {
-      luaL_tolstring(L1, getindex, NULL);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("Ltolstring") {
+      luaL_tolstring(L1, getindex, ശൂന്യ);
     }
-    else if EQ("type") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("type") {
       lua_pushstring(L1, luaL_typename(L1, getnum));
     }
-    else if EQ("xmove") {
-      int f = getindex;
-      int t = getindex;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("xmove") {
+      പൂർണ്ണസംഖ്യ f = getindex;
+      പൂർണ്ണസംഖ്യ t = getindex;
       lua_State *fs = (f == 0) ? L1 : lua_tothread(L1, f);
       lua_State *ts = (t == 0) ? L1 : lua_tothread(L1, t);
-      int n = getnum;
-      if (n == 0) n = lua_gettop(fs);
+      പൂർണ്ണസംഖ്യ n = getnum;
+      എങ്കിൽ (n == 0) n = lua_gettop(fs);
       lua_xmove(fs, ts, n);
     }
-    else if EQ("isyieldable") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("isyieldable") {
       lua_pushboolean(L1, lua_isyieldable(lua_tothread(L1, getindex)));
     }
-    else if EQ("yield") {
-      return lua_yield(L1, getnum);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("yield") {
+      തിരികെ lua_yield(L1, getnum);
     }
-    else if EQ("yieldk") {
-      int nres = getnum;
-      int i = getindex;
-      return lua_yieldk(L1, nres, i, Cfunck);
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("yieldk") {
+      പൂർണ്ണസംഖ്യ nres = getnum;
+      പൂർണ്ണസംഖ്യ i = getindex;
+      തിരികെ lua_yieldk(L1, nres, i, Cfunck);
     }
-    else if EQ("toclose") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("toclose") {
       lua_toclose(L1, getnum);
     }
-    else if EQ("closeslot") {
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("closeslot") {
       lua_closeslot(L1, getnum);
     }
-    else if EQ("argerror") {
-      int arg = getnum;
+    അല്ലെങ്കിൽ എങ്കിൽ EQ("argerror") {
+      പൂർണ്ണസംഖ്യ arg = getnum;
       luaL_argerror(L1, arg, getstring);
     }
-    else luaL_error(L, "unknown instruction %s", buff);
+    അല്ലെങ്കിൽ luaL_error(L, "unknown instruction %s", buff);
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int testC (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ testC (lua_State *L) {
   lua_State *L1;
-  const char *pc;
-  if (lua_isuserdata(L, 1)) {
+  സ്ഥിരം അക്ഷരം *pc;
+  എങ്കിൽ (lua_isuserdata(L, 1)) {
     L1 = getstate(L);
     pc = luaL_checkstring(L, 2);
   }
-  else if (lua_isthread(L, 1)) {
+  അല്ലെങ്കിൽ എങ്കിൽ (lua_isthread(L, 1)) {
     L1 = lua_tothread(L, 1);
     pc = luaL_checkstring(L, 2);
   }
-  else {
+  അല്ലെങ്കിൽ {
     L1 = L;
     pc = luaL_checkstring(L, 1);
   }
-  return runC(L, L1, pc);
+  തിരികെ runC(L, L1, pc);
 }
 
 
-static int Cfunc (lua_State *L) {
-  return runC(L, L, lua_tostring(L, lua_upvalueindex(1)));
+സ്ഥിതം പൂർണ്ണസംഖ്യ Cfunc (lua_State *L) {
+  തിരികെ runC(L, L, lua_tostring(L, lua_upvalueindex(1)));
 }
 
 
-static int Cfunck (lua_State *L, int status, lua_KContext ctx) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ Cfunck (lua_State *L, പൂർണ്ണസംഖ്യ status, lua_KContext ctx) {
   lua_pushstring(L, statcodes[status]);
   lua_setglobal(L, "status");
   lua_pushinteger(L, cast_Integer(ctx));
   lua_setglobal(L, "ctx");
-  return runC(L, L, lua_tostring(L, cast_int(ctx)));
+  തിരികെ runC(L, L, lua_tostring(L, cast_int(ctx)));
 }
 
 
-static int makeCfunc (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ makeCfunc (lua_State *L) {
   luaL_checkstring(L, 1);
   lua_pushcclosure(L, Cfunc, lua_gettop(L));
-  return 1;
+  തിരികെ 1;
 }
 
 
@@ -2072,14 +2072,14 @@ static int makeCfunc (lua_State *L) {
 /*
 ** C hook that runs the C script stored in registry.C_HOOK[L]
 */
-static void Chook (lua_State *L, lua_Debug *ar) {
-  const char *scpt;
-  const char *const events [] = {"call", "ret", "line", "count", "tailcall"};
+സ്ഥിതം ശൂന്യം Chook (lua_State *L, lua_Debug *ar) {
+  സ്ഥിരം അക്ഷരം *scpt;
+  സ്ഥിരം അക്ഷരം *സ്ഥിരം events [] = {"call", "ret", "line", "count", "tailcall"};
   lua_getfield(L, LUA_REGISTRYINDEX, "C_HOOK");
   lua_pushlightuserdata(L, L);
   lua_gettable(L, -2);  /* get C_HOOK[L] (script saved by sethookaux) */
   scpt = lua_tostring(L, -1);  /* not very religious (string will be popped) */
-  lua_pop(L, 2);  /* remove C_HOOK and script */
+  lua_എടുക്കുക(L, 2);  /* remove C_HOOK and script */
   lua_pushstring(L, events[ar->event]);  /* may be used by script */
   lua_pushinteger(L, ar->currentline);  /* may be used by script */
   runC(L, L, scpt);  /* run script from C_HOOK[L] */
@@ -2089,14 +2089,14 @@ static void Chook (lua_State *L, lua_Debug *ar) {
 /*
 ** sets 'registry.C_HOOK[L] = scpt' and sets 'Chook' as a hook
 */
-static void sethookaux (lua_State *L, int mask, int count, const char *scpt) {
-  if (*scpt == '\0') {  /* no script? */
-    lua_sethook(L, NULL, 0, 0);  /* turn off hooks */
-    return;
+സ്ഥിതം ശൂന്യം sethookaux (lua_State *L, പൂർണ്ണസംഖ്യ mask, പൂർണ്ണസംഖ്യ എണ്ണം, സ്ഥിരം അക്ഷരം *scpt) {
+  എങ്കിൽ (*scpt == '\0') {  /* no script? */
+    lua_sethook(L, ശൂന്യ, 0, 0);  /* turn off hooks */
+    തിരികെ;
   }
   lua_getfield(L, LUA_REGISTRYINDEX, "C_HOOK");  /* get C_HOOK table */
-  if (!lua_istable(L, -1)) {  /* no hook table? */
-    lua_pop(L, 1);  /* remove previous value */
+  എങ്കിൽ (!lua_istable(L, -1)) {  /* no hook table? */
+    lua_എടുക്കുക(L, 1);  /* remove previous value */
     lua_newtable(L);  /* create new C_HOOK table */
     lua_pushvalue(L, -1);
     lua_setfield(L, LUA_REGISTRYINDEX, "C_HOOK");  /* register it */
@@ -2104,60 +2104,60 @@ static void sethookaux (lua_State *L, int mask, int count, const char *scpt) {
   lua_pushlightuserdata(L, L);
   lua_pushstring(L, scpt);
   lua_settable(L, -3);  /* C_HOOK[L] = script */
-  lua_sethook(L, Chook, mask, count);
+  lua_sethook(L, Chook, mask, എണ്ണം);
 }
 
 
-static int sethook (lua_State *L) {
-  if (lua_isnoneornil(L, 1))
-    lua_sethook(L, NULL, 0, 0);  /* turn off hooks */
-  else {
-    const char *scpt = luaL_checkstring(L, 1);
-    const char *smask = luaL_checkstring(L, 2);
-    int count = cast_int(luaL_optinteger(L, 3, 0));
-    int mask = 0;
-    if (strchr(smask, 'c')) mask |= LUA_MASKCALL;
-    if (strchr(smask, 'r')) mask |= LUA_MASKRET;
-    if (strchr(smask, 'l')) mask |= LUA_MASKLINE;
-    if (count > 0) mask |= LUA_MASKCOUNT;
-    sethookaux(L, mask, count, scpt);
+സ്ഥിതം പൂർണ്ണസംഖ്യ sethook (lua_State *L) {
+  എങ്കിൽ (lua_isnoneornil(L, 1))
+    lua_sethook(L, ശൂന്യ, 0, 0);  /* turn off hooks */
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം അക്ഷരം *scpt = luaL_checkstring(L, 1);
+    സ്ഥിരം അക്ഷരം *smask = luaL_checkstring(L, 2);
+    പൂർണ്ണസംഖ്യ എണ്ണം = cast_int(luaL_optinteger(L, 3, 0));
+    പൂർണ്ണസംഖ്യ mask = 0;
+    എങ്കിൽ (strchr(smask, 'c')) mask |= LUA_MASKCALL;
+    എങ്കിൽ (strchr(smask, 'r')) mask |= LUA_MASKRET;
+    എങ്കിൽ (strchr(smask, 'l')) mask |= LUA_MASKLINE;
+    എങ്കിൽ (എണ്ണം > 0) mask |= LUA_MASKCOUNT;
+    sethookaux(L, mask, എണ്ണം, scpt);
   }
-  return 0;
+  തിരികെ 0;
 }
 
 
-static int coresume (lua_State *L) {
-  int status, nres;
+സ്ഥിതം പൂർണ്ണസംഖ്യ coresume (lua_State *L) {
+  പൂർണ്ണസംഖ്യ status, nres;
   lua_State *co = lua_tothread(L, 1);
   luaL_argcheck(L, co, 1, "coroutine expected");
   status = lua_resume(co, L, 0, &nres);
-  if (status != LUA_OK && status != LUA_YIELD) {
+  എങ്കിൽ (status != LUA_OK && status != LUA_YIELD) {
     lua_pushboolean(L, 0);
-    lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    lua_തിരുകുക(L, -2);
+    തിരികെ 2;  /* return false + error message */
   }
-  else {
+  അല്ലെങ്കിൽ {
     lua_pushboolean(L, 1);
-    return 1;
+    തിരികെ 1;
   }
 }
 
-#if !defined(LUA_USE_POSIX)
+#എങ്കിൽ !defined(LUA_USE_POSIX)
 
-#define nonblock	NULL
+#define nonblock	ശൂന്യ
 
-#else
+#അല്ലെങ്കിൽ
 
-#include <unistd.h>
-#include <fcntl.h>
+#അന്തര്ഭാവ <unistd.h>
+#അന്തര്ഭാവ <fcntl.h>
 
-static int nonblock (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ nonblock (lua_State *L) {
   FILE *f = cast(luaL_Stream*, luaL_checkudata(L, 1, LUA_FILEHANDLE))->f;
-  int fd = fileno(f);
-  int flags = fcntl(fd, F_GETFL, 0);
+  പൂർണ്ണസംഖ്യ fd = fileno(f);
+  പൂർണ്ണസംഖ്യ flags = fcntl(fd, F_GETFL, 0);
   flags |= O_NONBLOCK;
   fcntl(fd, F_SETFL, flags);
-  return 0;
+  തിരികെ 0;
 }
 #endif
 
@@ -2165,7 +2165,7 @@ static int nonblock (lua_State *L) {
 
 
 
-static const struct luaL_Reg tests_funcs[] = {
+സ്ഥിതം സ്ഥിരം ഘടന luaL_Reg tests_funcs[] = {
   {"checkmemory", lua_checkmemory},
   {"closestate", closestate},
   {"d2s", d2s},
@@ -2209,7 +2209,7 @@ static const struct luaL_Reg tests_funcs[] = {
   {"testC", testC},
   {"makeCfunc", makeCfunc},
   {"totalmem", mem_query},
-  {"alloccount", alloc_count},
+  {"alloccount", alloc_എണ്ണം},
   {"allocfailnext", alloc_failnext},
   {"trick", settrick},
   {"udataval", udataval},
@@ -2218,18 +2218,18 @@ static const struct luaL_Reg tests_funcs[] = {
   {"externKstr", externKstr},
   {"externstr", externstr},
   {"nonblock", nonblock},
-  {NULL, NULL}
+  {ശൂന്യ, ശൂന്യ}
 };
 
 
-static void checkfinalmem (void) {
+സ്ഥിതം ശൂന്യം checkfinalmem (ശൂന്യം) {
   lua_assert(l_memcontrol.numblocks == 0);
   lua_assert(l_memcontrol.total == 0);
 }
 
 
-int luaB_opentests (lua_State *L) {
-  void *ud;
+പൂർണ്ണസംഖ്യ luaB_opentests (lua_State *L) {
+  ശൂന്യം *ud;
   lua_Alloc f = lua_getallocf(L, &ud);
   lua_atpanic(L, &tpanic);
   lua_setwarnf(L, &warnf, L);
@@ -2240,7 +2240,7 @@ int luaB_opentests (lua_State *L) {
   lua_assert(f == debug_realloc && ud == cast_voidp(&l_memcontrol));
   lua_setallocf(L, f, ud);  /* exercise this function */
   luaL_newlib(L, tests_funcs);
-  return 1;
+  തിരികെ 1;
 }
 
 #endif

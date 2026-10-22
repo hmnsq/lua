@@ -7,29 +7,29 @@
 #define ldump_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include <limits.h>
-#include <stddef.h>
+#അന്തര്ഭാവ <limits.h>
+#അന്തര്ഭാവ <stddef.h>
 
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
-#include "lapi.h"
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "ltable.h"
-#include "lundump.h"
+#അന്തര്ഭാവ "lapi.h"
+#അന്തര്ഭാവ "lgc.h"
+#അന്തര്ഭാവ "lobject.h"
+#അന്തര്ഭാവ "lstate.h"
+#അന്തര്ഭാവ "ltable.h"
+#അന്തര്ഭാവ "lundump.h"
 
 
-typedef struct {
+തരനിർവചനം ഘടന {
   lua_State *L;
   lua_Writer writer;
-  void *data;
+  ശൂന്യം *data;
   size_t offset;  /* current position relative to beginning of dump */
-  int strip;
-  int status;
+  പൂർണ്ണസംഖ്യ strip;
+  പൂർണ്ണസംഖ്യ status;
   Table *h;  /* table to track saved strings */
   lua_Unsigned nstr;  /* counter for counting saved strings */
 } DumpState;
@@ -39,9 +39,9 @@ typedef struct {
 ** All high-level dumps go through dumpVector; you can change it to
 ** change the endianness of the result
 */
-#define dumpVector(D,v,n)	dumpBlock(D,v,(n)*sizeof((v)[0]))
+#define dumpVector(D,v,n)	dumpBlock(D,v,(n)*വലുപ്പം((v)[0]))
 
-#define dumpLiteral(D, s)	dumpBlock(D,s,sizeof(s) - sizeof(char))
+#define dumpLiteral(D, s)	dumpBlock(D,s,വലുപ്പം(s) - വലുപ്പം(അക്ഷരം))
 
 
 /*
@@ -49,8 +49,8 @@ typedef struct {
 ** 'b' should not be NULL, except for the last call signaling the end
 ** of the dump.
 */
-static void dumpBlock (DumpState *D, const void *b, size_t size) {
-  if (D->status == 0) {  /* do not write anything after an error */
+സ്ഥിതം ശൂന്യം dumpBlock (DumpState *D, സ്ഥിരം ശൂന്യം *b, size_t size) {
+  എങ്കിൽ (D->status == 0) {  /* do not write anything after an error */
     lua_unlock(D->L);
     D->status = (*D->writer)(D->L, b, size, D->data);
     lua_lock(D->L);
@@ -63,11 +63,11 @@ static void dumpBlock (DumpState *D, const void *b, size_t size) {
 ** Dump enough zeros to ensure that current position is a multiple of
 ** 'align'.
 */
-static void dumpAlign (DumpState *D, unsigned align) {
+സ്ഥിതം ശൂന്യം dumpAlign (DumpState *D, unsigned align) {
   unsigned padding = align - cast_uint(D->offset % align);
-  if (padding < align) {  /* padding == align means no padding */
-    static lua_Integer paddingContent = 0;
-    lua_assert(align <= sizeof(lua_Integer));
+  എങ്കിൽ (padding < align) {  /* padding == align means no padding */
+    സ്ഥിതം lua_Integer paddingContent = 0;
+    lua_assert(align <= വലുപ്പം(lua_Integer));
     dumpBlock(D, &paddingContent, padding);
   }
   lua_assert(D->offset % align == 0);
@@ -77,7 +77,7 @@ static void dumpAlign (DumpState *D, unsigned align) {
 #define dumpVar(D,x)		dumpVector(D,&x,1)
 
 
-static void dumpByte (DumpState *D, int y) {
+സ്ഥിതം ശൂന്യം dumpByte (DumpState *D, പൂർണ്ണസംഖ്യ y) {
   lu_byte x = (lu_byte)y;
   dumpVar(D, x);
 }
@@ -92,28 +92,28 @@ static void dumpByte (DumpState *D, int y) {
 /*
 ** Dumps an unsigned integer using the MSB Varint encoding
 */
-static void dumpVarint (DumpState *D, lua_Unsigned x) {
+സ്ഥിതം ശൂന്യം dumpVarint (DumpState *D, lua_Unsigned x) {
   lu_byte buff[DIBS];
   unsigned n = 1;
   buff[DIBS - 1] = x & 0x7f;  /* fill least-significant byte */
-  while ((x >>= 7) != 0)  /* fill other bytes in reverse order */
+  ആകുമ്പോൾ ((x >>= 7) != 0)  /* fill other bytes in reverse order */
     buff[DIBS - (++n)] = cast_byte((x & 0x7f) | 0x80);
   dumpVector(D, buff + DIBS - n, n);
 }
 
 
-static void dumpSize (DumpState *D, size_t sz) {
+സ്ഥിതം ശൂന്യം dumpSize (DumpState *D, size_t sz) {
   dumpVarint(D, cast(lua_Unsigned, sz));
 }
 
 
-static void dumpInt (DumpState *D, int x) {
+സ്ഥിതം ശൂന്യം dumpInt (DumpState *D, പൂർണ്ണസംഖ്യ x) {
   lua_assert(x >= 0);
   dumpVarint(D, cast_uint(x));
 }
 
 
-static void dumpNumber (DumpState *D, lua_Number x) {
+സ്ഥിതം ശൂന്യം dump_സംഖ്യ (DumpState *D, lua_സംഖ്യ x) {
   dumpVar(D, x);
 }
 
@@ -124,7 +124,7 @@ static void dumpNumber (DumpState *D, lua_Number x) {
 ** A non-negative x is coded as 2x; a negative x is coded as -2x - 1.
 ** (0 => 0; -1 => 1; 1 => 2; -2 => 3; 2 => 4; ...)
 */
-static void dumpInteger (DumpState *D, lua_Integer x) {
+സ്ഥിതം ശൂന്യം dumpInteger (DumpState *D, lua_Integer x) {
   lua_Unsigned cx = (x >= 0) ? 2u * l_castS2U(x)
                              : (2u * ~l_castS2U(x)) + 1;
   dumpVarint(D, cx);
@@ -140,83 +140,83 @@ static void dumpInteger (DumpState *D, lua_Integer x) {
 ** The real size does not include the ending '\0' (which is not dumped),
 ** so adding 1 to it cannot overflow a size_t.
 */
-static void dumpString (DumpState *D, TString *ts) {
-  if (ts == NULL) {
+സ്ഥിതം ശൂന്യം dumpString (DumpState *D, TString *ts) {
+  എങ്കിൽ (ts == ശൂന്യ) {
     dumpVarint(D, 0);  /* will "reuse" NULL */
     dumpVarint(D, 0);  /* special index for NULL */
   }
-  else {
+  അല്ലെങ്കിൽ {
     TValue idx;
-    int tag = luaH_getstr(D->h, ts, &idx);
-    if (!tagisempty(tag)) {  /* string already saved? */
+    പൂർണ്ണസംഖ്യ tag = luaH_getstr(D->h, ts, &idx);
+    എങ്കിൽ (!tagisempty(tag)) {  /* string already saved? */
       dumpVarint(D, 0);  /* reuse a saved string */
       dumpVarint(D, l_castS2U(ivalue(&idx)));  /* index of saved string */
     }
-    else {  /* must write and save the string */
-      TValue key, value;  /* to save the string in the hash */
+    അല്ലെങ്കിൽ {  /* must write and save the string */
+      TValue താക്കോൽ, മൂല്യം;  /* to save the string in the hash */
       size_t size;
-      const char *s = getlstr(ts, size);
+      സ്ഥിരം അക്ഷരം *s = getlstr(ts, size);
       dumpSize(D, size + 1);
       dumpVector(D, s, size + 1);  /* include ending '\0' */
       D->nstr++;  /* one more saved string */
-      setsvalue(D->L, &key, ts);  /* the string is the key */
-      setivalue(&value, l_castU2S(D->nstr));  /* its index is the value */
-      luaH_set(D->L, D->h, &key, &value);  /* h[ts] = nstr */
+      setsvalue(D->L, &താക്കോൽ, ts);  /* the string is the key */
+      setivalue(&മൂല്യം, l_castU2S(D->nstr));  /* its index is the value */
+      luaH_set(D->L, D->h, &താക്കോൽ, &മൂല്യം);  /* h[ts] = nstr */
       /* integer value does not need barrier */
     }
   }
 }
 
 
-static void dumpCode (DumpState *D, const Proto *f) {
+സ്ഥിതം ശൂന്യം dumpCode (DumpState *D, സ്ഥിരം Proto *f) {
   dumpInt(D, f->sizecode);
-  dumpAlign(D, sizeof(f->code[0]));
-  lua_assert(f->code != NULL);
+  dumpAlign(D, വലുപ്പം(f->code[0]));
+  lua_assert(f->code != ശൂന്യ);
   dumpVector(D, f->code, cast_uint(f->sizecode));
 }
 
 
-static void dumpFunction (DumpState *D, const Proto *f);
+സ്ഥിതം ശൂന്യം dumpFunction (DumpState *D, സ്ഥിരം Proto *f);
 
-static void dumpConstants (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizek;
+സ്ഥിതം ശൂന്യം dumpConstants (DumpState *D, സ്ഥിരം Proto *f) {
+  പൂർണ്ണസംഖ്യ i;
+  പൂർണ്ണസംഖ്യ n = f->sizek;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
-    const TValue *o = &f->k[i];
-    int tt = ttypetag(o);
+  വേണ്ടി (i = 0; i < n; i++) {
+    സ്ഥിരം TValue *o = &f->k[i];
+    പൂർണ്ണസംഖ്യ tt = ttypetag(o);
     dumpByte(D, tt);
-    switch (tt) {
-      case LUA_VNUMFLT:
-        dumpNumber(D, fltvalue(o));
-        break;
-      case LUA_VNUMINT:
+    തിരഞ്ഞെടുപ്പ് (tt) {
+      അവസ്ഥ LUA_VNUMFLT:
+        dump_സംഖ്യ(D, fltvalue(o));
+        നിർത്തുക;
+      അവസ്ഥ LUA_VNUMINT:
         dumpInteger(D, ivalue(o));
-        break;
-      case LUA_VSHRSTR:
-      case LUA_VLNGSTR:
+        നിർത്തുക;
+      അവസ്ഥ LUA_VSHRSTR:
+      അവസ്ഥ LUA_VLNGSTR:
         dumpString(D, tsvalue(o));
-        break;
-      default:
+        നിർത്തുക;
+      സ്ഥിരസ്ഥിതി:
         lua_assert(tt == LUA_VNIL || tt == LUA_VFALSE || tt == LUA_VTRUE);
     }
   }
 }
 
 
-static void dumpProtos (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizep;
+സ്ഥിതം ശൂന്യം dumpProtos (DumpState *D, സ്ഥിരം Proto *f) {
+  പൂർണ്ണസംഖ്യ i;
+  പൂർണ്ണസംഖ്യ n = f->sizep;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  വേണ്ടി (i = 0; i < n; i++)
     dumpFunction(D, f->p[i]);
 }
 
 
-static void dumpUpvalues (DumpState *D, const Proto *f) {
-  int i, n = f->sizeupvalues;
+സ്ഥിതം ശൂന്യം dumpUpvalues (DumpState *D, സ്ഥിരം Proto *f) {
+  പൂർണ്ണസംഖ്യ i, n = f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  വേണ്ടി (i = 0; i < n; i++) {
     dumpByte(D, f->upvalues[i].instack);
     dumpByte(D, f->upvalues[i].idx);
     dumpByte(D, f->upvalues[i].kind);
@@ -224,34 +224,34 @@ static void dumpUpvalues (DumpState *D, const Proto *f) {
 }
 
 
-static void dumpDebug (DumpState *D, const Proto *f) {
-  int i, n;
+സ്ഥിതം ശൂന്യം dumpDebug (DumpState *D, സ്ഥിരം Proto *f) {
+  പൂർണ്ണസംഖ്യ i, n;
   n = (D->strip) ? 0 : f->sizelineinfo;
   dumpInt(D, n);
-  if (f->lineinfo != NULL)
+  എങ്കിൽ (f->lineinfo != ശൂന്യ)
     dumpVector(D, f->lineinfo, cast_uint(n));
   n = (D->strip) ? 0 : f->sizeabslineinfo;
   dumpInt(D, n);
-  if (n > 0) {
+  എങ്കിൽ (n > 0) {
     /* 'abslineinfo' is an array of structures of int's */
-    dumpAlign(D, sizeof(int));
+    dumpAlign(D, വലുപ്പം(പൂർണ്ണസംഖ്യ));
     dumpVector(D, f->abslineinfo, cast_uint(n));
   }
   n = (D->strip) ? 0 : f->sizelocvars;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  വേണ്ടി (i = 0; i < n; i++) {
     dumpString(D, f->locvars[i].varname);
     dumpInt(D, f->locvars[i].startpc);
     dumpInt(D, f->locvars[i].endpc);
   }
   n = (D->strip) ? 0 : f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  വേണ്ടി (i = 0; i < n; i++)
     dumpString(D, f->upvalues[i].name);
 }
 
 
-static void dumpFunction (DumpState *D, const Proto *f) {
+സ്ഥിതം ശൂന്യം dumpFunction (DumpState *D, സ്ഥിരം Proto *f) {
   dumpInt(D, f->linedefined);
   dumpInt(D, f->lastlinedefined);
   dumpByte(D, f->numparams);
@@ -261,36 +261,36 @@ static void dumpFunction (DumpState *D, const Proto *f) {
   dumpConstants(D, f);
   dumpUpvalues(D, f);
   dumpProtos(D, f);
-  dumpString(D, D->strip ? NULL : f->source);
+  dumpString(D, D->strip ? ശൂന്യ : f->source);
   dumpDebug(D, f);
 }
 
 
-#define dumpNumInfo(D, tvar, value)  \
-  { tvar i = value; dumpByte(D, sizeof(tvar)); dumpVar(D, i); }
+#define dump_അക്കം_Info(D, tvar, മൂല്യം)  \
+  { tvar i = മൂല്യം; dumpByte(D, വലുപ്പം(tvar)); dumpVar(D, i); }
 
 
-static void dumpHeader (DumpState *D) {
+സ്ഥിതം ശൂന്യം dumpHeader (DumpState *D) {
   dumpLiteral(D, LUA_SIGNATURE);
   dumpByte(D, LUAC_VERSION);
   dumpByte(D, LUAC_FORMAT);
   dumpLiteral(D, LUAC_DATA);
-  dumpNumInfo(D, int, LUAC_INT);
-  dumpNumInfo(D, Instruction, LUAC_INST);
-  dumpNumInfo(D, lua_Integer, LUAC_INT);
-  dumpNumInfo(D, lua_Number, LUAC_NUM);
+  dump_അക്കം_Info(D, പൂർണ്ണസംഖ്യ, LUAC_INT);
+  dump_അക്കം_Info(D, Instruction, LUAC_INST);
+  dump_അക്കം_Info(D, lua_Integer, LUAC_INT);
+  dump_അക്കം_Info(D, lua_സംഖ്യ, LUAC_അക്കം);
 }
 
 
 /*
 ** dump Lua function as precompiled chunk
 */
-int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
-               int strip) {
+പൂർണ്ണസംഖ്യ luaU_dump (lua_State *L, സ്ഥിരം Proto *f, lua_Writer w, ശൂന്യം *data,
+               പൂർണ്ണസംഖ്യ strip) {
   DumpState D;
   D.h = luaH_new(L);  /* aux. table to keep strings already dumped */
-  sethvalue2s(L, L->top.p, D.h);  /* anchor it */
-  L->top.p++;
+  sethvalue2s(L, L->മുകൾ.p, D.h);  /* anchor it */
+  L->മുകൾ.p++;
   D.L = L;
   D.writer = w;
   D.offset = 0;
@@ -301,7 +301,7 @@ int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
   dumpHeader(&D);
   dumpByte(&D, f->sizeupvalues);
   dumpFunction(&D, f);
-  dumpBlock(&D, NULL, 0);  /* signal end of dump */
-  return D.status;
+  dumpBlock(&D, ശൂന്യ, 0);  /* signal end of dump */
+  തിരികെ D.status;
 }
 

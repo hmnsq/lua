@@ -7,31 +7,31 @@
 #define ldo_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include <setjmp.h>
-#include <stdlib.h>
-#include <string.h>
+#അന്തര്ഭാവ <setjmp.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lundump.h"
-#include "lvm.h"
-#include "lzio.h"
+#അന്തര്ഭാവ "lapi.h"
+#അന്തര്ഭാവ "ldebug.h"
+#അന്തര്ഭാവ "ldo.h"
+#അന്തര്ഭാവ "lfunc.h"
+#അന്തര്ഭാവ "lgc.h"
+#അന്തര്ഭാവ "lmem.h"
+#അന്തര്ഭാവ "lobject.h"
+#അന്തര്ഭാവ "lopcodes.h"
+#അന്തര്ഭാവ "lparser.h"
+#അന്തര്ഭാവ "lstate.h"
+#അന്തര്ഭാവ "lstring.h"
+#അന്തര്ഭാവ "ltable.h"
+#അന്തര്ഭാവ "ltm.h"
+#അന്തര്ഭാവ "lundump.h"
+#അന്തര്ഭാവ "lvm.h"
+#അന്തര്ഭാവ "lzio.h"
 
 
 
@@ -42,12 +42,12 @@
 ** these macros allow user-specific actions when a thread is
 ** resumed/yielded.
 */
-#if !defined(luai_userstateresume)
-#define luai_userstateresume(L,n)	((void)L)
+#എങ്കിൽ !defined(luai_userstateresume)
+#define luai_userstateresume(L,n)	((ശൂന്യം)L)
 #endif
 
-#if !defined(luai_userstateyield)
-#define luai_userstateyield(L,n)	((void)L)
+#എങ്കിൽ !defined(luai_userstateyield)
+#define luai_userstateyield(L,n)	((ശൂന്യം)L)
 #endif
 
 
@@ -58,10 +58,10 @@
 */
 
 /* chained list of long jump buffers */
-typedef struct lua_longjmp {
-  struct lua_longjmp *previous;
+തരനിർവചനം ഘടന lua_longjmp {
+  ഘടന lua_longjmp *previous;
   jmp_buf b;
-  volatile TStatus status;  /* error code */
+  അസ്ഥിര TStatus status;  /* error code */
 } lua_longjmp;
 
 
@@ -71,19 +71,19 @@ typedef struct lua_longjmp {
 ** C++ code, with _longjmp/_setjmp when available (POSIX), and with
 ** longjmp/setjmp otherwise.
 */
-#if !defined(LUAI_THROW)				/* { */
+#എങ്കിൽ !defined(LUAI_THROW)				/* { */
 
-#if defined(__cplusplus) && !defined(LUA_USE_LONGJMP)	/* { */
+#എങ്കിൽ defined(__cplusplus) && !defined(LUA_USE_LONGJMP)	/* { */
 
 /* C++ exceptions */
 #define LUAI_THROW(L,c)		throw(c)
 
-static void LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, void *ud) {
+സ്ഥിതം ശൂന്യം LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, ശൂന്യം *ud) {
   try {
     f(L, ud);  /* call function protected */
   }
   catch (lua_longjmp *c1) { /* Lua error */
-    if (c1 != c)  /* not the correct level? */
+    എങ്കിൽ (c1 != c)  /* not the correct level? */
       throw;  /* rethrow to upper level */
   }
   catch (...) {  /* non-Lua exception */
@@ -92,52 +92,52 @@ static void LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, void *ud) {
 }
 
 
-#elif defined(LUA_USE_POSIX)				/* }{ */
+#അല്ലെങ്കിലെങ്കിൽ defined(LUA_USE_POSIX)				/* }{ */
 
 /* in POSIX, use _longjmp/_setjmp (more efficient) */
 #define LUAI_THROW(L,c)		_longjmp((c)->b, 1)
-#define LUAI_TRY(L,c,f,ud)	if (_setjmp((c)->b) == 0) ((f)(L, ud))
+#define LUAI_TRY(L,c,f,ud)	എങ്കിൽ (_setjmp((c)->b) == 0) ((f)(L, ud))
 
-#else							/* }{ */
+#അല്ലെങ്കിൽ							/* }{ */
 
 /* ISO C handling with long jumps */
 #define LUAI_THROW(L,c)		longjmp((c)->b, 1)
-#define LUAI_TRY(L,c,f,ud)	if (setjmp((c)->b) == 0) ((f)(L, ud))
+#define LUAI_TRY(L,c,f,ud)	എങ്കിൽ (setjmp((c)->b) == 0) ((f)(L, ud))
 
 #endif							/* } */
 
 #endif							/* } */
 
 
-void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop) {
-  if (errcode == LUA_ERRMEM) {  /* memory error? */
+ശൂന്യം luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop) {
+  എങ്കിൽ (errcode == LUA_ERRMEM) {  /* memory error? */
     setsvalue2s(L, oldtop, G(L)->memerrmsg); /* reuse preregistered msg. */
   }
-  else {
+  അല്ലെങ്കിൽ {
     lua_assert(errorstatus(errcode));  /* must be a real error */
-    lua_assert(!ttisnil(s2v(L->top.p - 1)));  /* with a non-nil object */
-    setobjs2s(L, oldtop, L->top.p - 1);  /* move it to 'oldtop' */
+    lua_assert(!ttisnil(s2v(L->മുകൾ.p - 1)));  /* with a non-nil object */
+    setobjs2s(L, oldtop, L->മുകൾ.p - 1);  /* move it to 'oldtop' */
   }
-  L->top.p = oldtop + 1;  /* top goes back to old top plus error object */
+  L->മുകൾ.p = oldtop + 1;  /* top goes back to old top plus error object */
 }
 
 
 l_noret luaD_throw (lua_State *L, TStatus errcode) {
-  if (L->errorJmp) {  /* thread has an error handler? */
+  എങ്കിൽ (L->errorJmp) {  /* thread has an error handler? */
     L->errorJmp->status = errcode;  /* set status */
     LUAI_THROW(L, L->errorJmp);  /* jump to it */
   }
-  else {  /* thread has no error handler */
+  അല്ലെങ്കിൽ {  /* thread has no error handler */
     global_State *g = G(L);
     lua_State *mainth = mainthread(g);
     errcode = luaE_resetthread(L, errcode);  /* close all upvalues */
     L->status = errcode;
-    if (mainth->errorJmp) {  /* main thread has a handler? */
-      setobjs2s(L, mainth->top.p++, L->top.p - 1);  /* copy error obj. */
+    എങ്കിൽ (mainth->errorJmp) {  /* main thread has a handler? */
+      setobjs2s(L, mainth->മുകൾ.p++, L->മുകൾ.p - 1);  /* copy error obj. */
       luaD_throw(mainth, errcode);  /* re-throw in main thread */
     }
-    else {  /* no handler at all; abort */
-      if (g->panic) {  /* panic function? */
+    അല്ലെങ്കിൽ {  /* no handler at all; abort */
+      എങ്കിൽ (g->panic) {  /* panic function? */
         lua_unlock(L);
         g->panic(L);  /* call panic function (last chance to jump out) */
       }
@@ -148,16 +148,16 @@ l_noret luaD_throw (lua_State *L, TStatus errcode) {
 
 
 l_noret luaD_throwbaselevel (lua_State *L, TStatus errcode) {
-  if (L->errorJmp) {
+  എങ്കിൽ (L->errorJmp) {
     /* unroll error entries up to the first level */
-    while (L->errorJmp->previous != NULL)
+    ആകുമ്പോൾ (L->errorJmp->previous != ശൂന്യ)
       L->errorJmp = L->errorJmp->previous;
   }
   luaD_throw(L, errcode);
 }
 
 
-TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
+TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, ശൂന്യം *ud) {
   l_uint32 oldnCcalls = L->nCcalls;
   lua_longjmp lj;
   lj.status = LUA_OK;
@@ -166,7 +166,7 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
   LUAI_TRY(L, &lj, f, ud);  /* call 'f' catching errors */
   L->errorJmp = lj.previous;  /* restore old error handler */
   L->nCcalls = oldnCcalls;
-  return lj.status;
+  തിരികെ lj.status;
 }
 
 /* }====================================================== */
@@ -187,17 +187,17 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
 ** It must fit into INT_MAX/2.
 */
 
-#if !defined(LUAI_MAXSTACK)
-#if 1000000 < (INT_MAX / 2)
+#എങ്കിൽ !defined(LUAI_MAXSTACK)
+#എങ്കിൽ 1000000 < (INT_MAX / 2)
 #define LUAI_MAXSTACK           1000000
-#else
+#അല്ലെങ്കിൽ
 #define LUAI_MAXSTACK           (INT_MAX / 2u)
 #endif
 #endif
 
 
 /* maximum stack size that respects size_t */
-#define MAXSTACK_BYSIZET  ((MAX_SIZET / sizeof(StackValue)) - STACKERRSPACE)
+#define MAXSTACK_BYSIZET  ((MAX_SIZET / വലുപ്പം(അട്ടി_മൂല്യം)) - STACKERRSPACE)
 
 /*
 ** Minimum between LUAI_MAXSTACK and MAXSTACK_BYSIZET
@@ -213,9 +213,9 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
 
 /* raise a stack error while running the message handler */
 l_noret luaD_errerr (lua_State *L) {
-  TString *msg = luaS_newliteral(L, "error in error handling");
-  setsvalue2s(L, L->top.p, msg);
-  L->top.p++;  /* assume EXTRA_STACK */
+  TString *സന്ദേശം = luaS_newliteral(L, "error in error handling");
+  setsvalue2s(L, L->മുകൾ.p, സന്ദേശം);
+  L->മുകൾ.p++;  /* assume EXTRA_STACK */
   luaD_throw(L, LUA_ERRERR);
 }
 
@@ -225,17 +225,17 @@ l_noret luaD_errerr (lua_State *L) {
 ** as a finalizer): At least BASIC_STACK_SIZE in the Lua stack, two
 ** available CallInfos, and two "slots" in the C stack.
 */
-int luaD_checkminstack (lua_State *L) {
-  if (getCcalls(L) >= LUAI_MAXCCALLS - 2)
-    return 0;  /* not enough C-stack slots */
-  if (L->ci->next == NULL && luaE_extendCI(L, 0) == NULL)
-    return 0;  /* unable to allocate first ci */
-  if (L->ci->next->next == NULL && luaE_extendCI(L, 0) == NULL)
-    return 0;  /* unable to allocate second ci */
-  if (L->stack_last.p - L->top.p >= BASIC_STACK_SIZE)
-    return 1;  /* enough (BASIC_STACK_SIZE) free slots in the Lua stack */
-  else  /* try to grow stack to a size with enough free slots */
-    return luaD_growstack(L, BASIC_STACK_SIZE, 0);
+പൂർണ്ണസംഖ്യ luaD_checkminstack (lua_State *L) {
+  എങ്കിൽ (getCcalls(L) >= LUAI_MAXCCALLS - 2)
+    തിരികെ 0;  /* not enough C-stack slots */
+  എങ്കിൽ (L->ci->next == ശൂന്യ && luaE_extendCI(L, 0) == ശൂന്യ)
+    തിരികെ 0;  /* unable to allocate first ci */
+  എങ്കിൽ (L->ci->next->next == ശൂന്യ && luaE_extendCI(L, 0) == ശൂന്യ)
+    തിരികെ 0;  /* unable to allocate second ci */
+  എങ്കിൽ (L->അട്ടി_last.p - L->മുകൾ.p >= BASIC_അട്ടി_SIZE)
+    തിരികെ 1;  /* enough (BASIC_STACK_SIZE) free slots in the Lua stack */
+  അല്ലെങ്കിൽ  /* try to grow stack to a size with enough free slots */
+    തിരികെ luaD_growstack(L, BASIC_അട്ടി_SIZE, 0);
 }
 
 
@@ -249,23 +249,23 @@ int luaD_checkminstack (lua_State *L) {
 ** That is not strict ISO C, but seems to work fine everywhere.
 ** The following macro chooses how strict is the code.
 */
-#if !defined(LUAI_STRICT_ADDRESS)
+#എങ്കിൽ !defined(LUAI_STRICT_ADDRESS)
 #define LUAI_STRICT_ADDRESS	1
 #endif
 
-#if LUAI_STRICT_ADDRESS
+#എങ്കിൽ LUAI_STRICT_ADDRESS
 /*
 ** Change all pointers to the stack into offsets.
 */
-static void relstack (lua_State *L) {
+സ്ഥിതം ശൂന്യം relstack (lua_State *L) {
   CallInfo *ci;
   UpVal *up;
-  L->top.offset = savestack(L, L->top.p);
+  L->മുകൾ.offset = savestack(L, L->മുകൾ.p);
   L->tbclist.offset = savestack(L, L->tbclist.p);
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  വേണ്ടി (up = L->openupval; up != ശൂന്യ; up = up->u.open.next)
     up->v.offset = savestack(L, uplevel(up));
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.offset = savestack(L, ci->top.p);
+  വേണ്ടി (ci = L->ci; ci != ശൂന്യ; ci = ci->previous) {
+    ci->മുകൾ.offset = savestack(L, ci->മുകൾ.p);
     ci->func.offset = savestack(L, ci->func.p);
   }
 }
@@ -274,48 +274,48 @@ static void relstack (lua_State *L) {
 /*
 ** Change back all offsets into pointers.
 */
-static void correctstack (lua_State *L, StkId oldstack) {
+സ്ഥിതം ശൂന്യം correctstack (lua_State *L, StkId oldstack) {
   CallInfo *ci;
   UpVal *up;
   UNUSED(oldstack);
-  L->top.p = restorestack(L, L->top.offset);
+  L->മുകൾ.p = restorestack(L, L->മുകൾ.offset);
   L->tbclist.p = restorestack(L, L->tbclist.offset);
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  വേണ്ടി (up = L->openupval; up != ശൂന്യ; up = up->u.open.next)
     up->v.p = s2v(restorestack(L, up->v.offset));
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.p = restorestack(L, ci->top.offset);
+  വേണ്ടി (ci = L->ci; ci != ശൂന്യ; ci = ci->previous) {
+    ci->മുകൾ.p = restorestack(L, ci->മുകൾ.offset);
     ci->func.p = restorestack(L, ci->func.offset);
-    if (isLua(ci))
+    എങ്കിൽ (isLua(ci))
       ci->u.l.trap = 1;  /* signal to update 'trap' in 'luaV_execute' */
   }
 }
 
-#else
+#അല്ലെങ്കിൽ
 /*
 ** Assume that it is fine to use an address after its deallocation,
 ** as long as we do not dereference it.
 */
 
-static void relstack (lua_State *L) { UNUSED(L); }  /* do nothing */
+സ്ഥിതം ശൂന്യം relstack (lua_State *L) { UNUSED(L); }  /* do nothing */
 
 
 /*
 ** Correct pointers into 'oldstack' to point into 'L->stack'.
 */
-static void correctstack (lua_State *L, StkId oldstack) {
+സ്ഥിതം ശൂന്യം correctstack (lua_State *L, StkId oldstack) {
   CallInfo *ci;
   UpVal *up;
-  StkId newstack = L->stack.p;
-  if (oldstack == newstack)
-    return;
-  L->top.p = L->top.p - oldstack + newstack;
+  StkId newstack = L->അട്ടി.p;
+  എങ്കിൽ (oldstack == newstack)
+    തിരികെ;
+  L->മുകൾ.p = L->മുകൾ.p - oldstack + newstack;
   L->tbclist.p = L->tbclist.p - oldstack + newstack;
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  വേണ്ടി (up = L->openupval; up != ശൂന്യ; up = up->u.open.next)
     up->v.p = s2v(uplevel(up) - oldstack + newstack);
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.p = ci->top.p - oldstack + newstack;
+  വേണ്ടി (ci = L->ci; ci != ശൂന്യ; ci = ci->previous) {
+    ci->മുകൾ.p = ci->മുകൾ.p - oldstack + newstack;
     ci->func.p = ci->func.p - oldstack + newstack;
-    if (isLua(ci))
+    എങ്കിൽ (isLua(ci))
       ci->u.l.trap = 1;  /* signal to update 'trap' in 'luaV_execute' */
   }
 }
@@ -327,30 +327,30 @@ static void correctstack (lua_State *L, StkId oldstack) {
 ** In case of allocation error, raise an error or return false according
 ** to 'raiseerror'.
 */
-int luaD_reallocstack (lua_State *L, int newsize, int raiseerror) {
-  int oldsize = stacksize(L);
-  int i;
+പൂർണ്ണസംഖ്യ luaD_reallocstack (lua_State *L, പൂർണ്ണസംഖ്യ newsize, പൂർണ്ണസംഖ്യ raiseerror) {
+  പൂർണ്ണസംഖ്യ oldsize = stacksize(L);
+  പൂർണ്ണസംഖ്യ i;
   StkId newstack;
-  StkId oldstack = L->stack.p;
+  StkId oldstack = L->അട്ടി.p;
   lu_byte oldgcstop = G(L)->gcstopem;
   lua_assert(newsize <= MAXSTACK || newsize == ERRORSTACKSIZE);
   relstack(L);  /* change pointers to offsets */
   G(L)->gcstopem = 1;  /* stop emergency collection */
-  newstack = luaM_reallocvector(L, oldstack, oldsize + EXTRA_STACK,
-                                   newsize + EXTRA_STACK, StackValue);
+  newstack = luaM_reallocvector(L, oldstack, oldsize + EXTRA_അട്ടി,
+                                   newsize + EXTRA_അട്ടി, അട്ടി_മൂല്യം);
   G(L)->gcstopem = oldgcstop;  /* restore emergency collection */
-  if (l_unlikely(newstack == NULL)) {  /* reallocation failed? */
+  എങ്കിൽ (l_unlikely(newstack == ശൂന്യ)) {  /* reallocation failed? */
     correctstack(L, oldstack);  /* change offsets back to pointers */
-    if (raiseerror)
+    എങ്കിൽ (raiseerror)
       luaM_error(L);
-    else return 0;  /* do not raise an error */
+    അല്ലെങ്കിൽ തിരികെ 0;  /* do not raise an error */
   }
-  L->stack.p = newstack;
+  L->അട്ടി.p = newstack;
   correctstack(L, oldstack);  /* change offsets back to pointers */
-  L->stack_last.p = L->stack.p + newsize;
-  for (i = oldsize + EXTRA_STACK; i < newsize + EXTRA_STACK; i++)
+  L->അട്ടി_last.p = L->അട്ടി.p + newsize;
+  വേണ്ടി (i = oldsize + EXTRA_അട്ടി; i < newsize + EXTRA_അട്ടി; i++)
     setnilvalue2s(newstack + i); /* erase new segment */
-  return 1;
+  തിരികെ 1;
 }
 
 
@@ -358,33 +358,33 @@ int luaD_reallocstack (lua_State *L, int newsize, int raiseerror) {
 ** Try to grow the stack by at least 'n' elements. When 'raiseerror'
 ** is true, raises any error; otherwise, return 0 in case of errors.
 */
-int luaD_growstack (lua_State *L, int n, int raiseerror) {
-  int size = stacksize(L);
-  if (l_unlikely(size > MAXSTACK)) {
+പൂർണ്ണസംഖ്യ luaD_growstack (lua_State *L, പൂർണ്ണസംഖ്യ n, പൂർണ്ണസംഖ്യ raiseerror) {
+  പൂർണ്ണസംഖ്യ size = stacksize(L);
+  എങ്കിൽ (l_unlikely(size > MAXSTACK)) {
     /* if stack is larger than maximum, thread is already using the
        extra space reserved for errors, that is, thread is handling
        a stack error; cannot grow further than that. */
     lua_assert(stacksize(L) == ERRORSTACKSIZE);
-    if (raiseerror)
+    എങ്കിൽ (raiseerror)
       luaD_errerr(L);  /* stack error inside message handler */
-    return 0;  /* if not 'raiseerror', just signal it */
+    തിരികെ 0;  /* if not 'raiseerror', just signal it */
   }
-  else if (n < MAXSTACK) {  /* avoids arithmetic overflows */
-    int newsize = size + (size >> 1);  /* tentative new size (size * 1.5) */
-    int needed = cast_int(L->top.p - L->stack.p) + n;
-    if (newsize > MAXSTACK)  /* cannot cross the limit */
+  അല്ലെങ്കിൽ എങ്കിൽ (n < MAXSTACK) {  /* avoids arithmetic overflows */
+    പൂർണ്ണസംഖ്യ newsize = size + (size >> 1);  /* tentative new size (size * 1.5) */
+    പൂർണ്ണസംഖ്യ needed = cast_int(L->മുകൾ.p - L->അട്ടി.p) + n;
+    എങ്കിൽ (newsize > MAXSTACK)  /* cannot cross the limit */
       newsize = MAXSTACK;
-    if (newsize < needed)  /* but must respect what was asked for */
+    എങ്കിൽ (newsize < needed)  /* but must respect what was asked for */
       newsize = needed;
-    if (l_likely(newsize <= MAXSTACK))
-      return luaD_reallocstack(L, newsize, raiseerror);
+    എങ്കിൽ (l_likely(newsize <= MAXSTACK))
+      തിരികെ luaD_reallocstack(L, newsize, raiseerror);
   }
   /* else stack overflow */
   /* add extra size to be able to handle the error message */
   luaD_reallocstack(L, ERRORSTACKSIZE, raiseerror);
-  if (raiseerror)
+  എങ്കിൽ (raiseerror)
     luaG_runerror(L, "stack overflow");
-  return 0;
+  തിരികെ 0;
 }
 
 
@@ -392,18 +392,18 @@ int luaD_growstack (lua_State *L, int n, int raiseerror) {
 ** Compute how much of the stack is being used, by computing the
 ** maximum top of all call frames in the stack and the current top.
 */
-static int stackinuse (lua_State *L) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ stackinuse (lua_State *L) {
   CallInfo *ci;
-  int res;
-  StkId lim = L->top.p;
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    if (lim < ci->top.p) lim = ci->top.p;
+  പൂർണ്ണസംഖ്യ res;
+  StkId lim = L->മുകൾ.p;
+  വേണ്ടി (ci = L->ci; ci != ശൂന്യ; ci = ci->previous) {
+    എങ്കിൽ (lim < ci->മുകൾ.p) lim = ci->മുകൾ.p;
   }
-  lua_assert(lim <= L->stack_last.p + EXTRA_STACK);
-  res = cast_int(lim - L->stack.p) + 1;  /* part of stack in use */
-  if (res < LUA_MINSTACK)
+  lua_assert(lim <= L->അട്ടി_last.p + EXTRA_അട്ടി);
+  res = cast_int(lim - L->അട്ടി.p) + 1;  /* part of stack in use */
+  എങ്കിൽ (res < LUA_MINSTACK)
     res = LUA_MINSTACK;  /* ensure a minimum size */
-  return res;
+  തിരികെ res;
 }
 
 
@@ -416,17 +416,17 @@ static int stackinuse (lua_State *L) {
 ** stacksize (equal to ERRORSTACKSIZE in this case), and so the stack
 ** will be reduced to a "regular" size.
 */
-void luaD_shrinkstack (lua_State *L) {
-  int inuse = stackinuse(L);
-  int max = (inuse > MAXSTACK / 3) ? MAXSTACK : inuse * 3;
+ശൂന്യം luaD_shrinkstack (lua_State *L) {
+  പൂർണ്ണസംഖ്യ inuse = stackinuse(L);
+  പൂർണ്ണസംഖ്യ max = (inuse > MAXSTACK / 3) ? MAXSTACK : inuse * 3;
   /* if thread is currently not handling a stack overflow and its
      size is larger than maximum "reasonable" size, shrink it */
-  if (inuse <= MAXSTACK && stacksize(L) > max) {
-    int nsize = (inuse > MAXSTACK / 2) ? MAXSTACK : inuse * 2;
+  എങ്കിൽ (inuse <= MAXSTACK && stacksize(L) > max) {
+    പൂർണ്ണസംഖ്യ nsize = (inuse > MAXSTACK / 2) ? MAXSTACK : inuse * 2;
     luaD_reallocstack(L, nsize, 0);  /* ok if that fails */
   }
-  else  /* don't change stack */
-    condmovestack(L,(void)0,(void)0);  /* (change only for debugging) */
+  അല്ലെങ്കിൽ  /* don't change stack */
+    condmovestack(L,(ശൂന്യം)0,(ശൂന്യം)0);  /* (change only for debugging) */
   luaE_shrinkCI(L);  /* shrink CI list */
 }
 
@@ -438,24 +438,24 @@ void luaD_shrinkstack (lua_State *L) {
 ** called. (Both 'L->hook' and 'L->hookmask', which trigger this
 ** function, can be changed asynchronously by signals.)
 */
-void luaD_hook (lua_State *L, int event, int line,
-                              int ftransfer, int ntransfer) {
+ശൂന്യം luaD_hook (lua_State *L, പൂർണ്ണസംഖ്യ event, പൂർണ്ണസംഖ്യ വരി,
+                              പൂർണ്ണസംഖ്യ ftransfer, പൂർണ്ണസംഖ്യ ntransfer) {
   lua_Hook hook = L->hook;
-  if (hook && L->allowhook) {  /* make sure there is a hook */
+  എങ്കിൽ (hook && L->allowhook) {  /* make sure there is a hook */
     CallInfo *ci = L->ci;
-    ptrdiff_t top = savestack(L, L->top.p);  /* preserve original 'top' */
-    ptrdiff_t ci_top = savestack(L, ci->top.p);  /* idem for 'ci->top' */
+    ptrdiff_t മുകൾ = savestack(L, L->മുകൾ.p);  /* preserve original 'top' */
+    ptrdiff_t ci_മുകൾ = savestack(L, ci->മുകൾ.p);  /* idem for 'ci->top' */
     lua_Debug ar;
     ar.event = event;
-    ar.currentline = line;
+    ar.currentline = വരി;
     ar.i_ci = ci;
     L->transferinfo.ftransfer = ftransfer;
     L->transferinfo.ntransfer = ntransfer;
-    if (isLua(ci) && L->top.p < ci->top.p)
-      L->top.p = ci->top.p;  /* protect entire activation register */
+    എങ്കിൽ (isLua(ci) && L->മുകൾ.p < ci->മുകൾ.p)
+      L->മുകൾ.p = ci->മുകൾ.p;  /* protect entire activation register */
     luaD_checkstack(L, LUA_MINSTACK);  /* ensure minimum stack size */
-    if (ci->top.p < L->top.p + LUA_MINSTACK)
-      ci->top.p = L->top.p + LUA_MINSTACK;
+    എങ്കിൽ (ci->മുകൾ.p < L->മുകൾ.p + LUA_MINSTACK)
+      ci->മുകൾ.p = L->മുകൾ.p + LUA_MINSTACK;
     L->allowhook = 0;  /* cannot call hooks inside a hook */
     ci->callstatus |= CIST_HOOKED;
     lua_unlock(L);
@@ -463,8 +463,8 @@ void luaD_hook (lua_State *L, int event, int line,
     lua_lock(L);
     lua_assert(!L->allowhook);
     L->allowhook = 1;
-    ci->top.p = restorestack(L, ci_top);
-    L->top.p = restorestack(L, top);
+    ci->മുകൾ.p = restorestack(L, ci_മുകൾ);
+    L->മുകൾ.p = restorestack(L, മുകൾ);
     ci->callstatus &= ~CIST_HOOKED;
   }
 }
@@ -475,10 +475,10 @@ void luaD_hook (lua_State *L, int event, int line,
 ** whenever 'hookmask' is not zero, so it checks whether call hooks are
 ** active.
 */
-void luaD_hookcall (lua_State *L, CallInfo *ci) {
+ശൂന്യം luaD_hookcall (lua_State *L, CallInfo *ci) {
   L->oldpc = 0;  /* set 'oldpc' for new function */
-  if (L->hookmask & LUA_MASKCALL) {  /* is call hook on? */
-    int event = (ci->callstatus & CIST_TAIL) ? LUA_HOOKTAILCALL
+  എങ്കിൽ (L->hookmask & LUA_MASKCALL) {  /* is call hook on? */
+    പൂർണ്ണസംഖ്യ event = (ci->callstatus & CIST_TAIL) ? LUA_HOOKTAILCALL
                                              : LUA_HOOKCALL;
     Proto *p = ci_func(ci)->p;
     ci->u.l.savedpc++;  /* hooks assume 'pc' is already incremented */
@@ -493,14 +493,14 @@ void luaD_hookcall (lua_State *L, CallInfo *ci) {
 ** 'oldpc'. (Note that this correction is needed by the line hook, so it
 ** is done even when return hooks are off.)
 */
-static void rethook (lua_State *L, CallInfo *ci, int nres) {
-  if (L->hookmask & LUA_MASKRET) {  /* is return hook on? */
-    StkId firstres = L->top.p - nres;  /* index of first result */
-    int delta = 0;  /* correction for vararg functions */
-    int ftransfer;
-    if (isLua(ci)) {
+സ്ഥിതം ശൂന്യം rethook (lua_State *L, CallInfo *ci, പൂർണ്ണസംഖ്യ nres) {
+  എങ്കിൽ (L->hookmask & LUA_MASKRET) {  /* is return hook on? */
+    StkId firstres = L->മുകൾ.p - nres;  /* index of first result */
+    പൂർണ്ണസംഖ്യ delta = 0;  /* correction for vararg functions */
+    പൂർണ്ണസംഖ്യ ftransfer;
+    എങ്കിൽ (isLua(ci)) {
       Proto *p = ci_func(ci)->p;
-      if (p->flag & PF_VAHID)
+      എങ്കിൽ (p->flag & PF_VAHID)
         delta = ci->u.l.nextraargs + p->numparams + 1;
     }
     ci->func.p += delta;  /* if vararg, back to virtual 'func' */
@@ -508,7 +508,7 @@ static void rethook (lua_State *L, CallInfo *ci, int nres) {
     luaD_hook(L, LUA_HOOKRET, -1, ftransfer, nres);  /* call it */
     ci->func.p -= delta;
   }
-  if (isLua(ci = ci->previous))
+  എങ്കിൽ (isLua(ci = ci->previous))
     L->oldpc = pcRel(ci->u.l.savedpc, ci_func(ci)->p);  /* set 'oldpc' */
 }
 
@@ -522,34 +522,34 @@ static void rethook (lua_State *L, CallInfo *ci, int nres) {
 ** (This count will be saved in the 'callstatus' of the call).
 **  Raise an error if this counter overflows.
 */
-static unsigned tryfuncTM (lua_State *L, StkId func, unsigned status) {
-  const TValue *tm;
+സ്ഥിതം unsigned tryfuncTM (lua_State *L, StkId func, unsigned status) {
+  സ്ഥിരം TValue *tm;
   StkId p;
   tm = luaT_gettmbyobj(L, s2v(func), TM_CALL);
-  if (l_unlikely(ttisnil(tm)))  /* no metamethod? */
+  എങ്കിൽ (l_unlikely(ttisnil(tm)))  /* no metamethod? */
     luaG_callerror(L, s2v(func));
-  for (p = L->top.p; p > func; p--)  /* open space for metamethod */
+  വേണ്ടി (p = L->മുകൾ.p; p > func; p--)  /* open space for metamethod */
     setobjs2s(L, p, p-1);
-  L->top.p++;  /* stack space pre-allocated by the caller */
+  L->മുകൾ.p++;  /* stack space pre-allocated by the caller */
   setobj2s(L, func, tm);  /* metamethod is the new function to be called */
-  if ((status & MAX_CCMT) == MAX_CCMT)  /* is counter full? */
+  എങ്കിൽ ((status & MAX_CCMT) == MAX_CCMT)  /* is counter full? */
     luaG_runerror(L, "'__call' chain too long");
-  return status + (1u << CIST_CCMT);  /* increment counter */
+  തിരികെ status + (1u << CIST_CCMT);  /* increment counter */
 }
 
 
 /* Generic case for 'moveresult' */
-l_sinline void genmoveresults (lua_State *L, StkId res, int nres,
-                                             int wanted) {
-  StkId firstresult = L->top.p - nres;  /* index of first result */
-  int i;
-  if (nres > wanted)  /* extra results? */
+l_sinline ശൂന്യം genmoveresults (lua_State *L, StkId res, പൂർണ്ണസംഖ്യ nres,
+                                             പൂർണ്ണസംഖ്യ wanted) {
+  StkId firstresult = L->മുകൾ.p - nres;  /* index of first result */
+  പൂർണ്ണസംഖ്യ i;
+  എങ്കിൽ (nres > wanted)  /* extra results? */
     nres = wanted;  /* don't need them */
-  for (i = 0; i < nres; i++)  /* move all results to correct place */
+  വേണ്ടി (i = 0; i < nres; i++)  /* move all results to correct place */
     setobjs2s(L, res + i, firstresult + i);
-  for (; i < wanted; i++)  /* complete wanted number of results */
+  വേണ്ടി (; i < wanted; i++)  /* complete wanted number of results */
     setnilvalue2s(res + i);
-  L->top.p = res + wanted;  /* top points after the last result */
+  L->മുകൾ.p = res + wanted;  /* top points after the last result */
 }
 
 
@@ -560,39 +560,39 @@ l_sinline void genmoveresults (lua_State *L, StkId res, int nres,
 ** parameters) separated. The flag CIST_TBC in 'fwanted', if set,
 ** forces the switch to go to the default case.
 */
-l_sinline void moveresults (lua_State *L, StkId res, int nres,
+l_sinline ശൂന്യം moveresults (lua_State *L, StkId res, പൂർണ്ണസംഖ്യ nres,
                                           l_uint32 fwanted) {
-  switch (fwanted) {  /* handle typical cases separately */
-    case 0 + 1:  /* no values needed */
-      L->top.p = res;
-      return;
-    case 1 + 1:  /* one value needed */
-      if (nres == 0)   /* no results? */
+  തിരഞ്ഞെടുപ്പ് (fwanted) {  /* handle typical cases separately */
+    അവസ്ഥ 0 + 1:  /* no values needed */
+      L->മുകൾ.p = res;
+      തിരികെ;
+    അവസ്ഥ 1 + 1:  /* one value needed */
+      എങ്കിൽ (nres == 0)   /* no results? */
         setnilvalue2s(res);  /* adjust with nil */
-      else  /* at least one result */
-        setobjs2s(L, res, L->top.p - nres);  /* move it to proper place */
-      L->top.p = res + 1;
-      return;
-    case LUA_MULTRET + 1:
+      അല്ലെങ്കിൽ  /* at least one result */
+        setobjs2s(L, res, L->മുകൾ.p - nres);  /* move it to proper place */
+      L->മുകൾ.p = res + 1;
+      തിരികെ;
+    അവസ്ഥ LUA_MULTRET + 1:
       genmoveresults(L, res, nres, nres);  /* we want all results */
-      break;
-    default: {  /* two/more results and/or to-be-closed variables */
-      int wanted = get_nresults(fwanted);
-      if (fwanted & CIST_TBC) {  /* to-be-closed variables? */
+      നിർത്തുക;
+    സ്ഥിരസ്ഥിതി: {  /* two/more results and/or to-be-closed variables */
+      പൂർണ്ണസംഖ്യ wanted = get_nresults(fwanted);
+      എങ്കിൽ (fwanted & CIST_TBC) {  /* to-be-closed variables? */
         L->ci->u2.nres = nres;
         L->ci->callstatus |= CIST_CLSRET;  /* in case of yields */
         res = luaF_close(L, res, CLOSEKTOP, 1);
         L->ci->callstatus &= ~CIST_CLSRET;
-        if (L->hookmask) {  /* if needed, call hook after '__close's */
+        എങ്കിൽ (L->hookmask) {  /* if needed, call hook after '__close's */
           ptrdiff_t savedres = savestack(L, res);
           rethook(L, L->ci, nres);
           res = restorestack(L, savedres);  /* hook can move stack */
         }
-        if (wanted == LUA_MULTRET)
+        എങ്കിൽ (wanted == LUA_MULTRET)
           wanted = nres;  /* we want all results */
       }
       genmoveresults(L, res, nres, wanted);
-      break;
+      നിർത്തുക;
     }
   }
 }
@@ -604,9 +604,9 @@ l_sinline void moveresults (lua_State *L, StkId res, int nres,
 ** info. If function has to close variables, hook must be called after
 ** that.
 */
-void luaD_poscall (lua_State *L, CallInfo *ci, int nres) {
+ശൂന്യം luaD_poscall (lua_State *L, CallInfo *ci, പൂർണ്ണസംഖ്യ nres) {
   l_uint32 fwanted = ci->callstatus & (CIST_TBC | CIST_NRESULTS);
-  if (l_unlikely(L->hookmask) && !(fwanted & CIST_TBC))
+  എങ്കിൽ (l_unlikely(L->hookmask) && !(fwanted & CIST_TBC))
     rethook(L, ci, nres);
   /* move results to proper place */
   moveresults(L, ci->func.p, nres, fwanted);
@@ -628,29 +628,29 @@ void luaD_poscall (lua_State *L, CallInfo *ci, int nres) {
 ** (All these bit-fields fit in 16-bit values.)
 */
 l_sinline CallInfo *prepCallInfo (lua_State *L, StkId func, unsigned status,
-                                                StkId top) {
+                                                StkId മുകൾ) {
   CallInfo *ci = L->ci = next_ci(L);  /* new frame */
   ci->func.p = func;
   lua_assert((status & ~(CIST_NRESULTS | CIST_C | MAX_CCMT)) == 0);
   ci->callstatus = status;
-  ci->top.p = top;
-  return ci;
+  ci->മുകൾ.p = മുകൾ;
+  തിരികെ ci;
 }
 
 
 /*
 ** precall for C functions
 */
-l_sinline int precallC (lua_State *L, StkId func, unsigned status,
+l_sinline പൂർണ്ണസംഖ്യ precallC (lua_State *L, StkId func, unsigned status,
                                             lua_CFunction f) {
-  int n;  /* number of returns */
+  പൂർണ്ണസംഖ്യ n;  /* number of returns */
   CallInfo *ci;
   checkstackp(L, LUA_MINSTACK, func);  /* ensure minimum stack size */
   L->ci = ci = prepCallInfo(L, func, status | CIST_C,
-                               L->top.p + LUA_MINSTACK);
-  lua_assert(ci->top.p <= L->stack_last.p);
-  if (l_unlikely(L->hookmask & LUA_MASKCALL)) {
-    int narg = cast_int(L->top.p - func) - 1;
+                               L->മുകൾ.p + LUA_MINSTACK);
+  lua_assert(ci->മുകൾ.p <= L->അട്ടി_last.p);
+  എങ്കിൽ (l_unlikely(L->hookmask & LUA_MASKCALL)) {
+    പൂർണ്ണസംഖ്യ narg = cast_int(L->മുകൾ.p - func) - 1;
     luaD_hook(L, LUA_HOOKCALL, -1, 1, narg);
   }
   lua_unlock(L);
@@ -658,7 +658,7 @@ l_sinline int precallC (lua_State *L, StkId func, unsigned status,
   lua_lock(L);
   api_checknelems(L, n);
   luaD_poscall(L, ci, n);
-  return n;
+  തിരികെ n;
 }
 
 
@@ -668,39 +668,39 @@ l_sinline int precallC (lua_State *L, StkId func, unsigned status,
 ** (so that it includes the function itself). Return the number of
 ** results, if it was a C function, or -1 for a Lua function.
 */
-int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
-                                    int narg1, int delta) {
+പൂർണ്ണസംഖ്യ luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
+                                    പൂർണ്ണസംഖ്യ narg1, പൂർണ്ണസംഖ്യ delta) {
   unsigned status = LUA_MULTRET + 1;
  retry:
-  switch (ttypetag(s2v(func))) {
-    case LUA_VCCL:  /* C closure */
-      return precallC(L, func, status, clCvalue(s2v(func))->f);
-    case LUA_VLCF:  /* light C function */
-      return precallC(L, func, status, fvalue(s2v(func)));
-    case LUA_VLCL: {  /* Lua function */
+  തിരഞ്ഞെടുപ്പ് (ttypetag(s2v(func))) {
+    അവസ്ഥ LUA_VCCL:  /* C closure */
+      തിരികെ precallC(L, func, status, clCvalue(s2v(func))->f);
+    അവസ്ഥ LUA_VLCF:  /* light C function */
+      തിരികെ precallC(L, func, status, fvalue(s2v(func)));
+    അവസ്ഥ LUA_VLCL: {  /* Lua function */
       Proto *p = clLvalue(s2v(func))->p;
-      int fsize = p->maxstacksize;  /* frame size */
-      int nfixparams = p->numparams;
-      int i;
+      പൂർണ്ണസംഖ്യ fsize = p->maxstacksize;  /* frame size */
+      പൂർണ്ണസംഖ്യ nfixparams = p->numparams;
+      പൂർണ്ണസംഖ്യ i;
       checkstackp(L, fsize - delta, func);
       ci->func.p -= delta;  /* restore 'func' (if vararg) */
-      for (i = 0; i < narg1; i++)  /* move down function and arguments */
+      വേണ്ടി (i = 0; i < narg1; i++)  /* move down function and arguments */
         setobjs2s(L, ci->func.p + i, func + i);
       func = ci->func.p;  /* moved-down function */
-      for (; narg1 <= nfixparams; narg1++)
+      വേണ്ടി (; narg1 <= nfixparams; narg1++)
         setnilvalue2s(func + narg1);  /* complete missing arguments */
-      ci->top.p = func + 1 + fsize;  /* top for new function */
-      lua_assert(ci->top.p <= L->stack_last.p);
+      ci->മുകൾ.p = func + 1 + fsize;  /* top for new function */
+      lua_assert(ci->മുകൾ.p <= L->അട്ടി_last.p);
       ci->u.l.savedpc = p->code;  /* starting point */
       ci->callstatus |= CIST_TAIL;
-      L->top.p = func + narg1;  /* set top */
-      return -1;
+      L->മുകൾ.p = func + narg1;  /* set top */
+      തിരികെ -1;
     }
-    default: {  /* not a function */
+    സ്ഥിരസ്ഥിതി: {  /* not a function */
       checkstackp(L, 1, func);  /* space for metamethod */
       status = tryfuncTM(L, func, status);  /* try '__call' metamethod */
       narg1++;
-      goto retry;  /* try again */
+      പോകുക retry;  /* try again */
     }
   }
 }
@@ -714,35 +714,35 @@ int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
 ** returns NULL, with all the results on the stack, starting at the
 ** original function position.
 */
-CallInfo *luaD_precall (lua_State *L, StkId func, int nresults) {
+CallInfo *luaD_precall (lua_State *L, StkId func, പൂർണ്ണസംഖ്യ nresults) {
   unsigned status = cast_uint(nresults + 1);
   lua_assert(status <= MAXRESULTS + 1);
  retry:
-  switch (ttypetag(s2v(func))) {
-    case LUA_VCCL:  /* C closure */
+  തിരഞ്ഞെടുപ്പ് (ttypetag(s2v(func))) {
+    അവസ്ഥ LUA_VCCL:  /* C closure */
       precallC(L, func, status, clCvalue(s2v(func))->f);
-      return NULL;
-    case LUA_VLCF:  /* light C function */
+      തിരികെ ശൂന്യ;
+    അവസ്ഥ LUA_VLCF:  /* light C function */
       precallC(L, func, status, fvalue(s2v(func)));
-      return NULL;
-    case LUA_VLCL: {  /* Lua function */
+      തിരികെ ശൂന്യ;
+    അവസ്ഥ LUA_VLCL: {  /* Lua function */
       CallInfo *ci;
       Proto *p = clLvalue(s2v(func))->p;
-      int narg = cast_int(L->top.p - func) - 1;  /* number of real arguments */
-      int nfixparams = p->numparams;
-      int fsize = p->maxstacksize;  /* frame size */
+      പൂർണ്ണസംഖ്യ narg = cast_int(L->മുകൾ.p - func) - 1;  /* number of real arguments */
+      പൂർണ്ണസംഖ്യ nfixparams = p->numparams;
+      പൂർണ്ണസംഖ്യ fsize = p->maxstacksize;  /* frame size */
       checkstackp(L, fsize, func);
       L->ci = ci = prepCallInfo(L, func, status, func + 1 + fsize);
       ci->u.l.savedpc = p->code;  /* starting point */
-      for (; narg < nfixparams; narg++)
-        setnilvalue2s(L->top.p++);  /* complete missing arguments */
-      lua_assert(ci->top.p <= L->stack_last.p);
-      return ci;
+      വേണ്ടി (; narg < nfixparams; narg++)
+        setnilvalue2s(L->മുകൾ.p++);  /* complete missing arguments */
+      lua_assert(ci->മുകൾ.p <= L->അട്ടി_last.p);
+      തിരികെ ci;
     }
-    default: {  /* not a function */
+    സ്ഥിരസ്ഥിതി: {  /* not a function */
       checkstackp(L, 1, func);  /* space for metamethod */
       status = tryfuncTM(L, func, status);  /* try '__call' metamethod */
-      goto retry;  /* try again with metamethod */
+      പോകുക retry;  /* try again with metamethod */
     }
   }
 }
@@ -756,14 +756,14 @@ CallInfo *luaD_precall (lua_State *L, StkId func, int nresults) {
 ** check the stack before doing anything else. 'luaD_precall' already
 ** does that.
 */
-l_sinline void ccall (lua_State *L, StkId func, int nResults, l_uint32 inc) {
+l_sinline ശൂന്യം ccall (lua_State *L, StkId func, പൂർണ്ണസംഖ്യ nResults, l_uint32 inc) {
   CallInfo *ci;
   L->nCcalls += inc;
-  if (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS)) {
+  എങ്കിൽ (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS)) {
     checkstackp(L, 0, func);  /* free any use of EXTRA_STACK */
     luaE_checkcstack(L);
   }
-  if ((ci = luaD_precall(L, func, nResults)) != NULL) {  /* Lua function? */
+  എങ്കിൽ ((ci = luaD_precall(L, func, nResults)) != ശൂന്യ) {  /* Lua function? */
     ci->callstatus |= CIST_FRESH;  /* mark that it is a "fresh" execute */
     luaV_execute(L, ci);  /* call it */
   }
@@ -774,7 +774,7 @@ l_sinline void ccall (lua_State *L, StkId func, int nResults, l_uint32 inc) {
 /*
 ** External interface for 'ccall'
 */
-void luaD_call (lua_State *L, StkId func, int nResults) {
+ശൂന്യം luaD_call (lua_State *L, StkId func, പൂർണ്ണസംഖ്യ nResults) {
   ccall(L, func, nResults, 1);
 }
 
@@ -782,7 +782,7 @@ void luaD_call (lua_State *L, StkId func, int nResults) {
 /*
 ** Similar to 'luaD_call', but does not allow yields during the call.
 */
-void luaD_callnoyield (lua_State *L, StkId func, int nResults) {
+ശൂന്യം luaD_callnoyield (lua_State *L, StkId func, പൂർണ്ണസംഖ്യ nResults) {
   ccall(L, func, nResults, nyci);
 }
 
@@ -803,11 +803,11 @@ void luaD_callnoyield (lua_State *L, StkId func, int nResults) {
 ** particular, field CIST_RECST preserves the error status across these
 ** multiple runs, changing only if there is a new error.
 */
-static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
+സ്ഥിതം TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
   TStatus status = getcistrecst(ci);  /* get original status */
-  if (l_likely(status == LUA_OK))  /* no error? */
+  എങ്കിൽ (l_likely(status == LUA_OK))  /* no error? */
     status = LUA_YIELD;  /* was interrupted by an yield */
-  else {  /* error */
+  അല്ലെങ്കിൽ {  /* error */
     StkId func = restorestack(L, ci->u2.funcidx);
     L->allowhook = getoah(ci);  /* restore 'allowhook' */
     func = luaF_close(L, func, status, 1);  /* can yield or raise an error */
@@ -819,7 +819,7 @@ static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
   L->errfunc = ci->u.c.old_errfunc;
   /* if it is here, there were errors or yields; unlike 'lua_pcallk',
      do not change status */
-  return status;
+  തിരികെ status;
 }
 
 
@@ -836,19 +836,19 @@ static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
 ** of the function called by 'lua_callk'/'lua_pcallk', so we are
 ** conservative and use LUA_MULTRET (always adjust).
 */
-static void finishCcall (lua_State *L, CallInfo *ci) {
-  int n;  /* actual number of results from C function */
-  if (ci->callstatus & CIST_CLSRET) {  /* was closing TBC variable? */
+സ്ഥിതം ശൂന്യം finishCcall (lua_State *L, CallInfo *ci) {
+  പൂർണ്ണസംഖ്യ n;  /* actual number of results from C function */
+  എങ്കിൽ (ci->callstatus & CIST_CLSRET) {  /* was closing TBC variable? */
     lua_assert(ci->callstatus & CIST_TBC);
     n = ci->u2.nres;  /* just redo 'luaD_poscall' */
     /* don't need to reset CIST_CLSRET, as it will be set again anyway */
   }
-  else {
+  അല്ലെങ്കിൽ {
     TStatus status = LUA_YIELD;  /* default if there were no errors */
     lua_KFunction kf = ci->u.c.k;  /* continuation function */
     /* must have a continuation and must be able to call it */
-    lua_assert(kf != NULL && yieldable(L));
-    if (ci->callstatus & CIST_YPCALL)   /* was inside a 'lua_pcallk'? */
+    lua_assert(kf != ശൂന്യ && yieldable(L));
+    എങ്കിൽ (ci->callstatus & CIST_YPCALL)   /* was inside a 'lua_pcallk'? */
       status = finishpcallk(L, ci);  /* finish it */
     adjustresults(L, LUA_MULTRET);  /* finish 'lua_callk' */
     lua_unlock(L);
@@ -865,13 +865,13 @@ static void finishCcall (lua_State *L, CallInfo *ci) {
 ** previously interrupted coroutine until the stack is empty (or another
 ** interruption long-jumps out of the loop).
 */
-static void unroll (lua_State *L, void *ud) {
+സ്ഥിതം ശൂന്യം unroll (lua_State *L, ശൂന്യം *ud) {
   CallInfo *ci;
   UNUSED(ud);
-  while ((ci = L->ci) != &L->base_ci) {  /* something in the stack */
-    if (!isLua(ci))  /* C function? */
+  ആകുമ്പോൾ ((ci = L->ci) != &L->base_ci) {  /* something in the stack */
+    എങ്കിൽ (!isLua(ci))  /* C function? */
       finishCcall(L, ci);  /* complete its execution */
-    else {  /* Lua function */
+    അല്ലെങ്കിൽ {  /* Lua function */
       luaV_finishOp(L);  /* finish interrupted instruction */
       luaV_execute(L, ci);  /* execute down to higher C 'boundary' */
     }
@@ -883,13 +883,13 @@ static void unroll (lua_State *L, void *ud) {
 ** Try to find a suspended protected call (a "recover point") for the
 ** given thread.
 */
-static CallInfo *findpcall (lua_State *L) {
+സ്ഥിതം CallInfo *findpcall (lua_State *L) {
   CallInfo *ci;
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {  /* search for a pcall */
-    if (ci->callstatus & CIST_YPCALL)
-      return ci;
+  വേണ്ടി (ci = L->ci; ci != ശൂന്യ; ci = ci->previous) {  /* search for a pcall */
+    എങ്കിൽ (ci->callstatus & CIST_YPCALL)
+      തിരികെ ci;
   }
-  return NULL;  /* no pending pcall */
+  തിരികെ ശൂന്യ;  /* no pending pcall */
 }
 
 
@@ -898,13 +898,13 @@ static CallInfo *findpcall (lua_State *L) {
 ** of the coroutine itself. (Such errors should not be handled by any
 ** coroutine error handler and should not kill the coroutine.)
 */
-static int resume_error (lua_State *L, const char *msg, int narg) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ resume_error (lua_State *L, സ്ഥിരം അക്ഷരം *സന്ദേശം, പൂർണ്ണസംഖ്യ narg) {
   api_checkpop(L, narg);
-  L->top.p -= narg;  /* remove args from the stack */
-  setsvalue2s(L, L->top.p, luaS_new(L, msg));  /* push error message */
-  api_incr_top(L);
+  L->മുകൾ.p -= narg;  /* remove args from the stack */
+  setsvalue2s(L, L->മുകൾ.p, luaS_new(L, സന്ദേശം));  /* push error message */
+  api_incr_മുകൾ(L);
   lua_unlock(L);
-  return LUA_ERRRUN;
+  തിരികെ LUA_ERRRUN;
 }
 
 
@@ -915,25 +915,25 @@ static int resume_error (lua_State *L, const char *msg, int narg) {
 ** function), plus erroneous cases: non-suspended coroutine or dead
 ** coroutine.
 */
-static void resume (lua_State *L, void *ud) {
-  int n = *(cast(int*, ud));  /* number of arguments */
-  StkId firstArg = L->top.p - n;  /* first argument */
+സ്ഥിതം ശൂന്യം resume (lua_State *L, ശൂന്യം *ud) {
+  പൂർണ്ണസംഖ്യ n = *(cast(പൂർണ്ണസംഖ്യ*, ud));  /* number of arguments */
+  StkId firstArg = L->മുകൾ.p - n;  /* first argument */
   CallInfo *ci = L->ci;
-  if (L->status == LUA_OK)  /* starting a coroutine? */
+  എങ്കിൽ (L->status == LUA_OK)  /* starting a coroutine? */
     ccall(L, firstArg - 1, LUA_MULTRET, 0);  /* just call its body */
-  else {  /* resuming from previous yield */
+  അല്ലെങ്കിൽ {  /* resuming from previous yield */
     lua_assert(L->status == LUA_YIELD);
     L->status = LUA_OK;  /* mark that it is running (again) */
-    if (isLua(ci)) {  /* yielded inside a hook? */
+    എങ്കിൽ (isLua(ci)) {  /* yielded inside a hook? */
       /* undo increment made by 'luaG_traceexec': instruction was not
          executed yet */
       lua_assert(ci->callstatus & CIST_HOOKYIELD);
       ci->u.l.savedpc--;
-      L->top.p = firstArg;  /* discard arguments */
+      L->മുകൾ.p = firstArg;  /* discard arguments */
       luaV_execute(L, ci);  /* just continue running Lua code */
     }
-    else {  /* 'common' yield */
-      if (ci->u.c.k != NULL) {  /* does it have a continuation function? */
+    അല്ലെങ്കിൽ {  /* 'common' yield */
+      എങ്കിൽ (ci->u.c.k != ശൂന്യ) {  /* does it have a continuation function? */
         lua_unlock(L);
         n = (*ci->u.c.k)(L, LUA_YIELD, ci->u.c.ctx); /* call continuation */
         lua_lock(L);
@@ -941,7 +941,7 @@ static void resume (lua_State *L, void *ud) {
       }
       luaD_poscall(L, ci, n);  /* finish 'luaD_call' */
     }
-    unroll(L, NULL);  /* run continuation */
+    unroll(L, ശൂന്യ);  /* run continuation */
   }
 }
 
@@ -954,92 +954,92 @@ static void resume (lua_State *L, void *ud) {
 ** (status == LUA_YIELD), or an unprotected error ('findpcall' doesn't
 ** find a recover point).
 */
-static TStatus precover (lua_State *L, TStatus status) {
+സ്ഥിതം TStatus precover (lua_State *L, TStatus status) {
   CallInfo *ci;
-  while (errorstatus(status) && (ci = findpcall(L)) != NULL) {
+  ആകുമ്പോൾ (errorstatus(status) && (ci = findpcall(L)) != ശൂന്യ) {
     L->ci = ci;  /* go down to recovery functions */
     setcistrecst(ci, status);  /* status to finish 'pcall' */
-    status = luaD_rawrunprotected(L, unroll, NULL);
+    status = luaD_rawrunprotected(L, unroll, ശൂന്യ);
   }
-  return status;
+  തിരികെ status;
 }
 
 
-LUA_API int lua_resume (lua_State *L, lua_State *from, int nargs,
-                                      int *nresults) {
+LUA_API പൂർണ്ണസംഖ്യ lua_resume (lua_State *L, lua_State *from, പൂർണ്ണസംഖ്യ nargs,
+                                      പൂർണ്ണസംഖ്യ *nresults) {
   TStatus status;
   lua_lock(L);
-  if (L->status == LUA_OK) {  /* may be starting a coroutine */
-    if (L->ci != &L->base_ci)  /* not in base level? */
-      return resume_error(L, "cannot resume non-suspended coroutine", nargs);
-    else if (L->top.p - (L->ci->func.p + 1) == nargs)  /* no function? */
-      return resume_error(L, "cannot resume dead coroutine", nargs);
+  എങ്കിൽ (L->status == LUA_OK) {  /* may be starting a coroutine */
+    എങ്കിൽ (L->ci != &L->base_ci)  /* not in base level? */
+      തിരികെ resume_error(L, "cannot resume non-suspended coroutine", nargs);
+    അല്ലെങ്കിൽ എങ്കിൽ (L->മുകൾ.p - (L->ci->func.p + 1) == nargs)  /* no function? */
+      തിരികെ resume_error(L, "cannot resume dead coroutine", nargs);
   }
-  else if (L->status != LUA_YIELD)  /* ended with errors? */
-    return resume_error(L, "cannot resume dead coroutine", nargs);
+  അല്ലെങ്കിൽ എങ്കിൽ (L->status != LUA_YIELD)  /* ended with errors? */
+    തിരികെ resume_error(L, "cannot resume dead coroutine", nargs);
   L->nCcalls = (from) ? getCcalls(from) : 0;
-  if (getCcalls(L) >= LUAI_MAXCCALLS)
-    return resume_error(L, "C stack overflow", nargs);
+  എങ്കിൽ (getCcalls(L) >= LUAI_MAXCCALLS)
+    തിരികെ resume_error(L, "C stack overflow", nargs);
   L->nCcalls++;
   luai_userstateresume(L, nargs);
   api_checkpop(L, (L->status == LUA_OK) ? nargs + 1 : nargs);
   status = luaD_rawrunprotected(L, resume, &nargs);
    /* continue running after recoverable errors */
   status = precover(L, status);
-  if (l_likely(!errorstatus(status)))
+  എങ്കിൽ (l_likely(!errorstatus(status)))
     lua_assert(status == L->status);  /* normal end or yield */
-  else {  /* unrecoverable error */
+  അല്ലെങ്കിൽ {  /* unrecoverable error */
     L->status = status;  /* mark thread as 'dead' */
-    luaD_seterrorobj(L, status, L->top.p);  /* push error message */
-    L->ci->top.p = L->top.p;
+    luaD_seterrorobj(L, status, L->മുകൾ.p);  /* push error message */
+    L->ci->മുകൾ.p = L->മുകൾ.p;
   }
   *nresults = (status == LUA_YIELD) ? L->ci->u2.nyield
-                                    : cast_int(L->top.p - (L->ci->func.p + 1));
+                                    : cast_int(L->മുകൾ.p - (L->ci->func.p + 1));
   lua_unlock(L);
-  return APIstatus(status);
+  തിരികെ APIstatus(status);
 }
 
 
-LUA_API int lua_isyieldable (lua_State *L) {
-  return yieldable(L);
+LUA_API പൂർണ്ണസംഖ്യ lua_isyieldable (lua_State *L) {
+  തിരികെ yieldable(L);
 }
 
 
-LUA_API int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API പൂർണ്ണസംഖ്യ lua_yieldk (lua_State *L, പൂർണ്ണസംഖ്യ nresults, lua_KContext ctx,
                         lua_KFunction k) {
   CallInfo *ci;
   luai_userstateyield(L, nresults);
   lua_lock(L);
   ci = L->ci;
   api_checkpop(L, nresults);
-  if (l_unlikely(!yieldable(L))) {
-    if (L != mainthread(G(L)))
+  എങ്കിൽ (l_unlikely(!yieldable(L))) {
+    എങ്കിൽ (L != mainthread(G(L)))
       luaG_runerror(L, "attempt to yield across a C-call boundary");
-    else
+    അല്ലെങ്കിൽ
       luaG_runerror(L, "attempt to yield from outside a coroutine");
   }
   L->status = LUA_YIELD;
   ci->u2.nyield = nresults;  /* save number of results */
-  if (isLua(ci)) {  /* inside a hook? */
+  എങ്കിൽ (isLua(ci)) {  /* inside a hook? */
     lua_assert(!isLuacode(ci));
     api_check(L, nresults == 0, "hooks cannot yield values");
-    api_check(L, k == NULL, "hooks cannot continue after yielding");
+    api_check(L, k == ശൂന്യ, "hooks cannot continue after yielding");
   }
-  else {
-    if ((ci->u.c.k = k) != NULL)  /* is there a continuation? */
+  അല്ലെങ്കിൽ {
+    എങ്കിൽ ((ci->u.c.k = k) != ശൂന്യ)  /* is there a continuation? */
       ci->u.c.ctx = ctx;  /* save context */
     luaD_throw(L, LUA_YIELD);
   }
   lua_assert(ci->callstatus & CIST_HOOKED);  /* must be inside a hook */
   lua_unlock(L);
-  return 0;  /* return to 'luaD_hook' */
+  തിരികെ 0;  /* return to 'luaD_hook' */
 }
 
 
 /*
 ** Auxiliary structure to call 'luaF_close' in protected mode.
 */
-struct CloseP {
+ഘടന CloseP {
   StkId level;
   TStatus status;
 };
@@ -1048,8 +1048,8 @@ struct CloseP {
 /*
 ** Auxiliary function to call 'luaF_close' in protected mode.
 */
-static void closepaux (lua_State *L, void *ud) {
-  struct CloseP *pcl = cast(struct CloseP *, ud);
+സ്ഥിതം ശൂന്യം closepaux (lua_State *L, ശൂന്യം *ud) {
+  ഘടന CloseP *pcl = cast(ഘടന CloseP *, ud);
   luaF_close(L, pcl->level, pcl->status, 0);
 }
 
@@ -1061,13 +1061,13 @@ static void closepaux (lua_State *L, void *ud) {
 TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level, TStatus status) {
   CallInfo *old_ci = L->ci;
   lu_byte old_allowhooks = L->allowhook;
-  for (;;) {  /* keep closing upvalues until no more errors */
-    struct CloseP pcl;
+  വേണ്ടി (;;) {  /* keep closing upvalues until no more errors */
+    ഘടന CloseP pcl;
     pcl.level = restorestack(L, level); pcl.status = status;
     status = luaD_rawrunprotected(L, &closepaux, &pcl);
-    if (l_likely(status == LUA_OK))  /* no more errors? */
-      return pcl.status;
-    else {  /* an error occurred; restore saved state and repeat */
+    എങ്കിൽ (l_likely(status == LUA_OK))  /* no more errors? */
+      തിരികെ pcl.status;
+    അല്ലെങ്കിൽ {  /* an error occurred; restore saved state and repeat */
       L->ci = old_ci;
       L->allowhook = old_allowhooks;
     }
@@ -1080,7 +1080,7 @@ TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level, TStatus status) {
 ** thread information ('allowhook', etc.) and in particular
 ** its stack level in case of errors.
 */
-TStatus luaD_pcall (lua_State *L, Pfunc func, void *u, ptrdiff_t old_top,
+TStatus luaD_pcall (lua_State *L, Pfunc func, ശൂന്യം *u, ptrdiff_t old_മുകൾ,
                                   ptrdiff_t ef) {
   TStatus status;
   CallInfo *old_ci = L->ci;
@@ -1088,15 +1088,15 @@ TStatus luaD_pcall (lua_State *L, Pfunc func, void *u, ptrdiff_t old_top,
   ptrdiff_t old_errfunc = L->errfunc;
   L->errfunc = ef;
   status = luaD_rawrunprotected(L, func, u);
-  if (l_unlikely(status != LUA_OK)) {  /* an error occurred? */
+  എങ്കിൽ (l_unlikely(status != LUA_OK)) {  /* an error occurred? */
     L->ci = old_ci;
     L->allowhook = old_allowhooks;
-    status = luaD_closeprotected(L, old_top, status);
-    luaD_seterrorobj(L, status, restorestack(L, old_top));
+    status = luaD_closeprotected(L, old_മുകൾ, status);
+    luaD_seterrorobj(L, status, restorestack(L, old_മുകൾ));
     luaD_shrinkstack(L);   /* restore stack size in case of overflow */
   }
   L->errfunc = old_errfunc;
-  return status;
+  തിരികെ status;
 }
 
 
@@ -1104,17 +1104,17 @@ TStatus luaD_pcall (lua_State *L, Pfunc func, void *u, ptrdiff_t old_top,
 /*
 ** Execute a protected parser.
 */
-struct SParser {  /* data to 'f_parser' */
+ഘടന SParser {  /* data to 'f_parser' */
   ZIO *z;
   Mbuffer buff;  /* dynamic structure used by the scanner */
   Dyndata dyd;  /* dynamic structures used by the parser */
-  const char *mode;
-  const char *name;
+  സ്ഥിരം അക്ഷരം *mode;
+  സ്ഥിരം അക്ഷരം *name;
 };
 
 
-static void checkmode (lua_State *L, const char *mode, const char *x) {
-  if (strchr(mode, x[0]) == NULL) {
+സ്ഥിതം ശൂന്യം checkmode (lua_State *L, സ്ഥിരം അക്ഷരം *mode, സ്ഥിരം അക്ഷരം *x) {
+  എങ്കിൽ (strchr(mode, x[0]) == ശൂന്യ) {
     luaO_pushfstring(L,
        "attempt to load a %s chunk (mode is '%s')", x, mode);
     luaD_throw(L, LUA_ERRSYNTAX);
@@ -1126,31 +1126,31 @@ static void checkmode (lua_State *L, const char *mode, const char *x) {
 ** Before the first call to the reader function, Lua reserves a slot
 ** with a table for anchoring stuff.
 */
-static void f_parser (lua_State *L, void *ud) {
+സ്ഥിതം ശൂന്യം f_parser (lua_State *L, ശൂന്യം *ud) {
   LClosure *cl;
-  struct SParser *p = cast(struct SParser *, ud);
-  const char *mode = p->mode ? p->mode : "bt";
-  int c;
+  ഘടന SParser *p = cast(ഘടന SParser *, ud);
+  സ്ഥിരം അക്ഷരം *mode = p->mode ? p->mode : "bt";
+  പൂർണ്ണസംഖ്യ c;
   Table *anchor;
-  ptrdiff_t otop = savestack(L, L->top.p);  /* original top */
+  ptrdiff_t otop = savestack(L, L->മുകൾ.p);  /* original top */
   luaD_checkstack(L, 2);
   anchor = luaH_new(L);  /* create the anchor table */
-  sethvalue2s(L, L->top.p++, anchor);  /* anchor the anchor table */
+  sethvalue2s(L, L->മുകൾ.p++, anchor);  /* anchor the anchor table */
   c = zgetc(p->z);  /* read first character */
-  if (c == LUA_SIGNATURE[0]) {
-    int fixed = 0;
-    if (strchr(mode, 'B') != NULL)
+  എങ്കിൽ (c == LUA_SIGNATURE[0]) {
+    പൂർണ്ണസംഖ്യ fixed = 0;
+    എങ്കിൽ (strchr(mode, 'B') != ശൂന്യ)
       fixed = 1;
-    else
+    അല്ലെങ്കിൽ
       checkmode(L, mode, "binary");
     cl = luaU_undump(L, p->z, anchor, p->name, fixed);
   }
-  else {
+  അല്ലെങ്കിൽ {
     checkmode(L, mode, "text");
     cl = luaY_parser(L, p->z, anchor, &p->buff, &p->dyd, p->name, c);
   }
-  L->top.p = restorestack(L, otop);  /* restore stack */
-  setclLvalue2s(L, L->top.p++, cl);  /* push closure */
+  L->മുകൾ.p = restorestack(L, otop);  /* restore stack */
+  setclLvalue2s(L, L->മുകൾ.p++, cl);  /* push closure */
   lua_assert(cl->nupvalues == cl->p->sizeupvalues);
   luaF_initupvals(L, cl);
 }
@@ -1161,32 +1161,32 @@ static void f_parser (lua_State *L, void *ud) {
 ** temporarily in the stack, as luaH_set may call an emergency GC.
 ** Then, add it in the table with itself as its key.
 */
-void luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj) {
-  setgcovalue(L, s2v(L->top.p++), obj);  /* temporary anchor in the stack */
-  luaH_set(L, anchor, s2v(L->top.p - 1), s2v(L->top.p - 1));
+ശൂന്യം luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj) {
+  setgcovalue(L, s2v(L->മുകൾ.p++), obj);  /* temporary anchor in the stack */
+  luaH_set(L, anchor, s2v(L->മുകൾ.p - 1), s2v(L->മുകൾ.p - 1));
   /* Because this is a new key, luaH_set will call the GC barrier, so
      we don't need to call the barrier again here */
-  L->top.p--;
+  L->മുകൾ.p--;
 }
 
 
-TStatus luaD_protectedparser (lua_State *L, ZIO *z, const char *name,
-                                            const char *mode) {
-  struct SParser p;
+TStatus luaD_protectedparser (lua_State *L, ZIO *z, സ്ഥിരം അക്ഷരം *name,
+                                            സ്ഥിരം അക്ഷരം *mode) {
+  ഘടന SParser p;
   TStatus status;
   incnny(L);  /* cannot yield during parsing */
   p.z = z; p.name = name; p.mode = mode;
-  p.dyd.actvar.arr = NULL; p.dyd.actvar.size = 0;
-  p.dyd.gt.arr = NULL; p.dyd.gt.size = 0;
-  p.dyd.label.arr = NULL; p.dyd.label.size = 0;
+  p.dyd.actvar.arr = ശൂന്യ; p.dyd.actvar.size = 0;
+  p.dyd.gt.arr = ശൂന്യ; p.dyd.gt.size = 0;
+  p.dyd.label.arr = ശൂന്യ; p.dyd.label.size = 0;
   luaZ_initbuffer(L, &p.buff);
-  status = luaD_pcall(L, f_parser, &p, savestack(L, L->top.p), L->errfunc);
+  status = luaD_pcall(L, f_parser, &p, savestack(L, L->മുകൾ.p), L->errfunc);
   luaZ_freebuffer(L, &p.buff);
   luaM_freearray(L, p.dyd.actvar.arr, cast_sizet(p.dyd.actvar.size));
   luaM_freearray(L, p.dyd.gt.arr, cast_sizet(p.dyd.gt.size));
   luaM_freearray(L, p.dyd.label.arr, cast_sizet(p.dyd.label.size));
   decnny(L);
-  return status;
+  തിരികെ status;
 }
 
 

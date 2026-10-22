@@ -7,42 +7,42 @@
 #define ldebug_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#അന്തര്ഭാവ "lprefix.h"
 
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
+#അന്തര്ഭാവ <stdarg.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <string.h>
 
-#include "lua.h"
+#അന്തര്ഭാവ "lua.h"
 
-#include "lapi.h"
-#include "lcode.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lvm.h"
-
-
-
-#define LuaClosure(f)		((f) != NULL && (f)->c.tt == LUA_VLCL)
-
-static const char strlocal[] = "local";
-static const char strupval[] = "upvalue";
-
-static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
-                                                   const char **name);
+#അന്തര്ഭാവ "lapi.h"
+#അന്തര്ഭാവ "lcode.h"
+#അന്തര്ഭാവ "ldebug.h"
+#അന്തര്ഭാവ "ldo.h"
+#അന്തര്ഭാവ "lfunc.h"
+#അന്തര്ഭാവ "lobject.h"
+#അന്തര്ഭാവ "lopcodes.h"
+#അന്തര്ഭാവ "lstate.h"
+#അന്തര്ഭാവ "lstring.h"
+#അന്തര്ഭാവ "ltable.h"
+#അന്തര്ഭാവ "ltm.h"
+#അന്തര്ഭാവ "lvm.h"
 
 
-static int currentpc (CallInfo *ci) {
+
+#define LuaClosure(f)		((f) != ശൂന്യ && (f)->c.tt == LUA_VLCL)
+
+സ്ഥിതം സ്ഥിരം അക്ഷരം strlocal[] = "local";
+സ്ഥിതം സ്ഥിരം അക്ഷരം strupval[] = "upvalue";
+
+സ്ഥിതം സ്ഥിരം അക്ഷരം *funcnamefromcall (lua_State *L, CallInfo *ci,
+                                                   സ്ഥിരം അക്ഷരം **name);
+
+
+സ്ഥിതം പൂർണ്ണസംഖ്യ currentpc (CallInfo *ci) {
   lua_assert(isLua(ci));
-  return pcRel(ci->u.l.savedpc, ci_func(ci)->p);
+  തിരികെ pcRel(ci->u.l.savedpc, ci_func(ci)->p);
 }
 
 
@@ -59,20 +59,20 @@ static int currentpc (CallInfo *ci) {
 ** value for MAXIWTHABS or smaller. (Previous releases use a little
 ** smaller value.)
 */
-static int getbaseline (const Proto *f, int pc, int *basepc) {
-  if (f->sizeabslineinfo == 0 || pc < f->abslineinfo[0].pc) {
+സ്ഥിതം പൂർണ്ണസംഖ്യ getbaseline (സ്ഥിരം Proto *f, പൂർണ്ണസംഖ്യ pc, പൂർണ്ണസംഖ്യ *basepc) {
+  എങ്കിൽ (f->sizeabslineinfo == 0 || pc < f->abslineinfo[0].pc) {
     *basepc = -1;  /* start from the beginning */
-    return f->linedefined;
+    തിരികെ f->linedefined;
   }
-  else {
-    int i = pc / MAXIWTHABS - 1;  /* get an estimate */
+  അല്ലെങ്കിൽ {
+    പൂർണ്ണസംഖ്യ i = pc / MAXIWTHABS - 1;  /* get an estimate */
     /* estimate must be a lower bound of the correct base */
     lua_assert(i < 0 ||
               (i < f->sizeabslineinfo && f->abslineinfo[i].pc <= pc));
-    while (i + 1 < f->sizeabslineinfo && pc >= f->abslineinfo[i + 1].pc)
+    ആകുമ്പോൾ (i + 1 < f->sizeabslineinfo && pc >= f->abslineinfo[i + 1].pc)
       i++;  /* low estimate; adjust it */
     *basepc = f->abslineinfo[i].pc;
-    return f->abslineinfo[i].line;
+    തിരികെ f->abslineinfo[i].വരി;
   }
 }
 
@@ -82,23 +82,23 @@ static int getbaseline (const Proto *f, int pc, int *basepc) {
 ** first gets a base line and from there does the increments until
 ** the desired instruction.
 */
-int luaG_getfuncline (const Proto *f, int pc) {
-  if (f->lineinfo == NULL)  /* no debug information? */
-    return -1;
-  else {
-    int basepc;
-    int baseline = getbaseline(f, pc, &basepc);
-    while (basepc++ < pc) {  /* walk until given instruction */
+പൂർണ്ണസംഖ്യ luaG_getfuncline (സ്ഥിരം Proto *f, പൂർണ്ണസംഖ്യ pc) {
+  എങ്കിൽ (f->lineinfo == ശൂന്യ)  /* no debug information? */
+    തിരികെ -1;
+  അല്ലെങ്കിൽ {
+    പൂർണ്ണസംഖ്യ basepc;
+    പൂർണ്ണസംഖ്യ baseline = getbaseline(f, pc, &basepc);
+    ആകുമ്പോൾ (basepc++ < pc) {  /* walk until given instruction */
       lua_assert(f->lineinfo[basepc] != ABSLINEINFO);
       baseline += f->lineinfo[basepc];  /* correct line */
     }
-    return baseline;
+    തിരികെ baseline;
   }
 }
 
 
-static int getcurrentline (CallInfo *ci) {
-  return luaG_getfuncline(ci_func(ci)->p, currentpc(ci));
+സ്ഥിതം പൂർണ്ണസംഖ്യ getcurrentline (CallInfo *ci) {
+  തിരികെ luaG_getfuncline(ci_func(ci)->p, currentpc(ci));
 }
 
 
@@ -113,9 +113,9 @@ static int getcurrentline (CallInfo *ci) {
 ** temporarily broken while inserting a new element. We simply assume it
 ** has no good reasons to do that.)
 */
-static void settraps (CallInfo *ci) {
-  for (; ci != NULL; ci = ci->previous)
-    if (isLua(ci))
+സ്ഥിതം ശൂന്യം settraps (CallInfo *ci) {
+  വേണ്ടി (; ci != ശൂന്യ; ci = ci->previous)
+    എങ്കിൽ (isLua(ci))
       ci->u.l.trap = 1;
 }
 
@@ -130,146 +130,146 @@ static void settraps (CallInfo *ci) {
 ** for all platforms where it runs). Moreover, 'hook' is always checked
 ** before being called (see 'luaD_hook').
 */
-LUA_API void lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
-  if (func == NULL || mask == 0) {  /* turn off hooks? */
+LUA_API ശൂന്യം lua_sethook (lua_State *L, lua_Hook func, പൂർണ്ണസംഖ്യ mask, പൂർണ്ണസംഖ്യ എണ്ണം) {
+  എങ്കിൽ (func == ശൂന്യ || mask == 0) {  /* turn off hooks? */
     mask = 0;
-    func = NULL;
+    func = ശൂന്യ;
   }
   L->hook = func;
-  L->basehookcount = count;
+  L->basehookcount = എണ്ണം;
   resethookcount(L);
   L->hookmask = cast_byte(mask);
-  if (mask)
+  എങ്കിൽ (mask)
     settraps(L->ci);  /* to trace inside 'luaV_execute' */
 }
 
 
 LUA_API lua_Hook lua_gethook (lua_State *L) {
-  return L->hook;
+  തിരികെ L->hook;
 }
 
 
-LUA_API int lua_gethookmask (lua_State *L) {
-  return cast_int(L->hookmask);
+LUA_API പൂർണ്ണസംഖ്യ lua_gethookmask (lua_State *L) {
+  തിരികെ cast_int(L->hookmask);
 }
 
 
-LUA_API int lua_gethookcount (lua_State *L) {
-  return L->basehookcount;
+LUA_API പൂർണ്ണസംഖ്യ lua_gethookcount (lua_State *L) {
+  തിരികെ L->basehookcount;
 }
 
 
-LUA_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
-  int status;
+LUA_API പൂർണ്ണസംഖ്യ lua_getstack (lua_State *L, പൂർണ്ണസംഖ്യ level, lua_Debug *ar) {
+  പൂർണ്ണസംഖ്യ status;
   CallInfo *ci;
-  if (level < 0) return 0;  /* invalid (negative) level */
+  എങ്കിൽ (level < 0) തിരികെ 0;  /* invalid (negative) level */
   lua_lock(L);
-  for (ci = L->ci; level > 0 && ci != &L->base_ci; ci = ci->previous)
+  വേണ്ടി (ci = L->ci; level > 0 && ci != &L->base_ci; ci = ci->previous)
     level--;
-  if (level == 0 && ci != &L->base_ci) {  /* level found? */
+  എങ്കിൽ (level == 0 && ci != &L->base_ci) {  /* level found? */
     status = 1;
     ar->i_ci = ci;
   }
-  else status = 0;  /* no such level */
+  അല്ലെങ്കിൽ status = 0;  /* no such level */
   lua_unlock(L);
-  return status;
+  തിരികെ status;
 }
 
 
-static const char *upvalname (const Proto *p, int uv) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *upvalname (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ uv) {
   TString *s = check_exp(uv < p->sizeupvalues, p->upvalues[uv].name);
-  if (s == NULL) return "?";
-  else return getstr(s);
+  എങ്കിൽ (s == ശൂന്യ) തിരികെ "?";
+  അല്ലെങ്കിൽ തിരികെ getstr(s);
 }
 
 
-static const char *findvararg (CallInfo *ci, int n, StkId *pos) {
-  if (clLvalue(s2v(ci->func.p))->p->flag & PF_VAHID) {
-    int nextra = ci->u.l.nextraargs;
-    if (n >= -nextra) {  /* 'n' is negative */
+സ്ഥിതം സ്ഥിരം അക്ഷരം *findvararg (CallInfo *ci, പൂർണ്ണസംഖ്യ n, StkId *pos) {
+  എങ്കിൽ (clLvalue(s2v(ci->func.p))->p->flag & PF_VAHID) {
+    പൂർണ്ണസംഖ്യ nextra = ci->u.l.nextraargs;
+    എങ്കിൽ (n >= -nextra) {  /* 'n' is negative */
       *pos = ci->func.p - nextra - (n + 1);
-      return "(vararg)";  /* generic name for any vararg */
+      തിരികെ "(vararg)";  /* generic name for any vararg */
     }
   }
-  return NULL;  /* no such vararg */
+  തിരികെ ശൂന്യ;  /* no such vararg */
 }
 
 
-const char *luaG_findlocal (lua_State *L, CallInfo *ci, int n, StkId *pos) {
+സ്ഥിരം അക്ഷരം *luaG_findlocal (lua_State *L, CallInfo *ci, പൂർണ്ണസംഖ്യ n, StkId *pos) {
   StkId base = ci->func.p + 1;
-  const char *name = NULL;
-  if (isLua(ci)) {
-    if (n < 0)  /* access to vararg values? */
-      return findvararg(ci, n, pos);
-    else
+  സ്ഥിരം അക്ഷരം *name = ശൂന്യ;
+  എങ്കിൽ (isLua(ci)) {
+    എങ്കിൽ (n < 0)  /* access to vararg values? */
+      തിരികെ findvararg(ci, n, pos);
+    അല്ലെങ്കിൽ
       name = luaF_getlocalname(ci_func(ci)->p, cast_uint(n), currentpc(ci));
   }
-  if (name == NULL) {  /* no 'standard' name? */
-    StkId limit = (ci == L->ci) ? L->top.p : ci->next->func.p;
-    if (limit - base >= n && n > 0) {  /* is 'n' inside 'ci' stack? */
+  എങ്കിൽ (name == ശൂന്യ) {  /* no 'standard' name? */
+    StkId limit = (ci == L->ci) ? L->മുകൾ.p : ci->next->func.p;
+    എങ്കിൽ (limit - base >= n && n > 0) {  /* is 'n' inside 'ci' stack? */
       /* generic name for any valid slot */
       name = isLua(ci) ? "(temporary)" : "(C temporary)";
     }
-    else
-      return NULL;  /* no name */
+    അല്ലെങ്കിൽ
+      തിരികെ ശൂന്യ;  /* no name */
   }
-  if (pos)
+  എങ്കിൽ (pos)
     *pos = base + (n - 1);
-  return name;
+  തിരികെ name;
 }
 
 
-LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
-  const char *name;
+LUA_API സ്ഥിരം അക്ഷരം *lua_getlocal (lua_State *L, സ്ഥിരം lua_Debug *ar, പൂർണ്ണസംഖ്യ n) {
+  സ്ഥിരം അക്ഷരം *name;
   lua_lock(L);
-  if (ar == NULL) {  /* information about non-active function? */
-    if (!isLfunction(s2v(L->top.p - 1)))  /* not a Lua function? */
-      name = NULL;
-    else  /* consider live variables at function start (parameters) */
-      name = luaF_getlocalname(clLvalue(s2v(L->top.p - 1))->p, cast_uint(n), 0);
+  എങ്കിൽ (ar == ശൂന്യ) {  /* information about non-active function? */
+    എങ്കിൽ (!isLfunction(s2v(L->മുകൾ.p - 1)))  /* not a Lua function? */
+      name = ശൂന്യ;
+    അല്ലെങ്കിൽ  /* consider live variables at function start (parameters) */
+      name = luaF_getlocalname(clLvalue(s2v(L->മുകൾ.p - 1))->p, cast_uint(n), 0);
   }
-  else {  /* active function; get information through 'ar' */
-    StkId pos = NULL;  /* to avoid warnings */
+  അല്ലെങ്കിൽ {  /* active function; get information through 'ar' */
+    StkId pos = ശൂന്യ;  /* to avoid warnings */
     name = luaG_findlocal(L, ar->i_ci, n, &pos);
-    if (name) {
-      setobjs2s(L, L->top.p, pos);
-      api_incr_top(L);
+    എങ്കിൽ (name) {
+      setobjs2s(L, L->മുകൾ.p, pos);
+      api_incr_മുകൾ(L);
     }
   }
   lua_unlock(L);
-  return name;
+  തിരികെ name;
 }
 
 
-LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
-  StkId pos = NULL;  /* to avoid warnings */
-  const char *name;
+LUA_API സ്ഥിരം അക്ഷരം *lua_setlocal (lua_State *L, സ്ഥിരം lua_Debug *ar, പൂർണ്ണസംഖ്യ n) {
+  StkId pos = ശൂന്യ;  /* to avoid warnings */
+  സ്ഥിരം അക്ഷരം *name;
   lua_lock(L);
   name = luaG_findlocal(L, ar->i_ci, n, &pos);
-  if (name) {
+  എങ്കിൽ (name) {
     api_checkpop(L, 1);
-    setobjs2s(L, pos, L->top.p - 1);
-    L->top.p--;  /* pop value */
+    setobjs2s(L, pos, L->മുകൾ.p - 1);
+    L->മുകൾ.p--;  /* pop value */
   }
   lua_unlock(L);
-  return name;
+  തിരികെ name;
 }
 
 
-static void funcinfo (lua_Debug *ar, Closure *cl) {
-  if (!LuaClosure(cl)) {
+സ്ഥിതം ശൂന്യം funcinfo (lua_Debug *ar, Closure *cl) {
+  എങ്കിൽ (!LuaClosure(cl)) {
     ar->source = "=[C]";
     ar->srclen = LL("=[C]");
     ar->linedefined = -1;
     ar->lastlinedefined = -1;
     ar->what = "C";
   }
-  else {
-    const Proto *p = cl->l.p;
-    if (p->source) {
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം Proto *p = cl->l.p;
+    എങ്കിൽ (p->source) {
       ar->source = getlstr(p->source, ar->srclen);
     }
-    else {
+    അല്ലെങ്കിൽ {
       ar->source = "=?";
       ar->srclen = LL("=?");
     }
@@ -281,37 +281,37 @@ static void funcinfo (lua_Debug *ar, Closure *cl) {
 }
 
 
-static int nextline (const Proto *p, int currentline, int pc) {
-  if (p->lineinfo[pc] != ABSLINEINFO)
-    return currentline + p->lineinfo[pc];
-  else
-    return luaG_getfuncline(p, pc);
+സ്ഥിതം പൂർണ്ണസംഖ്യ nextline (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ currentline, പൂർണ്ണസംഖ്യ pc) {
+  എങ്കിൽ (p->lineinfo[pc] != ABSLINEINFO)
+    തിരികെ currentline + p->lineinfo[pc];
+  അല്ലെങ്കിൽ
+    തിരികെ luaG_getfuncline(p, pc);
 }
 
 
-static void collectvalidlines (lua_State *L, Closure *f) {
-  if (!LuaClosure(f)) {
-    setnilvalue2s(L->top.p);
-    api_incr_top(L);
+സ്ഥിതം ശൂന്യം collectvalidlines (lua_State *L, Closure *f) {
+  എങ്കിൽ (!LuaClosure(f)) {
+    setnilvalue2s(L->മുകൾ.p);
+    api_incr_മുകൾ(L);
   }
-  else {
-    const Proto *p = f->l.p;
-    int currentline = p->linedefined;
+  അല്ലെങ്കിൽ {
+    സ്ഥിരം Proto *p = f->l.p;
+    പൂർണ്ണസംഖ്യ currentline = p->linedefined;
     Table *t = luaH_new(L);  /* new table to store active lines */
-    sethvalue2s(L, L->top.p, t);  /* push it on stack */
-    api_incr_top(L);
-    if (p->lineinfo != NULL) {  /* proto with debug information? */
-      int i;
+    sethvalue2s(L, L->മുകൾ.p, t);  /* push it on stack */
+    api_incr_മുകൾ(L);
+    എങ്കിൽ (p->lineinfo != ശൂന്യ) {  /* proto with debug information? */
+      പൂർണ്ണസംഖ്യ i;
       TValue v;
       setbtvalue(&v);  /* boolean 'true' to be the value of all indices */
-      if (!(isvararg(p)))  /* regular function? */
+      എങ്കിൽ (!(isvararg(p)))  /* regular function? */
         i = 0;  /* consider all instructions */
-      else {  /* vararg function */
+      അല്ലെങ്കിൽ {  /* vararg function */
         lua_assert(GET_OPCODE(p->code[0]) == OP_VARARGPREP);
         currentline = nextline(p, currentline, 0);
         i = 1;  /* skip first instruction (OP_VARARGPREP) */
       }
-      for (; i < p->sizelineinfo; i++) {  /* for each instruction */
+      വേണ്ടി (; i < p->sizelineinfo; i++) {  /* for each instruction */
         currentline = nextline(p, currentline, i);  /* get its line */
         luaH_setint(L, t, currentline, &v);  /* table[line] = true */
       }
@@ -320,106 +320,106 @@ static void collectvalidlines (lua_State *L, Closure *f) {
 }
 
 
-static const char *getfuncname (lua_State *L, CallInfo *ci, const char **name) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *getfuncname (lua_State *L, CallInfo *ci, സ്ഥിരം അക്ഷരം **name) {
   /* calling function is a known function? */
-  if (ci != NULL && !(ci->callstatus & CIST_TAIL))
-    return funcnamefromcall(L, ci->previous, name);
-  else return NULL;  /* no way to find a name */
+  എങ്കിൽ (ci != ശൂന്യ && !(ci->callstatus & CIST_TAIL))
+    തിരികെ funcnamefromcall(L, ci->previous, name);
+  അല്ലെങ്കിൽ തിരികെ ശൂന്യ;  /* no way to find a name */
 }
 
 
-static int auxgetinfo (lua_State *L, const char *what, lua_Debug *ar,
+സ്ഥിതം പൂർണ്ണസംഖ്യ auxgetinfo (lua_State *L, സ്ഥിരം അക്ഷരം *what, lua_Debug *ar,
                        Closure *f, CallInfo *ci) {
-  int status = 1;
-  for (; *what; what++) {
-    switch (*what) {
-      case 'S': {
+  പൂർണ്ണസംഖ്യ status = 1;
+  വേണ്ടി (; *what; what++) {
+    തിരഞ്ഞെടുപ്പ് (*what) {
+      അവസ്ഥ 'S': {
         funcinfo(ar, f);
-        break;
+        നിർത്തുക;
       }
-      case 'l': {
+      അവസ്ഥ 'l': {
         ar->currentline = (ci && isLua(ci)) ? getcurrentline(ci) : -1;
-        break;
+        നിർത്തുക;
       }
-      case 'u': {
-        ar->nups = (f == NULL) ? 0 : f->c.nupvalues;
-        if (!LuaClosure(f)) {
+      അവസ്ഥ 'u': {
+        ar->nups = (f == ശൂന്യ) ? 0 : f->c.nupvalues;
+        എങ്കിൽ (!LuaClosure(f)) {
           ar->isvararg = 1;
           ar->nparams = 0;
         }
-        else {
+        അല്ലെങ്കിൽ {
           ar->isvararg = (isvararg(f->l.p)) ? 1 : 0;
           ar->nparams = f->l.p->numparams;
         }
-        break;
+        നിർത്തുക;
       }
-      case 't': {
-        if (ci != NULL) {
+      അവസ്ഥ 't': {
+        എങ്കിൽ (ci != ശൂന്യ) {
           ar->istailcall = !!(ci->callstatus & CIST_TAIL);
           ar->extraargs =
                    cast_uchar((ci->callstatus & MAX_CCMT) >> CIST_CCMT);
         }
-        else {
+        അല്ലെങ്കിൽ {
           ar->istailcall = 0;
           ar->extraargs = 0;
         }
-        break;
+        നിർത്തുക;
       }
-      case 'n': {
+      അവസ്ഥ 'n': {
         ar->namewhat = getfuncname(L, ci, &ar->name);
-        if (ar->namewhat == NULL) {
+        എങ്കിൽ (ar->namewhat == ശൂന്യ) {
           ar->namewhat = "";  /* not found */
-          ar->name = NULL;
+          ar->name = ശൂന്യ;
         }
-        break;
+        നിർത്തുക;
       }
-      case 'r': {
-        if (ci == NULL || !(ci->callstatus & CIST_HOOKED))
+      അവസ്ഥ 'r': {
+        എങ്കിൽ (ci == ശൂന്യ || !(ci->callstatus & CIST_HOOKED))
           ar->ftransfer = ar->ntransfer = 0;
-        else {
+        അല്ലെങ്കിൽ {
           ar->ftransfer = L->transferinfo.ftransfer;
           ar->ntransfer = L->transferinfo.ntransfer;
         }
-        break;
+        നിർത്തുക;
       }
-      case 'L':
-      case 'f':  /* handled by lua_getinfo */
-        break;
-      default: status = 0;  /* invalid option */
+      അവസ്ഥ 'L':
+      അവസ്ഥ 'f':  /* handled by lua_getinfo */
+        നിർത്തുക;
+      സ്ഥിരസ്ഥിതി: status = 0;  /* invalid option */
     }
   }
-  return status;
+  തിരികെ status;
 }
 
 
-LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
-  int status;
+LUA_API പൂർണ്ണസംഖ്യ lua_getinfo (lua_State *L, സ്ഥിരം അക്ഷരം *what, lua_Debug *ar) {
+  പൂർണ്ണസംഖ്യ status;
   Closure *cl;
   CallInfo *ci;
   TValue *func;
   lua_lock(L);
-  if (*what == '>') {
-    ci = NULL;
-    func = s2v(L->top.p - 1);
+  എങ്കിൽ (*what == '>') {
+    ci = ശൂന്യ;
+    func = s2v(L->മുകൾ.p - 1);
     api_check(L, ttisfunction(func), "function expected");
     what++;  /* skip the '>' */
-    L->top.p--;  /* pop function */
+    L->മുകൾ.p--;  /* pop function */
   }
-  else {
+  അല്ലെങ്കിൽ {
     ci = ar->i_ci;
     func = s2v(ci->func.p);
     lua_assert(ttisfunction(func));
   }
-  cl = ttisclosure(func) ? clvalue(func) : NULL;
+  cl = ttisclosure(func) ? clvalue(func) : ശൂന്യ;
   status = auxgetinfo(L, what, ar, cl, ci);
-  if (strchr(what, 'f')) {
-    setobj2s(L, L->top.p, func);
-    api_incr_top(L);
+  എങ്കിൽ (strchr(what, 'f')) {
+    setobj2s(L, L->മുകൾ.p, func);
+    api_incr_മുകൾ(L);
   }
-  if (strchr(what, 'L'))
+  എങ്കിൽ (strchr(what, 'L'))
     collectvalidlines(L, cl);
   lua_unlock(L);
-  return status;
+  തിരികെ status;
 }
 
 
@@ -430,115 +430,115 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
 */
 
 
-static int filterpc (int pc, int jmptarget) {
-  if (pc < jmptarget)  /* is code conditional (inside a jump)? */
-    return -1;  /* cannot know who sets that register */
-  else return pc;  /* current position sets that register */
+സ്ഥിതം പൂർണ്ണസംഖ്യ filterpc (പൂർണ്ണസംഖ്യ pc, പൂർണ്ണസംഖ്യ jmptarget) {
+  എങ്കിൽ (pc < jmptarget)  /* is code conditional (inside a jump)? */
+    തിരികെ -1;  /* cannot know who sets that register */
+  അല്ലെങ്കിൽ തിരികെ pc;  /* current position sets that register */
 }
 
 
 /*
 ** Try to find last instruction before 'lastpc' that modified register 'reg'.
 */
-static int findsetreg (const Proto *p, int lastpc, int reg) {
-  int pc;
-  int setreg = -1;  /* keep last instruction that changed 'reg' */
-  int jmptarget = 0;  /* any code before this address is conditional */
-  if (testMMMode(GET_OPCODE(p->code[lastpc])))
+സ്ഥിതം പൂർണ്ണസംഖ്യ findsetreg (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ lastpc, പൂർണ്ണസംഖ്യ reg) {
+  പൂർണ്ണസംഖ്യ pc;
+  പൂർണ്ണസംഖ്യ setreg = -1;  /* keep last instruction that changed 'reg' */
+  പൂർണ്ണസംഖ്യ jmptarget = 0;  /* any code before this address is conditional */
+  എങ്കിൽ (testMMMode(GET_OPCODE(p->code[lastpc])))
     lastpc--;  /* previous instruction was not actually executed */
-  for (pc = 0; pc < lastpc; pc++) {
+  വേണ്ടി (pc = 0; pc < lastpc; pc++) {
     Instruction i = p->code[pc];
     OpCode op = GET_OPCODE(i);
-    int a = GETARG_A(i);
-    int change;  /* true if current instruction changed 'reg' */
-    switch (op) {
-      case OP_LOADNIL: {  /* set registers from 'a' to 'a+b' */
-        int b = GETARG_B(i);
+    പൂർണ്ണസംഖ്യ a = GETARG_A(i);
+    പൂർണ്ണസംഖ്യ change;  /* true if current instruction changed 'reg' */
+    തിരഞ്ഞെടുപ്പ് (op) {
+      അവസ്ഥ OP_LOADNIL: {  /* set registers from 'a' to 'a+b' */
+        പൂർണ്ണസംഖ്യ b = GETARG_B(i);
         change = (a <= reg && reg <= a + b);
-        break;
+        നിർത്തുക;
       }
-      case OP_TFORCALL: {  /* affect all regs above its base */
+      അവസ്ഥ OP_TFORCALL: {  /* affect all regs above its base */
         change = (reg >= a + 2);
-        break;
+        നിർത്തുക;
       }
-      case OP_CALL:
-      case OP_TAILCALL: {  /* affect all registers above base */
+      അവസ്ഥ OP_CALL:
+      അവസ്ഥ OP_TAILCALL: {  /* affect all registers above base */
         change = (reg >= a);
-        break;
+        നിർത്തുക;
       }
-      case OP_JMP: {  /* doesn't change registers, but changes 'jmptarget' */
-        int b = GETARG_sJ(i);
-        int dest = pc + 1 + b;
+      അവസ്ഥ OP_JMP: {  /* doesn't change registers, but changes 'jmptarget' */
+        പൂർണ്ണസംഖ്യ b = GETARG_sJ(i);
+        പൂർണ്ണസംഖ്യ dest = pc + 1 + b;
         /* jump does not skip 'lastpc' and is larger than current one? */
-        if (dest <= lastpc && dest > jmptarget)
+        എങ്കിൽ (dest <= lastpc && dest > jmptarget)
           jmptarget = dest;  /* update 'jmptarget' */
         change = 0;
-        break;
+        നിർത്തുക;
       }
-      default:  /* any instruction that sets A */
+      സ്ഥിരസ്ഥിതി:  /* any instruction that sets A */
         change = (testAMode(op) && reg == a);
-        break;
+        നിർത്തുക;
     }
-    if (change)
+    എങ്കിൽ (change)
       setreg = filterpc(pc, jmptarget);
   }
-  return setreg;
+  തിരികെ setreg;
 }
 
 
 /*
 ** Find a "name" for the constant 'c'.
 */
-static const char *kname (const Proto *p, int index, const char **name) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *kname (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ index, സ്ഥിരം അക്ഷരം **name) {
   TValue *kvalue = &p->k[index];
-  if (ttisstring(kvalue)) {
+  എങ്കിൽ (ttisstring(kvalue)) {
     *name = getstr(tsvalue(kvalue));
-    return "constant";
+    തിരികെ "constant";
   }
-  else {
+  അല്ലെങ്കിൽ {
     *name = "?";
-    return NULL;
+    തിരികെ ശൂന്യ;
   }
 }
 
 
-static const char *basicgetobjname (const Proto *p, int *ppc, int reg,
-                                    const char **name) {
-  int pc = *ppc;
+സ്ഥിതം സ്ഥിരം അക്ഷരം *basicgetobjname (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ *ppc, പൂർണ്ണസംഖ്യ reg,
+                                    സ്ഥിരം അക്ഷരം **name) {
+  പൂർണ്ണസംഖ്യ pc = *ppc;
   *name = luaF_getlocalname(p, cast_uint(reg + 1), pc);
-  if (*name)  /* is a local? */
-    return strlocal;
+  എങ്കിൽ (*name)  /* is a local? */
+    തിരികെ strlocal;
   /* else try symbolic execution */
   *ppc = pc = findsetreg(p, pc, reg);
-  if (pc != -1) {  /* could find instruction? */
+  എങ്കിൽ (pc != -1) {  /* could find instruction? */
     Instruction i = p->code[pc];
     OpCode op = GET_OPCODE(i);
-    switch (op) {
-      case OP_MOVE: {
-        int b = GETARG_B(i);  /* move from 'b' to 'a' */
-        if (b < GETARG_A(i))
-          return basicgetobjname(p, ppc, b, name);  /* get name for 'b' */
-        break;
+    തിരഞ്ഞെടുപ്പ് (op) {
+      അവസ്ഥ OP_MOVE: {
+        പൂർണ്ണസംഖ്യ b = GETARG_B(i);  /* move from 'b' to 'a' */
+        എങ്കിൽ (b < GETARG_A(i))
+          തിരികെ basicgetobjname(p, ppc, b, name);  /* get name for 'b' */
+        നിർത്തുക;
       }
-      case OP_GETUPVAL: {
+      അവസ്ഥ OP_GETUPVAL: {
         *name = upvalname(p, GETARG_B(i));
-        return strupval;
+        തിരികെ strupval;
       }
-      case OP_LOADK: return kname(p, GETARG_Bx(i), name);
-      case OP_LOADKX: return kname(p, GETARG_Ax(p->code[pc + 1]), name);
-      default: break;
+      അവസ്ഥ OP_LOADK: തിരികെ kname(p, GETARG_Bx(i), name);
+      അവസ്ഥ OP_LOADKX: തിരികെ kname(p, GETARG_Ax(p->code[pc + 1]), name);
+      സ്ഥിരസ്ഥിതി: നിർത്തുക;
     }
   }
-  return NULL;  /* could not find reasonable name */
+  തിരികെ ശൂന്യ;  /* could not find reasonable name */
 }
 
 
 /*
 ** Find a "name" for the register 'c'.
 */
-static void rname (const Proto *p, int pc, int c, const char **name) {
-  const char *what = basicgetobjname(p, &pc, c, name); /* search for 'c' */
-  if (!(what && *what == 'c'))  /* did not find a constant name? */
+സ്ഥിതം ശൂന്യം rname (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ pc, പൂർണ്ണസംഖ്യ c, സ്ഥിരം അക്ഷരം **name) {
+  സ്ഥിരം അക്ഷരം *what = basicgetobjname(p, &pc, c, name); /* search for 'c' */
+  എങ്കിൽ (!(what && *what == 'c'))  /* did not find a constant name? */
     *name = "?";
 }
 
@@ -547,62 +547,62 @@ static void rname (const Proto *p, int pc, int c, const char **name) {
 ** Check whether table being indexed by instruction 'i' is the
 ** environment '_ENV'
 */
-static const char *isEnv (const Proto *p, int pc, Instruction i, int isup) {
-  int t = GETARG_B(i);  /* table index */
-  const char *name;  /* name of indexed variable */
-  if (isup)  /* is 't' an upvalue? */
+സ്ഥിതം സ്ഥിരം അക്ഷരം *isEnv (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ pc, Instruction i, പൂർണ്ണസംഖ്യ isup) {
+  പൂർണ്ണസംഖ്യ t = GETARG_B(i);  /* table index */
+  സ്ഥിരം അക്ഷരം *name;  /* name of indexed variable */
+  എങ്കിൽ (isup)  /* is 't' an upvalue? */
     name = upvalname(p, t);
-  else {  /* 't' is a register */
-    const char *what = basicgetobjname(p, &pc, t, &name);
+  അല്ലെങ്കിൽ {  /* 't' is a register */
+    സ്ഥിരം അക്ഷരം *what = basicgetobjname(p, &pc, t, &name);
     /* 'name' must be the name of a local variable (at the current
        level or an upvalue) */
-    if (what != strlocal && what != strupval)
-      name = NULL;  /* cannot be the variable _ENV */
+    എങ്കിൽ (what != strlocal && what != strupval)
+      name = ശൂന്യ;  /* cannot be the variable _ENV */
   }
-  return (name && strcmp(name, LUA_ENV) == 0) ? "global" : "field";
+  തിരികെ (name && strcmp(name, LUA_ENV) == 0) ? "global" : "field";
 }
 
 
 /*
 ** Extend 'basicgetobjname' to handle table accesses
 */
-static const char *getobjname (const Proto *p, int lastpc, int reg,
-                               const char **name) {
-  const char *kind = basicgetobjname(p, &lastpc, reg, name);
-  if (kind != NULL)
-    return kind;
-  else if (lastpc != -1) {  /* could find instruction? */
+സ്ഥിതം സ്ഥിരം അക്ഷരം *getobjname (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ lastpc, പൂർണ്ണസംഖ്യ reg,
+                               സ്ഥിരം അക്ഷരം **name) {
+  സ്ഥിരം അക്ഷരം *kind = basicgetobjname(p, &lastpc, reg, name);
+  എങ്കിൽ (kind != ശൂന്യ)
+    തിരികെ kind;
+  അല്ലെങ്കിൽ എങ്കിൽ (lastpc != -1) {  /* could find instruction? */
     Instruction i = p->code[lastpc];
     OpCode op = GET_OPCODE(i);
-    switch (op) {
-      case OP_GETTABUP: {
-        int k = GETARG_C(i);  /* key index */
+    തിരഞ്ഞെടുപ്പ് (op) {
+      അവസ്ഥ OP_GETTABUP: {
+        പൂർണ്ണസംഖ്യ k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return isEnv(p, lastpc, i, 1);
+        തിരികെ isEnv(p, lastpc, i, 1);
       }
-      case OP_GETTABLE: case OP_GETVARG: {
-        int k = GETARG_C(i);  /* key index */
+      അവസ്ഥ OP_GETTABLE: അവസ്ഥ OP_GETVARG: {
+        പൂർണ്ണസംഖ്യ k = GETARG_C(i);  /* key index */
         rname(p, lastpc, k, name);
-        return isEnv(p, lastpc, i, 0);
+        തിരികെ isEnv(p, lastpc, i, 0);
       }
-      case OP_GETI: {
+      അവസ്ഥ OP_GETI: {
         *name = "integer index";
-        return "field";
+        തിരികെ "field";
       }
-      case OP_GETFIELD: {
-        int k = GETARG_C(i);  /* key index */
+      അവസ്ഥ OP_GETFIELD: {
+        പൂർണ്ണസംഖ്യ k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return isEnv(p, lastpc, i, 0);
+        തിരികെ isEnv(p, lastpc, i, 0);
       }
-      case OP_SELF: {
-        int k = GETARG_C(i);  /* key index */
+      അവസ്ഥ OP_SELF: {
+        പൂർണ്ണസംഖ്യ k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return "method";
+        തിരികെ "method";
       }
-      default: break;  /* go through to return NULL */
+      സ്ഥിരസ്ഥിതി: നിർത്തുക;  /* go through to return NULL */
     }
   }
-  return NULL;  /* could not find reasonable name */
+  തിരികെ ശൂന്യ;  /* could not find reasonable name */
 }
 
 
@@ -612,64 +612,64 @@ static const char *getobjname (const Proto *p, int lastpc, int reg,
 ** Returns what the name is (e.g., "for iterator", "method",
 ** "metamethod") and sets '*name' to point to the name.
 */
-static const char *funcnamefromcode (lua_State *L, const Proto *p,
-                                     int pc, const char **name) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *funcnamefromcode (lua_State *L, സ്ഥിരം Proto *p,
+                                     പൂർണ്ണസംഖ്യ pc, സ്ഥിരം അക്ഷരം **name) {
   TMS tm = (TMS)0;  /* (initial value avoids warnings) */
   Instruction i = p->code[pc];  /* calling instruction */
-  switch (GET_OPCODE(i)) {
-    case OP_CALL:
-    case OP_TAILCALL:
-      return getobjname(p, pc, GETARG_A(i), name);  /* get function name */
-    case OP_TFORCALL: {  /* for iterator */
+  തിരഞ്ഞെടുപ്പ് (GET_OPCODE(i)) {
+    അവസ്ഥ OP_CALL:
+    അവസ്ഥ OP_TAILCALL:
+      തിരികെ getobjname(p, pc, GETARG_A(i), name);  /* get function name */
+    അവസ്ഥ OP_TFORCALL: {  /* for iterator */
       *name = "for iterator";
-       return "for iterator";
+       തിരികെ "for iterator";
     }
     /* other instructions can do calls through metamethods */
-    case OP_SELF: case OP_GETTABUP: case OP_GETTABLE:
-    case OP_GETI: case OP_GETFIELD:
+    അവസ്ഥ OP_SELF: അവസ്ഥ OP_GETTABUP: അവസ്ഥ OP_GETTABLE:
+    അവസ്ഥ OP_GETI: അവസ്ഥ OP_GETFIELD:
       tm = TM_INDEX;
-      break;
-    case OP_SETTABUP: case OP_SETTABLE: case OP_SETI: case OP_SETFIELD:
+      നിർത്തുക;
+    അവസ്ഥ OP_SETTABUP: അവസ്ഥ OP_SETTABLE: അവസ്ഥ OP_SETI: അവസ്ഥ OP_SETFIELD:
       tm = TM_NEWINDEX;
-      break;
-    case OP_MMBIN: case OP_MMBINI: case OP_MMBINK: {
+      നിർത്തുക;
+    അവസ്ഥ OP_MMBIN: അവസ്ഥ OP_MMBINI: അവസ്ഥ OP_MMBINK: {
       tm = cast(TMS, GETARG_C(i));
-      break;
+      നിർത്തുക;
     }
-    case OP_UNM: tm = TM_UNM; break;
-    case OP_BNOT: tm = TM_BNOT; break;
-    case OP_LEN: tm = TM_LEN; break;
-    case OP_CONCAT: tm = TM_CONCAT; break;
-    case OP_EQ: tm = TM_EQ; break;
+    അവസ്ഥ OP_UNM: tm = TM_UNM; നിർത്തുക;
+    അവസ്ഥ OP_BNOT: tm = TM_BNOT; നിർത്തുക;
+    അവസ്ഥ OP_LEN: tm = TM_LEN; നിർത്തുക;
+    അവസ്ഥ OP_CONCAT: tm = TM_CONCAT; നിർത്തുക;
+    അവസ്ഥ OP_EQ: tm = TM_EQ; നിർത്തുക;
     /* no cases for OP_EQI and OP_EQK, as they don't call metamethods */
-    case OP_LT: case OP_LTI: case OP_GTI: tm = TM_LT; break;
-    case OP_LE: case OP_LEI: case OP_GEI: tm = TM_LE; break;
-    case OP_CLOSE: case OP_RETURN: tm = TM_CLOSE; break;
-    default:
-      return NULL;  /* cannot find a reasonable name */
+    അവസ്ഥ OP_LT: അവസ്ഥ OP_LTI: അവസ്ഥ OP_GTI: tm = TM_LT; നിർത്തുക;
+    അവസ്ഥ OP_LE: അവസ്ഥ OP_LEI: അവസ്ഥ OP_GEI: tm = TM_LE; നിർത്തുക;
+    അവസ്ഥ OP_CLOSE: അവസ്ഥ OP_RETURN: tm = TM_CLOSE; നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
+      തിരികെ ശൂന്യ;  /* cannot find a reasonable name */
   }
   *name = getshrstr(G(L)->tmname[tm]) + 2;
-  return "metamethod";
+  തിരികെ "metamethod";
 }
 
 
 /*
 ** Try to find a name for a function based on how it was called.
 */
-static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
-                                                   const char **name) {
-  if (ci->callstatus & CIST_HOOKED) {  /* was it called inside a hook? */
+സ്ഥിതം സ്ഥിരം അക്ഷരം *funcnamefromcall (lua_State *L, CallInfo *ci,
+                                                   സ്ഥിരം അക്ഷരം **name) {
+  എങ്കിൽ (ci->callstatus & CIST_HOOKED) {  /* was it called inside a hook? */
     *name = "?";
-    return "hook";
+    തിരികെ "hook";
   }
-  else if (ci->callstatus & CIST_FIN) {  /* was it called as a finalizer? */
+  അല്ലെങ്കിൽ എങ്കിൽ (ci->callstatus & CIST_FIN) {  /* was it called as a finalizer? */
     *name = "__gc";
-    return "metamethod";  /* report it as such */
+    തിരികെ "metamethod";  /* report it as such */
   }
-  else if (isLua(ci))
-    return funcnamefromcode(L, ci_func(ci)->p, currentpc(ci), name);
-  else
-    return NULL;
+  അല്ലെങ്കിൽ എങ്കിൽ (isLua(ci))
+    തിരികെ funcnamefromcode(L, ci_func(ci)->p, currentpc(ci), name);
+  അല്ലെങ്കിൽ
+    തിരികെ ശൂന്യ;
 }
 
 /* }====================================================== */
@@ -682,14 +682,14 @@ static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
 ** not point to a value in this stack, we cannot compare it with the
 ** region boundaries (undefined behavior in ISO C).
 */
-static int instack (CallInfo *ci, const TValue *o) {
-  int pos;
+സ്ഥിതം പൂർണ്ണസംഖ്യ instack (CallInfo *ci, സ്ഥിരം TValue *o) {
+  പൂർണ്ണസംഖ്യ pos;
   StkId base = ci->func.p + 1;
-  for (pos = 0; base + pos < ci->top.p; pos++) {
-    if (o == s2v(base + pos))
-      return pos;
+  വേണ്ടി (pos = 0; base + pos < ci->മുകൾ.p; pos++) {
+    എങ്കിൽ (o == s2v(base + pos))
+      തിരികെ pos;
   }
-  return -1;  /* not found */
+  തിരികെ -1;  /* not found */
 }
 
 
@@ -698,54 +698,54 @@ static int instack (CallInfo *ci, const TValue *o) {
 ** with instructions OP_GETTABUP/OP_SETTABUP, which operate directly on
 ** upvalues.)
 */
-static const char *getupvalname (CallInfo *ci, const TValue *o,
-                                 const char **name) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *getupvalname (CallInfo *ci, സ്ഥിരം TValue *o,
+                                 സ്ഥിരം അക്ഷരം **name) {
   LClosure *c = ci_func(ci);
-  int i;
-  for (i = 0; i < c->nupvalues; i++) {
-    if (c->upvals[i]->v.p == o) {
+  പൂർണ്ണസംഖ്യ i;
+  വേണ്ടി (i = 0; i < c->nupvalues; i++) {
+    എങ്കിൽ (c->upvals[i]->v.p == o) {
       *name = upvalname(c->p, i);
-      return strupval;
+      തിരികെ strupval;
     }
   }
-  return NULL;
+  തിരികെ ശൂന്യ;
 }
 
 
-static const char *formatvarinfo (lua_State *L, const char *kind,
-                                                const char *name) {
-  if (kind == NULL)
-    return "";  /* no information */
-  else
-    return luaO_pushfstring(L, " (%s '%s')", kind, name);
+സ്ഥിതം സ്ഥിരം അക്ഷരം *formatvarinfo (lua_State *L, സ്ഥിരം അക്ഷരം *kind,
+                                                സ്ഥിരം അക്ഷരം *name) {
+  എങ്കിൽ (kind == ശൂന്യ)
+    തിരികെ "";  /* no information */
+  അല്ലെങ്കിൽ
+    തിരികെ luaO_pushfstring(L, " (%s '%s')", kind, name);
 }
 
 /*
 ** Build a string with a "description" for the value 'o', such as
 ** "variable 'x'" or "upvalue 'y'".
 */
-static const char *varinfo (lua_State *L, const TValue *o) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം *varinfo (lua_State *L, സ്ഥിരം TValue *o) {
   CallInfo *ci = L->ci;
-  const char *name = NULL;  /* to avoid warnings */
-  const char *kind = NULL;
-  if (isLua(ci)) {
+  സ്ഥിരം അക്ഷരം *name = ശൂന്യ;  /* to avoid warnings */
+  സ്ഥിരം അക്ഷരം *kind = ശൂന്യ;
+  എങ്കിൽ (isLua(ci)) {
     kind = getupvalname(ci, o, &name);  /* check whether 'o' is an upvalue */
-    if (!kind) {  /* not an upvalue? */
-      int reg = instack(ci, o);  /* try a register */
-      if (reg >= 0)  /* is 'o' a register? */
+    എങ്കിൽ (!kind) {  /* not an upvalue? */
+      പൂർണ്ണസംഖ്യ reg = instack(ci, o);  /* try a register */
+      എങ്കിൽ (reg >= 0)  /* is 'o' a register? */
         kind = getobjname(ci_func(ci)->p, currentpc(ci), reg, &name);
     }
   }
-  return formatvarinfo(L, kind, name);
+  തിരികെ formatvarinfo(L, kind, name);
 }
 
 
 /*
 ** Raise a type error
 */
-static l_noret typeerror (lua_State *L, const TValue *o, const char *op,
-                          const char *extra) {
-  const char *t = luaT_objtypename(L, o);
+സ്ഥിതം l_noret typeerror (lua_State *L, സ്ഥിരം TValue *o, സ്ഥിരം അക്ഷരം *op,
+                          സ്ഥിരം അക്ഷരം *extra) {
+  സ്ഥിരം അക്ഷരം *t = luaT_objtypename(L, o);
   luaG_runerror(L, "attempt to %s a %s value%s", op, t, extra);
 }
 
@@ -754,7 +754,7 @@ static l_noret typeerror (lua_State *L, const TValue *o, const char *op,
 ** Raise a type error with "standard" information about the faulty
 ** object 'o' (using 'varinfo').
 */
-l_noret luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
+l_noret luaG_typeerror (lua_State *L, സ്ഥിരം TValue *o, സ്ഥിരം അക്ഷരം *op) {
   typeerror(L, o, op, varinfo(L, o));
 }
 
@@ -764,107 +764,107 @@ l_noret luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
 ** for the object based on how it was called ('funcnamefromcall'); if it
 ** cannot get a name there, try 'varinfo'.
 */
-l_noret luaG_callerror (lua_State *L, const TValue *o) {
+l_noret luaG_callerror (lua_State *L, സ്ഥിരം TValue *o) {
   CallInfo *ci = L->ci;
-  const char *name = NULL;  /* to avoid warnings */
-  const char *kind = funcnamefromcall(L, ci, &name);
-  const char *extra = kind ? formatvarinfo(L, kind, name) : varinfo(L, o);
+  സ്ഥിരം അക്ഷരം *name = ശൂന്യ;  /* to avoid warnings */
+  സ്ഥിരം അക്ഷരം *kind = funcnamefromcall(L, ci, &name);
+  സ്ഥിരം അക്ഷരം *extra = kind ? formatvarinfo(L, kind, name) : varinfo(L, o);
   typeerror(L, o, "call", extra);
 }
 
 
-l_noret luaG_forerror (lua_State *L, const TValue *o, const char *what) {
+l_noret luaG_forerror (lua_State *L, സ്ഥിരം TValue *o, സ്ഥിരം അക്ഷരം *what) {
   luaG_runerror(L, "bad 'for' %s (number expected, got %s)",
                    what, luaT_objtypename(L, o));
 }
 
 
-l_noret luaG_concaterror (lua_State *L, const TValue *p1, const TValue *p2) {
-  if (ttisstring(p1) || cvt2str(p1)) p1 = p2;
+l_noret luaG_concaterror (lua_State *L, സ്ഥിരം TValue *p1, സ്ഥിരം TValue *p2) {
+  എങ്കിൽ (ttisstring(p1) || cvt2str(p1)) p1 = p2;
   luaG_typeerror(L, p1, "concatenate");
 }
 
 
-l_noret luaG_opinterror (lua_State *L, const TValue *p1,
-                         const TValue *p2, const char *msg) {
-  if (!ttisnumber(p1))  /* first operand is wrong? */
+l_noret luaG_opinterror (lua_State *L, സ്ഥിരം TValue *p1,
+                         സ്ഥിരം TValue *p2, സ്ഥിരം അക്ഷരം *സന്ദേശം) {
+  എങ്കിൽ (!ttisnumber(p1))  /* first operand is wrong? */
     p2 = p1;  /* now second is wrong */
-  luaG_typeerror(L, p2, msg);
+  luaG_typeerror(L, p2, സന്ദേശം);
 }
 
 
 /*
 ** Error when both values are convertible to numbers, but not to integers
 */
-l_noret luaG_tointerror (lua_State *L, const TValue *p1, const TValue *p2) {
+l_noret luaG_tointerror (lua_State *L, സ്ഥിരം TValue *p1, സ്ഥിരം TValue *p2) {
   lua_Integer temp;
-  if (!luaV_tointegerns(p1, &temp, LUA_FLOORN2I))
+  എങ്കിൽ (!luaV_tointegerns(p1, &temp, LUA_FLOORN2I))
     p2 = p1;
   luaG_runerror(L, "number%s has no integer representation", varinfo(L, p2));
 }
 
 
-l_noret luaG_ordererror (lua_State *L, const TValue *p1, const TValue *p2) {
-  const char *t1 = luaT_objtypename(L, p1);
-  const char *t2 = luaT_objtypename(L, p2);
-  if (strcmp(t1, t2) == 0)
+l_noret luaG_ordererror (lua_State *L, സ്ഥിരം TValue *p1, സ്ഥിരം TValue *p2) {
+  സ്ഥിരം അക്ഷരം *t1 = luaT_objtypename(L, p1);
+  സ്ഥിരം അക്ഷരം *t2 = luaT_objtypename(L, p2);
+  എങ്കിൽ (strcmp(t1, t2) == 0)
     luaG_runerror(L, "attempt to compare two %s values", t1);
-  else
+  അല്ലെങ്കിൽ
     luaG_runerror(L, "attempt to compare %s with %s", t1, t2);
 }
 
 
-l_noret luaG_errnnil (lua_State *L, LClosure *cl, int k) {
-  const char *globalname = "?";  /* default name if k == 0 */
-  if (k > 0)
+l_noret luaG_errnnil (lua_State *L, LClosure *cl, പൂർണ്ണസംഖ്യ k) {
+  സ്ഥിരം അക്ഷരം *globalname = "?";  /* default name if k == 0 */
+  എങ്കിൽ (k > 0)
     kname(cl->p, k - 1, &globalname);
   luaG_runerror(L, "global '%s' already defined", globalname);
 }
 
 
 /* add src:line information to 'msg' */
-const char *luaG_addinfo (lua_State *L, const char *msg, TString *src,
-                                        int line) {
-  if (src == NULL)  /* no debug information? */
-    return luaO_pushfstring(L, "?:?: %s", msg);
-  else {
-    char buff[LUA_IDSIZE];
+സ്ഥിരം അക്ഷരം *luaG_addinfo (lua_State *L, സ്ഥിരം അക്ഷരം *സന്ദേശം, TString *src,
+                                        പൂർണ്ണസംഖ്യ വരി) {
+  എങ്കിൽ (src == ശൂന്യ)  /* no debug information? */
+    തിരികെ luaO_pushfstring(L, "?:?: %s", സന്ദേശം);
+  അല്ലെങ്കിൽ {
+    അക്ഷരം buff[LUA_IDSIZE];
     size_t idlen;
-    const char *id = getlstr(src, idlen);
+    സ്ഥിരം അക്ഷരം *id = getlstr(src, idlen);
     luaO_chunkid(buff, id, idlen);
-    return luaO_pushfstring(L, "%s:%d: %s", buff, line, msg);
+    തിരികെ luaO_pushfstring(L, "%s:%d: %s", buff, വരി, സന്ദേശം);
   }
 }
 
 
 l_noret luaG_errormsg (lua_State *L) {
-  if (L->errfunc != 0) {  /* is there an error handling function? */
+  എങ്കിൽ (L->errfunc != 0) {  /* is there an error handling function? */
     StkId errfunc = restorestack(L, L->errfunc);
     lua_assert(ttisfunction(s2v(errfunc)));
-    setobjs2s(L, L->top.p, L->top.p - 1);  /* move argument */
-    setobjs2s(L, L->top.p - 1, errfunc);  /* push function */
-    L->top.p++;  /* assume EXTRA_STACK */
-    luaD_callnoyield(L, L->top.p - 2, 1);  /* call it */
+    setobjs2s(L, L->മുകൾ.p, L->മുകൾ.p - 1);  /* move argument */
+    setobjs2s(L, L->മുകൾ.p - 1, errfunc);  /* push function */
+    L->മുകൾ.p++;  /* assume EXTRA_STACK */
+    luaD_callnoyield(L, L->മുകൾ.p - 2, 1);  /* call it */
   }
-  if (ttisnil(s2v(L->top.p - 1))) {  /* error object is nil? */
+  എങ്കിൽ (ttisnil(s2v(L->മുകൾ.p - 1))) {  /* error object is nil? */
     /* change it to a proper message */
-    setsvalue2s(L, L->top.p - 1, luaS_newliteral(L, "<no error object>"));
+    setsvalue2s(L, L->മുകൾ.p - 1, luaS_newliteral(L, "<no error object>"));
   }
   luaD_throw(L, LUA_ERRRUN);
 }
 
 
-l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
+l_noret luaG_runerror (lua_State *L, സ്ഥിരം അക്ഷരം *fmt, ...) {
   CallInfo *ci = L->ci;
-  const char *msg;
+  സ്ഥിരം അക്ഷരം *സന്ദേശം;
   va_list argp;
   luaC_checkGC(L);  /* error message uses memory */
-  pushvfstring(L, argp, fmt, msg);
-  if (isLua(ci)) {  /* Lua function? */
+  pushvfstring(L, argp, fmt, സന്ദേശം);
+  എങ്കിൽ (isLua(ci)) {  /* Lua function? */
     /* add source:line information */
-    luaG_addinfo(L, msg, ci_func(ci)->p->source, getcurrentline(ci));
-    setobjs2s(L, L->top.p - 2, L->top.p - 1);  /* remove 'msg' */
-    L->top.p--;
+    luaG_addinfo(L, സന്ദേശം, ci_func(ci)->p->source, getcurrentline(ci));
+    setobjs2s(L, L->മുകൾ.p - 2, L->മുകൾ.p - 1);  /* remove 'msg' */
+    L->മുകൾ.p--;
   }
   luaG_errormsg(L);
 }
@@ -878,24 +878,24 @@ l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
 ** too far apart, there is a good chance of a ABSLINEINFO in the way,
 ** so it goes directly to 'luaG_getfuncline'.
 */
-static int changedline (const Proto *p, int oldpc, int newpc) {
-  if (p->lineinfo == NULL)  /* no debug information? */
-    return 0;
-  if (newpc - oldpc < MAXIWTHABS / 2) {  /* not too far apart? */
-    int delta = 0;  /* line difference */
-    int pc = oldpc;
-    for (;;) {
-      int lineinfo = p->lineinfo[++pc];
-      if (lineinfo == ABSLINEINFO)
-        break;  /* cannot compute delta; fall through */
+സ്ഥിതം പൂർണ്ണസംഖ്യ changedline (സ്ഥിരം Proto *p, പൂർണ്ണസംഖ്യ oldpc, പൂർണ്ണസംഖ്യ newpc) {
+  എങ്കിൽ (p->lineinfo == ശൂന്യ)  /* no debug information? */
+    തിരികെ 0;
+  എങ്കിൽ (newpc - oldpc < MAXIWTHABS / 2) {  /* not too far apart? */
+    പൂർണ്ണസംഖ്യ delta = 0;  /* line difference */
+    പൂർണ്ണസംഖ്യ pc = oldpc;
+    വേണ്ടി (;;) {
+      പൂർണ്ണസംഖ്യ lineinfo = p->lineinfo[++pc];
+      എങ്കിൽ (lineinfo == ABSLINEINFO)
+        നിർത്തുക;  /* cannot compute delta; fall through */
       delta += lineinfo;
-      if (pc == newpc)
-        return (delta != 0);  /* delta computed successfully */
+      എങ്കിൽ (pc == newpc)
+        തിരികെ (delta != 0);  /* delta computed successfully */
     }
   }
   /* either instructions are too far apart or there is an absolute line
      info in the way; compute line difference explicitly */
-  return (luaG_getfuncline(p, oldpc) != luaG_getfuncline(p, newpc));
+  തിരികെ (luaG_getfuncline(p, oldpc) != luaG_getfuncline(p, newpc));
 }
 
 
@@ -907,17 +907,17 @@ static int changedline (const Proto *p, int oldpc, int newpc) {
 ** a line/count hook before the call hook. Functions coming from
 ** an yield already called 'luaD_hookcall' before yielding.)
 */
-int luaG_tracecall (lua_State *L) {
+പൂർണ്ണസംഖ്യ luaG_tracecall (lua_State *L) {
   CallInfo *ci = L->ci;
   Proto *p = ci_func(ci)->p;
   ci->u.l.trap = 1;  /* ensure hooks will be checked */
-  if (ci->u.l.savedpc == p->code) {  /* first instruction (not resuming)? */
-    if (isvararg(p))
-      return 0;  /* hooks will start at VARARGPREP instruction */
-    else if (!(ci->callstatus & CIST_HOOKYIELD))  /* not yielded? */
+  എങ്കിൽ (ci->u.l.savedpc == p->code) {  /* first instruction (not resuming)? */
+    എങ്കിൽ (isvararg(p))
+      തിരികെ 0;  /* hooks will start at VARARGPREP instruction */
+    അല്ലെങ്കിൽ എങ്കിൽ (!(ci->callstatus & CIST_HOOKYIELD))  /* not yielded? */
       luaD_hookcall(L, ci);  /* check 'call' hook */
   }
-  return 1;  /* keep 'trap' on */
+  തിരികെ 1;  /* keep 'trap' on */
 }
 
 
@@ -933,47 +933,47 @@ int luaG_tracecall (lua_State *L) {
 ** This function is not "Protected" when called, so it should correct
 ** 'L->top.p' before calling anything that can run the GC.
 */
-int luaG_traceexec (lua_State *L, const Instruction *pc) {
+പൂർണ്ണസംഖ്യ luaG_traceexec (lua_State *L, സ്ഥിരം Instruction *pc) {
   CallInfo *ci = L->ci;
   lu_byte mask = cast_byte(L->hookmask);
-  const Proto *p = ci_func(ci)->p;
-  int counthook;
-  if (!(mask & (LUA_MASKLINE | LUA_MASKCOUNT))) {  /* no hooks? */
+  സ്ഥിരം Proto *p = ci_func(ci)->p;
+  പൂർണ്ണസംഖ്യ counthook;
+  എങ്കിൽ (!(mask & (LUA_MASKLINE | LUA_MASKCOUNT))) {  /* no hooks? */
     ci->u.l.trap = 0;  /* don't need to stop again */
-    return 0;  /* turn off 'trap' */
+    തിരികെ 0;  /* turn off 'trap' */
   }
   pc++;  /* reference is always next instruction */
   ci->u.l.savedpc = pc;  /* save 'pc' */
   counthook = (mask & LUA_MASKCOUNT) && (--L->hookcount == 0);
-  if (counthook)
+  എങ്കിൽ (counthook)
     resethookcount(L);  /* reset count */
-  else if (!(mask & LUA_MASKLINE))
-    return 1;  /* no line hook and count != 0; nothing to be done now */
-  if (ci->callstatus & CIST_HOOKYIELD) {  /* hook yielded last time? */
+  അല്ലെങ്കിൽ എങ്കിൽ (!(mask & LUA_MASKLINE))
+    തിരികെ 1;  /* no line hook and count != 0; nothing to be done now */
+  എങ്കിൽ (ci->callstatus & CIST_HOOKYIELD) {  /* hook yielded last time? */
     ci->callstatus &= ~CIST_HOOKYIELD;  /* erase mark */
-    return 1;  /* do not call hook again (VM yielded, so it did not move) */
+    തിരികെ 1;  /* do not call hook again (VM yielded, so it did not move) */
   }
-  if (!luaP_isIT(*(ci->u.l.savedpc - 1)))  /* top not being used? */
-    L->top.p = ci->top.p;  /* correct top */
-  if (counthook)
+  എങ്കിൽ (!luaP_isIT(*(ci->u.l.savedpc - 1)))  /* top not being used? */
+    L->മുകൾ.p = ci->മുകൾ.p;  /* correct top */
+  എങ്കിൽ (counthook)
     luaD_hook(L, LUA_HOOKCOUNT, -1, 0, 0);  /* call count hook */
-  if (mask & LUA_MASKLINE) {
+  എങ്കിൽ (mask & LUA_MASKLINE) {
     /* 'L->oldpc' may be invalid; use zero in this case */
-    int oldpc = (L->oldpc < p->sizecode) ? L->oldpc : 0;
-    int npci = pcRel(pc, p);
-    if (npci <= oldpc ||  /* call hook when jump back (loop), */
+    പൂർണ്ണസംഖ്യ oldpc = (L->oldpc < p->sizecode) ? L->oldpc : 0;
+    പൂർണ്ണസംഖ്യ npci = pcRel(pc, p);
+    എങ്കിൽ (npci <= oldpc ||  /* call hook when jump back (loop), */
         changedline(p, oldpc, npci)) {  /* or when enter new line */
-      int newline = luaG_getfuncline(p, npci);
+      പൂർണ്ണസംഖ്യ newline = luaG_getfuncline(p, npci);
       luaD_hook(L, LUA_HOOKLINE, newline, 0, 0);  /* call line hook */
     }
     L->oldpc = npci;  /* 'pc' of last call to line hook */
   }
-  if (L->status == LUA_YIELD) {  /* did hook yield? */
-    if (counthook)
+  എങ്കിൽ (L->status == LUA_YIELD) {  /* did hook yield? */
+    എങ്കിൽ (counthook)
       L->hookcount = 1;  /* undo decrement to zero */
     ci->callstatus |= CIST_HOOKYIELD;  /* mark that it yielded */
     luaD_throw(L, LUA_YIELD);
   }
-  return 1;  /* keep 'trap' on */
+  തിരികെ 1;  /* keep 'trap' on */
 }
 

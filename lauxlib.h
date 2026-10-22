@@ -9,18 +9,18 @@
 #define lauxlib_h
 
 
-#include <stddef.h>
-#include <stdio.h>
+#അന്തര്ഭാവ <stddef.h>
+#അന്തര്ഭാവ <stdio.h>
 
-#include "luaconf.h"
-#include "lua.h"
+#അന്തര്ഭാവ "luaconf.h"
+#അന്തര്ഭാവ "lua.h"
 
 
 /* global table */
 #define LUA_GNAME	"_G"
 
 
-typedef struct luaL_Buffer luaL_Buffer;
+തരനിർവചനം ഘടന luaL_Buffer luaL_Buffer;
 
 
 /* extra error code for 'luaL_loadfilex' */
@@ -35,53 +35,53 @@ typedef struct luaL_Buffer luaL_Buffer;
 #define LUA_PRELOAD_TABLE	"_PRELOAD"
 
 
-typedef struct luaL_Reg {
-  const char *name;
+തരനിർവചനം ഘടന luaL_Reg {
+  സ്ഥിരം അക്ഷരം *name;
   lua_CFunction func;
 } luaL_Reg;
 
 
-#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_Number))
+#define LUAL_NUMSIZES	(വലുപ്പം(lua_Integer)*16 + വലുപ്പം(lua_സംഖ്യ))
 
-LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_Number ver, size_t sz);
+LUALIB_API ശൂന്യം (luaL_checkversion_) (lua_State *L, lua_സംഖ്യ ver, size_t sz);
 #define luaL_checkversion(L)  \
-	  luaL_checkversion_(L, LUA_VERSION_NUM, LUAL_NUMSIZES)
+	  luaL_checkversion_(L, LUA_VERSION_അക്കം, LUAL_NUMSIZES)
 
-LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
-LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
-LUALIB_API const char *(luaL_tolstring) (lua_State *L, int idx, size_t *len);
-LUALIB_API int (luaL_argerror) (lua_State *L, int arg, const char *extramsg);
-LUALIB_API int (luaL_typeerror) (lua_State *L, int arg, const char *tname);
-LUALIB_API const char *(luaL_checklstring) (lua_State *L, int arg,
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_getmetafield) (lua_State *L, പൂർണ്ണസംഖ്യ obj, സ്ഥിരം അക്ഷരം *e);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_callmeta) (lua_State *L, പൂർണ്ണസംഖ്യ obj, സ്ഥിരം അക്ഷരം *e);
+LUALIB_API സ്ഥിരം അക്ഷരം *(luaL_tolstring) (lua_State *L, പൂർണ്ണസംഖ്യ idx, size_t *len);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_argerror) (lua_State *L, പൂർണ്ണസംഖ്യ arg, സ്ഥിരം അക്ഷരം *extramsg);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_typeerror) (lua_State *L, പൂർണ്ണസംഖ്യ arg, സ്ഥിരം അക്ഷരം *tname);
+LUALIB_API സ്ഥിരം അക്ഷരം *(luaL_checklstring) (lua_State *L, പൂർണ്ണസംഖ്യ arg,
                                                           size_t *l);
-LUALIB_API const char *(luaL_optlstring) (lua_State *L, int arg,
-                                          const char *def, size_t *l);
-LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int arg);
-LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int arg, lua_Number def);
+LUALIB_API സ്ഥിരം അക്ഷരം *(luaL_optlstring) (lua_State *L, പൂർണ്ണസംഖ്യ arg,
+                                          സ്ഥിരം അക്ഷരം *def, size_t *l);
+LUALIB_API lua_സംഖ്യ (luaL_checknumber) (lua_State *L, പൂർണ്ണസംഖ്യ arg);
+LUALIB_API lua_സംഖ്യ (luaL_optnumber) (lua_State *L, പൂർണ്ണസംഖ്യ arg, lua_സംഖ്യ def);
 
-LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, int arg);
-LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, int arg,
+LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, പൂർണ്ണസംഖ്യ arg);
+LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, പൂർണ്ണസംഖ്യ arg,
                                           lua_Integer def);
 
-LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
-LUALIB_API void (luaL_checktype) (lua_State *L, int arg, int t);
-LUALIB_API void (luaL_checkany) (lua_State *L, int arg);
+LUALIB_API ശൂന്യം (luaL_checkstack) (lua_State *L, പൂർണ്ണസംഖ്യ sz, സ്ഥിരം അക്ഷരം *സന്ദേശം);
+LUALIB_API ശൂന്യം (luaL_checktype) (lua_State *L, പൂർണ്ണസംഖ്യ arg, പൂർണ്ണസംഖ്യ t);
+LUALIB_API ശൂന്യം (luaL_checkany) (lua_State *L, പൂർണ്ണസംഖ്യ arg);
 
-LUALIB_API int   (luaL_newmetatable) (lua_State *L, const char *tname);
-LUALIB_API void  (luaL_setmetatable) (lua_State *L, const char *tname);
-LUALIB_API void *(luaL_testudata) (lua_State *L, int ud, const char *tname);
-LUALIB_API void *(luaL_checkudata) (lua_State *L, int ud, const char *tname);
+LUALIB_API പൂർണ്ണസംഖ്യ   (luaL_newmetatable) (lua_State *L, സ്ഥിരം അക്ഷരം *tname);
+LUALIB_API ശൂന്യം  (luaL_setmetatable) (lua_State *L, സ്ഥിരം അക്ഷരം *tname);
+LUALIB_API ശൂന്യം *(luaL_testudata) (lua_State *L, പൂർണ്ണസംഖ്യ ud, സ്ഥിരം അക്ഷരം *tname);
+LUALIB_API ശൂന്യം *(luaL_checkudata) (lua_State *L, പൂർണ്ണസംഖ്യ ud, സ്ഥിരം അക്ഷരം *tname);
 
-LUALIB_API void (luaL_where) (lua_State *L, int lvl);
-LUALIB_API int (luaL_error) (lua_State *L, const char *fmt, ...);
+LUALIB_API ശൂന്യം (luaL_where) (lua_State *L, പൂർണ്ണസംഖ്യ lvl);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_error) (lua_State *L, സ്ഥിരം അക്ഷരം *fmt, ...);
 
-LUALIB_API int (luaL_checkoption) (lua_State *L, int arg, const char *def,
-                                   const char *const lst[]);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_checkoption) (lua_State *L, പൂർണ്ണസംഖ്യ arg, സ്ഥിരം അക്ഷരം *def,
+                                   സ്ഥിരം അക്ഷരം *സ്ഥിരം lst[]);
 
-LUALIB_API int (luaL_fileresult) (lua_State *L, int stat, const char *fname);
-LUALIB_API int (luaL_execresult) (lua_State *L, int stat);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_fileresult) (lua_State *L, പൂർണ്ണസംഖ്യ stat, സ്ഥിരം അക്ഷരം *fname);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_execresult) (lua_State *L, പൂർണ്ണസംഖ്യ stat);
 
-LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
+LUALIB_API ശൂന്യം *(luaL_alloc) (ശൂന്യം *ud, ശൂന്യം *ptr, size_t osize,
                                                     size_t nsize);
 
 
@@ -89,38 +89,38 @@ LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
 #define LUA_NOREF       (-2)
 #define LUA_REFNIL      (-1)
 
-LUALIB_API int (luaL_ref) (lua_State *L, int t);
-LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_ref) (lua_State *L, പൂർണ്ണസംഖ്യ t);
+LUALIB_API ശൂന്യം (luaL_unref) (lua_State *L, പൂർണ്ണസംഖ്യ t, പൂർണ്ണസംഖ്യ ref);
 
-LUALIB_API int (luaL_loadfilex) (lua_State *L, const char *filename,
-                                               const char *mode);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_loadfilex) (lua_State *L, സ്ഥിരം അക്ഷരം *filename,
+                                               സ്ഥിരം അക്ഷരം *mode);
 
-#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,NULL)
+#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,ശൂന്യ)
 
-LUALIB_API int (luaL_loadbufferx) (lua_State *L, const char *buff, size_t sz,
-                                   const char *name, const char *mode);
-LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_loadbufferx) (lua_State *L, സ്ഥിരം അക്ഷരം *buff, size_t sz,
+                                   സ്ഥിരം അക്ഷരം *name, സ്ഥിരം അക്ഷരം *mode);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_loadstring) (lua_State *L, സ്ഥിരം അക്ഷരം *s);
 
-LUALIB_API lua_State *(luaL_newstate) (void);
+LUALIB_API lua_State *(luaL_newstate) (ശൂന്യം);
 
 LUALIB_API unsigned (luaL_makeseed) (lua_State *L);
 
-LUALIB_API lua_Integer (luaL_len) (lua_State *L, int idx);
+LUALIB_API lua_Integer (luaL_len) (lua_State *L, പൂർണ്ണസംഖ്യ idx);
 
-LUALIB_API void (luaL_addgsub) (luaL_Buffer *b, const char *s,
-                                     const char *p, const char *r);
-LUALIB_API const char *(luaL_gsub) (lua_State *L, const char *s,
-                                    const char *p, const char *r);
+LUALIB_API ശൂന്യം (luaL_addgsub) (luaL_Buffer *b, സ്ഥിരം അക്ഷരം *s,
+                                     സ്ഥിരം അക്ഷരം *p, സ്ഥിരം അക്ഷരം *r);
+LUALIB_API സ്ഥിരം അക്ഷരം *(luaL_gsub) (lua_State *L, സ്ഥിരം അക്ഷരം *s,
+                                    സ്ഥിരം അക്ഷരം *p, സ്ഥിരം അക്ഷരം *r);
 
-LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
+LUALIB_API ശൂന്യം (luaL_setfuncs) (lua_State *L, സ്ഥിരം luaL_Reg *l, പൂർണ്ണസംഖ്യ nup);
 
-LUALIB_API int (luaL_getsubtable) (lua_State *L, int idx, const char *fname);
+LUALIB_API പൂർണ്ണസംഖ്യ (luaL_getsubtable) (lua_State *L, പൂർണ്ണസംഖ്യ idx, സ്ഥിരം അക്ഷരം *fname);
 
-LUALIB_API void (luaL_traceback) (lua_State *L, lua_State *L1,
-                                  const char *msg, int level);
+LUALIB_API ശൂന്യം (luaL_traceback) (lua_State *L, lua_State *L1,
+                                  സ്ഥിരം അക്ഷരം *സന്ദേശം, പൂർണ്ണസംഖ്യ level);
 
-LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
-                                 lua_CFunction openf, int glb);
+LUALIB_API ശൂന്യം (luaL_requiref) (lua_State *L, സ്ഥിരം അക്ഷരം *modname,
+                                 lua_CFunction openf, പൂർണ്ണസംഖ്യ glb);
 
 /*
 ** ===============================================================
@@ -130,19 +130,19 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 #define luaL_newlibtable(L,l)	\
-  lua_createtable(L, 0, sizeof(l)/sizeof((l)[0]) - 1)
+  lua_createtable(L, 0, വലുപ്പം(l)/വലുപ്പം((l)[0]) - 1)
 
 #define luaL_newlib(L,l)  \
   (luaL_checkversion(L), luaL_newlibtable(L,l), luaL_setfuncs(L,l,0))
 
 #define luaL_argcheck(L, cond,arg,extramsg)	\
-	((void)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
+	((ശൂന്യം)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
 
 #define luaL_argexpected(L,cond,arg,tname)	\
-	((void)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
+	((ശൂന്യം)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
 
-#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
-#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
+#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), ശൂന്യ))
+#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), ശൂന്യ))
 
 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 
@@ -156,7 +156,7 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 #define luaL_opt(L,f,n,d)	(lua_isnoneornil(L,(n)) ? (d) : f(L,(n)))
 
-#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,NULL)
+#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,ശൂന്യ)
 
 
 /*
@@ -168,9 +168,9 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 /* push the value used to represent failure/error */
-#if defined(LUA_FAILISFALSE)
+#എങ്കിൽ defined(LUA_FAILISFALSE)
 #define luaL_pushfail(L)	lua_pushboolean(L, 0)
-#else
+#അല്ലെങ്കിൽ
 #define luaL_pushfail(L)	lua_pushnil(L)
 #endif
 
@@ -182,14 +182,14 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 ** =======================================================
 */
 
-struct luaL_Buffer {
-  char *b;  /* buffer address */
+ഘടന luaL_Buffer {
+  അക്ഷരം *b;  /* buffer address */
   size_t size;  /* buffer size */
   size_t n;  /* number of characters in buffer */
   lua_State *L;
-  union {
+  സംഘം {
     LUAI_MAXALIGN;  /* ensure maximum alignment for buffer */
-    char b[LUAL_BUFFERSIZE];  /* initial buffer */
+    അക്ഷരം b[LUAL_BUFFERSIZE];  /* initial buffer */
   } init;
 };
 
@@ -199,21 +199,21 @@ struct luaL_Buffer {
 
 
 #define luaL_addchar(B,c) \
-  ((void)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
+  ((ശൂന്യം)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
    ((B)->b[(B)->n++] = (c)))
 
 #define luaL_addsize(B,s)	((B)->n += (s))
 
 #define luaL_buffsub(B,s)	((B)->n -= (s))
 
-LUALIB_API void (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
-LUALIB_API char *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
-LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
-LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
+LUALIB_API ശൂന്യം (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
+LUALIB_API അക്ഷരം *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
+LUALIB_API ശൂന്യം (luaL_addlstring) (luaL_Buffer *B, സ്ഥിരം അക്ഷരം *s, size_t l);
+LUALIB_API ശൂന്യം (luaL_addstring) (luaL_Buffer *B, സ്ഥിരം അക്ഷരം *s);
+LUALIB_API ശൂന്യം (luaL_addvalue) (luaL_Buffer *B);
+LUALIB_API ശൂന്യം (luaL_pushresult) (luaL_Buffer *B);
+LUALIB_API ശൂന്യം (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
+LUALIB_API അക്ഷരം *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 
 #define luaL_prepbuffer(B)	luaL_prepbuffsize(B, LUAL_BUFFERSIZE)
 
@@ -236,7 +236,7 @@ LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 #define LUA_FILEHANDLE          "FILE*"
 
 
-typedef struct luaL_Stream {
+തരനിർവചനം ഘടന luaL_Stream {
   FILE *f;  /* stream (NULL for incompletely created streams) */
   lua_CFunction closef;  /* to close stream (NULL for closed streams) */
 } luaL_Stream;
@@ -249,14 +249,14 @@ typedef struct luaL_Stream {
 ** Compatibility with deprecated conversions
 ** =============================================================
 */
-#if defined(LUA_COMPAT_APIINTCASTS)
+#എങ്കിൽ defined(LUA_COMPAT_APIINTCASTS)
 
 #define luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
 #define luaL_optunsigned(L,a,d)	\
 	((lua_Unsigned)luaL_optinteger(L,a,(lua_Integer)(d)))
 
-#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
-#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+#define luaL_checkint(L,n)	((പൂർണ്ണസംഖ്യ)luaL_checkinteger(L, (n)))
+#define luaL_optint(L,n,d)	((പൂർണ്ണസംഖ്യ)luaL_optinteger(L, (n), (d)))
 
 #define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
 #define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
