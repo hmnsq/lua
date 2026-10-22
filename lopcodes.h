@@ -79,24 +79,24 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 #define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
+#만약 L_INTHASBITS(SIZE_Bx)
 #define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
+#아니면
 #define MAXARG_Bx	INT_MAX
 #endif
 
 #define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#if L_INTHASBITS(SIZE_Ax)
+#만약 L_INTHASBITS(SIZE_Ax)
 #define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
+#아니면
 #define MAXARG_Ax	INT_MAX
 #endif
 
-#if L_INTHASBITS(SIZE_sJ)
+#만약 L_INTHASBITS(SIZE_sJ)
 #define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
+#아니면
 #define MAXARG_sJ	INT_MAX
 #endif
 
@@ -198,7 +198,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
+#만약 !defined(MAXINDEXRK)  /* (for debugging only) */
 #define MAXINDEXRK	MAXARG_B
 #endif
 
@@ -348,7 +348,7 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 } OpCode;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#define NUM_OPCODES	((정수)(OP_EXTRAARG) + 1)
 
 
 
@@ -438,7 +438,7 @@ LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC 정수 luaP_isIT (Instruction i);
 
 
 #endif

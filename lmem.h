@@ -85,12 +85,12 @@ LUAI_FUNC void *luaM_realloc_ (lua_State *L, void *block, size_t oldsize,
 LUAI_FUNC void *luaM_saferealloc_ (lua_State *L, void *block, size_t oldsize,
                                                               size_t size);
 LUAI_FUNC void luaM_free_ (lua_State *L, void *block, size_t osize);
-LUAI_FUNC void *luaM_growaux_ (lua_State *L, void *block, int nelems,
-                               int *size, unsigned size_elem, int limit,
+LUAI_FUNC void *luaM_growaux_ (lua_State *L, void *block, 정수 nelems,
+                               정수 *size, unsigned size_elem, 정수 limit,
                                const char *what);
-LUAI_FUNC void *luaM_shrinkvector_ (lua_State *L, void *block, int *nelem,
-                                    int final_n, unsigned size_elem);
-LUAI_FUNC void *luaM_malloc_ (lua_State *L, size_t size, int tag);
+LUAI_FUNC void *luaM_shrinkvector_ (lua_State *L, void *block, 정수 *nelem,
+                                    정수 final_n, unsigned size_elem);
+LUAI_FUNC void *luaM_malloc_ (lua_State *L, size_t size, 정수 tag);
 
 #endif
 

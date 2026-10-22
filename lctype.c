@@ -12,15 +12,15 @@
 
 #include "lctype.h"
 
-#if !LUA_USE_CTYPE	/* { */
+#만약 !LUA_USE_CTYPE	/* { */
 
 #include <limits.h>
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#만약 defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
 #define NONA		0x01
-#else
+#아니면
 #define NONA		0x00	/* default */
 #endif
 

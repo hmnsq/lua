@@ -20,7 +20,7 @@
 #define FIRST_RESERVED	(UCHAR_MAX + 1)
 
 
-#if !defined(LUA_ENV)
+#만약 !defined(LUA_ENV)
 #define LUA_ENV		"_ENV"
 #endif
 
@@ -54,7 +54,7 @@ typedef union {
 
 
 typedef struct Token {
-  int token;
+  정수 token;
   SemInfo seminfo;
 } Token;
 
@@ -62,9 +62,9 @@ typedef struct Token {
 /* state of the scanner plus state of the parser when shared by all
    functions */
 typedef struct LexState {
-  int current;  /* current character (charint) */
-  int linenumber;  /* input line counter */
-  int lastline;  /* line of last token 'consumed' */
+  정수 current;  /* current character (charint) */
+  정수 linenumber;  /* input line counter */
+  정수 lastline;  /* line of last token 'consumed' */
   Token t;  /* current token */
   Token lookahead;  /* look ahead token */
   struct FuncState *fs;  /* current function (parser) */
@@ -82,12 +82,12 @@ typedef struct LexState {
 
 LUAI_FUNC void luaX_init (lua_State *L);
 LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
-                              TString *source, int firstchar);
+                              TString *source, 정수 firstchar);
 LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l);
 LUAI_FUNC void luaX_next (LexState *ls);
-LUAI_FUNC int luaX_lookahead (LexState *ls);
+LUAI_FUNC 정수 luaX_lookahead (LexState *ls);
 LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const char *s);
-LUAI_FUNC const char *luaX_token2str (LexState *ls, int token);
+LUAI_FUNC const char *luaX_token2str (LexState *ls, 정수 token);
 
 
 #endif
