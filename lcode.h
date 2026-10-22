@@ -59,23 +59,23 @@ typedef enum UnOpr { OPR_MINUS, OPR_BNOT, OPR_NOT, OPR_LEN, OPR_NOUNOPR } UnOpr;
 
 #define luaK_jumpto(fs,t)	luaK_patchlist(fs, luaK_jump(fs), t)
 
-LUAI_FUNC int luaK_code (FuncState *fs, Instruction i);
-LUAI_FUNC int luaK_codeABx (FuncState *fs, OpCode o, int A, int Bx);
-LUAI_FUNC int luaK_codeABCk (FuncState *fs, OpCode o, int A, int B, int C,
-                                            int k);
-LUAI_FUNC int luaK_codevABCk (FuncState *fs, OpCode o, int A, int B, int C,
-                                             int k);
-LUAI_FUNC int luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v);
-LUAI_FUNC void luaK_fixline (FuncState *fs, int line);
-LUAI_FUNC void luaK_nil (FuncState *fs, int from, int n);
-LUAI_FUNC void luaK_codecheckglobal (FuncState *fs, expdesc *var, int k,
-                                                    int line);
-LUAI_FUNC void luaK_reserveregs (FuncState *fs, int n);
-LUAI_FUNC void luaK_checkstack (FuncState *fs, int n);
-LUAI_FUNC void luaK_int (FuncState *fs, int reg, lua_Integer n);
+LUAI_FUNC 整数 luaK_code (FuncState *fs, Instruction i);
+LUAI_FUNC 整数 luaK_codeABx (FuncState *fs, OpCode o, 整数 A, 整数 Bx);
+LUAI_FUNC 整数 luaK_codeABCk (FuncState *fs, OpCode o, 整数 A, 整数 B, 整数 C,
+                                            整数 k);
+LUAI_FUNC 整数 luaK_codevABCk (FuncState *fs, OpCode o, 整数 A, 整数 B, 整数 C,
+                                             整数 k);
+LUAI_FUNC 整数 luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v);
+LUAI_FUNC void luaK_fixline (FuncState *fs, 整数 line);
+LUAI_FUNC void luaK_nil (FuncState *fs, 整数 from, 整数 n);
+LUAI_FUNC void luaK_codecheckglobal (FuncState *fs, expdesc *var, 整数 k,
+                                                    整数 line);
+LUAI_FUNC void luaK_reserveregs (FuncState *fs, 整数 n);
+LUAI_FUNC void luaK_checkstack (FuncState *fs, 整数 n);
+LUAI_FUNC void luaK_int (FuncState *fs, 整数 reg, lua_Integer n);
 LUAI_FUNC void luaK_vapar2local (FuncState *fs, expdesc *var);
 LUAI_FUNC void luaK_dischargevars (FuncState *fs, expdesc *e);
-LUAI_FUNC int luaK_exp2anyreg (FuncState *fs, expdesc *e);
+LUAI_FUNC 整数 luaK_exp2anyreg (FuncState *fs, expdesc *e);
 LUAI_FUNC void luaK_exp2anyregup (FuncState *fs, expdesc *e);
 LUAI_FUNC void luaK_exp2nextreg (FuncState *fs, expdesc *e);
 LUAI_FUNC void luaK_exp2val (FuncState *fs, expdesc *e);
@@ -83,21 +83,21 @@ LUAI_FUNC void luaK_self (FuncState *fs, expdesc *e, expdesc *key);
 LUAI_FUNC void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k);
 LUAI_FUNC void luaK_goiftrue (FuncState *fs, expdesc *e);
 LUAI_FUNC void luaK_storevar (FuncState *fs, expdesc *var, expdesc *e);
-LUAI_FUNC void luaK_setreturns (FuncState *fs, expdesc *e, int nresults);
+LUAI_FUNC void luaK_setreturns (FuncState *fs, expdesc *e, 整数 nresults);
 LUAI_FUNC void luaK_setoneret (FuncState *fs, expdesc *e);
-LUAI_FUNC int luaK_jump (FuncState *fs);
-LUAI_FUNC void luaK_ret (FuncState *fs, int first, int nret);
-LUAI_FUNC void luaK_patchlist (FuncState *fs, int list, int target);
-LUAI_FUNC void luaK_patchtohere (FuncState *fs, int list);
-LUAI_FUNC void luaK_concat (FuncState *fs, int *l1, int l2);
-LUAI_FUNC int luaK_getlabel (FuncState *fs);
-LUAI_FUNC void luaK_prefix (FuncState *fs, UnOpr op, expdesc *v, int line);
+LUAI_FUNC 整数 luaK_jump (FuncState *fs);
+LUAI_FUNC void luaK_ret (FuncState *fs, 整数 first, 整数 nret);
+LUAI_FUNC void luaK_patchlist (FuncState *fs, 整数 list, 整数 target);
+LUAI_FUNC void luaK_patchtohere (FuncState *fs, 整数 list);
+LUAI_FUNC void luaK_concat (FuncState *fs, 整数 *l1, 整数 l2);
+LUAI_FUNC 整数 luaK_getlabel (FuncState *fs);
+LUAI_FUNC void luaK_prefix (FuncState *fs, UnOpr op, expdesc *v, 整数 line);
 LUAI_FUNC void luaK_infix (FuncState *fs, BinOpr op, expdesc *v);
 LUAI_FUNC void luaK_posfix (FuncState *fs, BinOpr op, expdesc *v1,
-                            expdesc *v2, int line);
-LUAI_FUNC void luaK_settablesize (FuncState *fs, int pc,
-                                  int ra, int asize, int hsize);
-LUAI_FUNC void luaK_setlist (FuncState *fs, int base, int nelems, int tostore);
+                            expdesc *v2, 整数 line);
+LUAI_FUNC void luaK_settablesize (FuncState *fs, 整数 pc,
+                                  整数 ra, 整数 asize, 整数 hsize);
+LUAI_FUNC void luaK_setlist (FuncState *fs, 整数 base, 整数 nelems, 整数 tostore);
 LUAI_FUNC void luaK_finish (FuncState *fs);
 LUAI_FUNC l_noret luaK_semerror (LexState *ls, const char *fmt, ...);
 

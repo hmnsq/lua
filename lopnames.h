@@ -4,7 +4,7 @@
 ** See Copyright Notice in lua.h
 */
 
-#if !defined(lopnames_h)
+#如果 !defined(lopnames_h)
 #define lopnames_h
 
 #include <stddef.h>

@@ -22,7 +22,7 @@
 static lua_State *getco (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   luaL_argexpected(L, co, 1, "thread");
-  return co;
+  返回 co;
 }
 
 
@@ -30,89 +30,89 @@ static lua_State *getco (lua_State *L) {
 ** Resumes a coroutine. Returns the number of results for non-error
 ** cases or -1 for errors.
 */
-static int auxresume (lua_State *L, lua_State *co, int narg) {
-  int status, nres;
-  if (l_unlikely(!lua_checkstack(co, narg))) {
+static 整数 auxresume (lua_State *L, lua_State *co, 整数 narg) {
+  整数 status, nres;
+  如果 (l_unlikely(!lua_checkstack(co, narg))) {
     lua_pushliteral(L, "too many arguments to resume");
-    return -1;  /* error flag */
+    返回 -1;  /* error flag */
   }
   lua_xmove(L, co, narg);
   status = lua_resume(co, L, narg, &nres);
-  if (l_likely(status == LUA_OK || status == LUA_YIELD)) {
-    if (l_unlikely(!lua_checkstack(L, nres + 1))) {
+  如果 (l_likely(status == LUA_OK || status == LUA_YIELD)) {
+    如果 (l_unlikely(!lua_checkstack(L, nres + 1))) {
       lua_pop(co, nres);  /* remove results anyway */
       lua_pushliteral(L, "too many results to resume");
-      return -1;  /* error flag */
+      返回 -1;  /* error flag */
     }
     lua_xmove(co, L, nres);  /* move yielded values */
-    return nres;
+    返回 nres;
   }
-  else {
+  否则 {
     lua_xmove(co, L, 1);  /* move error message */
-    return -1;  /* error flag */
+    返回 -1;  /* error flag */
   }
 }
 
 
-static int luaB_coresume (lua_State *L) {
+static 整数 luaB_coresume (lua_State *L) {
   lua_State *co = getco(L);
-  int r;
+  整数 r;
   r = auxresume(L, co, lua_gettop(L) - 1);
-  if (l_unlikely(r < 0)) {
+  如果 (l_unlikely(r < 0)) {
     lua_pushboolean(L, 0);
     lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    返回 2;  /* return false + error message */
   }
-  else {
+  否则 {
     lua_pushboolean(L, 1);
     lua_insert(L, -(r + 1));
-    return r + 1;  /* return true + 'resume' returns */
+    返回 r + 1;  /* return true + 'resume' returns */
   }
 }
 
 
-static int luaB_auxwrap (lua_State *L) {
+static 整数 luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
-  int r = auxresume(L, co, lua_gettop(L));
-  if (l_unlikely(r < 0)) {  /* error? */
-    int stat = lua_status(co);
-    if (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
+  整数 r = auxresume(L, co, lua_gettop(L));
+  如果 (l_unlikely(r < 0)) {  /* error? */
+    整数 stat = lua_status(co);
+    如果 (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
       stat = lua_closethread(co, L);  /* close its tbc variables */
-      if (stat == LUA_OK)
-        return 0;  /* nothing to return */
+      如果 (stat == LUA_OK)
+        返回 0;  /* nothing to return */
       lua_xmove(co, L, 1);  /* move error message to the caller */
     }
-    if (stat != LUA_ERRMEM &&  /* not a memory error and ... */
+    如果 (stat != LUA_ERRMEM &&  /* not a memory error and ... */
         lua_type(L, -1) == LUA_TSTRING) {  /* ... error object is a string? */
       luaL_where(L, 1);  /* add extra info, if available */
       lua_insert(L, -2);
       lua_concat(L, 2);
     }
-    return lua_error(L);  /* propagate error */
+    返回 lua_error(L);  /* propagate error */
   }
-  return r;
+  返回 r;
 }
 
 
-static int luaB_cocreate (lua_State *L) {
+static 整数 luaB_cocreate (lua_State *L) {
   lua_State *NL;
   luaL_checktype(L, 1, LUA_TFUNCTION);
   NL = lua_newthread(L);
   lua_pushvalue(L, 1);  /* move function to top */
   lua_xmove(L, NL, 1);  /* move function from L to NL */
-  return 1;
+  返回 1;
 }
 
 
-static int luaB_cowrap (lua_State *L) {
+static 整数 luaB_cowrap (lua_State *L) {
   luaB_cocreate(L);
   lua_pushcclosure(L, luaB_auxwrap, 1);
-  return 1;
+  返回 1;
 }
 
 
-static int luaB_yield (lua_State *L) {
-  return lua_yield(L, lua_gettop(L));
+static 整数 luaB_yield (lua_State *L) {
+  返回 lua_yield(L, lua_gettop(L));
 }
 
 
@@ -126,81 +126,81 @@ static const char *const statname[] =
   {"running", "dead", "suspended", "normal"};
 
 
-static int auxstatus (lua_State *L, lua_State *co) {
-  if (L == co) return COS_RUN;
-  else {
+static 整数 auxstatus (lua_State *L, lua_State *co) {
+  如果 (L == co) 返回 COS_RUN;
+  否则 {
     switch (lua_status(co)) {
       case LUA_YIELD:
-        return COS_YIELD;
+        返回 COS_YIELD;
       case LUA_OK: {
         lua_Debug ar;
-        if (lua_getstack(co, 0, &ar))  /* does it have frames? */
-          return COS_NORM;  /* it is running */
-        else if (lua_gettop(co) == 0)
-            return COS_DEAD;
-        else
-          return COS_YIELD;  /* initial state */
+        如果 (lua_getstack(co, 0, &ar))  /* does it have frames? */
+          返回 COS_NORM;  /* it is running */
+        否则 如果 (lua_gettop(co) == 0)
+            返回 COS_DEAD;
+        否则
+          返回 COS_YIELD;  /* initial state */
       }
       default:  /* some error occurred */
-        return COS_DEAD;
+        返回 COS_DEAD;
     }
   }
 }
 
 
-static int luaB_costatus (lua_State *L) {
+static 整数 luaB_costatus (lua_State *L) {
   lua_State *co = getco(L);
   lua_pushstring(L, statname[auxstatus(L, co)]);
-  return 1;
+  返回 1;
 }
 
 
 static lua_State *getoptco (lua_State *L) {
-  return (lua_isnone(L, 1) ? L : getco(L));
+  返回 (lua_isnone(L, 1) ? L : getco(L));
 }
 
 
-static int luaB_yieldable (lua_State *L) {
+static 整数 luaB_yieldable (lua_State *L) {
   lua_State *co = getoptco(L);
   lua_pushboolean(L, lua_isyieldable(co));
-  return 1;
+  返回 1;
 }
 
 
-static int luaB_corunning (lua_State *L) {
-  int ismain = lua_pushthread(L);
+static 整数 luaB_corunning (lua_State *L) {
+  整数 ismain = lua_pushthread(L);
   lua_pushboolean(L, ismain);
-  return 2;
+  返回 2;
 }
 
 
-static int luaB_close (lua_State *L) {
+static 整数 luaB_close (lua_State *L) {
   lua_State *co = getoptco(L);
-  int status = auxstatus(L, co);
+  整数 status = auxstatus(L, co);
   switch (status) {
     case COS_DEAD: case COS_YIELD: {
       status = lua_closethread(co, L);
-      if (status == LUA_OK) {
+      如果 (status == LUA_OK) {
         lua_pushboolean(L, 1);
-        return 1;
+        返回 1;
       }
-      else {
+      否则 {
         lua_pushboolean(L, 0);
         lua_xmove(co, L, 1);  /* move error message */
-        return 2;
+        返回 2;
       }
     }
     case COS_NORM:
-      return luaL_error(L, "cannot close a %s coroutine", statname[status]);
+      返回 luaL_error(L, "cannot close a %s coroutine", statname[status]);
     case COS_RUN:
       lua_geti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);  /* get main */
-      if (lua_tothread(L, -1) == co)
-        return luaL_error(L, "cannot close main thread");
+      如果 (lua_tothread(L, -1) == co)
+        返回 luaL_error(L, "cannot close main thread");
       lua_closethread(co, L);  /* close itself */
       /* previous call does not return *//* FALLTHROUGH */
     default:
       lua_assert(0);
-      return 0;
+      返回 0;
   }
 }
 
@@ -219,8 +219,8 @@ static const luaL_Reg co_funcs[] = {
 
 
 
-LUAMOD_API int luaopen_coroutine (lua_State *L) {
+LUAMOD_API 整数 luaopen_coroutine (lua_State *L) {
   luaL_newlib(L, co_funcs);
-  return 1;
+  返回 1;
 }
 
