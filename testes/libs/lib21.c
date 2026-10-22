@@ -1,10 +1,10 @@
 #include "lua.h"
 
 
-int luaopen_lib2 (lua_State *L);
+ကိန်းပြည့် luaopen_lib2 (lua_State *L);
 
-LUAMOD_API int luaopen_lib21 (lua_State *L) {
-  return luaopen_lib2(L);
+LUAMOD_API ကိန်းပြည့် luaopen_lib21 (lua_State *L) {
+  ပြန်ပေး luaopen_lib2(L);
 }
 
 
