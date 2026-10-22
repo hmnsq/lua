@@ -7,9 +7,9 @@
 #ifndef lparser_h
 #define lparser_h
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#அந்தர்பாவ "llimits.h"
+#அந்தர்பாவ "lobject.h"
+#அந்தர்பாவ "lzio.h"
 
 
 /*
@@ -22,7 +22,7 @@
 */
 
 /* kinds of variables/expressions */
-typedef enum {
+வகைவரை எண்ணிக்கை {
   VVOID,  /* when 'expdesc' describes the last expression of a list,
              this kind means an empty list (so, no expression) */
   VNIL,  /* constant nil */
@@ -75,26 +75,26 @@ typedef enum {
 #define vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
 
 
-typedef struct expdesc {
+வகைவரை கட்டமைப்பு expdesc {
   expkind k;
-  union {
+  ஒன்றிப்பு {
     lua_Integer ival;    /* for VKINT */
-    lua_Number nval;  /* for VKFLT */
+    lua_எண் nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
-    int info;  /* for generic use */
-    struct {  /* for indexed variables */
+    முழு info;  /* for generic use */
+    கட்டமைப்பு {  /* for indexed variables */
       short idx;  /* index (R or "long" K) */
       lu_byte t;  /* table (register or upvalue) */
       lu_byte ro;  /* true if variable is read-only */
-      int keystr;  /* index in 'k' of string key, or -1 if not a string */
+      முழு keystr;  /* index in 'k' of string key, or -1 if not a string */
     } ind;
-    struct {  /* for local variables */
+    கட்டமைப்பு {  /* for local variables */
       lu_byte ridx;  /* register holding the variable */
       short vidx;  /* index in 'actvar.arr' */
     } var;
   } u;
-  int t;  /* patch list of 'exit when true' */
-  int f;  /* patch list of 'exit when false' */
+  முழு t;  /* patch list of 'exit when true' */
+  முழு f;  /* patch list of 'exit when false' */
 } expdesc;
 
 
@@ -115,8 +115,8 @@ typedef struct expdesc {
 
 
 /* description of an active variable */
-typedef union Vardesc {
-  struct {
+வகைவரை ஒன்றிப்பு Vardesc {
+  கட்டமைப்பு {
     TValuefields;  /* constant value (if it is a compile-time constant) */
     lu_byte kind;
     lu_byte ridx;  /* register holding the variable */
@@ -129,29 +129,29 @@ typedef union Vardesc {
 
 
 /* description of pending goto statements and label statements */
-typedef struct Labeldesc {
+வகைவரை கட்டமைப்பு Labeldesc {
   TString *name;  /* label identifier */
-  int pc;  /* position in code */
-  int line;  /* line where it appeared */
+  முழு pc;  /* position in code */
+  முழு வரி;  /* line where it appeared */
   short nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;
 
 
 /* list of labels or gotos */
-typedef struct Labellist {
+வகைவரை கட்டமைப்பு Labellist {
   Labeldesc *arr;  /* array */
-  int n;  /* number of entries in use */
-  int size;  /* array size */
+  முழு n;  /* number of entries in use */
+  முழு size;  /* array size */
 } Labellist;
 
 
 /* dynamic structures used by the parser */
-typedef struct Dyndata {
-  struct {  /* list of all active local variables */
+வகைவரை கட்டமைப்பு Dyndata {
+  கட்டமைப்பு {  /* list of all active local variables */
     Vardesc *arr;
-    int n;
-    int size;
+    முழு n;
+    முழு size;
   } actvar;
   Labellist gt;  /* list of pending gotos */
   Labellist label;   /* list of active labels */
@@ -159,24 +159,24 @@ typedef struct Dyndata {
 
 
 /* control of blocks */
-struct BlockCnt;  /* defined in lparser.c */
+கட்டமைப்பு BlockCnt;  /* defined in lparser.c */
 
 
 /* state needed to generate code for a given function */
-typedef struct FuncState {
+வகைவரை கட்டமைப்பு FuncState {
   Proto *f;  /* current function header */
-  struct FuncState *prev;  /* enclosing function */
-  struct LexState *ls;  /* lexical state */
-  struct BlockCnt *bl;  /* chain of current blocks */
+  கட்டமைப்பு FuncState *prev;  /* enclosing function */
+  கட்டமைப்பு LexState *ls;  /* lexical state */
+  கட்டமைப்பு BlockCnt *bl;  /* chain of current blocks */
   Table *kcache;  /* cache for reusing constants */
-  int pc;  /* next position to code (equivalent to 'ncode') */
-  int lasttarget;   /* 'label' of last 'jump label' */
-  int previousline;  /* last line that was saved in 'lineinfo' */
-  int nk;  /* number of elements in 'k' */
-  int np;  /* number of elements in 'p' */
-  int nabslineinfo;  /* number of elements in 'abslineinfo' */
-  int firstlocal;  /* index of first local var (in Dyndata array) */
-  int firstlabel;  /* index of first label (in 'dyd->label->arr') */
+  முழு pc;  /* next position to code (equivalent to 'ncode') */
+  முழு lasttarget;   /* 'label' of last 'jump label' */
+  முழு previousline;  /* last line that was saved in 'lineinfo' */
+  முழு nk;  /* number of elements in 'k' */
+  முழு np;  /* number of elements in 'p' */
+  முழு nabslineinfo;  /* number of elements in 'abslineinfo' */
+  முழு firstlocal;  /* index of first local var (in Dyndata array) */
+  முழு firstlabel;  /* index of first label (in 'dyd->label->arr') */
   short ndebugvars;  /* number of elements in 'f->locvars' */
   short nactvar;  /* number of active variable declarations */
   lu_byte nups;  /* number of upvalues */
@@ -187,11 +187,11 @@ typedef struct FuncState {
 
 
 LUAI_FUNC lu_byte luaY_nvarstack (FuncState *fs);
-LUAI_FUNC void luaY_checklimit (FuncState *fs, int v, int l,
-                                const char *what);
+LUAI_FUNC வெறுமை luaY_checklimit (FuncState *fs, முழு v, முழு l,
+                                மாறிலி எழுத்து *what);
 LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor,
                                  Mbuffer *buff, Dyndata *dyd,
-                                 const char *name, int firstchar);
+                                 மாறிலி எழுத்து *name, முழு firstchar);
 
 
 #endif

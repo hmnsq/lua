@@ -1,23 +1,23 @@
-#include "lua.h"
-#include "lauxlib.h"
+#அந்தர்பாவ "lua.h"
+#அந்தர்பாவ "lauxlib.h"
 
-static int id (lua_State *L) {
-  return lua_gettop(L);
+நிலையான முழு id (lua_State *L) {
+  திரும்பு lua_gettop(L);
 }
 
 
-static const struct luaL_Reg funcs[] = {
+நிலையான மாறிலி கட்டமைப்பு luaL_Reg funcs[] = {
   {"id", id},
-  {NULL, NULL}
+  {வெற்று, வெற்று}
 };
 
 
-LUAMOD_API int luaopen_lib2 (lua_State *L) {
+LUAMOD_API முழு luaopen_lib2 (lua_State *L) {
   lua_settop(L, 2);
   lua_setglobal(L, "y");  /* y gets 2nd parameter */
   lua_setglobal(L, "x");  /* x gets 1st parameter */
   luaL_newlib(L, funcs);
-  return 1;
+  திரும்பு 1;
 }
 
 

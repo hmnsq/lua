@@ -30,7 +30,7 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
+#எனில் 0
 #define LUA_USE_LINUX
 #define LUA_USE_MACOSX
 #define LUA_USE_POSIX
@@ -40,7 +40,7 @@
 /*
 ** Other specific features
 */
-#if 0
+#எனில் 0
 #define LUA_32BITS
 #define LUA_USE_C89
 #endif
@@ -48,89 +48,89 @@
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#அந்தர்பாவ "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#அந்தர்பாவ <assert.h>
+#அந்தர்பாவ <ctype.h>
+#அந்தர்பாவ <errno.h>
+#அந்தர்பாவ <float.h>
+#அந்தர்பாவ <limits.h>
+#அந்தர்பாவ <locale.h>
+#அந்தர்பாவ <math.h>
+#அந்தர்பாவ <setjmp.h>
+#அந்தர்பாவ <signal.h>
+#அந்தர்பாவ <stdarg.h>
+#அந்தர்பாவ <stddef.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <stdlib.h>
+#அந்தர்பாவ <string.h>
+#அந்தர்பாவ <time.h>
 
 /* setup for luaconf.h */
 #define LUA_CORE
 #define LUA_LIB
 
-#include "luaconf.h"
+#அந்தர்பாவ "luaconf.h"
 
 /* do not export internal symbols */
 #undef LUAI_FUNC
 #undef LUAI_DDEC
 #undef LUAI_DDEF
-#define LUAI_FUNC	static
+#define LUAI_FUNC	நிலையான
 #define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#define LUAI_DDEF	நிலையான
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#அந்தர்பாவ "lzio.c"
+#அந்தர்பாவ "lctype.c"
+#அந்தர்பாவ "lopcodes.c"
+#அந்தர்பாவ "lmem.c"
+#அந்தர்பாவ "lundump.c"
+#அந்தர்பாவ "ldump.c"
+#அந்தர்பாவ "lstate.c"
+#அந்தர்பாவ "lgc.c"
+#அந்தர்பாவ "llex.c"
+#அந்தர்பாவ "lcode.c"
+#அந்தர்பாவ "lparser.c"
+#அந்தர்பாவ "ldebug.c"
+#அந்தர்பாவ "lfunc.c"
+#அந்தர்பாவ "lobject.c"
+#அந்தர்பாவ "ltm.c"
+#அந்தர்பாவ "lstring.c"
+#அந்தர்பாவ "ltable.c"
+#அந்தர்பாவ "ldo.c"
+#அந்தர்பாவ "lvm.c"
+#அந்தர்பாவ "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#அந்தர்பாவ "lauxlib.c"
 
 /* standard library  -- not used by luac */
 #ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
+#அந்தர்பாவ "lbaselib.c"
+#அந்தர்பாவ "lcorolib.c"
+#அந்தர்பாவ "ldblib.c"
+#அந்தர்பாவ "liolib.c"
+#அந்தர்பாவ "lmathlib.c"
+#அந்தர்பாவ "loadlib.c"
+#அந்தர்பாவ "loslib.c"
+#அந்தர்பாவ "lstrlib.c"
+#அந்தர்பாவ "ltablib.c"
+#அந்தர்பாவ "lutf8lib.c"
+#அந்தர்பாவ "linit.c"
 #endif
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
+#எனில் defined(LUA_DEBUG)
+#அந்தர்பாவ "ltests.c"
 #endif
 
 /* lua */
 #ifdef MAKE_LUA
-#include "lua.c"
+#அந்தர்பாவ "lua.c"
 #endif
 
 /* luac */
 #ifdef MAKE_LUAC
-#include "luac.c"
+#அந்தர்பாவ "luac.c"
 #endif

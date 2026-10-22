@@ -6,32 +6,32 @@
 
 #define lua_c
 
-#include "lprefix.h"
+#அந்தர்பாவ "lprefix.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#அந்தர்பாவ <stdio.h>
+#அந்தர்பாவ <stdlib.h>
+#அந்தர்பாவ <string.h>
 
-#include <signal.h>
+#அந்தர்பாவ <signal.h>
 
-#include "lua.h"
+#அந்தர்பாவ "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#அந்தர்பாவ "lauxlib.h"
+#அந்தர்பாவ "lualib.h"
+#அந்தர்பாவ "llimits.h"
 
 
-#if !defined(LUA_PROGNAME)
+#எனில் !defined(LUA_PROGNAME)
 #define LUA_PROGNAME		"lua"
 #endif
 
-#if !defined(LUA_INIT_VAR)
+#எனில் !defined(LUA_INIT_VAR)
 #define LUA_INIT_VAR		"LUA_INIT"
 #endif
 
 /* Name of the environment variable with the name of the readline library */
-#if !defined(LUA_RLLIB_VAR)
+#எனில் !defined(LUA_RLLIB_VAR)
 #define LUA_RLLIB_VAR		"LUA_READLINELIB"
 #endif
 
@@ -39,27 +39,27 @@
 #define LUA_INITVARVERSION	LUA_INIT_VAR LUA_VERSUFFIX
 
 
-static lua_State *globalL = NULL;
+நிலையான lua_State *globalL = வெற்று;
 
-static const char *progname = LUA_PROGNAME;
+நிலையான மாறிலி எழுத்து *progname = LUA_PROGNAME;
 
 
-#if defined(LUA_USE_POSIX)   /* { */
+#எனில் defined(LUA_USE_POSIX)   /* { */
 
 /*
 ** Use 'sigaction' when available.
 */
-static void setsignal (int sig, void (*handler)(int)) {
-  struct sigaction sa;
+நிலையான வெறுமை setsignal (முழு sig, வெறுமை (*handler)(முழு)) {
+  கட்டமைப்பு sigaction sa;
   sa.sa_handler = handler;
   sa.sa_flags = 0;
   sigemptyset(&sa.sa_mask);  /* do not mask any signal */
-  sigaction(sig, &sa, NULL);
+  sigaction(sig, &sa, வெற்று);
 }
 
-#else           /* }{ */
+#இல்லையெனில்           /* }{ */
 
-#define setsignal            signal
+#define setsignal            சமிக்ஞை
 
 #endif                               /* } */
 
@@ -67,9 +67,9 @@ static void setsignal (int sig, void (*handler)(int)) {
 /*
 ** Hook set by signal function to stop the interpreter.
 */
-static void lstop (lua_State *L, lua_Debug *ar) {
-  (void)ar;  /* unused arg. */
-  lua_sethook(L, NULL, 0, 0);  /* reset hook */
+நிலையான வெறுமை lstop (lua_State *L, lua_Debug *ar) {
+  (வெறுமை)ar;  /* unused arg. */
+  lua_sethook(L, வெற்று, 0, 0);  /* reset hook */
   luaL_error(L, "interrupted!");
 }
 
@@ -80,18 +80,18 @@ static void lstop (lua_State *L, lua_Debug *ar) {
 ** this function only sets a hook that, when called, will stop the
 ** interpreter.
 */
-static void laction (int i) {
-  int flag = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE | LUA_MASKCOUNT;
+நிலையான வெறுமை laction (முழு i) {
+  முழு flag = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE | LUA_MASKCOUNT;
   setsignal(i, SIG_DFL); /* if another SIGINT happens, terminate process */
   lua_sethook(globalL, lstop, flag, 1);
 }
 
 
-static void print_usage (const char *badoption) {
+நிலையான வெறுமை print_usage (மாறிலி எழுத்து *badoption) {
   lua_writestringerror("%s: ", progname);
-  if (badoption[1] == 'e' || badoption[1] == 'l')
+  எனில் (badoption[1] == 'e' || badoption[1] == 'l')
     lua_writestringerror("'%s' needs argument\n", badoption);
-  else
+  இல்லையெனில்
     lua_writestringerror("unrecognized option '%s'\n", badoption);
   lua_writestringerror(
   "usage: %s [options] [script [args]]\n"
@@ -114,9 +114,9 @@ static void print_usage (const char *badoption) {
 ** Prints an error message, adding the program name in front of it
 ** (if present)
 */
-static void l_message (const char *pname, const char *msg) {
-  if (pname) lua_writestringerror("%s: ", pname);
-  lua_writestringerror("%s\n", msg);
+நிலையான வெறுமை l_message (மாறிலி எழுத்து *pname, மாறிலி எழுத்து *செய்தி) {
+  எனில் (pname) lua_writestringerror("%s: ", pname);
+  lua_writestringerror("%s\n", செய்தி);
 }
 
 
@@ -124,33 +124,33 @@ static void l_message (const char *pname, const char *msg) {
 ** Check whether 'status' is not OK and, if so, prints the error
 ** message on the top of the stack.
 */
-static int report (lua_State *L, int status) {
-  if (status != LUA_OK) {
-    const char *msg = lua_tostring(L, -1);
-    if (msg == NULL)
-      msg = "(error message not a string)";
-    l_message(progname, msg);
-    lua_pop(L, 1);  /* remove message */
+நிலையான முழு report (lua_State *L, முழு status) {
+  எனில் (status != LUA_OK) {
+    மாறிலி எழுத்து *செய்தி = lua_tostring(L, -1);
+    எனில் (செய்தி == வெற்று)
+      செய்தி = "(error message not a string)";
+    l_message(progname, செய்தி);
+    lua_எடு(L, 1);  /* remove message */
   }
-  return status;
+  திரும்பு status;
 }
 
 
 /*
 ** Message handler used to run all chunks
 */
-static int msghandler (lua_State *L) {
-  const char *msg = lua_tostring(L, 1);
-  if (msg == NULL) {  /* is error object not a string? */
-    if (luaL_callmeta(L, 1, "__tostring") &&  /* does it have a metamethod */
+நிலையான முழு msghandler (lua_State *L) {
+  மாறிலி எழுத்து *செய்தி = lua_tostring(L, 1);
+  எனில் (செய்தி == வெற்று) {  /* is error object not a string? */
+    எனில் (luaL_callmeta(L, 1, "__tostring") &&  /* does it have a metamethod */
         lua_type(L, -1) == LUA_TSTRING)  /* that produces a string? */
-      return 1;  /* that is the message */
-    else
-      msg = lua_pushfstring(L, "(error object is a %s value)",
+      திரும்பு 1;  /* that is the message */
+    இல்லையெனில்
+      செய்தி = lua_pushfstring(L, "(error object is a %s value)",
                                luaL_typename(L, 1));
   }
-  luaL_traceback(L, L, msg, 1);  /* append a standard traceback */
-  return 1;  /* return the traceback */
+  luaL_traceback(L, L, செய்தி, 1);  /* append a standard traceback */
+  திரும்பு 1;  /* return the traceback */
 }
 
 
@@ -158,21 +158,21 @@ static int msghandler (lua_State *L) {
 ** Interface to 'lua_pcall', which sets appropriate message function
 ** and C-signal handler. Used to run all chunks.
 */
-static int docall (lua_State *L, int narg, int nres) {
-  int status;
-  int base = lua_gettop(L) - narg;  /* function index */
+நிலையான முழு docall (lua_State *L, முழு narg, முழு nres) {
+  முழு status;
+  முழு base = lua_gettop(L) - narg;  /* function index */
   lua_pushcfunction(L, msghandler);  /* push message handler */
-  lua_insert(L, base);  /* put it under function and args */
+  lua_செருகு(L, base);  /* put it under function and args */
   globalL = L;  /* to be available to 'laction' */
   setsignal(SIGINT, laction);  /* set C-signal handler */
   status = lua_pcall(L, narg, nres, base);
   setsignal(SIGINT, SIG_DFL); /* reset C-signal handler */
   lua_remove(L, base);  /* remove message handler from the stack */
-  return status;
+  திரும்பு status;
 }
 
 
-static void print_version (void) {
+நிலையான வெறுமை print_version (வெறுமை) {
   lua_writestring(LUA_COPYRIGHT, strlen(LUA_COPYRIGHT));
   lua_writeline();
 }
@@ -188,11 +188,11 @@ static void print_version (void) {
 ** (If there is no interpreter's name either, 'script' is -1, so
 ** table sizes are zero.)
 */
-static void createargtable (lua_State *L, char **argv, int argc, int script) {
-  int i, narg;
+நிலையான வெறுமை createargtable (lua_State *L, எழுத்து **argv, முழு argc, முழு script) {
+  முழு i, narg;
   narg = argc - (script + 1);  /* number of positive indices */
   lua_createtable(L, narg, script + 1);
-  for (i = 0; i < argc; i++) {
+  க்கு (i = 0; i < argc; i++) {
     lua_pushstring(L, argv[i]);
     lua_rawseti(L, -2, i - script);
   }
@@ -200,19 +200,19 @@ static void createargtable (lua_State *L, char **argv, int argc, int script) {
 }
 
 
-static int dochunk (lua_State *L, int status) {
-  if (status == LUA_OK) status = docall(L, 0, 0);
-  return report(L, status);
+நிலையான முழு dochunk (lua_State *L, முழு status) {
+  எனில் (status == LUA_OK) status = docall(L, 0, 0);
+  திரும்பு report(L, status);
 }
 
 
-static int dofile (lua_State *L, const char *name) {
-  return dochunk(L, luaL_loadfilex(L, name, "bt"));
+நிலையான முழு dofile (lua_State *L, மாறிலி எழுத்து *name) {
+  திரும்பு dochunk(L, luaL_loadfilex(L, name, "bt"));
 }
 
 
-static int dostring (lua_State *L, const char *s, const char *name) {
-  return dochunk(L, luaL_loadbufferx(L, s, strlen(s), name, "t"));
+நிலையான முழு dostring (lua_State *L, மாறிலி எழுத்து *s, மாறிலி எழுத்து *name) {
+  திரும்பு dochunk(L, luaL_loadbufferx(L, s, strlen(s), name, "t"));
 }
 
 
@@ -221,57 +221,57 @@ static int dostring (lua_State *L, const char *s, const char *name) {
 ** If there is no explicit modname and globname contains a '-', cut
 ** the suffix after '-' (the "version") to make the global name.
 */
-static int dolibrary (lua_State *L, char *globname) {
-  int status;
-  char *suffix = NULL;
-  char *modname = strchr(globname, '=');
-  if (modname == NULL) {  /* no explicit name? */
+நிலையான முழு dolibrary (lua_State *L, எழுத்து *globname) {
+  முழு status;
+  எழுத்து *suffix = வெற்று;
+  எழுத்து *modname = strchr(globname, '=');
+  எனில் (modname == வெற்று) {  /* no explicit name? */
     modname = globname;  /* module name is equal to global name */
     suffix = strchr(modname, *LUA_IGMARK);  /* look for a suffix mark */
   }
-  else {
+  இல்லையெனில் {
     *modname = '\0';  /* global name ends here */
     modname++;  /* module name starts after the '=' */
   }
   lua_getglobal(L, "require");
   lua_pushstring(L, modname);
   status = docall(L, 1, 1);  /* call 'require(modname)' */
-  if (status == LUA_OK) {
-    if (suffix != NULL)  /* is there a suffix mark? */
+  எனில் (status == LUA_OK) {
+    எனில் (suffix != வெற்று)  /* is there a suffix mark? */
       *suffix = '\0';  /* remove suffix from global name */
     lua_setglobal(L, globname);  /* globname = require(modname) */
   }
-  return report(L, status);
+  திரும்பு report(L, status);
 }
 
 
 /*
 ** Push on the stack the contents of table 'arg' from 1 to #arg
 */
-static int pushargs (lua_State *L) {
-  int i, n;
-  if (lua_getglobal(L, "arg") != LUA_TTABLE)
+நிலையான முழு pushargs (lua_State *L) {
+  முழு i, n;
+  எனில் (lua_getglobal(L, "arg") != LUA_TTABLE)
     luaL_error(L, "'arg' is not a table");
-  n = (int)luaL_len(L, -1);
+  n = (முழு)luaL_len(L, -1);
   luaL_checkstack(L, n + 3, "too many arguments to script");
-  for (i = 1; i <= n; i++)
+  க்கு (i = 1; i <= n; i++)
     lua_rawgeti(L, -i, i);
   lua_remove(L, -i);  /* remove table from the stack */
-  return n;
+  திரும்பு n;
 }
 
 
-static int handle_script (lua_State *L, char **argv) {
-  int status;
-  const char *fname = argv[0];
-  if (strcmp(fname, "-") == 0 && strcmp(argv[-1], "--") != 0)
-    fname = NULL;  /* stdin */
+நிலையான முழு handle_script (lua_State *L, எழுத்து **argv) {
+  முழு status;
+  மாறிலி எழுத்து *fname = argv[0];
+  எனில் (strcmp(fname, "-") == 0 && strcmp(argv[-1], "--") != 0)
+    fname = வெற்று;  /* stdin */
   status = luaL_loadfilex(L, fname, "bt");
-  if (status == LUA_OK) {
-    int n = pushargs(L);  /* push arguments to script */
+  எனில் (status == LUA_OK) {
+    முழு n = pushargs(L);  /* push arguments to script */
     status = docall(L, n, LUA_MULTRET);
   }
-  return report(L, status);
+  திரும்பு report(L, status);
 }
 
 
@@ -290,61 +290,61 @@ static int handle_script (lua_State *L, char **argv) {
 ** argument.  Otherwise, 'first' is -1 if there is no program name,
 ** 0 if there is no script name, or the index of the script name.
 */
-static int collectargs (char **argv, int *first) {
-  int args = 0;
-  int i;
-  if (argv[0] != NULL) {  /* is there a program name? */
-    if (argv[0][0])  /* not empty? */
+நிலையான முழு collectargs (எழுத்து **argv, முழு *first) {
+  முழு args = 0;
+  முழு i;
+  எனில் (argv[0] != வெற்று) {  /* is there a program name? */
+    எனில் (argv[0][0])  /* not empty? */
       progname = argv[0];  /* save it */
   }
-  else {  /* no program name */
+  இல்லையெனில் {  /* no program name */
     *first = -1;
-    return 0;
+    திரும்பு 0;
   }
-  for (i = 1; argv[i] != NULL; i++) {  /* handle arguments */
+  க்கு (i = 1; argv[i] != வெற்று; i++) {  /* handle arguments */
     *first = i;
-    if (argv[i][0] != '-')  /* not an option? */
-        return args;  /* stop handling options */
-    switch (argv[i][1]) {  /* else check option */
-      case '-':  /* '--' */
-        if (argv[i][2] != '\0')  /* extra characters after '--'? */
-          return has_error;  /* invalid option */
+    எனில் (argv[i][0] != '-')  /* not an option? */
+        திரும்பு args;  /* stop handling options */
+    தேர்வு (argv[i][1]) {  /* else check option */
+      நிலை '-':  /* '--' */
+        எனில் (argv[i][2] != '\0')  /* extra characters after '--'? */
+          திரும்பு has_error;  /* invalid option */
         /* if there is a script name, it comes after '--' */
-        *first = (argv[i + 1] != NULL) ? i + 1 : 0;
-        return args;
-      case '\0':  /* '-' */
-        return args;  /* script "name" is '-' */
-      case 'E':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
+        *first = (argv[i + 1] != வெற்று) ? i + 1 : 0;
+        திரும்பு args;
+      நிலை '\0':  /* '-' */
+        திரும்பு args;  /* script "name" is '-' */
+      நிலை 'E':
+        எனில் (argv[i][2] != '\0')  /* extra characters? */
+          திரும்பு has_error;  /* invalid option */
         args |= has_E;
-        break;
-      case 'W':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
-        break;
-      case 'i':
+        நிறுத்து;
+      நிலை 'W':
+        எனில் (argv[i][2] != '\0')  /* extra characters? */
+          திரும்பு has_error;  /* invalid option */
+        நிறுத்து;
+      நிலை 'i':
         args |= has_i;  /* (-i implies -v) *//* FALLTHROUGH */
-      case 'v':
-        if (argv[i][2] != '\0')  /* extra characters? */
-          return has_error;  /* invalid option */
+      நிலை 'v':
+        எனில் (argv[i][2] != '\0')  /* extra characters? */
+          திரும்பு has_error;  /* invalid option */
         args |= has_v;
-        break;
-      case 'e':
+        நிறுத்து;
+      நிலை 'e':
         args |= has_e;  /* FALLTHROUGH */
-      case 'l':  /* both options need an argument */
-        if (argv[i][2] == '\0') {  /* no concatenated argument? */
+      நிலை 'l':  /* both options need an argument */
+        எனில் (argv[i][2] == '\0') {  /* no concatenated argument? */
           i++;  /* try next 'argv' */
-          if (argv[i] == NULL || argv[i][0] == '-')
-            return has_error;  /* no next argument or it is another option */
+          எனில் (argv[i] == வெற்று || argv[i][0] == '-')
+            திரும்பு has_error;  /* no next argument or it is another option */
         }
-        break;
-      default:  /* invalid option */
-        return has_error;
+        நிறுத்து;
+      இயல்பு:  /* invalid option */
+        திரும்பு has_error;
     }
   }
   *first = 0;  /* no script name */
-  return args;
+  திரும்பு args;
 }
 
 
@@ -353,54 +353,54 @@ static int collectargs (char **argv, int *first) {
 ** 'W', which also affects the state.
 ** Returns 0 if some code raises an error.
 */
-static int runargs (lua_State *L, char **argv, int n) {
-  int i;
+நிலையான முழு runargs (lua_State *L, எழுத்து **argv, முழு n) {
+  முழு i;
   lua_warning(L, "@off", 0);  /* by default, Lua stand-alone has warnings off */
-  for (i = 1; i < n; i++) {
-    int option = argv[i][1];
+  க்கு (i = 1; i < n; i++) {
+    முழு option = argv[i][1];
     lua_assert(argv[i][0] == '-');  /* already checked */
-    switch (option) {
-      case 'e':  case 'l': {
-        int status;
-        char *extra = argv[i] + 2;  /* both options need an argument */
-        if (*extra == '\0') extra = argv[++i];
-        lua_assert(extra != NULL);
+    தேர்வு (option) {
+      நிலை 'e':  நிலை 'l': {
+        முழு status;
+        எழுத்து *extra = argv[i] + 2;  /* both options need an argument */
+        எனில் (*extra == '\0') extra = argv[++i];
+        lua_assert(extra != வெற்று);
         status = (option == 'e')
                  ? dostring(L, extra, "=(command line)")
                  : dolibrary(L, extra);
-        if (status != LUA_OK) return 0;
-        break;
+        எனில் (status != LUA_OK) திரும்பு 0;
+        நிறுத்து;
       }
-      case 'W':
+      நிலை 'W':
         lua_warning(L, "@on", 0);  /* warnings on */
-        break;
+        நிறுத்து;
     }
   }
-  return 1;
+  திரும்பு 1;
 }
 
 
-static char *(*l_getenv)(const char *name);
+நிலையான எழுத்து *(*l_getenv)(மாறிலி எழுத்து *name);
 
 /* Function to ignore environment variables, used by option -E */
-static char *no_getenv (const char *name) {
+நிலையான எழுத்து *no_getenv (மாறிலி எழுத்து *name) {
   UNUSED(name);
-  return NULL;
+  திரும்பு வெற்று;
 }
 
 
-static int handle_luainit (lua_State *L) {
-  const char *name = "=" LUA_INITVARVERSION;
-  const char *init = l_getenv(name + 1);
-  if (init == NULL) {
+நிலையான முழு handle_luainit (lua_State *L) {
+  மாறிலி எழுத்து *name = "=" LUA_INITVARVERSION;
+  மாறிலி எழுத்து *init = l_getenv(name + 1);
+  எனில் (init == வெற்று) {
     name = "=" LUA_INIT_VAR;
     init = l_getenv(name + 1);  /* try alternative name */
   }
-  if (init == NULL) return LUA_OK;
-  else if (init[0] == '@')
-    return dofile(L, init+1);
-  else
-    return dostring(L, init, name);
+  எனில் (init == வெற்று) திரும்பு LUA_OK;
+  இல்லையெனில் எனில் (init[0] == '@')
+    திரும்பு dofile(L, init+1);
+  இல்லையெனில்
+    திரும்பு dostring(L, init, name);
 }
 
 
@@ -410,12 +410,12 @@ static int handle_luainit (lua_State *L) {
 ** ===================================================================
 */
 
-#if !defined(LUA_PROMPT)
+#எனில் !defined(LUA_PROMPT)
 #define LUA_PROMPT		"> "
 #define LUA_PROMPT2		">> "
 #endif
 
-#if !defined(LUA_MAXINPUT)
+#எனில் !defined(LUA_MAXINPUT)
 #define LUA_MAXINPUT		512
 #endif
 
@@ -424,21 +424,21 @@ static int handle_luainit (lua_State *L) {
 ** lua_stdin_is_tty detects whether the standard input is a 'tty' (that
 ** is, whether we're running lua interactively).
 */
-#if !defined(lua_stdin_is_tty)	/* { */
+#எனில் !defined(lua_stdin_is_tty)	/* { */
 
-#if defined(LUA_USE_POSIX)	/* { */
+#எனில் defined(LUA_USE_POSIX)	/* { */
 
-#include <unistd.h>
+#அந்தர்பாவ <unistd.h>
 #define lua_stdin_is_tty()	isatty(0)
 
-#elif defined(LUA_USE_WINDOWS)	/* }{ */
+#அல்லதெனில் defined(LUA_USE_WINDOWS)	/* }{ */
 
-#include <io.h>
-#include <windows.h>
+#அந்தர்பாவ <io.h>
+#அந்தர்பாவ <windows.h>
 
 #define lua_stdin_is_tty()	_isatty(_fileno(stdin))
 
-#else				/* }{ */
+#இல்லையெனில்				/* }{ */
 
 /* ISO C definition */
 #define lua_stdin_is_tty()	1  /* assume stdin is a tty */
@@ -456,77 +456,77 @@ static int handle_luainit (lua_State *L) {
 ** * lua_freeline defines how to free a line read by lua_readline.
 */
 
-#if !defined(lua_readline)	/* { */
+#எனில் !defined(lua_readline)	/* { */
 /* Otherwise, all previously listed functions should be defined. */
 
-#if defined(LUA_USE_READLINE)	/* { */
+#எனில் defined(LUA_USE_READLINE)	/* { */
 /* Lua will be linked with '-lreadline' */
 
-#include <readline/readline.h>
-#include <readline/history.h>
+#அந்தர்பாவ <readline/readline.h>
+#அந்தர்பாவ <readline/history.h>
 
 #define lua_initreadline(L)  \
-	((void)L, *cast(const char **, &rl_readline_name)="lua")
-#define lua_readline(buff,prompt)	((void)buff, readline(prompt))
-#define lua_saveline(line)	add_history(line)
-#define lua_freeline(line)	free(line)
+	((வெறுமை)L, *cast(மாறிலி எழுத்து **, &rl_readline_name)="lua")
+#define lua_readline(buff,prompt)	((வெறுமை)buff, readline(prompt))
+#define lua_saveline(வரி)	add_history(வரி)
+#define lua_freeline(வரி)	விடுவி(வரி)
 
-#else		/* }{ */
+#இல்லையெனில்		/* }{ */
 /* use dynamically loaded readline (or nothing) */
 
 /* pointer to 'readline' function (if any) */
-typedef char *(*l_readlineT) (const char *prompt);
-static l_readlineT l_readline = NULL;
+வகைவரை எழுத்து *(*l_readlineT) (மாறிலி எழுத்து *prompt);
+நிலையான l_readlineT l_readline = வெற்று;
 
 /* pointer to 'add_history' function (if any) */
-typedef void (*l_addhistT) (const char *string);
-static l_addhistT l_addhist = NULL;
+வகைவரை வெறுமை (*l_addhistT) (மாறிலி எழுத்து *string);
+நிலையான l_addhistT l_addhist = வெற்று;
 
 
-static char *lua_readline (char *buff, const char *prompt) {
-  if (l_readline != NULL)  /* is there a 'readline'? */
-    return (*l_readline)(prompt);  /* use it */
-  else {  /* emulate 'readline' over 'buff' */
+நிலையான எழுத்து *lua_readline (எழுத்து *buff, மாறிலி எழுத்து *prompt) {
+  எனில் (l_readline != வெற்று)  /* is there a 'readline'? */
+    திரும்பு (*l_readline)(prompt);  /* use it */
+  இல்லையெனில் {  /* emulate 'readline' over 'buff' */
     fputs(prompt, stdout);
     fflush(stdout);  /* show prompt */
-    return fgets(buff, LUA_MAXINPUT, stdin);  /* read line */
+    திரும்பு fgets(buff, LUA_MAXINPUT, stdin);  /* read line */
   }
 }
 
 
-static void lua_saveline (const char *line) {
-  if (l_addhist != NULL)  /* is there an 'add_history'? */
-    (*l_addhist)(line);  /* use it */
+நிலையான வெறுமை lua_saveline (மாறிலி எழுத்து *வரி) {
+  எனில் (l_addhist != வெற்று)  /* is there an 'add_history'? */
+    (*l_addhist)(வரி);  /* use it */
   /* else nothing to be done */
 }
 
 
-static void lua_freeline (char *line) {
-  if (l_readline != NULL)  /* is there a 'readline'? */
-    free(line);  /* free line created by it */
+நிலையான வெறுமை lua_freeline (எழுத்து *வரி) {
+  எனில் (l_readline != வெற்று)  /* is there a 'readline'? */
+    விடுவி(வரி);  /* free line created by it */
   /* else 'lua_readline' used an automatic buffer; nothing to free */
 }
 
 
-#if defined(LUA_USE_DLOPEN) && defined(LUA_READLINELIB)		/* { */
+#எனில் defined(LUA_USE_DLOPEN) && defined(LUA_READLINELIB)		/* { */
 /* try to load 'readline' dynamically */
 
-#include <dlfcn.h>
+#அந்தர்பாவ <dlfcn.h>
 
-static void lua_initreadline (lua_State *L) {
-  const char *rllib = l_getenv(LUA_RLLIB_VAR);  /* name of readline library */
-  void *lib;  /* library handle */
-  if (rllib == NULL)  /* no environment variable? */
+நிலையான வெறுமை lua_initreadline (lua_State *L) {
+  மாறிலி எழுத்து *rllib = l_getenv(LUA_RLLIB_VAR);  /* name of readline library */
+  வெறுமை *lib;  /* library handle */
+  எனில் (rllib == வெற்று)  /* no environment variable? */
     rllib = LUA_READLINELIB;  /* use default name */
   lib = dlopen(rllib, RTLD_NOW | RTLD_LOCAL);
-  if (lib != NULL) {
-    const char **name = cast(const char**, dlsym(lib, "rl_readline_name"));
-    if (name != NULL)
+  எனில் (lib != வெற்று) {
+    மாறிலி எழுத்து **name = cast(மாறிலி எழுத்து**, dlsym(lib, "rl_readline_name"));
+    எனில் (name != வெற்று)
       *name = "lua";
     l_readline = cast(l_readlineT, cast_func(dlsym(lib, "readline")));
     l_addhist = cast(l_addhistT, cast_func(dlsym(lib, "add_history")));
-    if (l_readline != NULL)  /* could load readline function? */
-      return;  /* everything ok */
+    எனில் (l_readline != வெற்று)  /* could load readline function? */
+      திரும்பு;  /* everything ok */
     /* else emit a warning */
   }
   lua_warning(L, "unable to load readline library '", 1);
@@ -534,11 +534,11 @@ static void lua_initreadline (lua_State *L) {
   lua_warning(L, "'", 0);
 }
 
-#else		/* }{ */
+#இல்லையெனில்		/* }{ */
 /* no dlopen or LUA_READLINELIB undefined */
 
 /* Leave pointers with NULL */
-#define lua_initreadline(L)	((void)L)
+#define lua_initreadline(L)	((வெறுமை)L)
 
 #endif		/* } */
 
@@ -552,19 +552,19 @@ static void lua_initreadline (lua_State *L) {
 ** the string (or nil, if using the default value) on the stack, to keep
 ** it anchored.
 */
-static const char *get_prompt (lua_State *L, int firstline) {
-  if (lua_getglobal(L, firstline ? "_PROMPT" : "_PROMPT2") == LUA_TNIL)
-    return (firstline ? LUA_PROMPT : LUA_PROMPT2);  /* use the default */
-  else {  /* apply 'tostring' over the value */
-    const char *p = luaL_tolstring(L, -1, NULL);
+நிலையான மாறிலி எழுத்து *get_prompt (lua_State *L, முழு firstline) {
+  எனில் (lua_getglobal(L, firstline ? "_PROMPT" : "_PROMPT2") == LUA_TNIL)
+    திரும்பு (firstline ? LUA_PROMPT : LUA_PROMPT2);  /* use the default */
+  இல்லையெனில் {  /* apply 'tostring' over the value */
+    மாறிலி எழுத்து *p = luaL_tolstring(L, -1, வெற்று);
     lua_remove(L, -2);  /* remove original value */
-    return p;
+    திரும்பு p;
   }
 }
 
 /* mark in error messages for incomplete statements */
 #define EOFMARK		"<eof>"
-#define marklen		(sizeof(EOFMARK)/sizeof(char) - 1)
+#define marklen		(அளவு(EOFMARK)/அளவு(எழுத்து) - 1)
 
 
 /*
@@ -572,34 +572,34 @@ static const char *get_prompt (lua_State *L, int firstline) {
 ** message at the top of the stack ends with the above mark for
 ** incomplete statements.
 */
-static int incomplete (lua_State *L, int status) {
-  if (status == LUA_ERRSYNTAX) {
+நிலையான முழு incomplete (lua_State *L, முழு status) {
+  எனில் (status == LUA_ERRSYNTAX) {
     size_t lmsg;
-    const char *msg = lua_tolstring(L, -1, &lmsg);
-    if (lmsg >= marklen && strcmp(msg + lmsg - marklen, EOFMARK) == 0)
-      return 1;
+    மாறிலி எழுத்து *செய்தி = lua_tolstring(L, -1, &lmsg);
+    எனில் (lmsg >= marklen && strcmp(செய்தி + lmsg - marklen, EOFMARK) == 0)
+      திரும்பு 1;
   }
-  return 0;  /* else... */
+  திரும்பு 0;  /* else... */
 }
 
 
 /*
 ** Prompt the user, read a line, and push it into the Lua stack.
 */
-static int pushline (lua_State *L, int firstline) {
-  char buffer[LUA_MAXINPUT];
+நிலையான முழு pushline (lua_State *L, முழு firstline) {
+  எழுத்து buffer[LUA_MAXINPUT];
   size_t l;
-  const char *prmt = get_prompt(L, firstline);
-  char *b = lua_readline(buffer, prmt);
-  lua_pop(L, 1);  /* remove prompt */
-  if (b == NULL)
-    return 0;  /* no input */
+  மாறிலி எழுத்து *prmt = get_prompt(L, firstline);
+  எழுத்து *b = lua_readline(buffer, prmt);
+  lua_எடு(L, 1);  /* remove prompt */
+  எனில் (b == வெற்று)
+    திரும்பு 0;  /* no input */
   l = strlen(b);
-  if (l > 0 && b[l-1] == '\n')  /* line ends with newline? */
+  எனில் (l > 0 && b[l-1] == '\n')  /* line ends with newline? */
     b[--l] = '\0';  /* remove it */
   lua_pushlstring(L, b, l);
   lua_freeline(b);
-  return 1;
+  திரும்பு 1;
 }
 
 
@@ -607,24 +607,24 @@ static int pushline (lua_State *L, int firstline) {
 ** Try to compile line on the stack as 'return <line>;'; on return, stack
 ** has either compiled chunk or original line (if compilation failed).
 */
-static int addreturn (lua_State *L) {
-  const char *line = lua_tostring(L, -1);  /* original line */
-  const char *retline = lua_pushfstring(L, "return %s;", line);
-  int status = luaL_loadbufferx(L, retline, strlen(retline), "=stdin", "t");
-  if (status == LUA_OK)
+நிலையான முழு addreturn (lua_State *L) {
+  மாறிலி எழுத்து *வரி = lua_tostring(L, -1);  /* original line */
+  மாறிலி எழுத்து *retline = lua_pushfstring(L, "return %s;", வரி);
+  முழு status = luaL_loadbufferx(L, retline, strlen(retline), "=stdin", "t");
+  எனில் (status == LUA_OK)
     lua_remove(L, -2);  /* remove modified line */
-  else
-    lua_pop(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
-  return status;
+  இல்லையெனில்
+    lua_எடு(L, 2);  /* pop result from 'luaL_loadbufferx' and modified line */
+  திரும்பு status;
 }
 
 
-static void checklocal (const char *line) {
-  static const size_t szloc = sizeof("local") - 1;
-  static const char space[] = " \t";
-  line += strspn(line, space);  /* skip spaces */
-  if (strncmp(line, "local", szloc) == 0 &&  /* "local"? */
-      strchr(space, *(line + szloc)) != NULL) {  /* followed by a space? */
+நிலையான வெறுமை checklocal (மாறிலி எழுத்து *வரி) {
+  நிலையான மாறிலி size_t szloc = அளவு("local") - 1;
+  நிலையான மாறிலி எழுத்து space[] = " \t";
+  வரி += strspn(வரி, space);  /* skip spaces */
+  எனில் (strncmp(வரி, "local", szloc) == 0 &&  /* "local"? */
+      strchr(space, *(வரி + szloc)) != வெற்று) {  /* followed by a space? */
     lua_writestringerror("%s\n",
       "warning: locals do not survive across lines in interactive mode");
   }
@@ -636,19 +636,19 @@ static void checklocal (const char *line) {
 ** for an incomplete statement. Start with first line already read in
 ** the stack.
 */
-static int multiline (lua_State *L) {
+நிலையான முழு multiline (lua_State *L) {
   size_t len;
-  const char *line = lua_tolstring(L, 1, &len);  /* get first line */
-  checklocal(line);
-  for (;;) {  /* repeat until gets a complete statement */
-    int status = luaL_loadbufferx(L, line, len, "=stdin", "t");  /* try it */
-    if (!incomplete(L, status) || !pushline(L, 0))
-      return status;  /* should not or cannot try to add continuation line */
+  மாறிலி எழுத்து *வரி = lua_tolstring(L, 1, &len);  /* get first line */
+  checklocal(வரி);
+  க்கு (;;) {  /* repeat until gets a complete statement */
+    முழு status = luaL_loadbufferx(L, வரி, len, "=stdin", "t");  /* try it */
+    எனில் (!incomplete(L, status) || !pushline(L, 0))
+      திரும்பு status;  /* should not or cannot try to add continuation line */
     lua_remove(L, -2);  /* remove error message (from incomplete line) */
     lua_pushliteral(L, "\n");  /* add newline... */
-    lua_insert(L, -2);  /* ...between the two lines */
+    lua_செருகு(L, -2);  /* ...between the two lines */
     lua_concat(L, 3);  /* join them */
-    line = lua_tolstring(L, 1, &len);  /* get what is has */
+    வரி = lua_tolstring(L, 1, &len);  /* get what is has */
   }
 }
 
@@ -659,33 +659,33 @@ static int multiline (lua_State *L) {
 ** the final status of load/call with the resulting function (if any)
 ** in the top of the stack.
 */
-static int loadline (lua_State *L) {
-  const char *line;
-  int status;
+நிலையான முழு loadline (lua_State *L) {
+  மாறிலி எழுத்து *வரி;
+  முழு status;
   lua_settop(L, 0);
-  if (!pushline(L, 1))
-    return -1;  /* no input */
-  if ((status = addreturn(L)) != LUA_OK)  /* 'return ...' did not work? */
+  எனில் (!pushline(L, 1))
+    திரும்பு -1;  /* no input */
+  எனில் ((status = addreturn(L)) != LUA_OK)  /* 'return ...' did not work? */
     status = multiline(L);  /* try as command, maybe with continuation lines */
-  line = lua_tostring(L, 1);
-  if (line[0] != '\0')  /* non empty? */
-    lua_saveline(line);  /* keep history */
+  வரி = lua_tostring(L, 1);
+  எனில் (வரி[0] != '\0')  /* non empty? */
+    lua_saveline(வரி);  /* keep history */
   lua_remove(L, 1);  /* remove line from the stack */
   lua_assert(lua_gettop(L) == 1);
-  return status;
+  திரும்பு status;
 }
 
 
 /*
 ** Prints (calling the Lua 'print' function) any values on the stack
 */
-static void l_print (lua_State *L) {
-  int n = lua_gettop(L);
-  if (n > 0) {  /* any result to be printed? */
+நிலையான வெறுமை l_print (lua_State *L) {
+  முழு n = lua_gettop(L);
+  எனில் (n > 0) {  /* any result to be printed? */
     luaL_checkstack(L, LUA_MINSTACK, "too many results to print");
     lua_getglobal(L, "print");
-    lua_insert(L, 1);
-    if (lua_pcall(L, n, 0, 0) != LUA_OK)
+    lua_செருகு(L, 1);
+    எனில் (lua_pcall(L, n, 0, 0) != LUA_OK)
       l_message(progname, lua_pushfstring(L, "error calling 'print' (%s)",
                                              lua_tostring(L, -1)));
   }
@@ -696,16 +696,16 @@ static void l_print (lua_State *L) {
 ** Do the REPL: repeatedly read (load) a line, evaluate (call) it, and
 ** print any results.
 */
-static void doREPL (lua_State *L) {
-  int status;
-  const char *oldprogname = progname;
-  progname = NULL;  /* no 'progname' on errors in interactive mode */
+நிலையான வெறுமை doREPL (lua_State *L) {
+  முழு status;
+  மாறிலி எழுத்து *oldprogname = progname;
+  progname = வெற்று;  /* no 'progname' on errors in interactive mode */
   lua_initreadline(L);
-  while ((status = loadline(L)) != -1) {
-    if (status == LUA_OK)
+  போது ((status = loadline(L)) != -1) {
+    எனில் (status == LUA_OK)
       status = docall(L, 0, LUA_MULTRET);
-    if (status == LUA_OK) l_print(L);
-    else report(L, status);
+    எனில் (status == LUA_OK) l_print(L);
+    இல்லையெனில் report(L, status);
   }
   lua_settop(L, 0);  /* clear stack */
   lua_writeline();
@@ -714,11 +714,11 @@ static void doREPL (lua_State *L) {
 
 /* }================================================================== */
 
-#if !defined(luai_openlibs)
-#if defined(LUA_NODEBUGLIB)
+#எனில் !defined(luai_openlibs)
+#எனில் defined(LUA_NODEBUGLIB)
 /* With this option, code must require the debug library before using it */
 #define luai_openlibs(L)  luaL_openselectedlibs(L, ~LUA_DBLIBK, LUA_DBLIBK)
-#else
+#இல்லையெனில்
 /* The default is to open all standard libraries */
 #define luai_openlibs(L)  luaL_openselectedlibs(L, ~0, 0)
 #endif
@@ -729,58 +729,58 @@ static void doREPL (lua_State *L) {
 ** Main body of stand-alone interpreter (to be called in protected mode).
 ** Reads the options and handles them all.
 */
-static int pmain (lua_State *L) {
-  int argc = (int)lua_tointeger(L, 1);
-  char **argv = (char **)lua_touserdata(L, 2);
-  int script;
-  int args = collectargs(argv, &script);
-  int optlim = (script > 0) ? script : argc; /* first argv not an option */
+நிலையான முழு pmain (lua_State *L) {
+  முழு argc = (முழு)lua_tointeger(L, 1);
+  எழுத்து **argv = (எழுத்து **)lua_touserdata(L, 2);
+  முழு script;
+  முழு args = collectargs(argv, &script);
+  முழு optlim = (script > 0) ? script : argc; /* first argv not an option */
   luaL_checkversion(L);  /* check that interpreter has correct version */
-  if (args == has_error) {  /* bad arg? */
+  எனில் (args == has_error) {  /* bad arg? */
     print_usage(argv[script]);  /* 'script' has index of bad arg. */
-    return 0;
+    திரும்பு 0;
   }
-  if (args & has_v)  /* option '-v'? */
+  எனில் (args & has_v)  /* option '-v'? */
     print_version();
-  if (args & has_E) {  /* option '-E'? */
+  எனில் (args & has_E) {  /* option '-E'? */
     l_getenv = &no_getenv;  /* program will ignore environment variables */
     lua_pushboolean(L, 1);  /* signal for libraries to ignore env. vars. */
     lua_setfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
   }
-  else
+  இல்லையெனில்
     l_getenv = &getenv;
   luai_openlibs(L);  /* open standard libraries */
   createargtable(L, argv, argc, script);  /* create table 'arg' */
   lua_gc(L, LUA_GCRESTART);  /* start GC... */
   lua_gc(L, LUA_GCGEN);  /* ...in generational mode */
-  if (handle_luainit(L) != LUA_OK)  /* run LUA_INIT */
-    return 0;  /* error running LUA_INIT */
-  if (!runargs(L, argv, optlim))  /* execute arguments -e, -l, and -W */
-    return 0;  /* something failed */
-  if (script > 0) {  /* execute main script (if there is one) */
-    if (handle_script(L, argv + script) != LUA_OK)
-      return 0;  /* interrupt in case of error */
+  எனில் (handle_luainit(L) != LUA_OK)  /* run LUA_INIT */
+    திரும்பு 0;  /* error running LUA_INIT */
+  எனில் (!runargs(L, argv, optlim))  /* execute arguments -e, -l, and -W */
+    திரும்பு 0;  /* something failed */
+  எனில் (script > 0) {  /* execute main script (if there is one) */
+    எனில் (handle_script(L, argv + script) != LUA_OK)
+      திரும்பு 0;  /* interrupt in case of error */
   }
-  if (args & has_i)  /* -i option? */
+  எனில் (args & has_i)  /* -i option? */
     doREPL(L);  /* do read-eval-print loop */
-  else if (script < 1 && !(args & (has_e | has_v))) { /* no active option? */
-    if (lua_stdin_is_tty()) {  /* running in interactive mode? */
+  இல்லையெனில் எனில் (script < 1 && !(args & (has_e | has_v))) { /* no active option? */
+    எனில் (lua_stdin_is_tty()) {  /* running in interactive mode? */
       print_version();
       doREPL(L);  /* do read-eval-print loop */
     }
-    else dofile(L, NULL);  /* executes stdin as a file */
+    இல்லையெனில் dofile(L, வெற்று);  /* executes stdin as a file */
   }
   lua_pushboolean(L, 1);  /* signal no errors */
-  return 1;
+  திரும்பு 1;
 }
 
 
-int main (int argc, char **argv) {
-  int status, result;
+முழு முதன்மை (முழு argc, எழுத்து **argv) {
+  முழு status, result;
   lua_State *L = luaL_newstate();  /* create state */
-  if (L == NULL) {
+  எனில் (L == வெற்று) {
     l_message(argv[0], "cannot create state: not enough memory");
-    return EXIT_FAILURE;
+    திரும்பு EXIT_FAILURE;
   }
   lua_gc(L, LUA_GCSTOP);  /* stop GC while building state */
   lua_pushcfunction(L, &pmain);  /* to call 'pmain' in protected mode */
@@ -790,6 +790,6 @@ int main (int argc, char **argv) {
   result = lua_toboolean(L, -1);  /* get result */
   report(L, status);
   lua_close(L);
-  return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
+  திரும்பு (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

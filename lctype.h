@@ -7,7 +7,7 @@
 #ifndef lctype_h
 #define lctype_h
 
-#include "lua.h"
+#அந்தர்பாவ "lua.h"
 
 
 /*
@@ -16,12 +16,12 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#எனில் !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#எனில் 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
 #define LUA_USE_CTYPE	0
-#else
+#இல்லையெனில்
 /* must use standard C ctype */
 #define LUA_USE_CTYPE	1
 #endif
@@ -29,11 +29,11 @@
 #endif
 
 
-#if !LUA_USE_CTYPE	/* { */
+#எனில் !LUA_USE_CTYPE	/* { */
 
-#include <limits.h>
+#அந்தர்பாவ <limits.h>
 
-#include "llimits.h"
+#அந்தர்பாவ "llimits.h"
 
 
 #define ALPHABIT	0
@@ -74,16 +74,16 @@
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(மாறிலி lu_byte luai_ctype_[UCHAR_MAX + 2];)
 
 
-#else			/* }{ */
+#இல்லையெனில்			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#அந்தர்பாவ <ctype.h>
 
 
 #define lislalpha(c)	(isalpha(c) || (c) == '_')

@@ -8,14 +8,14 @@
 #define lfunc_h
 
 
-#include "lobject.h"
+#அந்தர்பாவ "lobject.h"
 
 
 #define sizeCclosure(n)  \
-	(offsetof(CClosure, upvalue) + sizeof(TValue) * cast_uint(n))
+	(offsetof(CClosure, upvalue) + அளவு(TValue) * cast_uint(n))
 
 #define sizeLclosure(n)  \
-	(offsetof(LClosure, upvals) + sizeof(UpVal *) * cast_uint(n))
+	(offsetof(LClosure, upvals) + அளவு(UpVal *) * cast_uint(n))
 
 
 /* test whether thread is in 'twups' list */
@@ -29,7 +29,7 @@
 #define MAXUPVAL	255
 
 
-#define upisopen(up)	((up)->v.p != &(up)->u.value)
+#define upisopen(up)	((up)->v.p != &(up)->u.மதிப்பு)
 
 
 #define uplevel(up)	check_exp(upisopen(up), cast(StkId, (up)->v.p))
@@ -48,18 +48,18 @@
 
 
 LUAI_FUNC Proto *luaF_newproto (lua_State *L);
-LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, int nupvals);
-LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, int nupvals);
-LUAI_FUNC void luaF_initupvals (lua_State *L, LClosure *cl);
+LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, முழு nupvals);
+LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, முழு nupvals);
+LUAI_FUNC வெறுமை luaF_initupvals (lua_State *L, LClosure *cl);
 LUAI_FUNC UpVal *luaF_findupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_newtbcupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_closeupval (lua_State *L, StkId level);
-LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus status, int yy);
-LUAI_FUNC void luaF_unlinkupval (UpVal *uv);
+LUAI_FUNC வெறுமை luaF_newtbcupval (lua_State *L, StkId level);
+LUAI_FUNC வெறுமை luaF_closeupval (lua_State *L, StkId level);
+LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus status, முழு yy);
+LUAI_FUNC வெறுமை luaF_unlinkupval (UpVal *uv);
 LUAI_FUNC lu_mem luaF_protosize (Proto *p);
-LUAI_FUNC void luaF_freeproto (lua_State *L, Proto *f);
-LUAI_FUNC const char *luaF_getlocalname (const Proto *func,
-                                         unsigned local_number, int pc);
+LUAI_FUNC வெறுமை luaF_freeproto (lua_State *L, Proto *f);
+LUAI_FUNC மாறிலி எழுத்து *luaF_getlocalname (மாறிலி Proto *func,
+                                         unsigned local_எண், முழு pc);
 
 
 #endif
