@@ -5,63 +5,63 @@
 */
 
 
-#ifndef lzio_h
-#define lzio_h
+#اگر_تعریف_نشده lzio_h
+#تعریف_کن lzio_h
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lmem.h"
-
-
-#define EOZ	(-1)			/* end of stream */
-
-typedef struct Zio ZIO;
-
-#define zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
+#ضمن "lmem.h"
 
 
-typedef struct Mbuffer {
-  char *buffer;
+#تعریف_کن EOZ	(-1)			/* end of stream */
+
+تعريفنوع بنية Zio ZIO;
+
+#تعریف_کن zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
+
+
+تعريفنوع بنية Mbuffer {
+  حرف *میانگیر;
   size_t n;
   size_t buffsize;
 } Mbuffer;
 
-#define luaZ_initbuffer(L, buff) ((buff)->buffer = NULL, (buff)->buffsize = 0)
+#تعریف_کن luaZ_initbuffer(L, buff) ((buff)->میانگیر = عدم, (buff)->buffsize = 0)
 
-#define luaZ_buffer(buff)	((buff)->buffer)
-#define luaZ_sizebuffer(buff)	((buff)->buffsize)
-#define luaZ_bufflen(buff)	((buff)->n)
+#تعریف_کن lua_Z_میانگیر(buff)	((buff)->میانگیر)
+#تعریف_کن luaZ_sizebuffer(buff)	((buff)->buffsize)
+#تعریف_کن luaZ_bufflen(buff)	((buff)->n)
 
-#define luaZ_buffremove(buff,i)	((buff)->n -= cast_sizet(i))
-#define luaZ_resetbuffer(buff) ((buff)->n = 0)
-
-
-#define luaZ_resizebuffer(L, buff, size) \
-	((buff)->buffer = luaM_reallocvchar(L, (buff)->buffer, \
-				(buff)->buffsize, size), \
-	(buff)->buffsize = size)
-
-#define luaZ_freebuffer(L, buff)	luaZ_resizebuffer(L, buff, 0)
+#تعریف_کن luaZ_buffremove(buff,i)	((buff)->n -= cast_sizet(i))
+#تعریف_کن luaZ_resetbuffer(buff) ((buff)->n = 0)
 
 
-LUAI_FUNC void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
-                                        void *data);
-LUAI_FUNC size_t luaZ_read (ZIO* z, void *b, size_t n);	/* read next n bytes */
+#تعریف_کن luaZ_resizebuffer(L, buff, اندازه) \
+	((buff)->میانگیر = luaM_reallocvchar(L, (buff)->میانگیر, \
+				(buff)->buffsize, اندازه), \
+	(buff)->buffsize = اندازه)
 
-LUAI_FUNC const void *luaZ_getaddr (ZIO* z, size_t n);
+#تعریف_کن luaZ_freebuffer(L, buff)	luaZ_resizebuffer(L, buff, 0)
+
+
+LUAI_FUNC فراغ luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
+                                        فراغ *داده);
+LUAI_FUNC size_t luaZ_read (ZIO* z, فراغ *b, size_t n);	/* read next n bytes */
+
+LUAI_FUNC ثابت فراغ *luaZ_getaddr (ZIO* z, size_t n);
 
 
 /* --------- Private Part ------------------ */
 
-struct Zio {
+بنية Zio {
   size_t n;			/* bytes still unread */
-  const char *p;		/* current position in buffer */
+  ثابت حرف *p;		/* current position in buffer */
   lua_Reader reader;		/* reader function */
-  void *data;			/* additional data */
+  فراغ *داده;			/* additional data */
   lua_State *L;			/* Lua state (for reader) */
 };
 
 
-LUAI_FUNC int luaZ_fill (ZIO *z);
+LUAI_FUNC صحيح luaZ_fill (ZIO *z);
 
-#endif
+#پایان_اگر

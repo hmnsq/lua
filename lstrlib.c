@@ -4,27 +4,27 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lstrlib_c
-#define LUA_LIB
+#تعریف_کن lstrlib_c
+#تعریف_کن LUA_LIB
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <ctype.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ضمن <ctype.h>
+#ضمن <float.h>
+#ضمن <limits.h>
+#ضمن <locale.h>
+#ضمن <math.h>
+#ضمن <stddef.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <string.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ضمن "lauxlib.h"
+#ضمن "lualib.h"
+#ضمن "llimits.h"
 
 
 /*
@@ -32,16 +32,16 @@
 ** pattern-matching. This limit is arbitrary, but must fit in
 ** an unsigned char.
 */
-#if !defined(LUA_MAXCAPTURES)
-#define LUA_MAXCAPTURES		32
-#endif
+#إذا !defined(LUA_MAXCAPTURES)
+#تعریف_کن LUA_MAXCAPTURES		32
+#پایان_اگر
 
 
-static int str_len (lua_State *L) {
+ساكن صحيح str_len (lua_State *L) {
   size_t l;
   luaL_checklstring(L, 1, &l);
   lua_pushinteger(L, (lua_Integer)l);
-  return 1;
+  أرجع 1;
 }
 
 
@@ -53,14 +53,14 @@ static int str_len (lua_State *L) {
 ** The inverted comparison avoids a possible overflow
 ** computing '-pos'.
 */
-static size_t posrelatI (lua_Integer pos, size_t len) {
-  if (pos > 0)
-    return (size_t)pos;
-  else if (pos == 0)
-    return 1;
-  else if (pos < -(lua_Integer)len)  /* inverted comparison */
-    return 1;  /* clip to 1 */
-  else return len + (size_t)pos + 1;
+ساكن size_t posrelatI (lua_Integer pos, size_t len) {
+  إذا (pos > 0)
+    أرجع (size_t)pos;
+  وإلا إذا (pos == 0)
+    أرجع 1;
+  وإلا إذا (pos < -(lua_Integer)len)  /* inverted comparison */
+    أرجع 1;  /* clip to 1 */
+  وإلا أرجع len + (size_t)pos + 1;
 }
 
 
@@ -69,66 +69,66 @@ static size_t posrelatI (lua_Integer pos, size_t len) {
 ** with default value 'def'.
 ** Negative means back from end: clip result to [0, len]
 */
-static size_t getendpos (lua_State *L, int arg, lua_Integer def,
+ساكن size_t getendpos (lua_State *L, صحيح arg, lua_Integer def,
                          size_t len) {
   lua_Integer pos = luaL_optinteger(L, arg, def);
-  if (pos > (lua_Integer)len)
-    return len;
-  else if (pos >= 0)
-    return (size_t)pos;
-  else if (pos < -(lua_Integer)len)
-    return 0;
-  else return len + (size_t)pos + 1;
+  إذا (pos > (lua_Integer)len)
+    أرجع len;
+  وإلا إذا (pos >= 0)
+    أرجع (size_t)pos;
+  وإلا إذا (pos < -(lua_Integer)len)
+    أرجع 0;
+  وإلا أرجع len + (size_t)pos + 1;
 }
 
 
-static int str_sub (lua_State *L) {
+ساكن صحيح str_sub (lua_State *L) {
   size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
-  size_t start = posrelatI(luaL_checkinteger(L, 2), l);
-  size_t end = getendpos(L, 3, -1, l);
-  if (start <= end)
-    lua_pushlstring(L, s + start - 1, (end - start) + 1);
-  else lua_pushliteral(L, "");
-  return 1;
+  ثابت حرف *s = luaL_checklstring(L, 1, &l);
+  size_t شروع = posrelatI(luaL_checkinteger(L, 2), l);
+  size_t انتها = getendpos(L, 3, -1, l);
+  إذا (شروع <= انتها)
+    lua_pushlstring(L, s + شروع - 1, (انتها - شروع) + 1);
+  وإلا lua_pushliteral(L, "");
+  أرجع 1;
 }
 
 
-static int str_reverse (lua_State *L) {
+ساكن صحيح str_معکوس (lua_State *L) {
   size_t l, i;
-  luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i = 0; i < l; i++)
+  lua_L_میانگیر b;
+  ثابت حرف *s = luaL_checklstring(L, 1, &l);
+  حرف *p = luaL_buffinitsize(L, &b, l);
+  لكل (i = 0; i < l; i++)
     p[i] = s[l - i - 1];
   luaL_pushresultsize(&b, l);
-  return 1;
+  أرجع 1;
 }
 
 
-static int str_lower (lua_State *L) {
+ساكن صحيح str_پایینی (lua_State *L) {
   size_t l;
   size_t i;
-  luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i=0; i<l; i++)
+  lua_L_میانگیر b;
+  ثابت حرف *s = luaL_checklstring(L, 1, &l);
+  حرف *p = luaL_buffinitsize(L, &b, l);
+  لكل (i=0; i<l; i++)
     p[i] = cast_char(tolower(cast_uchar(s[i])));
   luaL_pushresultsize(&b, l);
-  return 1;
+  أرجع 1;
 }
 
 
-static int str_upper (lua_State *L) {
+ساكن صحيح str_فوقانی (lua_State *L) {
   size_t l;
   size_t i;
-  luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i=0; i<l; i++)
-    p[i] = cast_char(toupper(cast_uchar(s[i])));
+  lua_L_میانگیر b;
+  ثابت حرف *s = luaL_checklstring(L, 1, &l);
+  حرف *p = luaL_buffinitsize(L, &b, l);
+  لكل (i=0; i<l; i++)
+    p[i] = cast_char(به_بزرگ(cast_uchar(s[i])));
   luaL_pushresultsize(&b, l);
-  return 1;
+  أرجع 1;
 }
 
 
@@ -136,63 +136,63 @@ static int str_upper (lua_State *L) {
 ** MAX_SIZE is limited both by size_t and lua_Integer.
 ** When x <= MAX_SIZE, x can be safely cast to size_t or lua_Integer.
 */
-static int str_rep (lua_State *L) {
+ساكن صحيح str_rep (lua_State *L) {
   size_t len, lsep;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ثابت حرف *s = luaL_checklstring(L, 1, &len);
   lua_Integer n = luaL_checkinteger(L, 2);
-  const char *sep = luaL_optlstring(L, 3, "", &lsep);
-  if (n <= 0 || (len | lsep) == 0)
+  ثابت حرف *sep = luaL_optlstring(L, 3, "", &lsep);
+  إذا (n <= 0 || (len | lsep) == 0)
     lua_pushliteral(L, "");  /* no repetitions or both strings empty */
-  else if (l_unlikely(len > MAX_SIZE - lsep ||
-               cast_st2S(len + lsep) > cast_st2S(MAX_SIZE) / n))
-    return luaL_error(L, "resulting string too large");
-  else {
+  وإلا إذا (l_unlikely(len > MAX_اندازه - lsep ||
+               cast_st2S(len + lsep) > cast_st2S(MAX_اندازه) / n))
+    أرجع luaL_error(L, "resulting string too large");
+  وإلا {
     size_t totallen = (cast_sizet(n) * (len + lsep)) - lsep;
-    luaL_Buffer b;
-    char *p = luaL_buffinitsize(L, &b, totallen);
-    while (n-- > 1) {  /* first n-1 copies (followed by separator) */
-      memcpy(p, s, len * sizeof(char)); p += len;
-      if (lsep > 0) {  /* empty 'memcpy' is not that cheap */
-        memcpy(p, sep, lsep * sizeof(char)); p += lsep;
+    lua_L_میانگیر b;
+    حرف *p = luaL_buffinitsize(L, &b, totallen);
+    طالما (n-- > 1) {  /* first n-1 copies (followed by separator) */
+      کپی_حافظه(p, s, len * حجم(حرف)); p += len;
+      إذا (lsep > 0) {  /* empty 'memcpy' is not that cheap */
+        کپی_حافظه(p, sep, lsep * حجم(حرف)); p += lsep;
       }
     }
-    memcpy(p, s, len * sizeof(char));  /* last copy without separator */
+    کپی_حافظه(p, s, len * حجم(حرف));  /* last copy without separator */
     luaL_pushresultsize(&b, totallen);
   }
-  return 1;
+  أرجع 1;
 }
 
 
-static int str_byte (lua_State *L) {
+ساكن صحيح str_byte (lua_State *L) {
   size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
+  ثابت حرف *s = luaL_checklstring(L, 1, &l);
   lua_Integer pi = luaL_optinteger(L, 2, 1);
   size_t posi = posrelatI(pi, l);
   size_t pose = getendpos(L, 3, pi, l);
-  int n, i;
-  if (posi > pose) return 0;  /* empty interval; return no values */
-  if (l_unlikely(pose - posi >= (size_t)INT_MAX))  /* arithmetic overflow? */
-    return luaL_error(L, "string slice too long");
-  n = (int)(pose -  posi) + 1;
+  صحيح n, i;
+  إذا (posi > pose) أرجع 0;  /* empty interval; return no values */
+  إذا (l_unlikely(pose - posi >= (size_t)بیشترین_صحیح))  /* arithmetic overflow? */
+    أرجع luaL_error(L, "string slice too long");
+  n = (صحيح)(pose -  posi) + 1;
   luaL_checkstack(L, n, "string slice too long");
-  for (i=0; i<n; i++)
+  لكل (i=0; i<n; i++)
     lua_pushinteger(L, cast_uchar(s[posi + cast_uint(i) - 1]));
-  return n;
+  أرجع n;
 }
 
 
-static int str_char (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  int i;
-  luaL_Buffer b;
-  char *p = luaL_buffinitsize(L, &b, cast_uint(n));
-  for (i=1; i<=n; i++) {
+ساكن صحيح str_char (lua_State *L) {
+  صحيح n = lua_gettop(L);  /* number of arguments */
+  صحيح i;
+  lua_L_میانگیر b;
+  حرف *p = luaL_buffinitsize(L, &b, cast_uint(n));
+  لكل (i=1; i<=n; i++) {
     lua_Unsigned c = (lua_Unsigned)luaL_checkinteger(L, i);
     luaL_argcheck(L, c <= (lua_Unsigned)UCHAR_MAX, i, "value out of range");
     p[i - 1] = cast_char(cast_uchar(c));
   }
   luaL_pushresultsize(&b, cast_uint(n));
-  return 1;
+  أرجع 1;
 }
 
 
@@ -202,31 +202,31 @@ static int str_char (lua_State *L) {
 ** top of the stack when 'lua_dump' is called. ('luaL_buffinit' might
 ** push stuff.)
 */
-struct str_Writer {
-  int init;  /* true iff buffer has been initialized */
-  luaL_Buffer B;
+بنية str_Writer {
+  صحيح init;  /* true iff buffer has been initialized */
+  lua_L_میانگیر B;
 };
 
 
-static int writer (lua_State *L, const void *b, size_t size, void *ud) {
-  struct str_Writer *state = (struct str_Writer *)ud;
-  if (!state->init) {
+ساكن صحيح writer (lua_State *L, ثابت فراغ *b, size_t اندازه, فراغ *ud) {
+  بنية str_Writer *state = (بنية str_Writer *)ud;
+  إذا (!state->init) {
     state->init = 1;
     luaL_buffinit(L, &state->B);
   }
-  if (b == NULL) {  /* finishing dump? */
+  إذا (b == عدم) {  /* finishing dump? */
     luaL_pushresult(&state->B);  /* push result */
     lua_replace(L, 1);  /* move it to reserved slot */
   }
-  else
-    luaL_addlstring(&state->B, (const char *)b, size);
-  return 0;
+  وإلا
+    luaL_addlstring(&state->B, (ثابت حرف *)b, اندازه);
+  أرجع 0;
 }
 
 
-static int str_dump (lua_State *L) {
-  struct str_Writer state;
-  int strip = lua_toboolean(L, 2);
+ساكن صحيح str_dump (lua_State *L) {
+  بنية str_Writer state;
+  صحيح strip = lua_toboolean(L, 2);
   luaL_argcheck(L, lua_type(L, 1) == LUA_TFUNCTION && !lua_iscfunction(L, 1),
                    1, "Lua function expected");
   /* ensure function is on the top of the stack and vacate slot 1 */
@@ -234,7 +234,7 @@ static int str_dump (lua_State *L) {
   state.init = 0;
   lua_dump(L, writer, &state, strip);
   lua_settop(L, 1);  /* leave final result on top */
-  return 1;
+  أرجع 1;
 }
 
 
@@ -245,26 +245,26 @@ static int str_dump (lua_State *L) {
 ** =======================================================
 */
 
-#if defined(LUA_NOCVTS2N)	/* { */
+#إذا defined(LUA_NOCVTS2N)	/* { */
 
 /* no coercion from strings to numbers */
 
-static const luaL_Reg stringmetamethods[] = {
-  {"__index", NULL},  /* placeholder */
-  {NULL, NULL}
+ساكن ثابت luaL_Reg stringmetamethods[] = {
+  {"__index", عدم},  /* placeholder */
+  {عدم, عدم}
 };
 
-#else		/* }{ */
+#وإلا		/* }{ */
 
-static int tonum (lua_State *L, int arg) {
-  if (lua_type(L, arg) == LUA_TNUMBER) {  /* already a number? */
+ساكن صحيح tonum (lua_State *L, صحيح arg) {
+  إذا (lua_type(L, arg) == LUA_TNUMBER) {  /* already a number? */
     lua_pushvalue(L, arg);
-    return 1;
+    أرجع 1;
   }
-  else {  /* check whether it is a numerical string */
+  وإلا {  /* check whether it is a numerical string */
     size_t len;
-    const char *s = lua_tolstring(L, arg, &len);
-    return (s != NULL && lua_stringtonumber(L, s) == len + 1);
+    ثابت حرف *s = lua_tolstring(L, arg, &len);
+    أرجع (s != عدم && lua_stringtonumber(L, s) == len + 1);
   }
 }
 
@@ -276,61 +276,61 @@ static int tonum (lua_State *L, int arg) {
 ** doesn't work, the only other option would be for the second
 ** operand to have a different metamethod.
 */
-static void trymt (lua_State *L, const char *mtkey, const char *opname) {
+ساكن فراغ trymt (lua_State *L, ثابت حرف *mtkey, ثابت حرف *opname) {
   lua_settop(L, 2);  /* back to the original arguments */
-  if (l_unlikely(lua_type(L, 2) == LUA_TSTRING ||
+  إذا (l_unlikely(lua_type(L, 2) == LUA_TSTRING ||
                  !luaL_getmetafield(L, 2, mtkey)))
     luaL_error(L, "attempt to %s a '%s' with a '%s'", opname,
                   luaL_typename(L, -2), luaL_typename(L, -1));
-  lua_insert(L, -3);  /* put metamethod before arguments */
+  lua_درج(L, -3);  /* put metamethod before arguments */
   lua_call(L, 2, 1);  /* call metamethod */
 }
 
 
-static int arith (lua_State *L, int op, const char *mtname) {
-  if (tonum(L, 1) && tonum(L, 2))
+ساكن صحيح arith (lua_State *L, صحيح op, ثابت حرف *mtname) {
+  إذا (tonum(L, 1) && tonum(L, 2))
     lua_arith(L, op);  /* result will be on the top */
-  else
+  وإلا
     trymt(L, mtname, mtname + 2);
-  return 1;
+  أرجع 1;
 }
 
 
-static int arith_add (lua_State *L) {
-  return arith(L, LUA_OPADD, "__add");
+ساكن صحيح arith_جمع_کن (lua_State *L) {
+  أرجع arith(L, LUA_OPADD, "__add");
 }
 
-static int arith_sub (lua_State *L) {
-  return arith(L, LUA_OPSUB, "__sub");
+ساكن صحيح arith_sub (lua_State *L) {
+  أرجع arith(L, LUA_OPSUB, "__sub");
 }
 
-static int arith_mul (lua_State *L) {
-  return arith(L, LUA_OPMUL, "__mul");
+ساكن صحيح arith_mul (lua_State *L) {
+  أرجع arith(L, LUA_OPMUL, "__mul");
 }
 
-static int arith_mod (lua_State *L) {
-  return arith(L, LUA_OPMOD, "__mod");
+ساكن صحيح arith_mod (lua_State *L) {
+  أرجع arith(L, LUA_OPMOD, "__mod");
 }
 
-static int arith_pow (lua_State *L) {
-  return arith(L, LUA_OPPOW, "__pow");
+ساكن صحيح arith_pow (lua_State *L) {
+  أرجع arith(L, LUA_OPPOW, "__pow");
 }
 
-static int arith_div (lua_State *L) {
-  return arith(L, LUA_OPDIV, "__div");
+ساكن صحيح arith_div (lua_State *L) {
+  أرجع arith(L, LUA_OPDIV, "__div");
 }
 
-static int arith_idiv (lua_State *L) {
-  return arith(L, LUA_OPIDIV, "__idiv");
+ساكن صحيح arith_idiv (lua_State *L) {
+  أرجع arith(L, LUA_OPIDIV, "__idiv");
 }
 
-static int arith_unm (lua_State *L) {
-  return arith(L, LUA_OPUNM, "__unm");
+ساكن صحيح arith_unm (lua_State *L) {
+  أرجع arith(L, LUA_OPUNM, "__unm");
 }
 
 
-static const luaL_Reg stringmetamethods[] = {
-  {"__add", arith_add},
+ساكن ثابت luaL_Reg stringmetamethods[] = {
+  {"__add", arith_جمع_کن},
   {"__sub", arith_sub},
   {"__mul", arith_mul},
   {"__mod", arith_mod},
@@ -338,11 +338,11 @@ static const luaL_Reg stringmetamethods[] = {
   {"__div", arith_div},
   {"__idiv", arith_idiv},
   {"__unm", arith_unm},
-  {"__index", NULL},  /* placeholder */
-  {NULL, NULL}
+  {"__index", عدم},  /* placeholder */
+  {عدم, عدم}
 };
 
-#endif		/* } */
+#پایان_اگر		/* } */
 
 /* }====================================================== */
 
@@ -353,343 +353,343 @@ static const luaL_Reg stringmetamethods[] = {
 */
 
 
-#define CAP_UNFINISHED	(-1)
-#define CAP_POSITION	(-2)
+#تعریف_کن CAP_UNFINISHED	(-1)
+#تعریف_کن CAP_POSITION	(-2)
 
 
-typedef struct MatchState {
-  const char *src_init;  /* init of source string */
-  const char *src_end;  /* end ('\0') of source string */
-  const char *p_end;  /* end ('\0') of pattern */
+تعريفنوع بنية تطابق_State {
+  ثابت حرف *src_init;  /* init of source string */
+  ثابت حرف *src_انتها;  /* end ('\0') of source string */
+  ثابت حرف *p_انتها;  /* end ('\0') of pattern */
   lua_State *L;
-  int matchdepth;  /* control for recursive depth (to avoid C stack overflow) */
-  int level;  /* total number of captures (finished or unfinished) */
-  struct {
-    const char *init;
+  صحيح matchdepth;  /* control for recursive depth (to avoid C stack overflow) */
+  صحيح level;  /* total number of captures (finished or unfinished) */
+  بنية {
+    ثابت حرف *init;
     ptrdiff_t len;  /* length or special value (CAP_*) */
   } capture[LUA_MAXCAPTURES];
-} MatchState;
+} تطابق_State;
 
 
 /* recursive function */
-static const char *match (MatchState *ms, const char *s, const char *p);
+ساكن ثابت حرف *تطابق (تطابق_State *ms, ثابت حرف *s, ثابت حرف *p);
 
 
 /* maximum recursion depth for 'match' */
-#if !defined(MAXCCALLS)
-#define MAXCCALLS	200
-#endif
+#إذا !defined(MAXCCALLS)
+#تعریف_کن MAXCCALLS	200
+#پایان_اگر
 
 
-#define L_ESC		'%'
-#define SPECIALS	"^$*+?.([%-"
+#تعریف_کن L_ESC		'%'
+#تعریف_کن SPECIALS	"^$*+?.([%-"
 
 
-static int check_capture (MatchState *ms, int l) {
+ساكن صحيح check_capture (تطابق_State *ms, صحيح l) {
   l -= '1';
-  if (l_unlikely(l < 0 || l >= ms->level ||
+  إذا (l_unlikely(l < 0 || l >= ms->level ||
                  ms->capture[l].len == CAP_UNFINISHED))
-    return luaL_error(ms->L, "invalid capture index %%%d", l + 1);
-  return l;
+    أرجع luaL_error(ms->L, "invalid capture index %%%d", l + 1);
+  أرجع l;
 }
 
 
-static int capture_to_close (MatchState *ms) {
-  int level = ms->level;
-  for (level--; level>=0; level--)
-    if (ms->capture[level].len == CAP_UNFINISHED) return level;
-  return luaL_error(ms->L, "invalid pattern capture");
+ساكن صحيح capture_مقصد_close (تطابق_State *ms) {
+  صحيح level = ms->level;
+  لكل (level--; level>=0; level--)
+    إذا (ms->capture[level].len == CAP_UNFINISHED) أرجع level;
+  أرجع luaL_error(ms->L, "invalid pattern capture");
 }
 
 
-static const char *classend (MatchState *ms, const char *p) {
-  switch (*p++) {
-    case L_ESC: {
-      if (l_unlikely(p == ms->p_end))
+ساكن ثابت حرف *classend (تطابق_State *ms, ثابت حرف *p) {
+  بدل (*p++) {
+    حالة L_ESC: {
+      إذا (l_unlikely(p == ms->p_انتها))
         luaL_error(ms->L, "malformed pattern (ends with '%%')");
-      return p+1;
+      أرجع p+1;
     }
-    case '[': {
-      if (*p == '^') p++;
-      do {  /* look for a ']' */
-        if (l_unlikely(p == ms->p_end))
+    حالة '[': {
+      إذا (*p == '^') p++;
+      افعل {  /* look for a ']' */
+        إذا (l_unlikely(p == ms->p_انتها))
           luaL_error(ms->L, "malformed pattern (missing ']')");
-        if (*(p++) == L_ESC && p < ms->p_end)
+        إذا (*(p++) == L_ESC && p < ms->p_انتها)
           p++;  /* skip escapes (e.g. '%]') */
-      } while (*p != ']');
-      return p+1;
+      } طالما (*p != ']');
+      أرجع p+1;
     }
-    default: {
-      return p;
+    افتراضي: {
+      أرجع p;
     }
   }
 }
 
 
-static int match_class (int c, int cl) {
-  int res;
-  switch (tolower(cl)) {
-    case 'a' : res = isalpha(c); break;
-    case 'c' : res = iscntrl(c); break;
-    case 'd' : res = isdigit(c); break;
-    case 'g' : res = isgraph(c); break;
-    case 'l' : res = islower(c); break;
-    case 'p' : res = ispunct(c); break;
-    case 's' : res = isspace(c); break;
-    case 'u' : res = isupper(c); break;
-    case 'w' : res = isalnum(c); break;
-    case 'x' : res = isxdigit(c); break;
-    case 'z' : res = (c == 0); break;  /* deprecated option */
-    default: return (cl == c);
+ساكن صحيح تطابق_class (صحيح c, صحيح cl) {
+  صحيح res;
+  بدل (tolower(cl)) {
+    حالة 'a' : res = آیا_حرف(c); اكسر;
+    حالة 'c' : res = iscntrl(c); اكسر;
+    حالة 'd' : res = آیا_رقم(c); اكسر;
+    حالة 'g' : res = isgraph(c); اكسر;
+    حالة 'l' : res = islower(c); اكسر;
+    حالة 'p' : res = ispunct(c); اكسر;
+    حالة 's' : res = آیا_فاصله(c); اكسر;
+    حالة 'u' : res = isupper(c); اكسر;
+    حالة 'w' : res = آیا_حرف_یا_رقم(c); اكسر;
+    حالة 'x' : res = isxdigit(c); اكسر;
+    حالة 'z' : res = (c == 0); اكسر;  /* deprecated option */
+    افتراضي: أرجع (cl == c);
   }
-  return (islower(cl) ? res : !res);
+  أرجع (islower(cl) ? res : !res);
 }
 
 
-static int matchbracketclass (int c, const char *p, const char *ec) {
-  int sig = 1;
-  if (*(p+1) == '^') {
+ساكن صحيح matchbracketclass (صحيح c, ثابت حرف *p, ثابت حرف *ec) {
+  صحيح sig = 1;
+  إذا (*(p+1) == '^') {
     sig = 0;
     p++;  /* skip the '^' */
   }
-  while (++p < ec) {
-    if (*p == L_ESC) {
+  طالما (++p < ec) {
+    إذا (*p == L_ESC) {
       p++;
-      if (match_class(c, cast_uchar(*p)))
-        return sig;
+      إذا (تطابق_class(c, cast_uchar(*p)))
+        أرجع sig;
     }
-    else if ((*(p+1) == '-') && (p+2 < ec)) {
+    وإلا إذا ((*(p+1) == '-') && (p+2 < ec)) {
       p+=2;
-      if (cast_uchar(*(p-2)) <= c && c <= cast_uchar(*p))
-        return sig;
+      إذا (cast_uchar(*(p-2)) <= c && c <= cast_uchar(*p))
+        أرجع sig;
     }
-    else if (cast_uchar(*p) == c) return sig;
+    وإلا إذا (cast_uchar(*p) == c) أرجع sig;
   }
-  return !sig;
+  أرجع !sig;
 }
 
 
-static int singlematch (MatchState *ms, const char *s, const char *p,
-                        const char *ep) {
-  if (s >= ms->src_end)
-    return 0;
-  else {
-    int c = cast_uchar(*s);
-    switch (*p) {
-      case '.': return 1;  /* matches any char */
-      case L_ESC: return match_class(c, cast_uchar(*(p+1)));
-      case '[': return matchbracketclass(c, p, ep-1);
-      default:  return (cast_uchar(*p) == c);
+ساكن صحيح singlematch (تطابق_State *ms, ثابت حرف *s, ثابت حرف *p,
+                        ثابت حرف *ep) {
+  إذا (s >= ms->src_انتها)
+    أرجع 0;
+  وإلا {
+    صحيح c = cast_uchar(*s);
+    بدل (*p) {
+      حالة '.': أرجع 1;  /* matches any char */
+      حالة L_ESC: أرجع تطابق_class(c, cast_uchar(*(p+1)));
+      حالة '[': أرجع matchbracketclass(c, p, ep-1);
+      افتراضي:  أرجع (cast_uchar(*p) == c);
     }
   }
 }
 
 
-static const char *matchbalance (MatchState *ms, const char *s,
-                                   const char *p) {
-  if (l_unlikely(p >= ms->p_end - 1))
+ساكن ثابت حرف *matchbalance (تطابق_State *ms, ثابت حرف *s,
+                                   ثابت حرف *p) {
+  إذا (l_unlikely(p >= ms->p_انتها - 1))
     luaL_error(ms->L, "malformed pattern (missing arguments to '%%b')");
-  if (*s != *p) return NULL;
-  else {
-    int b = *p;
-    int e = *(p+1);
-    int cont = 1;
-    while (++s < ms->src_end) {
-      if (*s == e) {
-        if (--cont == 0) return s+1;
+  إذا (*s != *p) أرجع عدم;
+  وإلا {
+    صحيح b = *p;
+    صحيح e = *(p+1);
+    صحيح cont = 1;
+    طالما (++s < ms->src_انتها) {
+      إذا (*s == e) {
+        إذا (--cont == 0) أرجع s+1;
       }
-      else if (*s == b) cont++;
+      وإلا إذا (*s == b) cont++;
     }
   }
-  return NULL;  /* string ends out of balance */
+  أرجع عدم;  /* string ends out of balance */
 }
 
 
-static const char *max_expand (MatchState *ms, const char *s,
-                                 const char *p, const char *ep) {
+ساكن ثابت حرف *max_expand (تطابق_State *ms, ثابت حرف *s,
+                                 ثابت حرف *p, ثابت حرف *ep) {
   ptrdiff_t i = 0;  /* counts maximum expand for item */
-  while (singlematch(ms, s + i, p, ep))
+  طالما (singlematch(ms, s + i, p, ep))
     i++;
   /* keeps trying to match with the maximum repetitions */
-  while (i>=0) {
-    const char *res = match(ms, (s+i), ep+1);
-    if (res) return res;
+  طالما (i>=0) {
+    ثابت حرف *res = تطابق(ms, (s+i), ep+1);
+    إذا (res) أرجع res;
     i--;  /* else didn't match; reduce 1 repetition to try again */
   }
-  return NULL;
+  أرجع عدم;
 }
 
 
-static const char *min_expand (MatchState *ms, const char *s,
-                                 const char *p, const char *ep) {
-  for (;;) {
-    const char *res = match(ms, s, ep+1);
-    if (res != NULL)
-      return res;
-    else if (singlematch(ms, s, p, ep))
+ساكن ثابت حرف *min_expand (تطابق_State *ms, ثابت حرف *s,
+                                 ثابت حرف *p, ثابت حرف *ep) {
+  لكل (;;) {
+    ثابت حرف *res = تطابق(ms, s, ep+1);
+    إذا (res != عدم)
+      أرجع res;
+    وإلا إذا (singlematch(ms, s, p, ep))
       s++;  /* try with one more repetition */
-    else return NULL;
+    وإلا أرجع عدم;
   }
 }
 
 
-static const char *start_capture (MatchState *ms, const char *s,
-                                    const char *p, int what) {
-  const char *res;
-  int level = ms->level;
-  if (level >= LUA_MAXCAPTURES) luaL_error(ms->L, "too many captures");
+ساكن ثابت حرف *شروع_capture (تطابق_State *ms, ثابت حرف *s,
+                                    ثابت حرف *p, صحيح what) {
+  ثابت حرف *res;
+  صحيح level = ms->level;
+  إذا (level >= LUA_MAXCAPTURES) luaL_error(ms->L, "too many captures");
   ms->capture[level].init = s;
   ms->capture[level].len = what;
   ms->level = level+1;
-  if ((res=match(ms, s, p)) == NULL)  /* match failed? */
+  إذا ((res=تطابق(ms, s, p)) == عدم)  /* match failed? */
     ms->level--;  /* undo capture */
-  return res;
+  أرجع res;
 }
 
 
-static const char *end_capture (MatchState *ms, const char *s,
-                                  const char *p) {
-  int l = capture_to_close(ms);
-  const char *res;
+ساكن ثابت حرف *انتها_capture (تطابق_State *ms, ثابت حرف *s,
+                                  ثابت حرف *p) {
+  صحيح l = capture_مقصد_close(ms);
+  ثابت حرف *res;
   ms->capture[l].len = s - ms->capture[l].init;  /* close capture */
-  if ((res = match(ms, s, p)) == NULL)  /* match failed? */
+  إذا ((res = تطابق(ms, s, p)) == عدم)  /* match failed? */
     ms->capture[l].len = CAP_UNFINISHED;  /* undo capture */
-  return res;
+  أرجع res;
 }
 
 
-static const char *match_capture (MatchState *ms, const char *s, int l) {
+ساكن ثابت حرف *تطابق_capture (تطابق_State *ms, ثابت حرف *s, صحيح l) {
   size_t len;
   l = check_capture(ms, l);
   len = cast_sizet(ms->capture[l].len);
-  if ((size_t)(ms->src_end-s) >= len &&
+  إذا ((size_t)(ms->src_انتها-s) >= len &&
       memcmp(ms->capture[l].init, s, len) == 0)
-    return s+len;
-  else return NULL;
+    أرجع s+len;
+  وإلا أرجع عدم;
 }
 
 
-static const char *match (MatchState *ms, const char *s, const char *p) {
-  if (l_unlikely(ms->matchdepth-- == 0))
+ساكن ثابت حرف *تطابق (تطابق_State *ms, ثابت حرف *s, ثابت حرف *p) {
+  إذا (l_unlikely(ms->matchdepth-- == 0))
     luaL_error(ms->L, "pattern too complex");
   init: /* using goto to optimize tail recursion */
-  if (p != ms->p_end) {  /* end of pattern? */
-    switch (*p) {
-      case '(': {  /* start capture */
-        if (*(p + 1) == ')')  /* position capture? */
-          s = start_capture(ms, s, p + 2, CAP_POSITION);
-        else
-          s = start_capture(ms, s, p + 1, CAP_UNFINISHED);
-        break;
+  إذا (p != ms->p_انتها) {  /* end of pattern? */
+    بدل (*p) {
+      حالة '(': {  /* start capture */
+        إذا (*(p + 1) == ')')  /* position capture? */
+          s = شروع_capture(ms, s, p + 2, CAP_POSITION);
+        وإلا
+          s = شروع_capture(ms, s, p + 1, CAP_UNFINISHED);
+        اكسر;
       }
-      case ')': {  /* end capture */
-        s = end_capture(ms, s, p + 1);
-        break;
+      حالة ')': {  /* end capture */
+        s = انتها_capture(ms, s, p + 1);
+        اكسر;
       }
-      case '$': {
-        if ((p + 1) != ms->p_end)  /* is the '$' the last char in pattern? */
-          goto dflt;  /* no; go to default */
-        s = (s == ms->src_end) ? s : NULL;  /* check end of string */
-        break;
+      حالة '$': {
+        إذا ((p + 1) != ms->p_انتها)  /* is the '$' the last char in pattern? */
+          اذهب dflt;  /* no; go to default */
+        s = (s == ms->src_انتها) ? s : عدم;  /* check end of string */
+        اكسر;
       }
-      case L_ESC: {  /* escaped sequences not in the format class[*+?-]? */
-        switch (*(p + 1)) {
-          case 'b': {  /* balanced string? */
+      حالة L_ESC: {  /* escaped sequences not in the format class[*+?-]? */
+        بدل (*(p + 1)) {
+          حالة 'b': {  /* balanced string? */
             s = matchbalance(ms, s, p + 2);
-            if (s != NULL) {
-              p += 4; goto init;  /* return match(ms, s, p + 4); */
+            إذا (s != عدم) {
+              p += 4; اذهب init;  /* return match(ms, s, p + 4); */
             }  /* else fail (s == NULL) */
-            break;
+            اكسر;
           }
-          case 'f': {  /* frontier? */
-            const char *ep; char previous;
+          حالة 'f': {  /* frontier? */
+            ثابت حرف *ep; حرف قبلی;
             p += 2;
-            if (l_unlikely(*p != '['))
+            إذا (l_unlikely(*p != '['))
               luaL_error(ms->L, "missing '[' after '%%f' in pattern");
             ep = classend(ms, p);  /* points to what is next */
-            previous = (s == ms->src_init) ? '\0' : *(s - 1);
-            if (!matchbracketclass(cast_uchar(previous), p, ep - 1) &&
+            قبلی = (s == ms->src_init) ? '\0' : *(s - 1);
+            إذا (!matchbracketclass(cast_uchar(قبلی), p, ep - 1) &&
                matchbracketclass(cast_uchar(*s), p, ep - 1)) {
-              p = ep; goto init;  /* return match(ms, s, ep); */
+              p = ep; اذهب init;  /* return match(ms, s, ep); */
             }
-            s = NULL;  /* match failed */
-            break;
+            s = عدم;  /* match failed */
+            اكسر;
           }
-          case '0': case '1': case '2': case '3':
-          case '4': case '5': case '6': case '7':
-          case '8': case '9': {  /* capture results (%0-%9)? */
-            s = match_capture(ms, s, cast_uchar(*(p + 1)));
-            if (s != NULL) {
-              p += 2; goto init;  /* return match(ms, s, p + 2) */
+          حالة '0': حالة '1': حالة '2': حالة '3':
+          حالة '4': حالة '5': حالة '6': حالة '7':
+          حالة '8': حالة '9': {  /* capture results (%0-%9)? */
+            s = تطابق_capture(ms, s, cast_uchar(*(p + 1)));
+            إذا (s != عدم) {
+              p += 2; اذهب init;  /* return match(ms, s, p + 2) */
             }
-            break;
+            اكسر;
           }
-          default: goto dflt;
+          افتراضي: اذهب dflt;
         }
-        break;
+        اكسر;
       }
-      default: dflt: {  /* pattern class plus optional suffix */
-        const char *ep = classend(ms, p);  /* points to optional suffix */
+      افتراضي: dflt: {  /* pattern class plus optional suffix */
+        ثابت حرف *ep = classend(ms, p);  /* points to optional suffix */
         /* does not match at least once? */
-        if (!singlematch(ms, s, p, ep)) {
-          if (*ep == '*' || *ep == '?' || *ep == '-') {  /* accept empty? */
-            p = ep + 1; goto init;  /* return match(ms, s, ep + 1); */
+        إذا (!singlematch(ms, s, p, ep)) {
+          إذا (*ep == '*' || *ep == '?' || *ep == '-') {  /* accept empty? */
+            p = ep + 1; اذهب init;  /* return match(ms, s, ep + 1); */
           }
-          else  /* '+' or no suffix */
-            s = NULL;  /* fail */
+          وإلا  /* '+' or no suffix */
+            s = عدم;  /* fail */
         }
-        else {  /* matched once */
-          switch (*ep) {  /* handle optional suffix */
-            case '?': {  /* optional */
-              const char *res;
-              if ((res = match(ms, s + 1, ep + 1)) != NULL)
+        وإلا {  /* matched once */
+          بدل (*ep) {  /* handle optional suffix */
+            حالة '?': {  /* optional */
+              ثابت حرف *res;
+              إذا ((res = تطابق(ms, s + 1, ep + 1)) != عدم)
                 s = res;
-              else {
-                p = ep + 1; goto init;  /* else return match(ms, s, ep + 1); */
+              وإلا {
+                p = ep + 1; اذهب init;  /* else return match(ms, s, ep + 1); */
               }
-              break;
+              اكسر;
             }
-            case '+':  /* 1 or more repetitions */
+            حالة '+':  /* 1 or more repetitions */
               s++;  /* 1 match already done */
               /* FALLTHROUGH */
-            case '*':  /* 0 or more repetitions */
+            حالة '*':  /* 0 or more repetitions */
               s = max_expand(ms, s, p, ep);
-              break;
-            case '-':  /* 0 or more repetitions (minimum) */
+              اكسر;
+            حالة '-':  /* 0 or more repetitions (minimum) */
               s = min_expand(ms, s, p, ep);
-              break;
-            default:  /* no suffix */
-              s++; p = ep; goto init;  /* return match(ms, s + 1, ep); */
+              اكسر;
+            افتراضي:  /* no suffix */
+              s++; p = ep; اذهب init;  /* return match(ms, s + 1, ep); */
           }
         }
-        break;
+        اكسر;
       }
     }
   }
   ms->matchdepth++;
-  return s;
+  أرجع s;
 }
 
 
 
-static const char *lmemfind (const char *s1, size_t l1,
-                               const char *s2, size_t l2) {
-  if (l2 == 0) return s1;  /* empty strings are everywhere */
-  else if (l2 > l1) return NULL;  /* avoids a negative 'l1' */
-  else {
-    const char *init;  /* to search for a '*s2' inside 's1' */
+ساكن ثابت حرف *lmemfind (ثابت حرف *s1, size_t l1,
+                               ثابت حرف *s2, size_t l2) {
+  إذا (l2 == 0) أرجع s1;  /* empty strings are everywhere */
+  وإلا إذا (l2 > l1) أرجع عدم;  /* avoids a negative 'l1' */
+  وإلا {
+    ثابت حرف *init;  /* to search for a '*s2' inside 's1' */
     l2--;  /* 1st char will be checked by 'memchr' */
     l1 = l1-l2;  /* 's2' cannot be found after that */
-    while (l1 > 0 && (init = (const char *)memchr(s1, *s2, l1)) != NULL) {
+    طالما (l1 > 0 && (init = (ثابت حرف *)memchr(s1, *s2, l1)) != عدم) {
       init++;   /* 1st char is already checked */
-      if (memcmp(init, s2+1, l2) == 0)
-        return init-1;
-      else {  /* correct 'l1' and 's1' to try again */
+      إذا (memcmp(init, s2+1, l2) == 0)
+        أرجع init-1;
+      وإلا {  /* correct 'l1' and 's1' to try again */
         l1 -= ct_diff2sz(init - s1);
         s1 = init;
       }
     }
-    return NULL;  /* not found */
+    أرجع عدم;  /* not found */
   }
 }
 
@@ -701,23 +701,23 @@ static const char *lmemfind (const char *s1, size_t l1,
 ** its length and put its address in '*cap'. If it is an integer
 ** (a position), push it on the stack and return CAP_POSITION.
 */
-static ptrdiff_t get_onecapture (MatchState *ms, int i, const char *s,
-                              const char *e, const char **cap) {
-  if (i >= ms->level) {
-    if (l_unlikely(i != 0))
+ساكن ptrdiff_t get_onecapture (تطابق_State *ms, صحيح i, ثابت حرف *s,
+                              ثابت حرف *e, ثابت حرف **cap) {
+  إذا (i >= ms->level) {
+    إذا (l_unlikely(i != 0))
       luaL_error(ms->L, "invalid capture index %%%d", i + 1);
     *cap = s;
-    return (e - s);
+    أرجع (e - s);
   }
-  else {
+  وإلا {
     ptrdiff_t capl = ms->capture[i].len;
     *cap = ms->capture[i].init;
-    if (l_unlikely(capl == CAP_UNFINISHED))
+    إذا (l_unlikely(capl == CAP_UNFINISHED))
       luaL_error(ms->L, "unfinished capture");
-    else if (capl == CAP_POSITION)
+    وإلا إذا (capl == CAP_POSITION)
       lua_pushinteger(ms->L,
           ct_diff2S(ms->capture[i].init - ms->src_init) + 1);
-    return capl;
+    أرجع capl;
   }
 }
 
@@ -725,47 +725,47 @@ static ptrdiff_t get_onecapture (MatchState *ms, int i, const char *s,
 /*
 ** Push the i-th capture on the stack.
 */
-static void push_onecapture (MatchState *ms, int i, const char *s,
-                                                    const char *e) {
-  const char *cap;
+ساكن فراغ افزودن_onecapture (تطابق_State *ms, صحيح i, ثابت حرف *s,
+                                                    ثابت حرف *e) {
+  ثابت حرف *cap;
   ptrdiff_t l = get_onecapture(ms, i, s, e, &cap);
-  if (l != CAP_POSITION)
+  إذا (l != CAP_POSITION)
     lua_pushlstring(ms->L, cap, cast_sizet(l));
   /* else position was already pushed */
 }
 
 
-static int push_captures (MatchState *ms, const char *s, const char *e) {
-  int i;
-  int nlevels = (ms->level == 0 && s) ? 1 : ms->level;
+ساكن صحيح افزودن_captures (تطابق_State *ms, ثابت حرف *s, ثابت حرف *e) {
+  صحيح i;
+  صحيح nlevels = (ms->level == 0 && s) ? 1 : ms->level;
   luaL_checkstack(ms->L, nlevels, "too many captures");
-  for (i = 0; i < nlevels; i++)
-    push_onecapture(ms, i, s, e);
-  return nlevels;  /* number of strings pushed */
+  لكل (i = 0; i < nlevels; i++)
+    افزودن_onecapture(ms, i, s, e);
+  أرجع nlevels;  /* number of strings pushed */
 }
 
 
 /* check whether pattern has no special characters */
-static int nospecials (const char *p, size_t l) {
+ساكن صحيح nospecials (ثابت حرف *p, size_t l) {
   size_t upto = 0;
-  do {
-    if (strpbrk(p + upto, SPECIALS))
-      return 0;  /* pattern has a special character */
-    upto += strlen(p + upto) + 1;  /* may have more after \0 */
-  } while (upto <= l);
-  return 1;  /* no special chars found */
+  افعل {
+    إذا (strpbrk(p + upto, SPECIALS))
+      أرجع 0;  /* pattern has a special character */
+    upto += طول_رشته(p + upto) + 1;  /* may have more after \0 */
+  } طالما (upto <= l);
+  أرجع 1;  /* no special chars found */
 }
 
 
 /*
 ** Prepare state for matches. These fields are not affected by each match.
 */
-static void prepstate (MatchState *ms, lua_State *L,
-                       const char *s, size_t ls, const char *p, size_t lp) {
+ساكن فراغ prepstate (تطابق_State *ms, lua_State *L,
+                       ثابت حرف *s, size_t ls, ثابت حرف *p, size_t lp) {
   ms->L = L;
   ms->src_init = s;
-  ms->src_end = s + ls;
-  ms->p_end = p + lp;
+  ms->src_انتها = s + ls;
+  ms->p_انتها = p + lp;
 }
 
 
@@ -773,132 +773,132 @@ static void prepstate (MatchState *ms, lua_State *L,
 ** (Re)prepare state for a match, setting fields that change during
 ** each match.
 */
-static void reprepstate (MatchState *ms) {
+ساكن فراغ reprepstate (تطابق_State *ms) {
   ms->matchdepth = MAXCCALLS;
   ms->level = 0;
 }
 
 
-static int str_find_aux (lua_State *L, int find) {
+ساكن صحيح str_پیدا_کن_aux (lua_State *L, صحيح پیدا_کن) {
   size_t ls, lp;
-  const char *s = luaL_checklstring(L, 1, &ls);
-  const char *p = luaL_checklstring(L, 2, &lp);
+  ثابت حرف *s = luaL_checklstring(L, 1, &ls);
+  ثابت حرف *p = luaL_checklstring(L, 2, &lp);
   size_t init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
-  if (init > ls) {  /* start after string's end? */
+  إذا (init > ls) {  /* start after string's end? */
     luaL_pushfail(L);  /* cannot find anything */
-    return 1;
+    أرجع 1;
   }
   /* explicit request or no special characters? */
-  if (find && (lua_toboolean(L, 4) || nospecials(p, lp))) {
+  إذا (پیدا_کن && (lua_toboolean(L, 4) || nospecials(p, lp))) {
     /* do a plain search */
-    const char *s2 = lmemfind(s + init, ls - init, p, lp);
-    if (s2) {
+    ثابت حرف *s2 = lmemfind(s + init, ls - init, p, lp);
+    إذا (s2) {
       lua_pushinteger(L, ct_diff2S(s2 - s) + 1);
       lua_pushinteger(L, cast_st2S(ct_diff2sz(s2 - s) + lp));
-      return 2;
+      أرجع 2;
     }
   }
-  else {
-    MatchState ms;
-    const char *s1 = s + init;
-    int anchor = (*p == '^');
-    if (anchor) {
+  وإلا {
+    تطابق_State ms;
+    ثابت حرف *s1 = s + init;
+    صحيح anchor = (*p == '^');
+    إذا (anchor) {
       p++; lp--;  /* skip anchor character */
     }
     prepstate(&ms, L, s, ls, p, lp);
-    do {
-      const char *res;
+    افعل {
+      ثابت حرف *res;
       reprepstate(&ms);
-      if ((res=match(&ms, s1, p)) != NULL) {
-        if (find) {
-          lua_pushinteger(L, ct_diff2S(s1 - s) + 1);  /* start */
-          lua_pushinteger(L, ct_diff2S(res - s));   /* end */
-          return push_captures(&ms, NULL, 0) + 2;
+      إذا ((res=تطابق(&ms, s1, p)) != عدم) {
+        إذا (پیدا_کن) {
+          lua_pushinteger(L, ct_diff2S(s1 - s) + 1);  /*شروع*/
+          lua_pushinteger(L, ct_diff2S(res - s));   /*انتها*/
+          أرجع افزودن_captures(&ms, عدم, 0) + 2;
         }
-        else
-          return push_captures(&ms, s1, res);
+        وإلا
+          أرجع افزودن_captures(&ms, s1, res);
       }
-    } while (s1++ < ms.src_end && !anchor);
+    } طالما (s1++ < ms.src_انتها && !anchor);
   }
   luaL_pushfail(L);  /* not found */
-  return 1;
+  أرجع 1;
 }
 
 
-static int str_find (lua_State *L) {
-  return str_find_aux(L, 1);
+ساكن صحيح str_پیدا_کن (lua_State *L) {
+  أرجع str_پیدا_کن_aux(L, 1);
 }
 
 
-static int str_match (lua_State *L) {
-  return str_find_aux(L, 0);
+ساكن صحيح str_تطابق (lua_State *L) {
+  أرجع str_پیدا_کن_aux(L, 0);
 }
 
 
 /* state for 'gmatch' */
-typedef struct GMatchState {
-  const char *src;  /* current position */
-  const char *p;  /* pattern */
-  const char *lastmatch;  /* end of last match */
-  MatchState ms;  /* match state */
+تعريفنوع بنية GMatchState {
+  ثابت حرف *src;  /* current position */
+  ثابت حرف *p;  /*الگو*/
+  ثابت حرف *lastmatch;  /* end of last match */
+  تطابق_State ms;  /* match state */
 } GMatchState;
 
 
-static int gmatch_aux (lua_State *L) {
+ساكن صحيح gmatch_aux (lua_State *L) {
   GMatchState *gm = (GMatchState *)lua_touserdata(L, lua_upvalueindex(3));
-  const char *src;
+  ثابت حرف *src;
   gm->ms.L = L;
-  for (src = gm->src; src <= gm->ms.src_end; src++) {
-    const char *e;
+  لكل (src = gm->src; src <= gm->ms.src_انتها; src++) {
+    ثابت حرف *e;
     reprepstate(&gm->ms);
-    if ((e = match(&gm->ms, src, gm->p)) != NULL && e != gm->lastmatch) {
+    إذا ((e = تطابق(&gm->ms, src, gm->p)) != عدم && e != gm->lastmatch) {
       gm->src = gm->lastmatch = e;
-      return push_captures(&gm->ms, src, e);
+      أرجع افزودن_captures(&gm->ms, src, e);
     }
   }
-  return 0;  /* not found */
+  أرجع 0;  /* not found */
 }
 
 
-static int gmatch (lua_State *L) {
+ساكن صحيح gmatch (lua_State *L) {
   size_t ls, lp;
-  const char *s = luaL_checklstring(L, 1, &ls);
-  const char *p = luaL_checklstring(L, 2, &lp);
+  ثابت حرف *s = luaL_checklstring(L, 1, &ls);
+  ثابت حرف *p = luaL_checklstring(L, 2, &lp);
   size_t init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
   GMatchState *gm;
   lua_settop(L, 2);  /* keep strings on closure to avoid being collected */
-  gm = (GMatchState *)lua_newuserdatauv(L, sizeof(GMatchState), 0);
-  if (init > ls)  /* start after string's end? */
+  gm = (GMatchState *)lua_newuserdatauv(L, حجم(GMatchState), 0);
+  إذا (init > ls)  /* start after string's end? */
     init = ls + 1;  /* avoid overflows in 's + init' */
   prepstate(&gm->ms, L, s, ls, p, lp);
-  gm->src = s + init; gm->p = p; gm->lastmatch = NULL;
+  gm->src = s + init; gm->p = p; gm->lastmatch = عدم;
   lua_pushcclosure(L, gmatch_aux, 3);
-  return 1;
+  أرجع 1;
 }
 
 
-static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
-                                                   const char *e) {
+ساكن فراغ جمع_کن_s (تطابق_State *ms, lua_L_میانگیر *b, ثابت حرف *s,
+                                                   ثابت حرف *e) {
   size_t l;
   lua_State *L = ms->L;
-  const char *news = lua_tolstring(L, 3, &l);
-  const char *p;
-  while ((p = (char *)memchr(news, L_ESC, l)) != NULL) {
+  ثابت حرف *news = lua_tolstring(L, 3, &l);
+  ثابت حرف *p;
+  طالما ((p = (حرف *)memchr(news, L_ESC, l)) != عدم) {
     luaL_addlstring(b, news, ct_diff2sz(p - news));
     p++;  /* skip ESC */
-    if (*p == L_ESC)  /* '%%' */
+    إذا (*p == L_ESC)  /* '%%' */
       luaL_addchar(b, *p);
-    else if (*p == '0')  /* '%0' */
+    وإلا إذا (*p == '0')  /* '%0' */
         luaL_addlstring(b, s, ct_diff2sz(e - s));
-    else if (isdigit(cast_uchar(*p))) {  /* '%n' */
-      const char *cap;
+    وإلا إذا (آیا_رقم(cast_uchar(*p))) {  /* '%n' */
+      ثابت حرف *cap;
       ptrdiff_t resl = get_onecapture(ms, *p - '1', s, e, &cap);
-      if (resl == CAP_POSITION)
+      إذا (resl == CAP_POSITION)
         luaL_addvalue(b);  /* add position to accumulated result */
-      else
+      وإلا
         luaL_addlstring(b, cap, cast_sizet(resl));
     }
-    else
+    وإلا
       luaL_error(L, "invalid use of '%c' in replacement string", L_ESC);
     l -= ct_diff2sz(p + 1 - news);
     news = p + 1;
@@ -912,84 +912,84 @@ static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
 ** Return true if the original string was changed. (Function calls and
 ** table indexing resulting in nil or false do not change the subject.)
 */
-static int add_value (MatchState *ms, luaL_Buffer *b, const char *s,
-                                      const char *e, int tr) {
+ساكن صحيح جمع_کن_مقدار (تطابق_State *ms, lua_L_میانگیر *b, ثابت حرف *s,
+                                      ثابت حرف *e, صحيح tr) {
   lua_State *L = ms->L;
-  switch (tr) {
-    case LUA_TFUNCTION: {  /* call the function */
-      int n;
+  بدل (tr) {
+    حالة LUA_TFUNCTION: {  /* call the function */
+      صحيح n;
       lua_pushvalue(L, 3);  /* push the function */
-      n = push_captures(ms, s, e);  /* all captures as arguments */
+      n = افزودن_captures(ms, s, e);  /* all captures as arguments */
       lua_call(L, n, 1);  /* call it */
-      break;
+      اكسر;
     }
-    case LUA_TTABLE: {  /* index the table */
-      push_onecapture(ms, 0, s, e);  /* first capture is the index */
+    حالة LUA_TTABLE: {  /* index the table */
+      افزودن_onecapture(ms, 0, s, e);  /* first capture is the index */
       lua_gettable(L, 3);
-      break;
+      اكسر;
     }
-    default: {  /* LUA_TNUMBER or LUA_TSTRING */
-      add_s(ms, b, s, e);  /* add value to the buffer */
-      return 1;  /* something changed */
+    افتراضي: {  /* LUA_TNUMBER or LUA_TSTRING */
+      جمع_کن_s(ms, b, s, e);  /* add value to the buffer */
+      أرجع 1;  /* something changed */
     }
   }
-  if (!lua_toboolean(L, -1)) {  /* nil or false? */
-    lua_pop(L, 1);  /* remove value */
+  إذا (!lua_toboolean(L, -1)) {  /* nil or false? */
+    lua_برداشت(L, 1);  /* remove value */
     luaL_addlstring(b, s, ct_diff2sz(e - s));  /* keep original text */
-    return 0;  /* no changes */
+    أرجع 0;  /* no changes */
   }
-  else if (l_unlikely(!lua_isstring(L, -1)))
-    return luaL_error(L, "invalid replacement value (a %s)",
+  وإلا إذا (l_unlikely(!lua_isstring(L, -1)))
+    أرجع luaL_error(L, "invalid replacement value (a %s)",
                          luaL_typename(L, -1));
-  else {
+  وإلا {
     luaL_addvalue(b);  /* add result to accumulator */
-    return 1;  /* something changed */
+    أرجع 1;  /* something changed */
   }
 }
 
 
-static int str_gsub (lua_State *L) {
+ساكن صحيح str_gsub (lua_State *L) {
   size_t srcl, lp;
-  const char *src = luaL_checklstring(L, 1, &srcl);  /* subject */
-  const char *p = luaL_checklstring(L, 2, &lp);  /* pattern */
-  const char *lastmatch = NULL;  /* end of last match */
-  int tr = lua_type(L, 3);  /* replacement type */
+  ثابت حرف *src = luaL_checklstring(L, 1, &srcl);  /* subject */
+  ثابت حرف *p = luaL_checklstring(L, 2, &lp);  /*الگو*/
+  ثابت حرف *lastmatch = عدم;  /* end of last match */
+  صحيح tr = lua_type(L, 3);  /* replacement type */
   /* max replacements */
   lua_Integer max_s = luaL_optinteger(L, 4, cast_st2S(srcl) + 1);
-  int anchor = (*p == '^');
+  صحيح anchor = (*p == '^');
   lua_Integer n = 0;  /* replacement count */
-  int changed = 0;  /* change flag */
-  MatchState ms;
-  luaL_Buffer b;
+  صحيح تغییریافته = 0;  /* change flag */
+  تطابق_State ms;
+  lua_L_میانگیر b;
   luaL_argexpected(L, tr == LUA_TNUMBER || tr == LUA_TSTRING ||
                    tr == LUA_TFUNCTION || tr == LUA_TTABLE, 3,
                       "string/function/table");
   luaL_buffinit(L, &b);
-  if (anchor) {
+  إذا (anchor) {
     p++; lp--;  /* skip anchor character */
   }
   prepstate(&ms, L, src, srcl, p, lp);
-  while (n < max_s) {
-    const char *e;
+  طالما (n < max_s) {
+    ثابت حرف *e;
     reprepstate(&ms);  /* (re)prepare state for new match */
-    if ((e = match(&ms, src, p)) != NULL && e != lastmatch) {  /* match? */
+    إذا ((e = تطابق(&ms, src, p)) != عدم && e != lastmatch) {  /* match? */
       n++;
-      changed = add_value(&ms, &b, src, e, tr) || changed;
+      تغییریافته = جمع_کن_مقدار(&ms, &b, src, e, tr) || تغییریافته;
       src = lastmatch = e;
     }
-    else if (src < ms.src_end)  /* otherwise, skip one character */
+    وإلا إذا (src < ms.src_انتها)  /* otherwise, skip one character */
       luaL_addchar(&b, *src++);
-    else break;  /* end of subject */
-    if (anchor) break;
+    وإلا اكسر;  /* end of subject */
+    إذا (anchor) اكسر;
   }
-  if (!changed)  /* no changes? */
+  إذا (!تغییریافته)  /* no changes? */
     lua_pushvalue(L, 1);  /* return original string */
-  else {  /* something changed */
-    luaL_addlstring(&b, src, ct_diff2sz(ms.src_end - src));
+  وإلا {  /* something changed */
+    luaL_addlstring(&b, src, ct_diff2sz(ms.src_انتها - src));
     luaL_pushresult(&b);  /* create and return new string */
   }
   lua_pushinteger(L, n);  /* number of substitutions */
-  return 2;
+  أرجع 2;
 }
 
 /* }====================================================== */
@@ -1002,13 +1002,13 @@ static int str_gsub (lua_State *L) {
 ** =======================================================
 */
 
-#if !defined(lua_number2strx)	/* { */
+#إذا !defined(lua_number2strx)	/* { */
 
 /*
 ** Hexadecimal floating-point formatter
 */
 
-#define SIZELENMOD	(sizeof(LUA_NUMBER_FRMLEN)/sizeof(char))
+#تعریف_کن SIZELENMOD	(حجم(LUA_عدد_FRMLEN)/حجم(حرف))
 
 
 /*
@@ -1017,66 +1017,66 @@ static int str_gsub (lua_State *L) {
 ** to nibble boundaries by making what is left after that first digit a
 ** multiple of 4.
 */
-#define L_NBFD		((l_floatatt(MANT_DIG) - 1)%4 + 1)
+#تعریف_کن L_NBFD		((l_floatatt(MANT_DIG) - 1)%4 + 1)
 
 
 /*
 ** Add integer part of 'x' to buffer and return new 'x'
 */
-static lua_Number adddigit (char *buff, unsigned n, lua_Number x) {
-  lua_Number dd = l_mathop(floor)(x);  /* get integer part from 'x' */
-  int d = (int)dd;
+ساكن lua_عدد adddigit (حرف *buff, بیعلامت n, lua_عدد x) {
+  lua_عدد dd = l_mathop(floor)(x);  /* get integer part from 'x' */
+  صحيح d = (صحيح)dd;
   buff[n] = cast_char(d < 10 ? d + '0' : d - 10 + 'a');  /* add to buffer */
-  return x - dd;  /* return what is left */
+  أرجع x - dd;  /* return what is left */
 }
 
 
-static int num2straux (char *buff, unsigned sz, lua_Number x) {
+ساكن صحيح num2straux (حرف *buff, بیعلامت sz, lua_عدد x) {
   /* if 'inf' or 'NaN', format it like '%g' */
-  if (x != x || x == (lua_Number)HUGE_VAL || x == -(lua_Number)HUGE_VAL)
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT, (LUAI_UACNUMBER)x);
-  else if (x == 0) {  /* can be -0... */
+  إذا (x != x || x == (lua_عدد)HUGE_VAL || x == -(lua_عدد)HUGE_VAL)
+    أرجع l_sprintf(buff, sz, LUA_عدد_FMT, (LUAI_UACNUMBER)x);
+  وإلا إذا (x == 0) {  /* can be -0... */
     /* create "0" or "-0" followed by exponent */
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT "x0p+0", (LUAI_UACNUMBER)x);
+    أرجع l_sprintf(buff, sz, LUA_عدد_FMT "x0p+0", (LUAI_UACNUMBER)x);
   }
-  else {
-    int e;
-    lua_Number m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
-    unsigned n = 0;  /* character count */
-    if (m < 0) {  /* is number negative? */
+  وإلا {
+    صحيح e;
+    lua_عدد m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
+    بیعلامت n = 0;  /* character count */
+    إذا (m < 0) {  /* is number negative? */
       buff[n++] = '-';  /* add sign */
       m = -m;  /* make it positive */
     }
     buff[n++] = '0'; buff[n++] = 'x';  /* add "0x" */
     m = adddigit(buff, n++, m * (1 << L_NBFD));  /* add first digit */
     e -= L_NBFD;  /* this digit goes before the radix point */
-    if (m > 0) {  /* more digits? */
+    إذا (m > 0) {  /* more digits? */
       buff[n++] = lua_getlocaledecpoint();  /* add radix point */
-      do {  /* add as many digits as needed */
+      افعل {  /* add as many digits as needed */
         m = adddigit(buff, n++, m * 16);
-      } while (m > 0);
+      } طالما (m > 0);
     }
     n += cast_uint(l_sprintf(buff + n, sz - n, "p%+d", e));  /* add exponent */
     lua_assert(n < sz);
-    return cast_int(n);
+    أرجع cast_int(n);
   }
 }
 
 
-static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
-                            const char *fmt, lua_Number x) {
-  int n = num2straux(buff, sz, x);
-  if (fmt[SIZELENMOD] == 'A') {
-    int i;
-    for (i = 0; i < n; i++)
-      buff[i] = cast_char(toupper(cast_uchar(buff[i])));
+ساكن صحيح lua_number2strx (lua_State *L, حرف *buff, بیعلامت sz,
+                            ثابت حرف *fmt, lua_عدد x) {
+  صحيح n = num2straux(buff, sz, x);
+  إذا (fmt[SIZELENMOD] == 'A') {
+    صحيح i;
+    لكل (i = 0; i < n; i++)
+      buff[i] = cast_char(به_بزرگ(cast_uchar(buff[i])));
   }
-  else if (l_unlikely(fmt[SIZELENMOD] != 'a'))
-    return luaL_error(L, "modifiers for format '%%a'/'%%A' not implemented");
-  return n;
+  وإلا إذا (l_unlikely(fmt[SIZELENMOD] != 'a'))
+    أرجع luaL_error(L, "modifiers for format '%%a'/'%%A' not implemented");
+  أرجع n;
 }
 
-#endif				/* } */
+#پایان_اگر				/* } */
 
 
 /*
@@ -1085,7 +1085,7 @@ static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
 ** and '\0') + number of decimal digits to represent maxfloat (which
 ** is maximum exponent + 1). (99+3+1, adding some extra, 110)
 */
-#define MAX_ITEMF	(110 + l_floatatt(MAX_10_EXP))
+#تعریف_کن MAX_ITEMF	(110 + l_floatatt(MAX_10_EXP))
 
 
 /*
@@ -1096,28 +1096,28 @@ static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
 ** worst case are floats: they may need 99 significant digits, plus
 ** '0x', '-', '.', 'e+XXXX', and '\0'. Adding some extra, 120.
 */
-#define MAX_ITEM	120
+#تعریف_کن MAX_قلم	120
 
 
 /* valid flags in a format specification */
-#if !defined(L_FMTFLAGSF)
+#إذا !defined(L_FMTFLAGSF)
 
 /* valid flags for a, A, e, E, f, F, g, and G conversions */
-#define L_FMTFLAGSF	"-+#0 "
+#تعریف_کن L_FMTFLAGSF	"-+#0 "
 
 /* valid flags for o, x, and X conversions */
-#define L_FMTFLAGSX	"-#0"
+#تعریف_کن L_FMTFLAGSX	"-#0"
 
 /* valid flags for d and i conversions */
-#define L_FMTFLAGSI	"-+0 "
+#تعریف_کن L_FMTFLAGSI	"-+0 "
 
 /* valid flags for u conversions */
-#define L_FMTFLAGSU	"-0"
+#تعریف_کن L_FMTFLAGSU	"-0"
 
 /* valid flags for c, p, and s conversions */
-#define L_FMTFLAGSC	"-"
+#تعریف_کن L_FMTFLAGSC	"-"
 
-#endif
+#پایان_اگر
 
 
 /*
@@ -1126,25 +1126,25 @@ static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
 ** length modifier (8), conversion specifier, and final '\0', plus some
 ** extra.
 */
-#define MAX_FORMAT	32
+#تعریف_کن MAX_FORMAT	32
 
 
-static void addquoted (luaL_Buffer *b, const char *s, size_t len) {
+ساكن فراغ addquoted (lua_L_میانگیر *b, ثابت حرف *s, size_t len) {
   luaL_addchar(b, '"');
-  while (len--) {
-    if (*s == '"' || *s == '\\' || *s == '\n') {
+  طالما (len--) {
+    إذا (*s == '"' || *s == '\\' || *s == '\n') {
       luaL_addchar(b, '\\');
       luaL_addchar(b, *s);
     }
-    else if (iscntrl(cast_uchar(*s))) {
-      char buff[10];
-      if (!isdigit(cast_uchar(*(s+1))))
-        l_sprintf(buff, sizeof(buff), "\\%d", (int)cast_uchar(*s));
-      else
-        l_sprintf(buff, sizeof(buff), "\\%03d", (int)cast_uchar(*s));
+    وإلا إذا (iscntrl(cast_uchar(*s))) {
+      حرف buff[10];
+      إذا (!آیا_رقم(cast_uchar(*(s+1))))
+        l_sprintf(buff, حجم(buff), "\\%d", (صحيح)cast_uchar(*s));
+      وإلا
+        l_sprintf(buff, حجم(buff), "\\%03d", (صحيح)cast_uchar(*s));
       luaL_addstring(b, buff);
     }
-    else
+    وإلا
       luaL_addchar(b, *s);
     s++;
   }
@@ -1158,71 +1158,71 @@ static void addquoted (luaL_Buffer *b, const char *s, size_t len) {
 ** (to preserve precision); inf, -inf, and NaN are handled separately.
 ** (NaN cannot be expressed as a numeral, so we write '(0/0)' for it.)
 */
-static int quotefloat (lua_State *L, char *buff, lua_Number n) {
-  const char *s;  /* for the fixed representations */
-  if (n == (lua_Number)HUGE_VAL)  /* inf? */
+ساكن صحيح quotefloat (lua_State *L, حرف *buff, lua_عدد n) {
+  ثابت حرف *s;  /* for the fixed representations */
+  إذا (n == (lua_عدد)HUGE_VAL)  /* inf? */
     s = "1e9999";
-  else if (n == -(lua_Number)HUGE_VAL)  /* -inf? */
+  وإلا إذا (n == -(lua_عدد)HUGE_VAL)  /* -inf? */
     s = "-1e9999";
-  else if (n != n)  /* NaN? */
+  وإلا إذا (n != n)  /* NaN? */
     s = "(0/0)";
-  else {  /* format number as hexadecimal */
-    int  nb = lua_number2strx(L, buff, MAX_ITEM,
-                                 "%" LUA_NUMBER_FRMLEN "a", n);
+  وإلا {  /* format number as hexadecimal */
+    صحيح  nb = lua_number2strx(L, buff, MAX_قلم,
+                                 "%" LUA_عدد_FRMLEN "a", n);
     /* ensures that 'buff' string uses a dot as the radix character */
-    if (memchr(buff, '.', cast_uint(nb)) == NULL) {  /* no dot? */
-      char point = lua_getlocaledecpoint();  /* try locale point */
-      char *ppoint = (char *)memchr(buff, point, cast_uint(nb));
-      if (ppoint) *ppoint = '.';  /* change it to a dot */
+    إذا (memchr(buff, '.', cast_uint(nb)) == عدم) {  /* no dot? */
+      حرف نقطه = lua_getlocaledecpoint();  /* try locale point */
+      حرف *ppoint = (حرف *)memchr(buff, نقطه, cast_uint(nb));
+      إذا (ppoint) *ppoint = '.';  /* change it to a dot */
     }
-    return nb;
+    أرجع nb;
   }
   /* for the fixed representations */
-  return l_sprintf(buff, MAX_ITEM, "%s", s);
+  أرجع l_sprintf(buff, MAX_قلم, "%s", s);
 }
 
 
-static void addliteral (lua_State *L, luaL_Buffer *b, int arg) {
-  switch (lua_type(L, arg)) {
-    case LUA_TSTRING: {
+ساكن فراغ addliteral (lua_State *L, lua_L_میانگیر *b, صحيح arg) {
+  بدل (lua_type(L, arg)) {
+    حالة LUA_TSTRING: {
       size_t len;
-      const char *s = lua_tolstring(L, arg, &len);
+      ثابت حرف *s = lua_tolstring(L, arg, &len);
       addquoted(b, s, len);
-      break;
+      اكسر;
     }
-    case LUA_TNUMBER: {
-      char *buff = luaL_prepbuffsize(b, MAX_ITEM);
-      int nb;
-      if (!lua_isinteger(L, arg))  /* float? */
+    حالة LUA_TNUMBER: {
+      حرف *buff = luaL_prepbuffsize(b, MAX_قلم);
+      صحيح nb;
+      إذا (!lua_isinteger(L, arg))  /* float? */
         nb = quotefloat(L, buff, lua_tonumber(L, arg));
-      else {  /* integers */
+      وإلا {  /* integers */
         lua_Integer n = lua_tointeger(L, arg);
-        const char *format = (n == LUA_MININTEGER)  /* corner case? */
+        ثابت حرف *format = (n == LUA_MININTEGER)  /* corner case? */
                            ? "0x%" LUA_INTEGER_FRMLEN "x"  /* use hex */
                            : LUA_INTEGER_FMT;  /* else use default format */
-        nb = l_sprintf(buff, MAX_ITEM, format, (LUAI_UACINT)n);
+        nb = l_sprintf(buff, MAX_قلم, format, (LUAI_UACINT)n);
       }
       luaL_addsize(b, cast_uint(nb));
-      break;
+      اكسر;
     }
-    case LUA_TNIL: case LUA_TBOOLEAN: {
-      luaL_tolstring(L, arg, NULL);
+    حالة LUA_TNIL: حالة LUA_TBOOLEAN: {
+      luaL_tolstring(L, arg, عدم);
       luaL_addvalue(b);
-      break;
+      اكسر;
     }
-    default: {
+    افتراضي: {
       luaL_argerror(L, arg, "value has no literal form");
     }
   }
 }
 
 
-static const char *get2digits (const char *s) {
-  if (isdigit(cast_uchar(*s))) {
+ساكن ثابت حرف *get2digits (ثابت حرف *s) {
+  إذا (آیا_رقم(cast_uchar(*s))) {
     s++;
-    if (isdigit(cast_uchar(*s))) s++;  /* (2 digits at most) */
+    إذا (آیا_رقم(cast_uchar(*s))) s++;  /* (2 digits at most) */
   }
-  return s;
+  أرجع s;
 }
 
 
@@ -1232,18 +1232,18 @@ static const char *get2digits (const char *s) {
 ** be a valid conversion specifier. 'flags' are the accepted flags;
 ** 'precision' signals whether to accept a precision.
 */
-static void checkformat (lua_State *L, const char *form, const char *flags,
-                                       int precision) {
-  const char *spec = form + 1;  /* skip '%' */
+ساكن فراغ checkformat (lua_State *L, ثابت حرف *form, ثابت حرف *flags,
+                                       صحيح precision) {
+  ثابت حرف *spec = form + 1;  /* skip '%' */
   spec += strspn(spec, flags);  /* skip flags */
-  if (*spec != '0') {  /* a width cannot start with '0' */
+  إذا (*spec != '0') {  /* a width cannot start with '0' */
     spec = get2digits(spec);  /* skip width */
-    if (*spec == '.' && precision) {
+    إذا (*spec == '.' && precision) {
       spec++;
       spec = get2digits(spec);  /* skip precision */
     }
   }
-  if (!isalpha(cast_uchar(*spec)))  /* did not go to the end? */
+  إذا (!آیا_حرف(cast_uchar(*spec)))  /* did not go to the end? */
     luaL_error(L, "invalid conversion specification: '%s'", form);
 }
 
@@ -1252,131 +1252,131 @@ static void checkformat (lua_State *L, const char *form, const char *flags,
 ** Get a conversion specification and copy it to 'form'.
 ** Return the address of its last character.
 */
-static const char *getformat (lua_State *L, const char *strfrmt,
-                                            char *form) {
+ساكن ثابت حرف *getformat (lua_State *L, ثابت حرف *strfrmt,
+                                            حرف *form) {
   /* spans flags, width, and precision ('0' is included as a flag) */
   size_t len = strspn(strfrmt, L_FMTFLAGSF "123456789.");
   len++;  /* adds following character (should be the specifier) */
   /* still needs space for '%', '\0', plus a length modifier */
-  if (len >= MAX_FORMAT - 10)
+  إذا (len >= MAX_FORMAT - 10)
     luaL_error(L, "invalid format (too long)");
   *(form++) = '%';
-  memcpy(form, strfrmt, len * sizeof(char));
+  کپی_حافظه(form, strfrmt, len * حجم(حرف));
   *(form + len) = '\0';
-  return strfrmt + len - 1;
+  أرجع strfrmt + len - 1;
 }
 
 
 /*
 ** add length modifier into formats
 */
-static void addlenmod (char *form, const char *lenmod) {
-  size_t l = strlen(form);
-  size_t lm = strlen(lenmod);
-  char spec = form[l - 1];
+ساكن فراغ addlenmod (حرف *form, ثابت حرف *lenmod) {
+  size_t l = طول_رشته(form);
+  size_t lm = طول_رشته(lenmod);
+  حرف spec = form[l - 1];
   strcpy(form + l - 1, lenmod);
   form[l + lm - 1] = spec;
   form[l + lm] = '\0';
 }
 
 
-static int str_format (lua_State *L) {
-  int top = lua_gettop(L);
-  int arg = 1;
+ساكن صحيح str_format (lua_State *L) {
+  صحيح بالاترین = lua_gettop(L);
+  صحيح arg = 1;
   size_t sfl;
-  const char *strfrmt = luaL_checklstring(L, arg, &sfl);
-  const char *strfrmt_end = strfrmt+sfl;
-  const char *flags;
-  luaL_Buffer b;
+  ثابت حرف *strfrmt = luaL_checklstring(L, arg, &sfl);
+  ثابت حرف *strfrmt_انتها = strfrmt+sfl;
+  ثابت حرف *flags;
+  lua_L_میانگیر b;
   luaL_buffinit(L, &b);
-  while (strfrmt < strfrmt_end) {
-    if (*strfrmt != L_ESC)
+  طالما (strfrmt < strfrmt_انتها) {
+    إذا (*strfrmt != L_ESC)
       luaL_addchar(&b, *strfrmt++);
-    else if (*++strfrmt == L_ESC)
+    وإلا إذا (*++strfrmt == L_ESC)
       luaL_addchar(&b, *strfrmt++);  /* %% */
-    else { /* format item */
-      char form[MAX_FORMAT];  /* to store the format ('%...') */
-      unsigned maxitem = MAX_ITEM;  /* maximum length for the result */
-      char *buff = luaL_prepbuffsize(&b, maxitem);  /* to put result */
-      int nb = 0;  /* number of bytes in result */
-      if (++arg > top)
-        return luaL_argerror(L, arg, "no value");
+    وإلا { /* format item */
+      حرف form[MAX_FORMAT];  /* to store the format ('%...') */
+      بیعلامت maxitem = MAX_قلم;  /* maximum length for the result */
+      حرف *buff = luaL_prepbuffsize(&b, maxitem);  /* to put result */
+      صحيح nb = 0;  /* number of bytes in result */
+      إذا (++arg > بالاترین)
+        أرجع luaL_argerror(L, arg, "no value");
       strfrmt = getformat(L, strfrmt, form);
-      switch (*strfrmt++) {
-        case 'c': {
+      بدل (*strfrmt++) {
+        حالة 'c': {
           checkformat(L, form, L_FMTFLAGSC, 0);
-          nb = l_sprintf(buff, maxitem, form, (int)luaL_checkinteger(L, arg));
-          break;
+          nb = l_sprintf(buff, maxitem, form, (صحيح)luaL_checkinteger(L, arg));
+          اكسر;
         }
-        case 'd': case 'i':
+        حالة 'd': حالة 'i':
           flags = L_FMTFLAGSI;
-          goto intcase;
-        case 'u':
+          اذهب intcase;
+        حالة 'u':
           flags = L_FMTFLAGSU;
-          goto intcase;
-        case 'o': case 'x': case 'X':
+          اذهب intcase;
+        حالة 'o': حالة 'x': حالة 'X':
           flags = L_FMTFLAGSX;
          intcase: {
           lua_Integer n = luaL_checkinteger(L, arg);
           checkformat(L, form, flags, 1);
           addlenmod(form, LUA_INTEGER_FRMLEN);
           nb = l_sprintf(buff, maxitem, form, (LUAI_UACINT)n);
-          break;
+          اكسر;
         }
-        case 'a': case 'A':
+        حالة 'a': حالة 'A':
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_عدد_FRMLEN);
           nb = lua_number2strx(L, buff, maxitem, form,
                                   luaL_checknumber(L, arg));
-          break;
-        case 'f':
+          اكسر;
+        حالة 'f':
           maxitem = MAX_ITEMF;  /* extra space for '%f' */
           buff = luaL_prepbuffsize(&b, maxitem);
           /* FALLTHROUGH */
-        case 'e': case 'E': case 'g': case 'G': {
-          lua_Number n = luaL_checknumber(L, arg);
+        حالة 'e': حالة 'E': حالة 'g': حالة 'G': {
+          lua_عدد n = luaL_checknumber(L, arg);
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_عدد_FRMLEN);
           nb = l_sprintf(buff, maxitem, form, (LUAI_UACNUMBER)n);
-          break;
+          اكسر;
         }
-        case 'p': {
-          const void *p = lua_topointer(L, arg);
+        حالة 'p': {
+          ثابت فراغ *p = lua_topointer(L, arg);
           checkformat(L, form, L_FMTFLAGSC, 0);
-          if (p == NULL) {  /* avoid calling 'printf' with argument NULL */
-            p = "(null)";  /* result */
-            form[strlen(form) - 1] = 's';  /* format it as a string */
+          إذا (p == عدم) {  /* avoid calling 'printf' with argument NULL */
+            p = "(null)";  /*نتیجه*/
+            form[طول_رشته(form) - 1] = 's';  /* format it as a string */
           }
           nb = l_sprintf(buff, maxitem, form, p);
-          break;
+          اكسر;
         }
-        case 'q': {
-          if (form[2] != '\0')  /* modifiers? */
-            return luaL_error(L, "specifier '%%q' cannot have modifiers");
+        حالة 'q': {
+          إذا (form[2] != '\0')  /* modifiers? */
+            أرجع luaL_error(L, "specifier '%%q' cannot have modifiers");
           addliteral(L, &b, arg);
-          break;
+          اكسر;
         }
-        case 's': {
+        حالة 's': {
           size_t l;
-          const char *s = luaL_tolstring(L, arg, &l);
-          if (form[2] == '\0')  /* no modifiers? */
+          ثابت حرف *s = luaL_tolstring(L, arg, &l);
+          إذا (form[2] == '\0')  /* no modifiers? */
             luaL_addvalue(&b);  /* keep entire string */
-          else {
-            luaL_argcheck(L, l == strlen(s), arg, "string contains zeros");
+          وإلا {
+            luaL_argcheck(L, l == طول_رشته(s), arg, "string contains zeros");
             checkformat(L, form, L_FMTFLAGSC, 1);
-            if (strchr(form, '.') == NULL && l >= 100) {
+            إذا (strchr(form, '.') == عدم && l >= 100) {
               /* no precision and string is too long to be formatted */
               luaL_addvalue(&b);  /* keep entire string */
             }
-            else {  /* format the string into 'buff' */
+            وإلا {  /* format the string into 'buff' */
               nb = l_sprintf(buff, maxitem, form, s);
-              lua_pop(L, 1);  /* remove result from 'luaL_tolstring' */
+              lua_برداشت(L, 1);  /* remove result from 'luaL_tolstring' */
             }
           }
-          break;
+          اكسر;
         }
-        default: {  /* also treat cases 'pnLlh' */
-          return luaL_error(L, "invalid conversion '%s' to 'format'", form);
+        افتراضي: {  /* also treat cases 'pnLlh' */
+          أرجع luaL_error(L, "invalid conversion '%s' to 'format'", form);
         }
       }
       lua_assert(cast_uint(nb) < maxitem);
@@ -1384,7 +1384,7 @@ static int str_format (lua_State *L) {
     }
   }
   luaL_pushresult(&b);
-  return 1;
+  أرجع 1;
 }
 
 /* }====================================================== */
@@ -1398,44 +1398,44 @@ static int str_format (lua_State *L) {
 
 
 /* value used for padding */
-#if !defined(LUAL_PACKPADBYTE)
-#define LUAL_PACKPADBYTE		0x00
-#endif
+#إذا !defined(LUAL_PACKPADBYTE)
+#تعریف_کن LUAL_PACKPADBYTE		0x00
+#پایان_اگر
 
 /* maximum size for the binary representation of an integer */
-#define MAXINTSIZE	16
+#تعریف_کن MAXINTSIZE	16
 
 /* number of bits in a character */
-#define NB	CHAR_BIT
+#تعریف_کن NB	CHAR_BIT
 
 /* mask for one character (NB 1's) */
-#define MC	((1 << NB) - 1)
+#تعریف_کن MC	((1 << NB) - 1)
 
 /* size of a lua_Integer */
-#define SZINT	((int)sizeof(lua_Integer))
+#تعریف_کن SZINT	((صحيح)حجم(lua_Integer))
 
 
 /* dummy union to get native endianness */
-static const union {
-  int dummy;
-  char little;  /* true iff machine is little endian */
+ساكن ثابت اتحاد {
+  صحيح dummy;
+  حرف little;  /* true iff machine is little endian */
 } nativeendian = {1};
 
 
 /*
 ** information to pack/unpack stuff
 */
-typedef struct Header {
+تعريفنوع بنية سرآیند {
   lua_State *L;
-  int islittle;
-  unsigned maxalign;
-} Header;
+  صحيح islittle;
+  بیعلامت maxalign;
+} سرآیند;
 
 
 /*
 ** options for pack/unpack
 */
-typedef enum KOption {
+تعريفنوع تعداد KOption {
   Kint,		/* signed integers */
   Kuint,	/* unsigned integers */
   Kfloat,	/* single-precision floating-point numbers */
@@ -1454,17 +1454,17 @@ typedef enum KOption {
 ** Read an integer numeral from string 'fmt' or return 'df' if
 ** there is no numeral
 */
-static int digit (int c) { return '0' <= c && c <= '9'; }
+ساكن صحيح digit (صحيح c) { أرجع '0' <= c && c <= '9'; }
 
-static size_t getnum (const char **fmt, size_t df) {
-  if (!digit(**fmt))  /* no number? */
-    return df;  /* return default value */
-  else {
+ساكن size_t getnum (ثابت حرف **fmt, size_t df) {
+  إذا (!digit(**fmt))  /* no number? */
+    أرجع df;  /* return default value */
+  وإلا {
     size_t a = 0;
-    do {
+    افعل {
       a = a*10 + cast_uint(*((*fmt)++) - '0');
-    } while (digit(**fmt) && a <= (MAX_SIZE - 9)/10);
-    return a;
+    } طالما (digit(**fmt) && a <= (MAX_اندازه - 9)/10);
+    أرجع a;
   }
 }
 
@@ -1473,19 +1473,19 @@ static size_t getnum (const char **fmt, size_t df) {
 ** Read an integer numeral and raises an error if it is larger
 ** than the maximum size of integers.
 */
-static unsigned getnumlimit (Header *h, const char **fmt, size_t df) {
+ساكن بیعلامت getnumlimit (سرآیند *h, ثابت حرف **fmt, size_t df) {
   size_t sz = getnum(fmt, df);
-  if (l_unlikely((sz - 1u) >= MAXINTSIZE))
-    return cast_uint(luaL_error(h->L,
+  إذا (l_unlikely((sz - 1u) >= MAXINTSIZE))
+    أرجع cast_uint(luaL_error(h->L,
                "integral size (%d) out of limits [1,%d]", sz, MAXINTSIZE));
-  return cast_uint(sz);
+  أرجع cast_uint(sz);
 }
 
 
 /*
 ** Initialize Header
 */
-static void initheader (lua_State *L, Header *h) {
+ساكن فراغ initheader (lua_State *L, سرآیند *h) {
   h->L = L;
   h->islittle = nativeendian.little;
   h->maxalign = 1;
@@ -1495,47 +1495,47 @@ static void initheader (lua_State *L, Header *h) {
 /*
 ** Read and classify next option. 'size' is filled with option's size.
 */
-static KOption getoption (Header *h, const char **fmt, size_t *size) {
+ساكن KOption getoption (سرآیند *h, ثابت حرف **fmt, size_t *اندازه) {
   /* dummy structure to get native alignment requirements */
-  struct cD { char c; union { LUAI_MAXALIGN; } u; };
-  int opt = *((*fmt)++);
-  *size = 0;  /* default */
-  switch (opt) {
-    case 'b': *size = sizeof(char); return Kint;
-    case 'B': *size = sizeof(char); return Kuint;
-    case 'h': *size = sizeof(short); return Kint;
-    case 'H': *size = sizeof(short); return Kuint;
-    case 'l': *size = sizeof(long); return Kint;
-    case 'L': *size = sizeof(long); return Kuint;
-    case 'j': *size = sizeof(lua_Integer); return Kint;
-    case 'J': *size = sizeof(lua_Integer); return Kuint;
-    case 'T': *size = sizeof(size_t); return Kuint;
-    case 'f': *size = sizeof(float); return Kfloat;
-    case 'n': *size = sizeof(lua_Number); return Knumber;
-    case 'd': *size = sizeof(double); return Kdouble;
-    case 'i': *size = getnumlimit(h, fmt, sizeof(int)); return Kint;
-    case 'I': *size = getnumlimit(h, fmt, sizeof(int)); return Kuint;
-    case 's': *size = getnumlimit(h, fmt, sizeof(size_t)); return Kstring;
-    case 'c':
-      *size = getnum(fmt, cast_sizet(-1));
-      if (l_unlikely(*size == cast_sizet(-1)))
+  بنية cD { حرف c; اتحاد { LUAI_MAXALIGN; } u; };
+  صحيح opt = *((*fmt)++);
+  *اندازه = 0;  /* default */
+  بدل (opt) {
+    حالة 'b': *اندازه = حجم(حرف); أرجع Kint;
+    حالة 'B': *اندازه = حجم(حرف); أرجع Kuint;
+    حالة 'h': *اندازه = حجم(کوتاه); أرجع Kint;
+    حالة 'H': *اندازه = حجم(کوتاه); أرجع Kuint;
+    حالة 'l': *اندازه = حجم(دراز); أرجع Kint;
+    حالة 'L': *اندازه = حجم(دراز); أرجع Kuint;
+    حالة 'j': *اندازه = حجم(lua_Integer); أرجع Kint;
+    حالة 'J': *اندازه = حجم(lua_Integer); أرجع Kuint;
+    حالة 'T': *اندازه = حجم(size_t); أرجع Kuint;
+    حالة 'f': *اندازه = حجم(عائم); أرجع Kfloat;
+    حالة 'n': *اندازه = حجم(lua_عدد); أرجع Knumber;
+    حالة 'd': *اندازه = حجم(مزدوج); أرجع Kdouble;
+    حالة 'i': *اندازه = getnumlimit(h, fmt, حجم(صحيح)); أرجع Kint;
+    حالة 'I': *اندازه = getnumlimit(h, fmt, حجم(صحيح)); أرجع Kuint;
+    حالة 's': *اندازه = getnumlimit(h, fmt, حجم(size_t)); أرجع Kstring;
+    حالة 'c':
+      *اندازه = getnum(fmt, cast_sizet(-1));
+      إذا (l_unlikely(*اندازه == cast_sizet(-1)))
         luaL_error(h->L, "missing size for format option 'c'");
-      return Kchar;
-    case 'z': return Kzstr;
-    case 'x': *size = 1; return Kpadding;
-    case 'X': return Kpaddalign;
-    case ' ': break;
-    case '<': h->islittle = 1; break;
-    case '>': h->islittle = 0; break;
-    case '=': h->islittle = nativeendian.little; break;
-    case '!': {
-      const size_t maxalign = offsetof(struct cD, u);
+      أرجع Kchar;
+    حالة 'z': أرجع Kzstr;
+    حالة 'x': *اندازه = 1; أرجع Kpadding;
+    حالة 'X': أرجع Kpaddalign;
+    حالة ' ': اكسر;
+    حالة '<': h->islittle = 1; اكسر;
+    حالة '>': h->islittle = 0; اكسر;
+    حالة '=': h->islittle = nativeendian.little; اكسر;
+    حالة '!': {
+      ثابت size_t maxalign = offsetof(بنية cD, u);
       h->maxalign = getnumlimit(h, fmt, maxalign);
-      break;
+      اكسر;
     }
-    default: luaL_error(h->L, "invalid format option '%c'", opt);
+    افتراضي: luaL_error(h->L, "invalid format option '%c'", opt);
   }
-  return Knop;
+  أرجع Knop;
 }
 
 
@@ -1548,30 +1548,30 @@ static KOption getoption (Header *h, const char **fmt, size_t *size) {
 ** the maximum alignment ('maxalign'). Kchar option needs no alignment
 ** despite its size.
 */
-static KOption getdetails (Header *h, size_t totalsize, const char **fmt,
-                           size_t *psize, unsigned *ntoalign) {
+ساكن KOption getdetails (سرآیند *h, size_t totalsize, ثابت حرف **fmt,
+                           size_t *psize, بیعلامت *ntoalign) {
   KOption opt = getoption(h, fmt, psize);
   size_t align = *psize;  /* usually, alignment follows size */
-  if (opt == Kpaddalign) {  /* 'X' gets alignment from following option */
-    if (**fmt == '\0' || getoption(h, fmt, &align) == Kchar || align == 0)
+  إذا (opt == Kpaddalign) {  /* 'X' gets alignment from following option */
+    إذا (**fmt == '\0' || getoption(h, fmt, &align) == Kchar || align == 0)
       luaL_argerror(h->L, 1, "invalid next option for option 'X'");
   }
-  if (align <= 1 || opt == Kchar)  /* need no alignment? */
+  إذا (align <= 1 || opt == Kchar)  /* need no alignment? */
     *ntoalign = 0;
-  else {
-    if (align > h->maxalign)  /* enforce maximum alignment */
+  وإلا {
+    إذا (align > h->maxalign)  /* enforce maximum alignment */
       align = h->maxalign;
-    if (l_unlikely(!ispow2(align))) {  /* not a power of 2? */
+    إذا (l_unlikely(!ispow2(align))) {  /* not a power of 2? */
       *ntoalign = 0;  /* to avoid warnings */
       luaL_argerror(h->L, 1, "format asks for alignment not power of 2");
     }
-    else {
+    وإلا {
       /* 'szmoda' = totalsize % align */
-      unsigned szmoda = cast_uint(totalsize & (align - 1));
+      بیعلامت szmoda = cast_uint(totalsize & (align - 1));
       *ntoalign = cast_uint((align - szmoda) & (align - 1));
     }
   }
-  return opt;
+  أرجع opt;
 }
 
 
@@ -1581,20 +1581,20 @@ static KOption getdetails (Header *h, size_t totalsize, const char **fmt,
 ** the size of a Lua integer, correcting the extra sign-extension
 ** bytes if necessary (by default they would be zeros).
 */
-static void packint (luaL_Buffer *b, lua_Unsigned n,
-                     int islittle, unsigned size, int neg) {
-  char *buff = luaL_prepbuffsize(b, size);
-  unsigned i;
-  buff[islittle ? 0 : size - 1] = (char)(n & MC);  /* first byte */
-  for (i = 1; i < size; i++) {
+ساكن فراغ packint (lua_L_میانگیر *b, lua_Unsigned n,
+                     صحيح islittle, بیعلامت اندازه, صحيح neg) {
+  حرف *buff = luaL_prepbuffsize(b, اندازه);
+  بیعلامت i;
+  buff[islittle ? 0 : اندازه - 1] = (حرف)(n & MC);  /* first byte */
+  لكل (i = 1; i < اندازه; i++) {
     n >>= NB;
-    buff[islittle ? i : size - 1 - i] = (char)(n & MC);
+    buff[islittle ? i : اندازه - 1 - i] = (حرف)(n & MC);
   }
-  if (neg && size > SZINT) {  /* negative number need sign extension? */
-    for (i = SZINT; i < size; i++)  /* correct extra bytes */
-      buff[islittle ? i : size - 1 - i] = (char)MC;
+  إذا (neg && اندازه > SZINT) {  /* negative number need sign extension? */
+    لكل (i = SZINT; i < اندازه; i++)  /* correct extra bytes */
+      buff[islittle ? i : اندازه - 1 - i] = (حرف)MC;
   }
-  luaL_addsize(b, size);  /* add result to buffer */
+  luaL_addsize(b, اندازه);  /* add result to buffer */
 }
 
 
@@ -1602,142 +1602,142 @@ static void packint (luaL_Buffer *b, lua_Unsigned n,
 ** Copy 'size' bytes from 'src' to 'dest', correcting endianness if
 ** given 'islittle' is different from native endianness.
 */
-static void copywithendian (char *dest, const char *src,
-                            unsigned size, int islittle) {
-  if (islittle == nativeendian.little)
-    memcpy(dest, src, size);
-  else {
-    dest += size - 1;
-    while (size-- != 0)
+ساكن فراغ copywithendian (حرف *dest, ثابت حرف *src,
+                            بیعلامت اندازه, صحيح islittle) {
+  إذا (islittle == nativeendian.little)
+    کپی_حافظه(dest, src, اندازه);
+  وإلا {
+    dest += اندازه - 1;
+    طالما (اندازه-- != 0)
       *(dest--) = *(src++);
   }
 }
 
 
-static int str_pack (lua_State *L) {
-  luaL_Buffer b;
-  Header h;
-  const char *fmt = luaL_checkstring(L, 1);  /* format string */
-  int arg = 1;  /* current argument to pack */
+ساكن صحيح str_pack (lua_State *L) {
+  lua_L_میانگیر b;
+  سرآیند h;
+  ثابت حرف *fmt = luaL_checkstring(L, 1);  /* format string */
+  صحيح arg = 1;  /* current argument to pack */
   size_t totalsize = 0;  /* accumulate total size of result */
   initheader(L, &h);
   lua_pushnil(L);  /* mark to separate arguments from string buffer */
   luaL_buffinit(L, &b);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
-    KOption opt = getdetails(&h, totalsize, &fmt, &size, &ntoalign);
-    luaL_argcheck(L, size + ntoalign <= MAX_SIZE - totalsize, arg,
+  طالما (*fmt != '\0') {
+    بیعلامت ntoalign;
+    size_t اندازه;
+    KOption opt = getdetails(&h, totalsize, &fmt, &اندازه, &ntoalign);
+    luaL_argcheck(L, اندازه + ntoalign <= MAX_اندازه - totalsize, arg,
                      "result too long");
-    totalsize += ntoalign + size;
-    while (ntoalign-- > 0)
+    totalsize += ntoalign + اندازه;
+    طالما (ntoalign-- > 0)
      luaL_addchar(&b, LUAL_PACKPADBYTE);  /* fill alignment */
     arg++;
-    switch (opt) {
-      case Kint: {  /* signed integers */
+    بدل (opt) {
+      حالة Kint: {  /* signed integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT) {  /* need overflow check? */
-          lua_Integer lim = (lua_Integer)1 << ((size * NB) - 1);
+        إذا (اندازه < SZINT) {  /* need overflow check? */
+          lua_Integer lim = (lua_Integer)1 << ((اندازه * NB) - 1);
           luaL_argcheck(L, -lim <= n && n < lim, arg, "integer overflow");
         }
-        packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(size), (n < 0));
-        break;
+        packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(اندازه), (n < 0));
+        اكسر;
       }
-      case Kuint: {  /* unsigned integers */
+      حالة Kuint: {  /* unsigned integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT)  /* need overflow check? */
-          luaL_argcheck(L, (lua_Unsigned)n < ((lua_Unsigned)1 << (size * NB)),
+        إذا (اندازه < SZINT)  /* need overflow check? */
+          luaL_argcheck(L, (lua_Unsigned)n < ((lua_Unsigned)1 << (اندازه * NB)),
                            arg, "unsigned overflow");
-        packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(size), 0);
-        break;
+        packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(اندازه), 0);
+        اكسر;
       }
-      case Kfloat: {  /* C float */
-        float f = (float)luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      حالة Kfloat: {  /* C float */
+        عائم f = (عائم)luaL_checknumber(L, arg);  /* get argument */
+        حرف *buff = luaL_prepbuffsize(&b, حجم(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
-        luaL_addsize(&b, size);
-        break;
+        copywithendian(buff, (حرف *)&f, حجم(f), h.islittle);
+        luaL_addsize(&b, اندازه);
+        اكسر;
       }
-      case Knumber: {  /* Lua float */
-        lua_Number f = luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      حالة Knumber: {  /* Lua float */
+        lua_عدد f = luaL_checknumber(L, arg);  /* get argument */
+        حرف *buff = luaL_prepbuffsize(&b, حجم(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
-        luaL_addsize(&b, size);
-        break;
+        copywithendian(buff, (حرف *)&f, حجم(f), h.islittle);
+        luaL_addsize(&b, اندازه);
+        اكسر;
       }
-      case Kdouble: {  /* C double */
-        double f = (double)luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      حالة Kdouble: {  /* C double */
+        مزدوج f = (مزدوج)luaL_checknumber(L, arg);  /* get argument */
+        حرف *buff = luaL_prepbuffsize(&b, حجم(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
-        luaL_addsize(&b, size);
-        break;
+        copywithendian(buff, (حرف *)&f, حجم(f), h.islittle);
+        luaL_addsize(&b, اندازه);
+        اكسر;
       }
-      case Kchar: {  /* fixed-size string */
+      حالة Kchar: {  /* fixed-size string */
         size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
-        luaL_argcheck(L, len <= size, arg, "string longer than given size");
+        ثابت حرف *s = luaL_checklstring(L, arg, &len);
+        luaL_argcheck(L, len <= اندازه, arg, "string longer than given size");
         luaL_addlstring(&b, s, len);  /* add string */
-        if (len < size) {  /* does it need padding? */
-          size_t psize = size - len;  /* pad size */
-          char *buff = luaL_prepbuffsize(&b, psize);
+        إذا (len < اندازه) {  /* does it need padding? */
+          size_t psize = اندازه - len;  /* pad size */
+          حرف *buff = luaL_prepbuffsize(&b, psize);
           memset(buff, LUAL_PACKPADBYTE, psize);
           luaL_addsize(&b, psize);
         }
-        break;
+        اكسر;
       }
-      case Kstring: {  /* strings with length count */
+      حالة Kstring: {  /* strings with length count */
         size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
-        luaL_argcheck(L, size >= sizeof(lua_Unsigned) ||
-                         len < ((lua_Unsigned)1 << (size * NB)),
+        ثابت حرف *s = luaL_checklstring(L, arg, &len);
+        luaL_argcheck(L, اندازه >= حجم(lua_Unsigned) ||
+                         len < ((lua_Unsigned)1 << (اندازه * NB)),
                          arg, "string length does not fit in given size");
         /* pack length */
-        packint(&b, (lua_Unsigned)len, h.islittle, cast_uint(size), 0);
+        packint(&b, (lua_Unsigned)len, h.islittle, cast_uint(اندازه), 0);
         luaL_addlstring(&b, s, len);
         totalsize += len;
-        break;
+        اكسر;
       }
-      case Kzstr: {  /* zero-terminated string */
+      حالة Kzstr: {  /* zero-terminated string */
         size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
-        luaL_argcheck(L, strlen(s) == len, arg, "string contains zeros");
+        ثابت حرف *s = luaL_checklstring(L, arg, &len);
+        luaL_argcheck(L, طول_رشته(s) == len, arg, "string contains zeros");
         luaL_addlstring(&b, s, len);
         luaL_addchar(&b, '\0');  /* add zero at the end */
         totalsize += len + 1;
-        break;
+        اكسر;
       }
-      case Kpadding: luaL_addchar(&b, LUAL_PACKPADBYTE);  /* FALLTHROUGH */
-      case Kpaddalign: case Knop:
+      حالة Kpadding: luaL_addchar(&b, LUAL_PACKPADBYTE);  /* FALLTHROUGH */
+      حالة Kpaddalign: حالة Knop:
         arg--;  /* undo increment */
-        break;
+        اكسر;
     }
   }
   luaL_pushresult(&b);
-  return 1;
+  أرجع 1;
 }
 
 
-static int str_packsize (lua_State *L) {
-  Header h;
-  const char *fmt = luaL_checkstring(L, 1);  /* format string */
+ساكن صحيح str_packsize (lua_State *L) {
+  سرآیند h;
+  ثابت حرف *fmt = luaL_checkstring(L, 1);  /* format string */
   size_t totalsize = 0;  /* accumulate total size of result */
   initheader(L, &h);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
-    KOption opt = getdetails(&h, totalsize, &fmt, &size, &ntoalign);
+  طالما (*fmt != '\0') {
+    بیعلامت ntoalign;
+    size_t اندازه;
+    KOption opt = getdetails(&h, totalsize, &fmt, &اندازه, &ntoalign);
     luaL_argcheck(L, opt != Kstring && opt != Kzstr, 1,
                      "variable-length format");
-    size += ntoalign;  /* total space used by option */
-    luaL_argcheck(L, totalsize <= MAX_SIZE - size,
+    اندازه += ntoalign;  /* total space used by option */
+    luaL_argcheck(L, totalsize <= MAX_اندازه - اندازه,
                      1, "format result too large");
-    totalsize += size;
+    totalsize += اندازه;
   }
   lua_pushinteger(L, cast_st2S(totalsize));
-  return 1;
+  أرجع 1;
 }
 
 
@@ -1749,152 +1749,152 @@ static int str_packsize (lua_State *L) {
 ** it must check the unread bytes to see whether they do not cause an
 ** overflow.
 */
-static lua_Integer unpackint (lua_State *L, const char *str,
-                              int islittle, int size, int issigned) {
+ساكن lua_Integer unpackint (lua_State *L, ثابت حرف *str,
+                              صحيح islittle, صحيح اندازه, صحيح issigned) {
   lua_Unsigned res = 0;
-  int i;
-  int limit = (size  <= SZINT) ? size : SZINT;
-  for (i = limit - 1; i >= 0; i--) {
+  صحيح i;
+  صحيح حد = (اندازه  <= SZINT) ? اندازه : SZINT;
+  لكل (i = حد - 1; i >= 0; i--) {
     res <<= NB;
-    res |= (lua_Unsigned)(unsigned char)str[islittle ? i : size - 1 - i];
+    res |= (lua_Unsigned)(بیعلامت حرف)str[islittle ? i : اندازه - 1 - i];
   }
-  if (size < SZINT) {  /* real size smaller than lua_Integer? */
-    if (issigned) {  /* needs sign extension? */
-      lua_Unsigned mask = (lua_Unsigned)1 << (size*NB - 1);
-      res = ((res ^ mask) - mask);  /* do sign extension */
+  إذا (اندازه < SZINT) {  /* real size smaller than lua_Integer? */
+    إذا (issigned) {  /* needs sign extension? */
+      lua_Unsigned ماسک_2 = (lua_Unsigned)1 << (اندازه*NB - 1);
+      res = ((res ^ ماسک_2) - ماسک_2);  /* do sign extension */
     }
   }
-  else if (size > SZINT) {  /* must check unread bytes */
-    int mask = (!issigned || (lua_Integer)res >= 0) ? 0 : MC;
-    for (i = limit; i < size; i++) {
-      if (l_unlikely((unsigned char)str[islittle ? i : size - 1 - i] != mask))
-        luaL_error(L, "%d-byte integer does not fit into Lua Integer", size);
+  وإلا إذا (اندازه > SZINT) {  /* must check unread bytes */
+    صحيح ماسک_2 = (!issigned || (lua_Integer)res >= 0) ? 0 : MC;
+    لكل (i = حد; i < اندازه; i++) {
+      إذا (l_unlikely((بیعلامت حرف)str[islittle ? i : اندازه - 1 - i] != ماسک_2))
+        luaL_error(L, "%d-byte integer does not fit into Lua Integer", اندازه);
     }
   }
-  return (lua_Integer)res;
+  أرجع (lua_Integer)res;
 }
 
 
-static int str_unpack (lua_State *L) {
-  Header h;
-  const char *fmt = luaL_checkstring(L, 1);
+ساكن صحيح str_unpack (lua_State *L) {
+  سرآیند h;
+  ثابت حرف *fmt = luaL_checkstring(L, 1);
   size_t ld;
-  const char *data = luaL_checklstring(L, 2, &ld);
+  ثابت حرف *داده = luaL_checklstring(L, 2, &ld);
   size_t pos = posrelatI(luaL_optinteger(L, 3, 1), ld) - 1;
-  int n = 0;  /* number of results */
+  صحيح n = 0;  /* number of results */
   luaL_argcheck(L, pos <= ld, 3, "initial position out of string");
   initheader(L, &h);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
-    KOption opt = getdetails(&h, pos, &fmt, &size, &ntoalign);
-    luaL_argcheck(L, ntoalign + size <= ld - pos, 2,
+  طالما (*fmt != '\0') {
+    بیعلامت ntoalign;
+    size_t اندازه;
+    KOption opt = getdetails(&h, pos, &fmt, &اندازه, &ntoalign);
+    luaL_argcheck(L, ntoalign + اندازه <= ld - pos, 2,
                     "data string too short");
     pos += ntoalign;  /* skip alignment */
     /* stack space for item + next position */
     luaL_checkstack(L, 2, "too many results");
     n++;
-    switch (opt) {
-      case Kint:
-      case Kuint: {
-        lua_Integer res = unpackint(L, data + pos, h.islittle,
-                                       cast_int(size), (opt == Kint));
+    بدل (opt) {
+      حالة Kint:
+      حالة Kuint: {
+        lua_Integer res = unpackint(L, داده + pos, h.islittle,
+                                       cast_int(اندازه), (opt == Kint));
         lua_pushinteger(L, res);
-        break;
+        اكسر;
       }
-      case Kfloat: {
-        float f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
-        break;
+      حالة Kfloat: {
+        عائم f;
+        copywithendian((حرف *)&f, داده + pos, حجم(f), h.islittle);
+        lua_pushnumber(L, (lua_عدد)f);
+        اكسر;
       }
-      case Knumber: {
-        lua_Number f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
+      حالة Knumber: {
+        lua_عدد f;
+        copywithendian((حرف *)&f, داده + pos, حجم(f), h.islittle);
         lua_pushnumber(L, f);
-        break;
+        اكسر;
       }
-      case Kdouble: {
-        double f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
-        break;
+      حالة Kdouble: {
+        مزدوج f;
+        copywithendian((حرف *)&f, داده + pos, حجم(f), h.islittle);
+        lua_pushnumber(L, (lua_عدد)f);
+        اكسر;
       }
-      case Kchar: {
-        lua_pushlstring(L, data + pos, size);
-        break;
+      حالة Kchar: {
+        lua_pushlstring(L, داده + pos, اندازه);
+        اكسر;
       }
-      case Kstring: {
-        lua_Unsigned len = (lua_Unsigned)unpackint(L, data + pos,
-                                          h.islittle, cast_int(size), 0);
-        luaL_argcheck(L, len <= ld - pos - size, 2, "data string too short");
-        lua_pushlstring(L, data + pos + size, cast_sizet(len));
+      حالة Kstring: {
+        lua_Unsigned len = (lua_Unsigned)unpackint(L, داده + pos,
+                                          h.islittle, cast_int(اندازه), 0);
+        luaL_argcheck(L, len <= ld - pos - اندازه, 2, "data string too short");
+        lua_pushlstring(L, داده + pos + اندازه, cast_sizet(len));
         pos += cast_sizet(len);  /* skip string */
-        break;
+        اكسر;
       }
-      case Kzstr: {
-        size_t len = strlen(data + pos);
+      حالة Kzstr: {
+        size_t len = طول_رشته(داده + pos);
         luaL_argcheck(L, pos + len < ld, 2,
                          "unfinished string for format 'z'");
-        lua_pushlstring(L, data + pos, len);
+        lua_pushlstring(L, داده + pos, len);
         pos += len + 1;  /* skip string plus final '\0' */
-        break;
+        اكسر;
       }
-      case Kpaddalign: case Kpadding: case Knop:
+      حالة Kpaddalign: حالة Kpadding: حالة Knop:
         n--;  /* undo increment */
-        break;
+        اكسر;
     }
-    pos += size;
+    pos += اندازه;
   }
   lua_pushinteger(L, cast_st2S(pos) + 1);  /* next position */
-  return n + 1;
+  أرجع n + 1;
 }
 
 /* }====================================================== */
 
 
-static const luaL_Reg strlib[] = {
+ساكن ثابت luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
   {"dump", str_dump},
-  {"find", str_find},
+  {"find", str_پیدا_کن},
   {"format", str_format},
   {"gmatch", gmatch},
   {"gsub", str_gsub},
   {"len", str_len},
-  {"lower", str_lower},
-  {"match", str_match},
+  {"lower", str_پایینی},
+  {"match", str_تطابق},
   {"rep", str_rep},
-  {"reverse", str_reverse},
+  {"reverse", str_معکوس},
   {"sub", str_sub},
-  {"upper", str_upper},
+  {"upper", str_فوقانی},
   {"pack", str_pack},
   {"packsize", str_packsize},
   {"unpack", str_unpack},
-  {NULL, NULL}
+  {عدم, عدم}
 };
 
 
-static void createmetatable (lua_State *L) {
+ساكن فراغ createmetatable (lua_State *L) {
   /* table to be metatable for strings */
   luaL_newlibtable(L, stringmetamethods);
   luaL_setfuncs(L, stringmetamethods, 0);
   lua_pushliteral(L, "");  /* dummy string */
   lua_pushvalue(L, -2);  /* copy table */
   lua_setmetatable(L, -2);  /* set table as metatable for strings */
-  lua_pop(L, 1);  /* pop dummy string */
+  lua_برداشت(L, 1);  /* pop dummy string */
   lua_pushvalue(L, -2);  /* get string library */
   lua_setfield(L, -2, "__index");  /* metatable.__index = string */
-  lua_pop(L, 1);  /* pop metatable */
+  lua_برداشت(L, 1);  /* pop metatable */
 }
 
 
 /*
 ** Open string library
 */
-LUAMOD_API int luaopen_string (lua_State *L) {
+LUAMOD_API صحيح luaopen_string (lua_State *L) {
   luaL_newlib(L, strlib);
   createmetatable(L);
-  return 1;
+  أرجع 1;
 }
 

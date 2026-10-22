@@ -4,18 +4,18 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llimits_h
-#define llimits_h
+#اگر_تعریف_نشده llimits_h
+#تعریف_کن llimits_h
 
 
-#include <limits.h>
-#include <stddef.h>
+#ضمن <limits.h>
+#ضمن <stddef.h>
 
 
-#include "lua.h"
+#ضمن "lua.h"
 
 
-#define l_numbits(t)	cast_int(sizeof(t) * CHAR_BIT)
+#تعریف_کن l_numbits(t)	cast_int(حجم(t) * CHAR_BIT)
 
 /*
 ** 'l_mem' is a signed integer big enough to count the total memory
@@ -23,50 +23,50 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
-typedef LUAI_MEM l_mem;
-typedef LUAI_UMEM lu_mem;
-#elif LUAI_IS32INT	/* }{ */
-typedef ptrdiff_t l_mem;
-typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
-typedef long l_mem;
-typedef unsigned long lu_mem;
-#endif				/* } */
+#إذا defined(LUAI_MEM)		/* { external definitions? */
+تعريفنوع LUAI_MEM l_mem;
+تعريفنوع LUAI_UMEM lu_mem;
+#وإلاإذا LUAI_IS32INT	/* }{ */
+تعريفنوع ptrdiff_t l_mem;
+تعريفنوع size_t lu_mem;
+#وإلا  /* 16-bit ints */	/* }{ */
+تعريفنوع دراز l_mem;
+تعريفنوع بیعلامت دراز lu_mem;
+#پایان_اگر				/* } */
 
-#define MAX_LMEM  \
+#تعریف_کن MAX_LMEM  \
 	cast(l_mem, (cast(lu_mem, 1) << (l_numbits(l_mem) - 1)) - 1)
 
 
 /* chars used as small naturals (so that 'char' is reserved for characters) */
-typedef unsigned char lu_byte;
-typedef signed char ls_byte;
+تعريفنوع بیعلامت حرف lu_byte;
+تعريفنوع علامتدار حرف ls_byte;
 
 
 /* Type for thread status/error codes */
-typedef lu_byte TStatus;
+تعريفنوع lu_byte TStatus;
 
 /* The C API still uses 'int' for status/error codes */
-#define APIstatus(st)	cast_int(st)
+#تعریف_کن APIstatus(st)	cast_int(st)
 
 /* maximum value for size_t */
-#define MAX_SIZET	((size_t)(~(size_t)0))
+#تعریف_کن MAX_SIZET	((size_t)(~(size_t)0))
 
 /*
 ** Maximum size for strings and userdata visible for Lua; should be
 ** representable as a lua_Integer and as a size_t.
 */
-#define MAX_SIZE	(sizeof(size_t) < sizeof(lua_Integer) ? MAX_SIZET \
+#تعریف_کن MAX_اندازه	(حجم(size_t) < حجم(lua_Integer) ? MAX_SIZET \
 			  : cast_sizet(LUA_MAXINTEGER))
 
 /*
 ** test whether an unsigned value is a power of 2 (or zero)
 */
-#define ispow2(x)	(((x) & ((x) - 1)) == 0)
+#تعریف_کن ispow2(x)	(((x) & ((x) - 1)) == 0)
 
 
 /* number of chars of a literal string without the ending \0 */
-#define LL(x)   (sizeof(x)/sizeof(char) - 1)
+#تعریف_کن LL(x)   (حجم(x)/حجم(حرف) - 1)
 
 
 /*
@@ -75,157 +75,157 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#إذا !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
-#define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
-#define L_P2I	uintmax_t  /* use the largest available integer */
-#endif
-#else  /* C89 option */
-#define L_P2I	size_t
-#endif
+#ضمن <stdint.h>
+#إذا defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#تعریف_کن L_P2I	uintptr_t
+#وإلا  /* no 'intptr'? */
+#تعریف_کن L_P2I	uintmax_t  /* use the largest available integer */
+#پایان_اگر
+#وإلا  /* C89 option */
+#تعریف_کن L_P2I	size_t
+#پایان_اگر
 
-#define point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
+#تعریف_کن point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
 
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+تعريفنوع LUAI_UACNUMBER l_uac_عدد;
+تعريفنوع LUAI_UACINT l_uacInt;
 
 
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
-#undef NDEBUG
-#include <assert.h>
-#define lua_assert(c)           assert(c)
-#define assert_code(c)		c
-#endif
+#إذا defined LUAI_ASSERT
+#لغو_تعریف NDEBUG
+#ضمن <assert.h>
+#تعریف_کن lua_assert(c)           أكد(c)
+#تعریف_کن assert_کد(c)		c
+#پایان_اگر
 
-#if defined(lua_assert)
-#else
-#define lua_assert(c)		((void)0)
-#define assert_code(c)		((void)0)
-#endif
+#إذا defined(lua_assert)
+#وإلا
+#تعریف_کن lua_assert(c)		((فراغ)0)
+#تعریف_کن assert_کد(c)		((فراغ)0)
+#پایان_اگر
 
-#define check_exp(c,e)		(lua_assert(c), (e))
+#تعریف_کن check_exp(c,e)		(lua_assert(c), (e))
 /* to avoid problems with conditions too long */
-#define lua_longassert(c)	assert_code((c) ? (void)0 : lua_assert(0))
+#تعریف_کن lua_longassert(c)	assert_کد((c) ? (فراغ)0 : lua_assert(0))
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
-#define UNUSED(x)	((void)(x))
-#endif
+#إذا !defined(استفادهنشده)
+#تعریف_کن استفادهنشده(x)	((فراغ)(x))
+#پایان_اگر
 
 
 /* type casts (a macro highlights casts in the code) */
-#define cast(t, exp)	((t)(exp))
+#تعریف_کن cast(t, نمایی_تابع)	((t)(نمایی_تابع))
 
-#define cast_void(i)	cast(void, (i))
-#define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
-#define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
-#define cast_byte(i)	cast(lu_byte, (i))
-#define cast_uchar(i)	cast(unsigned char, (i))
-#define cast_char(i)	cast(char, (i))
-#define cast_charp(i)	cast(char *, (i))
-#define cast_sizet(i)	cast(size_t, (i))
-#define cast_Integer(i)	cast(lua_Integer, (i))
-#define cast_Inst(i)	cast(Instruction, (i))
+#تعریف_کن cast_void(i)	cast(فراغ, (i))
+#تعریف_کن cast_voidp(i)	cast(فراغ *, (i))
+#تعریف_کن cast_رقم(i)	cast(lua_عدد, (i))
+#تعریف_کن cast_int(i)	cast(صحيح, (i))
+#تعریف_کن cast_short(i)	cast(کوتاه, (i))
+#تعریف_کن cast_uint(i)	cast(بیعلامت صحيح, (i))
+#تعریف_کن cast_byte(i)	cast(lu_byte, (i))
+#تعریف_کن cast_uchar(i)	cast(بیعلامت حرف, (i))
+#تعریف_کن cast_char(i)	cast(حرف, (i))
+#تعریف_کن cast_charp(i)	cast(حرف *, (i))
+#تعریف_کن cast_sizet(i)	cast(size_t, (i))
+#تعریف_کن cast_Integer(i)	cast(lua_Integer, (i))
+#تعریف_کن cast_Inst(i)	cast(Instruction, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
-#define l_castS2U(i)	((lua_Unsigned)(i))
-#endif
+#إذا !defined(l_castS2U)
+#تعریف_کن l_castS2U(i)	((lua_Unsigned)(i))
+#پایان_اگر
 
 /*
 ** cast a lua_Unsigned to a signed lua_Integer; this cast is
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
-#define l_castU2S(i)	((lua_Integer)(i))
-#endif
+#إذا !defined(l_castU2S)
+#تعریف_کن l_castU2S(i)	((lua_Integer)(i))
+#پایان_اگر
 
 /*
 ** cast a size_t to lua_Integer: These casts are always valid for
 ** sizes of Lua objects (see MAX_SIZE)
 */
-#define cast_st2S(sz)	((lua_Integer)(sz))
+#تعریف_کن cast_st2S(sz)	((lua_Integer)(sz))
 
 /* Cast a ptrdiff_t to size_t, when it is known that the minuend
 ** comes from the subtrahend (the base)
 */
-#define ct_diff2sz(df)	((size_t)(df))
+#تعریف_کن ct_diff2sz(df)	((size_t)(df))
 
 /* ptrdiff_t to lua_Integer */
-#define ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
+#تعریف_کن ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
 
 /*
 ** Special type equivalent to '(void*)' for functions (to suppress some
 ** warnings when converting function pointers)
 */
-typedef void (*voidf)(void);
+تعريفنوع فراغ (*voidf)(فراغ);
 
 /*
 ** Macro to convert pointer-to-void* to pointer-to-function. This cast
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
-#define cast_func(p) (__extension__ (voidf)(p))
-#else
-#define cast_func(p) ((voidf)(p))
-#endif
+#إذا defined(__GNUC__)
+#تعریف_کن cast_func(p) (__extension__ (voidf)(p))
+#وإلا
+#تعریف_کن cast_func(p) ((voidf)(p))
+#پایان_اگر
 
 
 
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#إذا !defined(l_noret)
 
-#if defined(__GNUC__)
-#define l_noret		void __attribute__((noreturn))
-#elif defined(_MSC_VER) && _MSC_VER >= 1200
-#define l_noret		void __declspec(noreturn)
-#else
-#define l_noret		void
-#endif
+#إذا defined(__GNUC__)
+#تعریف_کن l_noret		فراغ __attribute__((noreturn))
+#وإلاإذا defined(_MSC_VER) && _MSC_VER >= 1200
+#تعریف_کن l_noret		فراغ __declspec(noreturn)
+#وإلا
+#تعریف_کن l_noret		فراغ
+#پایان_اگر
 
-#endif
+#پایان_اگر
 
 
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
-#define l_inline	inline
-#elif defined(__GNUC__)
-#define l_inline	__inline__
-#else
-#define l_inline	/* empty */
-#endif
+#إذا !defined(LUA_USE_C89)
+#تعریف_کن l_inline	مضمن
+#وإلاإذا defined(__GNUC__)
+#تعریف_کن l_inline	__inline__
+#وإلا
+#تعریف_کن l_inline	/*خالی*/
+#پایان_اگر
 
-#define l_sinline	static l_inline
+#تعریف_کن l_sinline	ساكن l_inline
 
 
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
-typedef unsigned long l_uint32;
-#endif
+#إذا LUAI_IS32INT
+تعريفنوع بیعلامت صحيح l_uint32;
+#وإلا
+تعريفنوع بیعلامت دراز l_uint32;
+#پایان_اگر
 
 
 /*
@@ -233,14 +233,14 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
-#define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
-#endif
+#إذا !defined(luai_numidiv)
+#تعریف_کن luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
+#پایان_اگر
 
 /* float division */
-#if !defined(luai_numdiv)
-#define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
-#endif
+#إذا !defined(luai_numdiv)
+#تعریف_کن luai_numdiv(L,a,b)      ((فراغ)L, (a)/(b))
+#پایان_اگر
 
 /*
 ** modulo: defined as 'a - floor(a/b)*b'; the direct computation
@@ -253,31 +253,31 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
-#define luai_nummod(L,a,b,m)  \
-  { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
-#endif
+#إذا !defined(luai_nummod)
+#تعریف_کن luai_nummod(L,a,b,m)  \
+  { (فراغ)L; (m) = l_mathop(fmod)(a,b); \
+    إذا (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+#پایان_اگر
 
 /* exponentiation */
-#if !defined(luai_numpow)
-#define luai_numpow(L,a,b)  \
-  ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
-#endif
+#إذا !defined(luai_numpow)
+#تعریف_کن luai_numpow(L,a,b)  \
+  ((فراغ)L, (b == 2) ? (a)*(a) : l_mathop(توان)(a,b))
+#پایان_اگر
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
-#define luai_numadd(L,a,b)      ((void)L, (a)+(b))
-#define luai_numsub(L,a,b)      ((void)L, (a)-(b))
-#define luai_nummul(L,a,b)      ((void)L, (a)*(b))
-#define luai_numunm(L,a)        ((void)L, -(a))
-#define luai_numeq(a,b)         ((a)==(b))
-#define luai_numlt(a,b)         ((a)<(b))
-#define luai_numle(a,b)         ((a)<=(b))
-#define luai_numgt(a,b)         ((a)>(b))
-#define luai_numge(a,b)         ((a)>=(b))
-#define luai_numisnan(a)        (!luai_numeq((a), (a)))
-#endif
+#إذا !defined(luai_numadd)
+#تعریف_کن luai_numadd(L,a,b)      ((فراغ)L, (a)+(b))
+#تعریف_کن luai_numsub(L,a,b)      ((فراغ)L, (a)-(b))
+#تعریف_کن luai_nummul(L,a,b)      ((فراغ)L, (a)*(b))
+#تعریف_کن luai_numunm(L,a)        ((فراغ)L, -(a))
+#تعریف_کن luai_numeq(a,b)         ((a)==(b))
+#تعریف_کن luai_numlt(a,b)         ((a)<(b))
+#تعریف_کن luai_numle(a,b)         ((a)<=(b))
+#تعریف_کن luai_numgt(a,b)         ((a)>(b))
+#تعریف_کن luai_numge(a,b)         ((a)>=(b))
+#تعریف_کن luai_numisnan(a)        (!luai_numeq((a), (a)))
+#پایان_اگر
 
 
 
@@ -290,9 +290,9 @@ typedef unsigned long l_uint32;
 ** MAXINTEGER may not have one, and therefore its conversion to float
 ** may have an ill-defined value.)
 */
-#define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+#تعریف_کن lua_numbertointeger(n,p) \
+  ((n) >= (LUA_عدد)(LUA_MININTEGER) && \
+   (n) < -(LUA_عدد)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 
@@ -310,24 +310,24 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#إذا !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#إذا defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
-#define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
-#define LUAI_FUNC	extern
-#endif
+#تعریف_کن LUAI_FUNC	__attribute__((visibility("internal"))) خارجي
+#وإلا
+#تعریف_کن LUAI_FUNC	خارجي
+#پایان_اگر
 
-#define LUAI_DDEC(dec)	LUAI_FUNC dec
-#define LUAI_DDEF	/* empty */
+#تعریف_کن LUAI_DDEC(dec)	LUAI_FUNC dec
+#تعریف_کن LUAI_DDEF	/*خالی*/
 
-#endif
+#پایان_اگر
 
 
 /* Give these macros simpler names for internal use */
-#define l_likely(x)	luai_likely(x)
-#define l_unlikely(x)	luai_unlikely(x)
+#تعریف_کن l_likely(x)	luai_likely(x)
+#تعریف_کن l_unlikely(x)	luai_unlikely(x)
 
 /*
 ** {==================================================================
@@ -336,22 +336,22 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
-#endif
+#إذا !defined(lua_writestring)
+#تعریف_کن lua_writestring(s,l)   fwrite((s), حجم(حرف), (l), stdout)
+#پایان_اگر
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
-#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
-#endif
+#إذا !defined(lua_writeline)
+#تعریف_کن lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
+#پایان_اگر
 
 /* print an error message */
-#if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
+#إذا !defined(lua_writestringerror)
+#تعریف_کن lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
+#پایان_اگر
 
 /* }================================================================== */
 
-#endif
+#پایان_اگر
 

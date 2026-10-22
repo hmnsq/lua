@@ -4,17 +4,17 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lmem_h
-#define lmem_h
+#اگر_تعریف_نشده lmem_h
+#تعریف_کن lmem_h
 
 
-#include <stddef.h>
+#ضمن <stddef.h>
 
-#include "llimits.h"
-#include "lua.h"
+#ضمن "llimits.h"
+#ضمن "lua.h"
 
 
-#define luaM_error(L)	luaD_throw(L, LUA_ERRMEM)
+#تعریف_کن luaM_error(L)	luaD_throw(L, LUA_ERRMEM)
 
 
 /*
@@ -28,10 +28,10 @@
 ** false due to limited range of data type"; the +1 tricks the compiler,
 ** avoiding this warning but also this optimization.)
 */
-#define luaM_testsize(n,e)  \
-	(sizeof(n) >= sizeof(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
+#تعریف_کن luaM_testsize(n,e)  \
+	(حجم(n) >= حجم(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
 
-#define luaM_checksize(L,n,e)  \
+#تعریف_کن luaM_checksize(L,n,e)  \
 	(luaM_testsize(n,e) ? luaM_toobig(L) : cast_void(0))
 
 
@@ -41,56 +41,56 @@
 ** when multiplied by the size of type 't'. (Assumes that 'n' is an
 ** 'int' and that 'int' is not larger than 'size_t'.)
 */
-#define luaM_limitN(n,t)  \
-  ((cast_sizet(n) <= MAX_SIZET/sizeof(t)) ? (n) :  \
-     cast_int((MAX_SIZET/sizeof(t))))
+#تعریف_کن lua_M_حد_N(n,t)  \
+  ((cast_sizet(n) <= MAX_SIZET/حجم(t)) ? (n) :  \
+     cast_int((MAX_SIZET/حجم(t))))
 
 
 /*
 ** Arrays of chars do not need any test
 */
-#define luaM_reallocvchar(L,b,on,n)  \
-  cast_charp(luaM_saferealloc_(L, (b), (on)*sizeof(char), (n)*sizeof(char)))
+#تعریف_کن luaM_reallocvchar(L,b,on,n)  \
+  cast_charp(luaM_saferealloc_(L, (b), (on)*حجم(حرف), (n)*حجم(حرف)))
 
-#define luaM_freemem(L, b, s)	luaM_free_(L, (b), (s))
-#define luaM_free(L, b)		luaM_free_(L, (b), sizeof(*(b)))
-#define luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*sizeof(*(b)))
+#تعریف_کن luaM_freemem(L, b, s)	luaM_free_(L, (b), (s))
+#تعریف_کن luaM_free(L, b)		luaM_free_(L, (b), حجم(*(b)))
+#تعریف_کن luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*حجم(*(b)))
 
-#define luaM_new(L,t)		cast(t*, luaM_malloc_(L, sizeof(t), 0))
-#define luaM_newvector(L,n,t)  \
-	cast(t*, luaM_malloc_(L, cast_sizet(n)*sizeof(t), 0))
-#define luaM_newvectorchecked(L,n,t) \
-  (luaM_checksize(L,n,sizeof(t)), luaM_newvector(L,n,t))
+#تعریف_کن luaM_new(L,t)		cast(t*, luaM_malloc_(L, حجم(t), 0))
+#تعریف_کن luaM_newvector(L,n,t)  \
+	cast(t*, luaM_malloc_(L, cast_sizet(n)*حجم(t), 0))
+#تعریف_کن luaM_newvectorchecked(L,n,t) \
+  (luaM_checksize(L,n,حجم(t)), luaM_newvector(L,n,t))
 
-#define luaM_newobject(L,tag,s)	luaM_malloc_(L, (s), tag)
+#تعریف_کن luaM_newobject(L,برچسب,s)	luaM_malloc_(L, (s), برچسب)
 
-#define luaM_newblock(L, size)	luaM_newvector(L, size, char)
+#تعریف_کن luaM_newblock(L, اندازه)	luaM_newvector(L, اندازه, حرف)
 
-#define luaM_growvector(L,v,nelems,size,t,limit,e) \
-	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(size),sizeof(t), \
-                         luaM_limitN(limit,t),e)))
+#تعریف_کن luaM_growvector(L,v,nelems,اندازه,t,حد,e) \
+	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(اندازه),حجم(t), \
+                         lua_M_حد_N(حد,t),e)))
 
-#define luaM_reallocvector(L, v,oldn,n,t) \
-   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * sizeof(t), \
-                                  cast_sizet(n) * sizeof(t))))
+#تعریف_کن luaM_reallocvector(L, v,oldn,n,t) \
+   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * حجم(t), \
+                                  cast_sizet(n) * حجم(t))))
 
-#define luaM_shrinkvector(L,v,size,fs,t) \
-   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(size), fs, sizeof(t))))
+#تعریف_کن luaM_shrinkvector(L,v,اندازه,fs,t) \
+   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(اندازه), fs, حجم(t))))
 
 LUAI_FUNC l_noret luaM_toobig (lua_State *L);
 
 /* not to be called directly */
-LUAI_FUNC void *luaM_realloc_ (lua_State *L, void *block, size_t oldsize,
-                                                          size_t size);
-LUAI_FUNC void *luaM_saferealloc_ (lua_State *L, void *block, size_t oldsize,
-                                                              size_t size);
-LUAI_FUNC void luaM_free_ (lua_State *L, void *block, size_t osize);
-LUAI_FUNC void *luaM_growaux_ (lua_State *L, void *block, int nelems,
-                               int *size, unsigned size_elem, int limit,
-                               const char *what);
-LUAI_FUNC void *luaM_shrinkvector_ (lua_State *L, void *block, int *nelem,
-                                    int final_n, unsigned size_elem);
-LUAI_FUNC void *luaM_malloc_ (lua_State *L, size_t size, int tag);
+LUAI_FUNC فراغ *luaM_realloc_ (lua_State *L, فراغ *بلوک, size_t oldsize,
+                                                          size_t اندازه);
+LUAI_FUNC فراغ *luaM_saferealloc_ (lua_State *L, فراغ *بلوک, size_t oldsize,
+                                                              size_t اندازه);
+LUAI_FUNC فراغ luaM_free_ (lua_State *L, فراغ *بلوک, size_t osize);
+LUAI_FUNC فراغ *luaM_growaux_ (lua_State *L, فراغ *بلوک, صحيح nelems,
+                               صحيح *اندازه, بیعلامت اندازه_elem, صحيح حد,
+                               ثابت حرف *what);
+LUAI_FUNC فراغ *luaM_shrinkvector_ (lua_State *L, فراغ *بلوک, صحيح *nelem,
+                                    صحيح final_n, بیعلامت اندازه_elem);
+LUAI_FUNC فراغ *luaM_malloc_ (lua_State *L, size_t اندازه, صحيح برچسب);
 
-#endif
+#پایان_اگر
 

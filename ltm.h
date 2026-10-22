@@ -4,25 +4,25 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ltm_h
-#define ltm_h
+#اگر_تعریف_نشده ltm_h
+#تعریف_کن ltm_h
 
 
-#include "lobject.h"
+#ضمن "lobject.h"
 
 
 /*
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER TM" and "ORDER OP"
 */
-typedef enum {
-  TM_INDEX,
+تعريفنوع تعداد {
+  TM_شاخص,
   TM_NEWINDEX,
   TM_GC,
-  TM_MODE,
+  TM_نما,
   TM_LEN,
   TM_EQ,  /* last tag method with fast access */
-  TM_ADD,
+  TM_جمع_کن,
   TM_SUB,
   TM_MUL,
   TM_MOD,
@@ -51,55 +51,55 @@ typedef enum {
 ** corresponding metamethod field. (Bit 6 of the flag indicates that
 ** the table is using the dummy node.)
 */
-#define maskflags	cast_byte(~(~0u << (TM_EQ + 1)))
+#تعریف_کن maskflags	cast_byte(~(~0u << (TM_EQ + 1)))
 
 
 /*
 ** Test whether there is no tagmethod.
 ** (Because tagmethods use raw accesses, the result may be an "empty" nil.)
 */
-#define notm(tm)	ttisnil(tm)
+#تعریف_کن notm(tm)	ttisnil(tm)
 
-#define checknoTM(mt,e)	((mt) == NULL || (mt)->flags & (1u<<(e)))
+#تعریف_کن checknoTM(mt,e)	((mt) == عدم || (mt)->flags & (1u<<(e)))
 
-#define gfasttm(g,mt,e)  \
-  (checknoTM(mt, e) ? NULL : luaT_gettm(mt, e, (g)->tmname[e]))
+#تعریف_کن gfasttm(g,mt,e)  \
+  (checknoTM(mt, e) ? عدم : luaT_gettm(mt, e, (g)->tmname[e]))
 
-#define fasttm(l,mt,e)	gfasttm(G(l), mt, e)
+#تعریف_کن fasttm(l,mt,e)	gfasttm(G(l), mt, e)
 
-#define ttypename(x)	luaT_typenames_[(x) + 1]
+#تعریف_کن ttypename(x)	luaT_typenames_[(x) + 1]
 
-LUAI_DDEC(const char *const luaT_typenames_[LUA_TOTALTYPES];)
+LUAI_DDEC(ثابت حرف *ثابت luaT_typenames_[LUA_TOTALTYPES];)
 
 
-LUAI_FUNC const char *luaT_objtypename (lua_State *L, const TValue *o);
+LUAI_FUNC ثابت حرف *luaT_objtypename (lua_State *L, ثابت TValue *o);
 
-LUAI_FUNC const TValue *luaT_gettm (Table *events, TMS event, TString *ename);
-LUAI_FUNC const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o,
+LUAI_FUNC ثابت TValue *luaT_gettm (جدول *events, TMS event, TString *ename);
+LUAI_FUNC ثابت TValue *luaT_gettmbyobj (lua_State *L, ثابت TValue *o,
                                                        TMS event);
-LUAI_FUNC void luaT_init (lua_State *L);
+LUAI_FUNC فراغ luaT_init (lua_State *L);
 
-LUAI_FUNC void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
-                            const TValue *p2, const TValue *p3);
-LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, const TValue *f,
-                               const TValue *p1, const TValue *p2, StkId p3);
-LUAI_FUNC void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
+LUAI_FUNC فراغ luaT_callTM (lua_State *L, ثابت TValue *f, ثابت TValue *p1,
+                            ثابت TValue *p2, ثابت TValue *p3);
+LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, ثابت TValue *f,
+                               ثابت TValue *p1, ثابت TValue *p2, StkId p3);
+LUAI_FUNC فراغ luaT_trybinTM (lua_State *L, ثابت TValue *p1, ثابت TValue *p2,
                               StkId res, TMS event);
-LUAI_FUNC void luaT_tryconcatTM (lua_State *L);
-LUAI_FUNC void luaT_trybinassocTM (lua_State *L, const TValue *p1,
-       const TValue *p2, int inv, StkId res, TMS event);
-LUAI_FUNC void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                               int inv, StkId res, TMS event);
-LUAI_FUNC int luaT_callorderTM (lua_State *L, const TValue *p1,
-                                const TValue *p2, TMS event);
-LUAI_FUNC int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                                 int inv, int isfloat, TMS event);
+LUAI_FUNC فراغ luaT_tryconcatTM (lua_State *L);
+LUAI_FUNC فراغ luaT_trybinassocTM (lua_State *L, ثابت TValue *p1,
+       ثابت TValue *p2, صحيح inv, StkId res, TMS event);
+LUAI_FUNC فراغ luaT_trybiniTM (lua_State *L, ثابت TValue *p1, lua_Integer i2,
+                               صحيح inv, StkId res, TMS event);
+LUAI_FUNC صحيح luaT_callorderTM (lua_State *L, ثابت TValue *p1,
+                                ثابت TValue *p2, TMS event);
+LUAI_FUNC صحيح luaT_callorderiTM (lua_State *L, ثابت TValue *p1, صحيح v2,
+                                 صحيح inv, صحيح isfloat, TMS event);
 
-LUAI_FUNC void luaT_adjustvarargs (lua_State *L, struct CallInfo *ci,
-                                                 const Proto *p);
-LUAI_FUNC void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
-LUAI_FUNC void luaT_getvarargs (lua_State *L, struct CallInfo *ci, StkId where,
-                                              int wanted, int vatab);
+LUAI_FUNC فراغ luaT_adjustvarargs (lua_State *L, بنية CallInfo *ci,
+                                                 ثابت Proto *p);
+LUAI_FUNC فراغ luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
+LUAI_FUNC فراغ luaT_getvarargs (lua_State *L, بنية CallInfo *ci, StkId where,
+                                              صحيح wanted, صحيح vatab);
 
 
-#endif
+#پایان_اگر

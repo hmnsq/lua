@@ -5,28 +5,28 @@
 */
 
 
-#define linit_c
-#define LUA_LIB
+#تعریف_کن linit_c
+#تعریف_کن LUA_LIB
 
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <stddef.h>
+#ضمن <stddef.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lualib.h"
-#include "lauxlib.h"
-#include "llimits.h"
+#ضمن "lualib.h"
+#ضمن "lauxlib.h"
+#ضمن "llimits.h"
 
 
 /*
 ** Standard Libraries. (Must be listed in the same ORDER of their
 ** respective constants LUA_<libname>K.)
 */
-static const luaL_Reg stdlibs[] = {
-  {LUA_GNAME, luaopen_base},
+ساكن ثابت luaL_Reg stdlibs[] = {
+  {LUA_GNAME, luaopen_پایه},
   {LUA_LOADLIBNAME, luaopen_package},
   {LUA_COLIBNAME, luaopen_coroutine},
   {LUA_DBLIBNAME, luaopen_debug},
@@ -34,30 +34,30 @@ static const luaL_Reg stdlibs[] = {
   {LUA_MATHLIBNAME, luaopen_math},
   {LUA_OSLIBNAME, luaopen_os},
   {LUA_STRLIBNAME, luaopen_string},
-  {LUA_TABLIBNAME, luaopen_table},
+  {LUA_TABLIBNAME, luaopen_جدول},
   {LUA_UTF8LIBNAME, luaopen_utf8},
-  {NULL, NULL}
+  {عدم, عدم}
 };
 
 
 /*
 ** require and preload selected standard libraries
 */
-LUALIB_API void luaL_openselectedlibs (lua_State *L, int load, int preload) {
-  int mask;
-  const luaL_Reg *lib;
-  luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_PRELOAD_TABLE);
-  for (lib = stdlibs, mask = 1; lib->name != NULL; lib++, mask <<= 1) {
-    if (load & mask) {  /* selected? */
+LUALIB_API فراغ luaL_openselectedlibs (lua_State *L, صحيح بارگیری, صحيح preload) {
+  صحيح ماسک_2;
+  ثابت luaL_Reg *lib;
+  luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_PRELOAD_جدول);
+  لكل (lib = stdlibs, ماسک_2 = 1; lib->name != عدم; lib++, ماسک_2 <<= 1) {
+    إذا (بارگیری & ماسک_2) {  /* selected? */
       luaL_requiref(L, lib->name, lib->func, 1);  /* require library */
-      lua_pop(L, 1);  /* remove result from the stack */
+      lua_برداشت(L, 1);  /* remove result from the stack */
     }
-    else if (preload & mask) {  /* selected? */
+    وإلا إذا (preload & ماسک_2) {  /* selected? */
       lua_pushcfunction(L, lib->func);
       lua_setfield(L, -2, lib->name);  /* add library to PRELOAD table */
     }
   }
-  lua_assert((mask >> 1) == LUA_UTF8LIBK);
-  lua_pop(L, 1);  /* remove PRELOAD table */
+  lua_assert((ماسک_2 >> 1) == LUA_UTF8LIBK);
+  lua_برداشت(L, 1);  /* remove PRELOAD table */
 }
 
