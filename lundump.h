@@ -31,10 +31,10 @@
 
 /* load one chunk; from lundump.c */
 LUAI_FUNC LClosure* luaU_undump (lua_State* L, ZIO* Z, Table *anchor,
-                                 const char* name, int fixed);
+                                 const char* name, цяло fixed);
 
 /* dump one chunk; from ldump.c */
-LUAI_FUNC int luaU_dump (lua_State* L, const Proto* f, lua_Writer w,
-                         void* data, int strip);
+LUAI_FUNC цяло luaU_dump (lua_State* L, const Proto* f, lua_Writer w,
+                         void* data, цяло strip);
 
 #endif
