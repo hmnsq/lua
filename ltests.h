@@ -8,8 +8,8 @@
 #define ltests_h
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#شامل <stdio.h>
+#شامل <stdlib.h>
 
 /* test Lua with compatibility code */
 #define LUA_COMPAT_MATHLIB
@@ -25,14 +25,14 @@
 
 
 /* to avoid warnings, and to make sure value is really unused */
-#define UNUSED(x)       (x=0, (void)(x))
+#define UNUSED(x)       (x=0, (تهی)(x))
 
 
 /* test for sizes in 'l_sprintf' (make sure whole buffer is available) */
 #undef l_sprintf
-#if !defined(LUA_USE_C89)
+#اگر !defined(LUA_USE_C89)
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), snprintf(s,sz,f,i))
-#else
+#وگرنه
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), sprintf(s,f,i))
 #endif
 
@@ -50,8 +50,8 @@
 
 
 /* memory-allocator control variables */
-typedef struct Memcontrol {
-  int failnext;
+تعریفنوع ساختار Memcontrol {
+  صحیح failnext;
   unsigned long numblocks;
   unsigned long total;
   unsigned long maxmem;
@@ -64,46 +64,46 @@ LUA_API Memcontrol l_memcontrol;
 
 
 #define luai_tracegc(L,f)		luai_tracegctest(L, f)
-extern void luai_tracegctest (lua_State *L, int first);
+بیرونی تهی luai_tracegctest (lua_State *L, صحیح first);
 
 
 /*
 ** generic variable for debug tricks
 */
-extern void *l_Trick;
+بیرونی تهی *l_Trick;
 
 
 /*
 ** Function to traverse and check all memory used by Lua
 */
-extern int lua_checkmemory (lua_State *L);
+بیرونی صحیح lua_checkmemory (lua_State *L);
 
 /*
 ** Function to print an object GC-friendly
 */
-struct GCObject;
-extern void lua_printobj (lua_State *L, struct GCObject *o);
+ساختار GCObject;
+بیرونی تهی lua_printobj (lua_State *L, ساختار GCObject *o);
 
 
 /*
 ** Function to print a value
 */
-struct TValue;
-extern void lua_printvalue (struct TValue *v);
+ساختار TValue;
+بیرونی تهی lua_printvalue (ساختار TValue *v);
 
 /*
 ** Function to print the stack
 */
-extern void lua_printstack (lua_State *L);
-extern int lua_printallstack (lua_State *L);
+بیرونی تهی lua_printstack (lua_State *L);
+بیرونی صحیح lua_printallstack (lua_State *L);
 
 
 /* test for lock/unlock */
 
-struct L_EXTRA { int lock; int *plock; };
+ساختار L_EXTRA { صحیح lock; صحیح *plock; };
 #undef LUA_EXTRASPACE
-#define LUA_EXTRASPACE	sizeof(struct L_EXTRA)
-#define getlock(l)	cast(struct L_EXTRA*, lua_getextraspace(l))
+#define LUA_EXTRASPACE	اندازه(ساختار L_EXTRA)
+#define getlock(l)	cast(ساختار L_EXTRA*, lua_getextraspace(l))
 #define luai_userstateopen(l)  \
 	(getlock(l)->lock = 0, getlock(l)->plock = &(getlock(l)->lock))
 #define luai_userstateclose(l)  \
@@ -117,18 +117,18 @@ struct L_EXTRA { int lock; int *plock; };
 
 
 
-LUA_API int luaB_opentests (lua_State *L);
+LUA_API صحیح luaB_opentests (lua_State *L);
 
-LUA_API void *debug_realloc (void *ud, void *block,
+LUA_API تهی *debug_realloc (تهی *ud, تهی *block,
                              size_t osize, size_t nsize);
 
 
 #define luaL_newstate()  \
-	lua_newstate(debug_realloc, &l_memcontrol, luaL_makeseed(NULL))
+	lua_newstate(debug_realloc, &l_memcontrol, luaL_makeseed(پوچ))
 #define luai_openlibs(L)  \
   {  luaL_openlibs(L); \
      luaL_requiref(L, "T", luaB_opentests, 1); \
-     lua_pop(L, 1); }
+     lua_برداشت(L, 1); }
 
 
 

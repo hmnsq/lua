@@ -7,50 +7,50 @@
 #define lfunc_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#شامل "lprefix.h"
 
 
-#include <stddef.h>
+#شامل <stddef.h>
 
-#include "lua.h"
+#شامل "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
+#شامل "ldebug.h"
+#شامل "ldo.h"
+#شامل "lfunc.h"
+#شامل "lgc.h"
+#شامل "lmem.h"
+#شامل "lobject.h"
+#شامل "lstate.h"
 
 
 
-CClosure *luaF_newCclosure (lua_State *L, int nupvals) {
+CClosure *luaF_newCclosure (lua_State *L, صحیح nupvals) {
   GCObject *o = luaC_newobj(L, LUA_VCCL, sizeCclosure(nupvals));
   CClosure *c = gco2ccl(o);
   c->nupvalues = cast_byte(nupvals);
-  return c;
+  بازگشت c;
 }
 
 
-LClosure *luaF_newLclosure (lua_State *L, int nupvals) {
+LClosure *luaF_newLclosure (lua_State *L, صحیح nupvals) {
   GCObject *o = luaC_newobj(L, LUA_VLCL, sizeLclosure(nupvals));
   LClosure *c = gco2lcl(o);
-  c->p = NULL;
+  c->p = پوچ;
   c->nupvalues = cast_byte(nupvals);
-  while (nupvals--) c->upvals[nupvals] = NULL;
-  return c;
+  وقتی (nupvals--) c->upvals[nupvals] = پوچ;
+  بازگشت c;
 }
 
 
 /*
 ** fill a closure with new closed upvalues
 */
-void luaF_initupvals (lua_State *L, LClosure *cl) {
-  int i;
-  for (i = 0; i < cl->nupvalues; i++) {
-    GCObject *o = luaC_newobj(L, LUA_VUPVAL, sizeof(UpVal));
+تهی luaF_initupvals (lua_State *L, LClosure *cl) {
+  صحیح i;
+  برای (i = 0; i < cl->nupvalues; i++) {
+    GCObject *o = luaC_newobj(L, LUA_VUPVAL, اندازه(UpVal));
     UpVal *uv = gco2upv(o);
-    uv->v.p = &uv->u.value;  /* make it closed */
+    uv->v.p = &uv->u.مقدار;  /* make it closed */
     setnilvalue(uv->v.p);
     cl->upvals[i] = uv;
     luaC_objbarrier(L, cl, uv);
@@ -62,21 +62,21 @@ void luaF_initupvals (lua_State *L, LClosure *cl) {
 ** Create a new upvalue at the given level, and link it to the list of
 ** open upvalues of 'L' after entry 'prev'.
 **/
-static UpVal *newupval (lua_State *L, StkId level, UpVal **prev) {
-  GCObject *o = luaC_newobj(L, LUA_VUPVAL, sizeof(UpVal));
+ایستا UpVal *newupval (lua_State *L, StkId level, UpVal **prev) {
+  GCObject *o = luaC_newobj(L, LUA_VUPVAL, اندازه(UpVal));
   UpVal *uv = gco2upv(o);
   UpVal *next = *prev;
   uv->v.p = s2v(level);  /* current value lives in the stack */
   uv->u.open.next = next;  /* link it to list of open upvalues */
   uv->u.open.previous = prev;
-  if (next)
+  اگر (next)
     next->u.open.previous = &uv->u.open.next;
   *prev = uv;
-  if (!isintwups(L)) {  /* thread not in list of threads with upvalues? */
+  اگر (!isintwups(L)) {  /* thread not in list of threads with upvalues? */
     L->twups = G(L)->twups;  /* link it to the list */
     G(L)->twups = L;
   }
-  return uv;
+  بازگشت uv;
 }
 
 
@@ -87,15 +87,15 @@ static UpVal *newupval (lua_State *L, StkId level, UpVal **prev) {
 UpVal *luaF_findupval (lua_State *L, StkId level) {
   UpVal **pp = &L->openupval;
   UpVal *p;
-  lua_assert(isintwups(L) || L->openupval == NULL);
-  while ((p = *pp) != NULL && uplevel(p) >= level) {  /* search for it */
+  lua_assert(isintwups(L) || L->openupval == پوچ);
+  وقتی ((p = *pp) != پوچ && uplevel(p) >= level) {  /* search for it */
     lua_assert(!isdead(G(L), p));
-    if (uplevel(p) == level)  /* corresponding upvalue? */
-      return p;  /* return it */
+    اگر (uplevel(p) == level)  /* corresponding upvalue? */
+      بازگشت p;  /* return it */
     pp = &p->u.open.next;
   }
   /* not found: create a new upvalue after 'pp' */
-  return newupval(L, level, pp);
+  بازگشت newupval(L, level, pp);
 }
 
 
@@ -104,18 +104,18 @@ UpVal *luaF_findupval (lua_State *L, StkId level) {
 ** boolean 'yy' controls whether the call is yieldable.
 ** (This function assumes EXTRA_STACK.)
 */
-static void callclosemethod (lua_State *L, TValue *obj, TValue *err, int yy) {
-  StkId top = L->top.p;
-  StkId func = top;
-  const TValue *tm = luaT_gettmbyobj(L, obj, TM_CLOSE);
-  setobj2s(L, top++, tm);  /* will call metamethod... */
-  setobj2s(L, top++, obj);  /* with 'self' as the 1st argument */
-  if (err != NULL)  /* if there was an error... */
-    setobj2s(L, top++, err);  /* then error object will be 2nd argument */
-  L->top.p = top;  /* add function and arguments */
-  if (yy)
+ایستا تهی callclosemethod (lua_State *L, TValue *obj, TValue *err, صحیح yy) {
+  StkId بالاترین = L->بالاترین.p;
+  StkId func = بالاترین;
+  ثابت TValue *tm = luaT_gettmbyobj(L, obj, TM_CLOSE);
+  setobj2s(L, بالاترین++, tm);  /* will call metamethod... */
+  setobj2s(L, بالاترین++, obj);  /* with 'self' as the 1st argument */
+  اگر (err != پوچ)  /* if there was an error... */
+    setobj2s(L, بالاترین++, err);  /* then error object will be 2nd argument */
+  L->بالاترین.p = بالاترین;  /* add function and arguments */
+  اگر (yy)
     luaD_call(L, func, 0);
-  else
+  وگرنه
     luaD_callnoyield(L, func, 0);
 }
 
@@ -124,12 +124,12 @@ static void callclosemethod (lua_State *L, TValue *obj, TValue *err, int yy) {
 ** Check whether object at given level has a close metamethod and raise
 ** an error if not.
 */
-static void checkclosemth (lua_State *L, StkId level) {
-  const TValue *tm = luaT_gettmbyobj(L, s2v(level), TM_CLOSE);
-  if (ttisnil(tm)) {  /* no metamethod? */
-    int idx = cast_int(level - L->ci->func.p);  /* variable index */
-    const char *vname = luaG_findlocal(L, L->ci, idx, NULL);
-    if (vname == NULL) vname = "?";
+ایستا تهی checkclosemth (lua_State *L, StkId level) {
+  ثابت TValue *tm = luaT_gettmbyobj(L, s2v(level), TM_CLOSE);
+  اگر (ttisnil(tm)) {  /* no metamethod? */
+    صحیح idx = cast_int(level - L->ci->func.p);  /* variable index */
+    ثابت نویسه *vname = luaG_findlocal(L, L->ci, idx, پوچ);
+    اگر (vname == پوچ) vname = "?";
     luaG_runerror(L, "variable '%s' got a non-closable value", vname);
   }
 }
@@ -142,21 +142,21 @@ static void checkclosemth (lua_State *L, StkId level) {
 ** the 'level' of the upvalue being closed, as everything after that
 ** won't be used again.
 */
-static void prepcallclosemth (lua_State *L, StkId level, TStatus status,
-                                            int yy) {
+ایستا تهی prepcallclosemth (lua_State *L, StkId level, TStatus status,
+                                            صحیح yy) {
   TValue *uv = s2v(level);  /* value being closed */
   TValue *errobj;
-  switch (status) {
-    case LUA_OK:
-      L->top.p = level + 1;  /* call will be at this level */
+  انتخاب (status) {
+    حالت LUA_OK:
+      L->بالاترین.p = level + 1;  /* call will be at this level */
       /* FALLTHROUGH */
-    case CLOSEKTOP:  /* don't need to change top */
-      errobj = NULL;  /* no error object */
-      break;
-    default:  /* 'luaD_seterrorobj' will set top to level + 2 */
+    حالت CLOSEKTOP:  /* don't need to change top */
+      errobj = پوچ;  /* no error object */
+      بشکن;
+    پیشفرض:  /* 'luaD_seterrorobj' will set top to level + 2 */
       errobj = s2v(level + 1);  /* error object goes after 'uv' */
       luaD_seterrorobj(L, status, level + 1);  /* set error object */
-      break;
+      بشکن;
   }
   callclosemethod(L, uv, errobj, yy);
 }
@@ -169,12 +169,12 @@ static void prepcallclosemth (lua_State *L, StkId level, TStatus status,
 /*
 ** Insert a variable in the list of to-be-closed variables.
 */
-void luaF_newtbcupval (lua_State *L, StkId level) {
+تهی luaF_newtbcupval (lua_State *L, StkId level) {
   lua_assert(level > L->tbclist.p);
-  if (l_isfalse(s2v(level)))
-    return;  /* false doesn't need to be closed */
+  اگر (l_isfalse(s2v(level)))
+    بازگشت;  /* false doesn't need to be closed */
   checkclosemth(L, level);  /* value must have a close method */
-  while (cast_uint(level - L->tbclist.p) > MAXDELTA) {
+  وقتی (cast_uint(level - L->tbclist.p) > MAXDELTA) {
     L->tbclist.p += MAXDELTA;  /* create a dummy node at maximum delta */
     L->tbclist.p->tbclist.delta = 0;
   }
@@ -183,10 +183,10 @@ void luaF_newtbcupval (lua_State *L, StkId level) {
 }
 
 
-void luaF_unlinkupval (UpVal *uv) {
+تهی luaF_unlinkupval (UpVal *uv) {
   lua_assert(upisopen(uv));
   *uv->u.open.previous = uv->u.open.next;
-  if (uv->u.open.next)
+  اگر (uv->u.open.next)
     uv->u.open.next->u.open.previous = uv->u.open.previous;
 }
 
@@ -194,15 +194,15 @@ void luaF_unlinkupval (UpVal *uv) {
 /*
 ** Close all upvalues up to the given stack level.
 */
-void luaF_closeupval (lua_State *L, StkId level) {
+تهی luaF_closeupval (lua_State *L, StkId level) {
   UpVal *uv;
-  while ((uv = L->openupval) != NULL && uplevel(uv) >= level) {
-    TValue *slot = &uv->u.value;  /* new position for value */
-    lua_assert(uplevel(uv) < L->top.p);
+  وقتی ((uv = L->openupval) != پوچ && uplevel(uv) >= level) {
+    TValue *slot = &uv->u.مقدار;  /* new position for value */
+    lua_assert(uplevel(uv) < L->بالاترین.p);
     luaF_unlinkupval(uv);  /* remove upvalue from 'openupval' list */
     setobj(L, slot, uv->v.p);  /* move value to upvalue slot */
     uv->v.p = slot;  /* now current value lives here */
-    if (!iswhite(uv)) {  /* neither white nor dead? */
+    اگر (!iswhite(uv)) {  /* neither white nor dead? */
       nw2black(uv);  /* closed upvalues cannot be gray */
       luaC_barrier(L, uv, slot);
     }
@@ -213,11 +213,11 @@ void luaF_closeupval (lua_State *L, StkId level) {
 /*
 ** Remove first element from the tbclist plus its dummy nodes.
 */
-static void poptbclist (lua_State *L) {
+ایستا تهی poptbclist (lua_State *L) {
   StkId tbc = L->tbclist.p;
   lua_assert(tbc->tbclist.delta > 0);  /* first element cannot be dummy */
   tbc -= tbc->tbclist.delta;
-  while (tbc > L->stack.p && tbc->tbclist.delta == 0)
+  وقتی (tbc > L->پشته.p && tbc->tbclist.delta == 0)
     tbc -= MAXDELTA;  /* remove dummy nodes */
   L->tbclist.p = tbc;
 }
@@ -227,63 +227,63 @@ static void poptbclist (lua_State *L) {
 ** Close all upvalues and to-be-closed variables up to the given stack
 ** level. Return restored 'level'.
 */
-StkId luaF_close (lua_State *L, StkId level, TStatus status, int yy) {
+StkId luaF_close (lua_State *L, StkId level, TStatus status, صحیح yy) {
   ptrdiff_t levelrel = savestack(L, level);
   luaF_closeupval(L, level);  /* first, close the upvalues */
-  while (L->tbclist.p >= level) {  /* traverse tbc's down to that level */
+  وقتی (L->tbclist.p >= level) {  /* traverse tbc's down to that level */
     StkId tbc = L->tbclist.p;  /* get variable index */
     poptbclist(L);  /* remove it from list */
     prepcallclosemth(L, tbc, status, yy);  /* close variable */
     level = restorestack(L, levelrel);
   }
-  return level;
+  بازگشت level;
 }
 
 
 Proto *luaF_newproto (lua_State *L) {
-  GCObject *o = luaC_newobj(L, LUA_VPROTO, sizeof(Proto));
+  GCObject *o = luaC_newobj(L, LUA_VPROTO, اندازه(Proto));
   Proto *f = gco2p(o);
-  f->k = NULL;
+  f->k = پوچ;
   f->sizek = 0;
-  f->p = NULL;
+  f->p = پوچ;
   f->sizep = 0;
-  f->code = NULL;
+  f->code = پوچ;
   f->sizecode = 0;
-  f->lineinfo = NULL;
+  f->lineinfo = پوچ;
   f->sizelineinfo = 0;
-  f->abslineinfo = NULL;
+  f->abslineinfo = پوچ;
   f->sizeabslineinfo = 0;
-  f->upvalues = NULL;
+  f->upvalues = پوچ;
   f->sizeupvalues = 0;
   f->numparams = 0;
   f->flag = 0;
   f->maxstacksize = 0;
-  f->locvars = NULL;
+  f->locvars = پوچ;
   f->sizelocvars = 0;
   f->linedefined = 0;
   f->lastlinedefined = 0;
-  f->source = NULL;
-  return f;
+  f->source = پوچ;
+  بازگشت f;
 }
 
 
 lu_mem luaF_protosize (Proto *p) {
-  lu_mem sz = cast(lu_mem, sizeof(Proto))
-            + cast_uint(p->sizep) * sizeof(Proto*)
-            + cast_uint(p->sizek) * sizeof(TValue)
-            + cast_uint(p->sizelocvars) * sizeof(LocVar)
-            + cast_uint(p->sizeupvalues) * sizeof(Upvaldesc);
-  if (!(p->flag & PF_FIXED)) {
-    sz += cast_uint(p->sizecode) * sizeof(Instruction);
-    sz += cast_uint(p->sizelineinfo) * sizeof(lu_byte);
-    sz += cast_uint(p->sizeabslineinfo) * sizeof(AbsLineInfo);
+  lu_mem sz = cast(lu_mem, اندازه(Proto))
+            + cast_uint(p->sizep) * اندازه(Proto*)
+            + cast_uint(p->sizek) * اندازه(TValue)
+            + cast_uint(p->sizelocvars) * اندازه(LocVar)
+            + cast_uint(p->sizeupvalues) * اندازه(Upvaldesc);
+  اگر (!(p->flag & PF_FIXED)) {
+    sz += cast_uint(p->sizecode) * اندازه(Instruction);
+    sz += cast_uint(p->sizelineinfo) * اندازه(lu_byte);
+    sz += cast_uint(p->sizeabslineinfo) * اندازه(Abs_سطر_Info);
   }
-  return sz;
+  بازگشت sz;
 }
 
 
-void luaF_freeproto (lua_State *L, Proto *f) {
-  if (!(f->flag & PF_FIXED)) {
+تهی luaF_freeproto (lua_State *L, Proto *f) {
+  اگر (!(f->flag & PF_FIXED)) {
     luaM_freearray(L, f->code, cast_sizet(f->sizecode));
     luaM_freearray(L, f->lineinfo, cast_sizet(f->sizelineinfo));
     luaM_freearray(L, f->abslineinfo, cast_sizet(f->sizeabslineinfo));
@@ -300,15 +300,15 @@ void luaF_freeproto (lua_State *L, Proto *f) {
 ** Look for n-th local variable at line 'line' in function 'func'.
 ** Returns NULL if not found.
 */
-const char *luaF_getlocalname (const Proto *f, unsigned local_number, int pc) {
-  int i;
-  for (i = 0; i<f->sizelocvars && f->locvars[i].startpc <= pc; i++) {
-    if (pc < f->locvars[i].endpc) {  /* is variable active? */
-      local_number--;
-      if (local_number == 0)
-        return getstr(f->locvars[i].varname);
+ثابت نویسه *luaF_getlocalname (ثابت Proto *f, unsigned local_عدد, صحیح pc) {
+  صحیح i;
+  برای (i = 0; i<f->sizelocvars && f->locvars[i].startpc <= pc; i++) {
+    اگر (pc < f->locvars[i].endpc) {  /* is variable active? */
+      local_عدد--;
+      اگر (local_عدد == 0)
+        بازگشت getstr(f->locvars[i].varname);
     }
   }
-  return NULL;  /* not found */
+  بازگشت پوچ;  /* not found */
 }
 

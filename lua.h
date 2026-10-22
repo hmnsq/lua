@@ -9,8 +9,8 @@
 #ifndef lua_h
 #define lua_h
 
-#include <stdarg.h>
-#include <stddef.h>
+#شامل <stdarg.h>
+#شامل <stddef.h>
 
 
 #define LUA_COPYRIGHT	LUA_RELEASE "  Copyright (C) 1994-2026 Lua.org, PUC-Rio"
@@ -21,11 +21,11 @@
 #define LUA_VERSION_MINOR_N	5
 #define LUA_VERSION_RELEASE_N	1
 
-#define LUA_VERSION_NUM  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
-#define LUA_VERSION_RELEASE_NUM  (LUA_VERSION_NUM * 100 + LUA_VERSION_RELEASE_N)
+#define LUA_VERSION_رقم  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
+#define LUA_VERSION_RELEASE_رقم  (LUA_VERSION_رقم * 100 + LUA_VERSION_RELEASE_N)
 
 
-#include "luaconf.h"
+#شامل "luaconf.h"
 
 
 /* mark for precompiled code ('<esc>Lua') */
@@ -53,7 +53,7 @@
 #define LUA_ERRERR	5
 
 
-typedef struct lua_State lua_State;
+تعریفنوع ساختار lua_State lua_State;
 
 
 /*
@@ -87,125 +87,125 @@ typedef struct lua_State lua_State;
 
 
 /* type of numbers in Lua */
-typedef LUA_NUMBER lua_Number;
+تعریفنوع LUA_عدد lua_عدد;
 
 
 /* type for integer functions */
-typedef LUA_INTEGER lua_Integer;
+تعریفنوع LUA_INTEGER lua_Integer;
 
 /* unsigned integer type */
-typedef LUA_UNSIGNED lua_Unsigned;
+تعریفنوع LUA_UNSIGNED lua_Unsigned;
 
 /* type for continuation-function contexts */
-typedef LUA_KCONTEXT lua_KContext;
+تعریفنوع LUA_KCONTEXT lua_KContext;
 
 
 /*
 ** Type for C functions registered with Lua
 */
-typedef int (*lua_CFunction) (lua_State *L);
+تعریفنوع صحیح (*lua_CFunction) (lua_State *L);
 
 /*
 ** Type for continuation functions
 */
-typedef int (*lua_KFunction) (lua_State *L, int status, lua_KContext ctx);
+تعریفنوع صحیح (*lua_KFunction) (lua_State *L, صحیح status, lua_KContext ctx);
 
 
 /*
 ** Type for functions that read/write blocks when loading/dumping Lua chunks
 */
-typedef const char * (*lua_Reader) (lua_State *L, void *ud, size_t *sz);
+تعریفنوع ثابت نویسه * (*lua_Reader) (lua_State *L, تهی *ud, size_t *sz);
 
-typedef int (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
+تعریفنوع صحیح (*lua_Writer) (lua_State *L, ثابت تهی *p, size_t sz, تهی *ud);
 
 
 /*
 ** Type for memory-allocation functions
 */
-typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
+تعریفنوع تهی * (*lua_Alloc) (تهی *ud, تهی *ptr, size_t osize, size_t nsize);
 
 
 /*
 ** Type for warning functions
 */
-typedef void (*lua_WarnFunction) (void *ud, const char *msg, int tocont);
+تعریفنوع تهی (*lua_WarnFunction) (تهی *ud, ثابت نویسه *پیام, صحیح tocont);
 
 
 /*
 ** Type used by the debug API to collect debug information
 */
-typedef struct lua_Debug lua_Debug;
+تعریفنوع ساختار lua_Debug lua_Debug;
 
 
 /*
 ** Functions to be called by the debugger in specific events
 */
-typedef void (*lua_Hook) (lua_State *L, lua_Debug *ar);
+تعریفنوع تهی (*lua_Hook) (lua_State *L, lua_Debug *ar);
 
 
 /*
 ** generic extra include file
 */
-#if defined(LUA_USER_H)
-#include LUA_USER_H
+#اگر defined(LUA_USER_H)
+#شامل LUA_USER_H
 #endif
 
 
 /*
 ** RCS ident string
 */
-extern const char lua_ident[];
+بیرونی ثابت نویسه lua_ident[];
 
 
 /*
 ** state manipulation
 */
-LUA_API lua_State *(lua_newstate) (lua_Alloc f, void *ud, unsigned seed);
-LUA_API void       (lua_close) (lua_State *L);
+LUA_API lua_State *(lua_newstate) (lua_Alloc f, تهی *ud, unsigned seed);
+LUA_API تهی       (lua_close) (lua_State *L);
 LUA_API lua_State *(lua_newthread) (lua_State *L);
-LUA_API int        (lua_closethread) (lua_State *L, lua_State *from);
+LUA_API صحیح        (lua_closethread) (lua_State *L, lua_State *from);
 
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
 
-LUA_API lua_Number (lua_version) (lua_State *L);
+LUA_API lua_عدد (lua_version) (lua_State *L);
 
 
 /*
 ** basic stack manipulation
 */
-LUA_API int   (lua_absindex) (lua_State *L, int idx);
-LUA_API int   (lua_gettop) (lua_State *L);
-LUA_API void  (lua_settop) (lua_State *L, int idx);
-LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
-LUA_API void  (lua_rotate) (lua_State *L, int idx, int n);
-LUA_API void  (lua_copy) (lua_State *L, int fromidx, int toidx);
-LUA_API int   (lua_checkstack) (lua_State *L, int n);
+LUA_API صحیح   (lua_absindex) (lua_State *L, صحیح idx);
+LUA_API صحیح   (lua_gettop) (lua_State *L);
+LUA_API تهی  (lua_settop) (lua_State *L, صحیح idx);
+LUA_API تهی  (lua_pushvalue) (lua_State *L, صحیح idx);
+LUA_API تهی  (lua_rotate) (lua_State *L, صحیح idx, صحیح n);
+LUA_API تهی  (lua_copy) (lua_State *L, صحیح fromidx, صحیح toidx);
+LUA_API صحیح   (lua_checkstack) (lua_State *L, صحیح n);
 
-LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
+LUA_API تهی  (lua_xmove) (lua_State *from, lua_State *to, صحیح n);
 
 
 /*
 ** access functions (stack -> C)
 */
 
-LUA_API int             (lua_isnumber) (lua_State *L, int idx);
-LUA_API int             (lua_isstring) (lua_State *L, int idx);
-LUA_API int             (lua_iscfunction) (lua_State *L, int idx);
-LUA_API int             (lua_isinteger) (lua_State *L, int idx);
-LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
-LUA_API int             (lua_type) (lua_State *L, int idx);
-LUA_API const char     *(lua_typename) (lua_State *L, int tp);
+LUA_API صحیح             (lua_isnumber) (lua_State *L, صحیح idx);
+LUA_API صحیح             (lua_isstring) (lua_State *L, صحیح idx);
+LUA_API صحیح             (lua_iscfunction) (lua_State *L, صحیح idx);
+LUA_API صحیح             (lua_isinteger) (lua_State *L, صحیح idx);
+LUA_API صحیح             (lua_isuserdata) (lua_State *L, صحیح idx);
+LUA_API صحیح             (lua_type) (lua_State *L, صحیح idx);
+LUA_API ثابت نویسه     *(lua_typename) (lua_State *L, صحیح tp);
 
-LUA_API lua_Number      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
-LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);
-LUA_API int             (lua_toboolean) (lua_State *L, int idx);
-LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
-LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, int idx);
-LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
-LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
-LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
-LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
+LUA_API lua_عدد      (lua_tonumberx) (lua_State *L, صحیح idx, صحیح *isnum);
+LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, صحیح idx, صحیح *isnum);
+LUA_API صحیح             (lua_toboolean) (lua_State *L, صحیح idx);
+LUA_API ثابت نویسه     *(lua_tolstring) (lua_State *L, صحیح idx, size_t *len);
+LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, صحیح idx);
+LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, صحیح idx);
+LUA_API تهی	       *(lua_touserdata) (lua_State *L, صحیح idx);
+LUA_API lua_State      *(lua_tothread) (lua_State *L, صحیح idx);
+LUA_API ثابت تهی     *(lua_topointer) (lua_State *L, صحیح idx);
 
 
 /*
@@ -227,101 +227,101 @@ LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 #define LUA_OPUNM	12
 #define LUA_OPBNOT	13
 
-LUA_API void  (lua_arith) (lua_State *L, int op);
+LUA_API تهی  (lua_arith) (lua_State *L, صحیح op);
 
 #define LUA_OPEQ	0
 #define LUA_OPLT	1
 #define LUA_OPLE	2
 
-LUA_API int   (lua_rawequal) (lua_State *L, int idx1, int idx2);
-LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
+LUA_API صحیح   (lua_rawequal) (lua_State *L, صحیح idx1, صحیح idx2);
+LUA_API صحیح   (lua_compare) (lua_State *L, صحیح idx1, صحیح idx2, صحیح op);
 
 
 /*
 ** push functions (C -> stack)
 */
-LUA_API void        (lua_pushnil) (lua_State *L);
-LUA_API void        (lua_pushnumber) (lua_State *L, lua_Number n);
-LUA_API void        (lua_pushinteger) (lua_State *L, lua_Integer n);
-LUA_API const char *(lua_pushlstring) (lua_State *L, const char *s, size_t len);
-LUA_API const char *(lua_pushexternalstring) (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUA_API const char *(lua_pushstring) (lua_State *L, const char *s);
-LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
+LUA_API تهی        (lua_pushnil) (lua_State *L);
+LUA_API تهی        (lua_pushnumber) (lua_State *L, lua_عدد n);
+LUA_API تهی        (lua_pushinteger) (lua_State *L, lua_Integer n);
+LUA_API ثابت نویسه *(lua_pushlstring) (lua_State *L, ثابت نویسه *s, size_t len);
+LUA_API ثابت نویسه *(lua_pushexternalstring) (lua_State *L,
+		ثابت نویسه *s, size_t len, lua_Alloc falloc, تهی *ud);
+LUA_API ثابت نویسه *(lua_pushstring) (lua_State *L, ثابت نویسه *s);
+LUA_API ثابت نویسه *(lua_pushvfstring) (lua_State *L, ثابت نویسه *fmt,
                                                       va_list argp);
-LUA_API const char *(lua_pushfstring) (lua_State *L, const char *fmt, ...);
-LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, int n);
-LUA_API void  (lua_pushboolean) (lua_State *L, int b);
-LUA_API void  (lua_pushlightuserdata) (lua_State *L, void *p);
-LUA_API int   (lua_pushthread) (lua_State *L);
+LUA_API ثابت نویسه *(lua_pushfstring) (lua_State *L, ثابت نویسه *fmt, ...);
+LUA_API تهی  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, صحیح n);
+LUA_API تهی  (lua_pushboolean) (lua_State *L, صحیح b);
+LUA_API تهی  (lua_pushlightuserdata) (lua_State *L, تهی *p);
+LUA_API صحیح   (lua_pushthread) (lua_State *L);
 
 
 /*
 ** get functions (Lua -> stack)
 */
-LUA_API int (lua_getglobal) (lua_State *L, const char *name);
-LUA_API int (lua_gettable) (lua_State *L, int idx);
-LUA_API int (lua_getfield) (lua_State *L, int idx, const char *k);
-LUA_API int (lua_geti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawget) (lua_State *L, int idx);
-LUA_API int (lua_rawgeti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawgetp) (lua_State *L, int idx, const void *p);
+LUA_API صحیح (lua_getglobal) (lua_State *L, ثابت نویسه *name);
+LUA_API صحیح (lua_gettable) (lua_State *L, صحیح idx);
+LUA_API صحیح (lua_getfield) (lua_State *L, صحیح idx, ثابت نویسه *k);
+LUA_API صحیح (lua_geti) (lua_State *L, صحیح idx, lua_Integer n);
+LUA_API صحیح (lua_rawget) (lua_State *L, صحیح idx);
+LUA_API صحیح (lua_rawgeti) (lua_State *L, صحیح idx, lua_Integer n);
+LUA_API صحیح (lua_rawgetp) (lua_State *L, صحیح idx, ثابت تهی *p);
 
-LUA_API void  (lua_createtable) (lua_State *L, int narr, int nrec);
-LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, int nuvalue);
-LUA_API int   (lua_getmetatable) (lua_State *L, int objindex);
-LUA_API int  (lua_getiuservalue) (lua_State *L, int idx, int n);
+LUA_API تهی  (lua_createtable) (lua_State *L, صحیح narr, صحیح nrec);
+LUA_API تهی *(lua_newuserdatauv) (lua_State *L, size_t sz, صحیح nuvalue);
+LUA_API صحیح   (lua_getmetatable) (lua_State *L, صحیح objindex);
+LUA_API صحیح  (lua_getiuservalue) (lua_State *L, صحیح idx, صحیح n);
 
 
 /*
 ** set functions (stack -> Lua)
 */
-LUA_API void  (lua_setglobal) (lua_State *L, const char *name);
-LUA_API void  (lua_settable) (lua_State *L, int idx);
-LUA_API void  (lua_setfield) (lua_State *L, int idx, const char *k);
-LUA_API void  (lua_seti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawset) (lua_State *L, int idx);
-LUA_API void  (lua_rawseti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawsetp) (lua_State *L, int idx, const void *p);
-LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
-LUA_API int   (lua_setiuservalue) (lua_State *L, int idx, int n);
+LUA_API تهی  (lua_setglobal) (lua_State *L, ثابت نویسه *name);
+LUA_API تهی  (lua_settable) (lua_State *L, صحیح idx);
+LUA_API تهی  (lua_setfield) (lua_State *L, صحیح idx, ثابت نویسه *k);
+LUA_API تهی  (lua_seti) (lua_State *L, صحیح idx, lua_Integer n);
+LUA_API تهی  (lua_rawset) (lua_State *L, صحیح idx);
+LUA_API تهی  (lua_rawseti) (lua_State *L, صحیح idx, lua_Integer n);
+LUA_API تهی  (lua_rawsetp) (lua_State *L, صحیح idx, ثابت تهی *p);
+LUA_API صحیح   (lua_setmetatable) (lua_State *L, صحیح objindex);
+LUA_API صحیح   (lua_setiuservalue) (lua_State *L, صحیح idx, صحیح n);
 
 
 /*
 ** 'load' and 'call' functions (load and run Lua code)
 */
-LUA_API void  (lua_callk) (lua_State *L, int nargs, int nresults,
+LUA_API تهی  (lua_callk) (lua_State *L, صحیح nargs, صحیح nresults,
                            lua_KContext ctx, lua_KFunction k);
-#define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, NULL)
+#define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, پوچ)
 
-LUA_API int   (lua_pcallk) (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API صحیح   (lua_pcallk) (lua_State *L, صحیح nargs, صحیح nresults, صحیح errfunc,
                             lua_KContext ctx, lua_KFunction k);
-#define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, NULL)
+#define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, پوچ)
 
-LUA_API int   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
-                          const char *chunkname, const char *mode);
+LUA_API صحیح   (lua_load) (lua_State *L, lua_Reader reader, تهی *dt,
+                          ثابت نویسه *chunkname, ثابت نویسه *mode);
 
-LUA_API int (lua_dump) (lua_State *L, lua_Writer writer, void *data, int strip);
+LUA_API صحیح (lua_dump) (lua_State *L, lua_Writer writer, تهی *data, صحیح strip);
 
 
 /*
 ** coroutine functions
 */
-LUA_API int  (lua_yieldk)     (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API صحیح  (lua_yieldk)     (lua_State *L, صحیح nresults, lua_KContext ctx,
                                lua_KFunction k);
-LUA_API int  (lua_resume)     (lua_State *L, lua_State *from, int narg,
-                               int *nres);
-LUA_API int  (lua_status)     (lua_State *L);
-LUA_API int (lua_isyieldable) (lua_State *L);
+LUA_API صحیح  (lua_resume)     (lua_State *L, lua_State *from, صحیح narg,
+                               صحیح *nres);
+LUA_API صحیح  (lua_status)     (lua_State *L);
+LUA_API صحیح (lua_isyieldable) (lua_State *L);
 
-#define lua_yield(L,n)		lua_yieldk(L, (n), 0, NULL)
+#define lua_yield(L,n)		lua_yieldk(L, (n), 0, پوچ)
 
 
 /*
 ** Warning-related functions
 */
-LUA_API void (lua_setwarnf) (lua_State *L, lua_WarnFunction f, void *ud);
-LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
+LUA_API تهی (lua_setwarnf) (lua_State *L, lua_WarnFunction f, تهی *ud);
+LUA_API تهی (lua_warning)  (lua_State *L, ثابت نویسه *پیام, صحیح tocont);
 
 
 /*
@@ -357,29 +357,29 @@ LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
 #define LUA_GCPN		6
 
 
-LUA_API int (lua_gc) (lua_State *L, int what, ...);
+LUA_API صحیح (lua_gc) (lua_State *L, صحیح what, ...);
 
 
 /*
 ** miscellaneous functions
 */
 
-LUA_API int   (lua_error) (lua_State *L);
+LUA_API صحیح   (lua_error) (lua_State *L);
 
-LUA_API int   (lua_next) (lua_State *L, int idx);
+LUA_API صحیح   (lua_next) (lua_State *L, صحیح idx);
 
-LUA_API void  (lua_concat) (lua_State *L, int n);
-LUA_API void  (lua_len)    (lua_State *L, int idx);
+LUA_API تهی  (lua_concat) (lua_State *L, صحیح n);
+LUA_API تهی  (lua_len)    (lua_State *L, صحیح idx);
 
 #define LUA_N2SBUFFSZ	64
-LUA_API unsigned  (lua_numbertocstring) (lua_State *L, int idx, char *buff);
-LUA_API size_t  (lua_stringtonumber) (lua_State *L, const char *s);
+LUA_API unsigned  (lua_numbertocstring) (lua_State *L, صحیح idx, نویسه *buff);
+LUA_API size_t  (lua_stringtonumber) (lua_State *L, ثابت نویسه *s);
 
-LUA_API lua_Alloc (lua_getallocf) (lua_State *L, void **ud);
-LUA_API void      (lua_setallocf) (lua_State *L, lua_Alloc f, void *ud);
+LUA_API lua_Alloc (lua_getallocf) (lua_State *L, تهی **ud);
+LUA_API تهی      (lua_setallocf) (lua_State *L, lua_Alloc f, تهی *ud);
 
-LUA_API void (lua_toclose) (lua_State *L, int idx);
-LUA_API void (lua_closeslot) (lua_State *L, int idx);
+LUA_API تهی (lua_toclose) (lua_State *L, صحیح idx);
+LUA_API تهی (lua_closeslot) (lua_State *L, صحیح idx);
 
 
 /*
@@ -388,12 +388,12 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 ** ===============================================================
 */
 
-#define lua_getextraspace(L)	((void *)((char *)(L) - LUA_EXTRASPACE))
+#define lua_getextraspace(L)	((تهی *)((نویسه *)(L) - LUA_EXTRASPACE))
 
-#define lua_tonumber(L,i)	lua_tonumberx(L,(i),NULL)
-#define lua_tointeger(L,i)	lua_tointegerx(L,(i),NULL)
+#define lua_tonumber(L,i)	lua_tonumberx(L,(i),پوچ)
+#define lua_tointeger(L,i)	lua_tointegerx(L,(i),پوچ)
 
-#define lua_pop(L,n)		lua_settop(L, -(n)-1)
+#define lua_برداشت(L,n)		lua_settop(L, -(n)-1)
 
 #define lua_newtable(L)		lua_createtable(L, 0, 0)
 
@@ -413,16 +413,16 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_pushliteral(L, s)	lua_pushstring(L, "" s)
 
 #define lua_pushglobaltable(L)  \
-	((void)lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS))
+	((تهی)lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS))
 
-#define lua_tostring(L,i)	lua_tolstring(L, (i), NULL)
+#define lua_tostring(L,i)	lua_tolstring(L, (i), پوچ)
 
 
-#define lua_insert(L,idx)	lua_rotate(L, (idx), 1)
+#define lua_درج(L,idx)	lua_rotate(L, (idx), 1)
 
-#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_pop(L, 1))
+#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_برداشت(L, 1))
 
-#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_pop(L, 1))
+#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_برداشت(L, 1))
 
 /* }============================================================== */
 
@@ -437,7 +437,7 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_getuservalue(L,idx)	lua_getiuservalue(L,idx,1)
 #define lua_setuservalue(L,idx)	lua_setiuservalue(L,idx,1)
 
-#define lua_resetthread(L)	lua_closethread(L,NULL)
+#define lua_resetthread(L)	lua_closethread(L,پوچ)
 
 /* }============================================================== */
 
@@ -467,43 +467,43 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define LUA_MASKCOUNT	(1 << LUA_HOOKCOUNT)
 
 
-LUA_API int (lua_getstack) (lua_State *L, int level, lua_Debug *ar);
-LUA_API int (lua_getinfo) (lua_State *L, const char *what, lua_Debug *ar);
-LUA_API const char *(lua_getlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_setlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_getupvalue) (lua_State *L, int funcindex, int n);
-LUA_API const char *(lua_setupvalue) (lua_State *L, int funcindex, int n);
+LUA_API صحیح (lua_getstack) (lua_State *L, صحیح level, lua_Debug *ar);
+LUA_API صحیح (lua_getinfo) (lua_State *L, ثابت نویسه *what, lua_Debug *ar);
+LUA_API ثابت نویسه *(lua_getlocal) (lua_State *L, ثابت lua_Debug *ar, صحیح n);
+LUA_API ثابت نویسه *(lua_setlocal) (lua_State *L, ثابت lua_Debug *ar, صحیح n);
+LUA_API ثابت نویسه *(lua_getupvalue) (lua_State *L, صحیح funcindex, صحیح n);
+LUA_API ثابت نویسه *(lua_setupvalue) (lua_State *L, صحیح funcindex, صحیح n);
 
-LUA_API void *(lua_upvalueid) (lua_State *L, int fidx, int n);
-LUA_API void  (lua_upvaluejoin) (lua_State *L, int fidx1, int n1,
-                                               int fidx2, int n2);
+LUA_API تهی *(lua_upvalueid) (lua_State *L, صحیح fidx, صحیح n);
+LUA_API تهی  (lua_upvaluejoin) (lua_State *L, صحیح fidx1, صحیح n1,
+                                               صحیح fidx2, صحیح n2);
 
-LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+LUA_API تهی (lua_sethook) (lua_State *L, lua_Hook func, صحیح mask, صحیح شمار);
 LUA_API lua_Hook (lua_gethook) (lua_State *L);
-LUA_API int (lua_gethookmask) (lua_State *L);
-LUA_API int (lua_gethookcount) (lua_State *L);
+LUA_API صحیح (lua_gethookmask) (lua_State *L);
+LUA_API صحیح (lua_gethookcount) (lua_State *L);
 
 
-struct lua_Debug {
-  int event;
-  const char *name;	/* (n) */
-  const char *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
-  const char *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
-  const char *source;	/* (S) */
+ساختار lua_Debug {
+  صحیح event;
+  ثابت نویسه *name;	/* (n) */
+  ثابت نویسه *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
+  ثابت نویسه *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
+  ثابت نویسه *source;	/* (S) */
   size_t srclen;	/* (S) */
-  int currentline;	/* (l) */
-  int linedefined;	/* (S) */
-  int lastlinedefined;	/* (S) */
-  unsigned char nups;	/* (u) number of upvalues */
-  unsigned char nparams;/* (u) number of parameters */
-  char isvararg;        /* (u) */
-  unsigned char extraargs;  /* (t) number of extra arguments */
-  char istailcall;	/* (t) */
-  int ftransfer;   /* (r) index of first value transferred */
-  int ntransfer;   /* (r) number of transferred values */
-  char short_src[LUA_IDSIZE]; /* (S) */
+  صحیح currentline;	/* (l) */
+  صحیح linedefined;	/* (S) */
+  صحیح lastlinedefined;	/* (S) */
+  unsigned نویسه nups;	/* (u) number of upvalues */
+  unsigned نویسه nparams;/* (u) number of parameters */
+  نویسه isvararg;        /* (u) */
+  unsigned نویسه extraargs;  /* (t) number of extra arguments */
+  نویسه istailcall;	/* (t) */
+  صحیح ftransfer;   /* (r) index of first value transferred */
+  صحیح ntransfer;   /* (r) number of transferred values */
+  نویسه short_src[LUA_IDSIZE]; /* (S) */
   /* private part */
-  struct CallInfo *i_ci;  /* active function */
+  ساختار CallInfo *i_ci;  /* active function */
 };
 
 /* }====================================================================== */
