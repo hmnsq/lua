@@ -1,0 +1,585 @@
+# What is still missing
+
+76 languages. Each line says in how many languages it is missing.
+
+## Files in languages BURP cannot read yet
+
+- `.lua`: 34 files
+
+## Keywords with no word in a language's table
+
+- guru:size_t: 71
+- guru:tm: 71
+- guru:strchr: 71
+- guru:ptrdiff_t: 71
+- guru:FILE: 71
+- guru:errno: 71
+- guru:time_t: 71
+- guru:offsetof: 71
+- guru:sprintf: 71
+- guru:va_list: 71
+- guru:va_arg: 71
+- guru:getc: 71
+- guru:strspn: 71
+- guru:HUGE_VAL: 71
+- guru:stderr: 71
+- guru:memcmp: 71
+- guru:EOF: 71
+- guru:stdin: 71
+- guru:UCHAR_MAX: 71
+- guru:fflush: 71
+- guru:stdout: 71
+- guru:getenv: 71
+- guru:close: 71
+- guru:va_start: 71
+- guru:va_end: 71
+- guru:SHRT_MAX: 71
+- guru:fopen: 71
+- guru:remove: 71
+- guru:UINT_MAX: 71
+- guru:fprintf: 71
+- guru:floor: 71
+- guru:ULONG_MAX: 71
+- guru:EXIT_FAILURE: 71
+- guru:memchr: 71
+- guru:strerror: 71
+- guru:fread: 71
+- guru:fclose: 71
+- guru:time: 71
+- guru:isxdigit: 71
+- guru:tolower: 71
+- guru:INT_MIN: 71
+- guru:EXIT_SUCCESS: 71
+- guru:ferror: 71
+- guru:fgets: 71
+- guru:jmp_buf: 71
+- guru:longjmp: 71
+- guru:setjmp: 71
+- guru:abort: 71
+- guru:ungetc: 71
+- guru:fwrite: 71
+- guru:CHAR_BIT: 71
+- guru:fmod: 71
+- guru:fabs: 71
+- guru:ceil: 71
+- guru:iscntrl: 71
+- guru:islower: 71
+- guru:SIG_DFL: 71
+- guru:SIGINT: 71
+- guru:strtod: 71
+- guru:BUFSIZ: 71
+- guru:feof: 71
+- guru:freopen: 71
+- guru:realloc: 71
+- guru:isprint: 71
+- guru:USHRT_MAX: 71
+- guru:fseek: 71
+- guru:ftell: 71
+- guru:tmpfile: 71
+- guru:clearerr: 71
+- guru:SEEK_SET: 71
+- guru:SEEK_CUR: 71
+- guru:SEEK_END: 71
+- guru:setvbuf: 71
+- guru:NDEBUG: 71
+- guru:strrchr: 71
+- guru:gmtime: 71
+- guru:localtime: 71
+- guru:L_tmpnam: 71
+- guru:tmpnam: 71
+- guru:system: 71
+- guru:rename: 71
+- guru:clock: 71
+- guru:strftime: 71
+- guru:mktime: 71
+- guru:difftime: 71
+- guru:setlocale: 71
+- guru:sig_atomic_t: 71
+- guru:isgraph: 71
+- guru:ispunct: 71
+- guru:isupper: 71
+- guru:strtoul: 71
+- guru:atexit: 71
+- guru:fputs: 71
+- guru:LONG_MAX: 71
+- guru:LONG_MIN: 71
+- guru:localeconv: 71
+- guru:strcmp: 70
+- guru:open: 70
+- guru:memset: 70
+- guru:strcpy: 70
+- guru:strcat: 70
+- guru:exp: 67
+- guru:log: 67
+- guru:sin: 67
+- guru:cos: 67
+- guru:#define: 66
+- guru:#endif: 66
+- guru:#ifndef: 66
+- guru:#undef: 66
+- guru:#error: 66
+- guru:#ifdef: 66
+- guru:unsigned: 62
+- guru:printf: 62
+- guru:long: 62
+- guru:strlen: 62
+- guru:memcpy: 62
+- guru:INT_MAX: 62
+- guru:short: 62
+- guru:isdigit: 62
+- guru:isalnum: 62
+- guru:exit: 62
+- guru:toupper: 62
+- guru:isalpha: 62
+- guru:isspace: 62
+- guru:strncmp: 62
+- guru:strstr: 62
+- guru:pow: 62
+- guru:abs: 62
+- guru:signed: 62
+- guru:sqrt: 62
+- guru:malloc: 62
+- guru:main: 54
+- guru:const: 25
+- guru:static: 25
+- guru:void: 25
+- guru:NULL: 25
+- guru:switch: 25
+- guru:default: 25
+- guru:typedef: 25
+- guru:goto: 25
+- guru:assert: 25
+- guru:do: 25
+- guru:#elif: 25
+- guru:extern: 25
+- guru:free: 25
+- guru:float: 25
+- guru:continue: 25
+- guru:#include: 25
+- guru:for: 9
+- guru:char: 9
+- guru:case: 9
+- guru:break: 9
+- guru:sizeof: 9
+- guru:struct: 9
+- guru:union: 9
+- guru:double: 9
+- guru:enum: 9
+- guru:volatile: 9
+- guru:inline: 9
+- guru:signal: 9
+- guru:int: 1
+- guru:if: 1
+- guru:return: 1
+- guru:else: 1
+- guru:#if: 1
+- guru:while: 1
+- guru:#else: 1
+
+## Names with no dictionary entry (the most common first)
+
+- `L`: 76
+- `i`: 76
+- `p`: 76
+- `lua_State`: 76
+- `n`: 76
+- `fs`: 76
+- `ls`: 76
+- `t`: 76
+- `g`: 76
+- `o`: 76
+- `f`: 76
+- `ci`: 76
+- `s`: 76
+- `e`: 76
+- `TValue`: 76
+- `b`: 76
+- `k`: 76
+- `buff`: 76
+- `l`: 76
+- `u`: 76
+- `v`: 76
+- `L1`: 76
+- `name`: 76
+- `pc`: 76
+- `lua_assert`: 76
+- `idx`: 76
+- `res`: 76
+- `c`: 76
+- `lua_Integer`: 76
+- `x`: 76
+- `s2v`: 76
+- `ra`: 76
+- `LUAI_FUNC`: 76
+- `len`: 76
+- `h`: 76
+- `FuncState`: 76
+- `LUA_API`: 76
+- `ts`: 76
+- `defined`: 76
+- `func`: 76
+- `StkId`: 76
+- `arg`: 76
+- `TString`: 76
+- `expdesc`: 76
+- `S`: 76
+- `GCObject`: 76
+- `op`: 76
+- `ar`: 76
+- `lu_byte`: 76
+- `ud`: 76
+- `ms`: 76
+- `D`: 76
+- `obj`: 76
+- `LexState`: 76
+- `a`: 76
+- `NONA`: 76
+- `global_State`: 76
+- `level`: 76
+- `cast`: 76
+- `l_unlikely`: 76
+- `lua_pushinteger`: 76
+- `r`: 76
+- `var`: 76
+- `EQ`: 76
+- `B`: 76
+- `uv`: 76
+- `LUALIB_API`: 76
+- `cast_uint`: 76
+- `G`: 76
+- `cl`: 76
+- `cast_int`: 76
+- `info`: 76
+- `m`: 76
+- `Proto`: 76
+- `lua_Unsigned`: 76
+- `e1`: 76
+- `pos`: 76
+- `CallInfo`: 76
+- `vmcase`: 76
+- `val`: 76
+- `opmode`: 76
+- `sz`: 76
+- `vmbreak`: 76
+- `e2`: 76
+- `lua_unlock`: 76
+- `luaL_error`: 76
+- `iABC`: 76
+- `bl`: 76
+- `rb`: 76
+- `v2`: 76
+- `p1`: 76
+- `asize`: 76
+- `lua_pushstring`: 76
+- `RA`: 76
+- `fmt`: 76
+- `what`: 76
+- `tt`: 76
+- `curr`: 76
+- `cc`: 76
+- `hres`: 76
+- `z`: 76
+- `l_mem`: 76
+- `v1`: 76
+- `reg`: 76
+- `nres`: 76
+- `init`: 76
+- `j`: 76
+- `l_mathop`: 76
+- `token`: 76
+- `luaL_argcheck`: 76
+- `lua_pushvalue`: 76
+- `cast_sizet`: 76
+- `LUA_OK`: 76
+- `luaL_checkinteger`: 76
+- `dyd`: 76
+- `filename`: 76
+- `p2`: 76
+- `Instruction`: 76
+- `getindex`: 76
+- `lua_pushboolean`: 76
+- `state`: 76
+- `getnum`: 76
+- `tsvalue`: 76
+- `ivalue`: 76
+- `gt`: 76
+- `event`: 76
+- `api_check`: 76
+- `callstatus`: 76
+- `opr`: 76
+- `Rand64`: 76
+- `nsize`: 76
+- `cast_byte`: 76
+- `mt`: 76
+- `lua_setfield`: 76
+- `lua_tostring`: 76
+- `d`: 76
+- `l_noret`: 76
+- `list`: 76
+- `io`: 76
+- `LUA_REGISTRYINDEX`: 76
+- `lua_gettop`: 76
+- `current`: 76
+- `newsize`: 76
+- `cast_uchar`: 76
+- `marked`: 76
+- `index2value`: 76
+- `lua_type`: 76
+- `obj2gco`: 76
+- `TStatus`: 76
+- `freereg`: 76
+- `ind`: 76
+- `nactvar`: 76
+- `posi`: 76
+- `rc`: 76
+- `vd`: 76
+- `stat`: 76
+- `varname`: 76
+- `tb`: 76
+- `lua_pushnumber`: 76
+- `setivalue`: 76
+- `str`: 76
+- `rn`: 76
+- `lua_settop`: 76
+- `luaL_optinteger`: 76
+- `l_castS2U`: 76
+- `t1`: 76
+- `from`: 76
+- `argp`: 76
+- `luaL_checkstring`: 76
+- `luaL_checknumber`: 76
+- `form`: 76
+- `n2`: 76
+- `extra`: 76
+- `co`: 76
+- `ttisinteger`: 76
+- `lua_pushfstring`: 76
+- `gcstate`: 76
+- `osize`: 76
+- `GET_OPCODE`: 76
+- `check_exp`: 76
+- `t2`: 76
+- `gval`: 76
+- `lib`: 76
+- `argv`: 76
+- `nargs`: 76
+- `luaL_checklstring`: 76
+- `lf`: 76
+- `nresults`: 76
+- `TMS`: 76
+- `setobjs2s`: 76
+- `tbclist`: 76
+- `LClosure`: 76
+- `LUA_TNIL`: 76
+- `LUAMOD_API`: 76
+- `fltvalue`: 76
+- `l_uint32`: 76
+- `nvars`: 76
+- `lua_CFunction`: 76
+- `lua_getfield`: 76
+- `lua_pushliteral`: 76
+- `arr`: 76
+- `oldsize`: 76
+- `ep`: 76
+- `newblock`: 76
+- `iswhite`: 76
+- `fi`: 76
+- `tname`: 76
+- `lineinfo`: 76
+- `flip`: 76
+- `luaG_runerror`: 76
+- `gcvalue`: 76
+- `metatable`: 76
+- `lua_Debug`: 76
+- `cond`: 76
+- `ct`: 76
+- `setobj2s`: 76
+- `fname`: 76
+- `luaL_Reg`: 76
+- `NO_JUMP`: 76
+- `i2`: 76
+- `narg`: 76
+- `delta`: 76
+- `getage`: 76
+- `val_`: 76
+- `s1`: 76
+- `hvalue`: 76
+- `upvalues`: 76
+- `LUA_TSTRING`: 76
+- `GETARG_B`: 76
+- `src`: 76
+- `LStream`: 76
+- `seminfo`: 76
+- `api_checkpop`: 76
+- `ttisnumber`: 76
+- `getstr`: 76
+- `LUA_TTABLE`: 76
+- `nuvalue`: 76
+- `na`: 76
+- `luaL_pushfail`: 76
+- `luaL_checkany`: 76
+- `l_castU2S`: 76
+- `gnode`: 76
+- `sep`: 76
+- `flags`: 76
+- `aux`: 76
+- `islittle`: 76
+- `lua_toboolean`: 76
+- `A`: 76
+- `luaK_exp2anyreg`: 76
+- `GETARG_C`: 76
+- `nb`: 76
+- `lo`: 76
+- `LUA_CORE`: 76
+- `setnilvalue2s`: 76
+- `tocont`: 76
+- `flag`: 76
+- `lim`: 76
+- `th`: 76
+- `mc`: 76
+- `vRB`: 76
+- `nupvalues`: 76
+- `LUA_VSHRSTR`: 76
+- `lua_pushnil`: 76
+- `lua_Alloc`: 76
+- `tagisempty`: 76
+- `ttisnil`: 76
+- `LUA_MULTRET`: 76
+- `ZIO`: 76
+- `gckind`: 76
+- `sizeupvalues`: 76
+- `n1`: 76
+- `BinOpr`: 76
+- `anchor`: 76
+- `locvars`: 76
+- `gc`: 76
+- `intop`: 76
+- `l_sprintf`: 76
+- `hash`: 76
+- `ttypetag`: 76
+- `LUA_VLNGSTR`: 76
+- `box`: 76
+- `modname`: 76
+- `savedpc`: 76
+- `align`: 76
+- `gclist`: 76
+- `cast_Inst`: 76
+- `i1`: 76
+- `lh`: 76
+- `oldasize`: 76
+- `newasize`: 76
+- `Protect`: 76
+- `setobj`: 76
+- `luaC_objbarrier`: 76
+- `ctx`: 76
+- `isLua`: 76
+- `errfunc`: 76
+- `upvals`: 76
+- `lua_remove`: 76
+- `luaL_checktype`: 76
+- `err`: 76
+
+## Comments with no translation
+
+- to avoid warnings: 76
+- FALLTHROUGH: 76
+- not found: 76
+- invalid option: 76
+- number of arguments: 76
+- no metamethod?: 76
+- call it: 76
+- error: 76
+- fail: 76
+- C closure: 76
+- else...: 76
+- clear its key: 76
+- control variable: 76
+- key must be a short string: 76
+- do the call: 76
+- raise a memory error: 76
+- push function: 76
+- allocation error?: 76
+- state: 76
+- error?: 76
+- placeholders: 76
+- key index: 76
+- ISO C definitions: 76
+- jump back: 76
+- compare them as floats: 76
+- compare them as integers: 76
+- 'f' is either greater or less than all integers: 76
+- in case of division by 0: 76
+- pop value: 76
+- save context: 76
+- no overflow?: 76
+- no more elements: 76
+- remove value: 76
+- use it: 76
+- skip initial spaces: 76
+- skip trailing spaces: 76
+- else not a number: 76
+- initial value: 76
+- remove it: 76
+- function will need a vararg table: 76
+- upvalue index: 76
+- error flag: 76
+- default: 76
+- turn off hooks: 76
+- no debug information?: 76
+- assume EXTRA_STACK: 76
+- Lua function?: 76
+- close all upvalues: 76
+- light C function: 76
+- Lua function: 76
+- try again: 76
+- dynamic structures used by the parser: 76
+- generational mode?: 76
+- entry is empty?: 76
+- remove entry: 76
+- is 'curr' dead?: 76
+- remove 'curr' from list: 76
+- erase 'curr': 76
+- go to next element: 76
+- nothing to be done: 76
+- close it: 76
+- check that it's a valid file handle: 76
+- close buffer: 76
+- placeholder: 76
+- special cases: -1 or 0: 76
+- allocation failed?: 76
+- not used: 76
+- overflow?: 76
+- found?: 76
+- free registers: 76
+- something changed: 76
+- get argument: 76
+- move 'f' to final result, correcting endianness if needed: 76
+- check whether 'key' is somewhere in the chain: 76
+- that's it: 76
+- a non-empty entry?: 76
+- 1st argument: 76
+- 2nd argument: 76
+- extra characters?: 76
+- skip the loop: 76
+- else will try the metamethod: 76
+- original arith. expression: 76
+- upvalues: 76
+- ** basic stack manipulation: 76
+- ** access functions (stack -> C): 76
+- ** push functions (C -> stack): 76
+- ** get functions (Lua -> stack): 76
+- pop key: 76
+- ** set functions (stack -> Lua): 76
+- unlock done in 'auxsetstr': 76
+- save continuation: 76
+- no errors?: 76
+- original top: 76
+- ** miscellaneous functions: 76
+- create new to-be-closed upvalue: 76
+- Lua closure: 76
+- else: 76
+- ** {======================================================
+** Generic Buffer manipulation
+** =======: 76
+- remove it from list: 76
+- file being read: 76
