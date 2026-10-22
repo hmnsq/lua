@@ -8,14 +8,14 @@
 #define llimits_h
 
 
-#include <limits.h>
-#include <stddef.h>
+#અન્તર્ભાવ <limits.h>
+#અન્તર્ભાવ <stddef.h>
 
 
-#include "lua.h"
+#અન્તર્ભાવ "lua.h"
 
 
-#define l_numbits(t)	cast_int(sizeof(t) * CHAR_BIT)
+#define l_numbits(t)	cast_int(કદ(t) * CHAR_BIT)
 
 /*
 ** 'l_mem' is a signed integer big enough to count the total memory
@@ -23,15 +23,15 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
-typedef LUAI_MEM l_mem;
-typedef LUAI_UMEM lu_mem;
-#elif LUAI_IS32INT	/* }{ */
-typedef ptrdiff_t l_mem;
-typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
-typedef long l_mem;
-typedef unsigned long lu_mem;
+#જો defined(LUAI_MEM)		/* { external definitions? */
+પ્રકારવ્યાખ્યા LUAI_MEM l_mem;
+પ્રકારવ્યાખ્યા LUAI_UMEM lu_mem;
+#અથવાજો LUAI_IS32INT	/* }{ */
+પ્રકારવ્યાખ્યા ptrdiff_t l_mem;
+પ્રકારવ્યાખ્યા size_t lu_mem;
+#નહીંતર  /* 16-bit ints */	/* }{ */
+પ્રકારવ્યાખ્યા long l_mem;
+પ્રકારવ્યાખ્યા unsigned long lu_mem;
 #endif				/* } */
 
 #define MAX_LMEM  \
@@ -39,12 +39,12 @@ typedef unsigned long lu_mem;
 
 
 /* chars used as small naturals (so that 'char' is reserved for characters) */
-typedef unsigned char lu_byte;
-typedef signed char ls_byte;
+પ્રકારવ્યાખ્યા unsigned અક્ષર lu_byte;
+પ્રકારવ્યાખ્યા signed અક્ષર ls_byte;
 
 
 /* Type for thread status/error codes */
-typedef lu_byte TStatus;
+પ્રકારવ્યાખ્યા lu_byte TStatus;
 
 /* The C API still uses 'int' for status/error codes */
 #define APIstatus(st)	cast_int(st)
@@ -56,7 +56,7 @@ typedef lu_byte TStatus;
 ** Maximum size for strings and userdata visible for Lua; should be
 ** representable as a lua_Integer and as a size_t.
 */
-#define MAX_SIZE	(sizeof(size_t) < sizeof(lua_Integer) ? MAX_SIZET \
+#define MAX_SIZE	(કદ(size_t) < કદ(lua_Integer) ? MAX_SIZET \
 			  : cast_sizet(LUA_MAXINTEGER))
 
 /*
@@ -66,7 +66,7 @@ typedef lu_byte TStatus;
 
 
 /* number of chars of a literal string without the ending \0 */
-#define LL(x)   (sizeof(x)/sizeof(char) - 1)
+#define LL(x)   (કદ(x)/કદ(અક્ષર) - 1)
 
 
 /*
@@ -75,15 +75,15 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#જો !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#અન્તર્ભાવ <stdint.h>
+#જો defined(UINTPTR_MAX)  /* even in C99 this type is optional */
 #define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
+#નહીંતર  /* no 'intptr'? */
 #define L_P2I	uintmax_t  /* use the largest available integer */
 #endif
-#else  /* C89 option */
+#નહીંતર  /* C89 option */
 #define L_P2I	size_t
 #endif
 
@@ -92,57 +92,57 @@ typedef lu_byte TStatus;
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+પ્રકારવ્યાખ્યા LUAI_UACNUMBER l_uac_સંખ્યા;
+પ્રકારવ્યાખ્યા LUAI_UACINT l_uacInt;
 
 
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
+#જો defined LUAI_ASSERT
 #undef NDEBUG
-#include <assert.h>
-#define lua_assert(c)           assert(c)
+#અન્તર્ભાવ <assert.h>
+#define lua_assert(c)           પ્રતિજ્ઞા(c)
 #define assert_code(c)		c
 #endif
 
-#if defined(lua_assert)
-#else
-#define lua_assert(c)		((void)0)
-#define assert_code(c)		((void)0)
+#જો defined(lua_assert)
+#નહીંતર
+#define lua_assert(c)		((શૂન્ય)0)
+#define assert_code(c)		((શૂન્ય)0)
 #endif
 
 #define check_exp(c,e)		(lua_assert(c), (e))
 /* to avoid problems with conditions too long */
-#define lua_longassert(c)	assert_code((c) ? (void)0 : lua_assert(0))
+#define lua_longassert(c)	assert_code((c) ? (શૂન્ય)0 : lua_assert(0))
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
-#define UNUSED(x)	((void)(x))
+#જો !defined(UNUSED)
+#define UNUSED(x)	((શૂન્ય)(x))
 #endif
 
 
 /* type casts (a macro highlights casts in the code) */
 #define cast(t, exp)	((t)(exp))
 
-#define cast_void(i)	cast(void, (i))
-#define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
+#define cast_void(i)	cast(શૂન્ય, (i))
+#define cast_voidp(i)	cast(શૂન્ય *, (i))
+#define cast_અંક(i)	cast(lua_સંખ્યા, (i))
+#define cast_int(i)	cast(પૂર્ણાંક, (i))
 #define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
+#define cast_uint(i)	cast(unsigned પૂર્ણાંક, (i))
 #define cast_byte(i)	cast(lu_byte, (i))
-#define cast_uchar(i)	cast(unsigned char, (i))
-#define cast_char(i)	cast(char, (i))
-#define cast_charp(i)	cast(char *, (i))
+#define cast_uchar(i)	cast(unsigned અક્ષર, (i))
+#define cast_char(i)	cast(અક્ષર, (i))
+#define cast_charp(i)	cast(અક્ષર *, (i))
 #define cast_sizet(i)	cast(size_t, (i))
 #define cast_Integer(i)	cast(lua_Integer, (i))
 #define cast_Inst(i)	cast(Instruction, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
+#જો !defined(l_castS2U)
 #define l_castS2U(i)	((lua_Unsigned)(i))
 #endif
 
@@ -151,7 +151,7 @@ typedef LUAI_UACINT l_uacInt;
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
+#જો !defined(l_castU2S)
 #define l_castU2S(i)	((lua_Integer)(i))
 #endif
 
@@ -173,16 +173,16 @@ typedef LUAI_UACINT l_uacInt;
 ** Special type equivalent to '(void*)' for functions (to suppress some
 ** warnings when converting function pointers)
 */
-typedef void (*voidf)(void);
+પ્રકારવ્યાખ્યા શૂન્ય (*voidf)(શૂન્ય);
 
 /*
 ** Macro to convert pointer-to-void* to pointer-to-function. This cast
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
+#જો defined(__GNUC__)
 #define cast_func(p) (__extension__ (voidf)(p))
-#else
+#નહીંતર
 #define cast_func(p) ((voidf)(p))
 #endif
 
@@ -191,14 +191,14 @@ typedef void (*voidf)(void);
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#જો !defined(l_noret)
 
-#if defined(__GNUC__)
-#define l_noret		void __attribute__((noreturn))
-#elif defined(_MSC_VER) && _MSC_VER >= 1200
-#define l_noret		void __declspec(noreturn)
-#else
-#define l_noret		void
+#જો defined(__GNUC__)
+#define l_noret		શૂન્ય __attribute__((noreturn))
+#અથવાજો defined(_MSC_VER) && _MSC_VER >= 1200
+#define l_noret		શૂન્ય __declspec(noreturn)
+#નહીંતર
+#define l_noret		શૂન્ય
 #endif
 
 #endif
@@ -207,24 +207,24 @@ typedef void (*voidf)(void);
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
-#define l_inline	inline
-#elif defined(__GNUC__)
+#જો !defined(LUA_USE_C89)
+#define l_inline	અંતઃરેખ
+#અથવાજો defined(__GNUC__)
 #define l_inline	__inline__
-#else
+#નહીંતર
 #define l_inline	/* empty */
 #endif
 
-#define l_sinline	static l_inline
+#define l_sinline	સ્થિર l_inline
 
 
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
-typedef unsigned long l_uint32;
+#જો LUAI_IS32INT
+પ્રકારવ્યાખ્યા unsigned પૂર્ણાંક l_uint32;
+#નહીંતર
+પ્રકારવ્યાખ્યા unsigned long l_uint32;
 #endif
 
 
@@ -233,13 +233,13 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
+#જો !defined(luai_numidiv)
 #define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
 #endif
 
 /* float division */
-#if !defined(luai_numdiv)
-#define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
+#જો !defined(luai_numdiv)
+#define luai_numdiv(L,a,b)      ((શૂન્ય)L, (a)/(b))
 #endif
 
 /*
@@ -253,24 +253,24 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
+#જો !defined(luai_nummod)
 #define luai_nummod(L,a,b,m)  \
-  { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+  { (શૂન્ય)L; (m) = l_mathop(fmod)(a,b); \
+    જો (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
 #endif
 
 /* exponentiation */
-#if !defined(luai_numpow)
+#જો !defined(luai_numpow)
 #define luai_numpow(L,a,b)  \
-  ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
+  ((શૂન્ય)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
 #endif
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
-#define luai_numadd(L,a,b)      ((void)L, (a)+(b))
-#define luai_numsub(L,a,b)      ((void)L, (a)-(b))
-#define luai_nummul(L,a,b)      ((void)L, (a)*(b))
-#define luai_numunm(L,a)        ((void)L, -(a))
+#જો !defined(luai_numadd)
+#define luai_numadd(L,a,b)      ((શૂન્ય)L, (a)+(b))
+#define luai_numsub(L,a,b)      ((શૂન્ય)L, (a)-(b))
+#define luai_nummul(L,a,b)      ((શૂન્ય)L, (a)*(b))
+#define luai_numunm(L,a)        ((શૂન્ય)L, -(a))
 #define luai_numeq(a,b)         ((a)==(b))
 #define luai_numlt(a,b)         ((a)<(b))
 #define luai_numle(a,b)         ((a)<=(b))
@@ -291,8 +291,8 @@ typedef unsigned long l_uint32;
 ** may have an ill-defined value.)
 */
 #define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+  ((n) >= (LUA_સંખ્યા)(LUA_MININTEGER) && \
+   (n) < -(LUA_સંખ્યા)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 
@@ -310,13 +310,13 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#જો !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#જો defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
-#define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
-#define LUAI_FUNC	extern
+#define LUAI_FUNC	__attribute__((visibility("internal"))) બાહ્ય
+#નહીંતર
+#define LUAI_FUNC	બાહ્ય
 #endif
 
 #define LUAI_DDEC(dec)	LUAI_FUNC dec
@@ -336,17 +336,17 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
+#જો !defined(lua_writestring)
+#define lua_writestring(s,l)   fwrite((s), કદ(અક્ષર), (l), stdout)
 #endif
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
+#જો !defined(lua_writeline)
 #define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
 #endif
 
 /* print an error message */
-#if !defined(lua_writestringerror)
+#જો !defined(lua_writestringerror)
 #define lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
 #endif

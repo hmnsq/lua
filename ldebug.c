@@ -7,42 +7,42 @@
 #define ldebug_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#અન્તર્ભાવ "lprefix.h"
 
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ <stddef.h>
+#અન્તર્ભાવ <string.h>
 
-#include "lua.h"
+#અન્તર્ભાવ "lua.h"
 
-#include "lapi.h"
-#include "lcode.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lvm.h"
-
-
-
-#define LuaClosure(f)		((f) != NULL && (f)->c.tt == LUA_VLCL)
-
-static const char strlocal[] = "local";
-static const char strupval[] = "upvalue";
-
-static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
-                                                   const char **name);
+#અન્તર્ભાવ "lapi.h"
+#અન્તર્ભાવ "lcode.h"
+#અન્તર્ભાવ "ldebug.h"
+#અન્તર્ભાવ "ldo.h"
+#અન્તર્ભાવ "lfunc.h"
+#અન્તર્ભાવ "lobject.h"
+#અન્તર્ભાવ "lopcodes.h"
+#અન્તર્ભાવ "lstate.h"
+#અન્તર્ભાવ "lstring.h"
+#અન્તર્ભાવ "ltable.h"
+#અન્તર્ભાવ "ltm.h"
+#અન્તર્ભાવ "lvm.h"
 
 
-static int currentpc (CallInfo *ci) {
+
+#define LuaClosure(f)		((f) != ખાલી && (f)->c.tt == LUA_VLCL)
+
+સ્થિર અચલ અક્ષર strlocal[] = "local";
+સ્થિર અચલ અક્ષર strupval[] = "upvalue";
+
+સ્થિર અચલ અક્ષર *funcnamefromcall (lua_State *L, CallInfo *ci,
+                                                   અચલ અક્ષર **name);
+
+
+સ્થિર પૂર્ણાંક currentpc (CallInfo *ci) {
   lua_assert(isLua(ci));
-  return pcRel(ci->u.l.savedpc, ci_func(ci)->p);
+  પાછા pcRel(ci->u.l.savedpc, ci_func(ci)->p);
 }
 
 
@@ -59,20 +59,20 @@ static int currentpc (CallInfo *ci) {
 ** value for MAXIWTHABS or smaller. (Previous releases use a little
 ** smaller value.)
 */
-static int getbaseline (const Proto *f, int pc, int *basepc) {
-  if (f->sizeabslineinfo == 0 || pc < f->abslineinfo[0].pc) {
+સ્થિર પૂર્ણાંક getbaseline (અચલ Proto *f, પૂર્ણાંક pc, પૂર્ણાંક *basepc) {
+  જો (f->sizeabslineinfo == 0 || pc < f->abslineinfo[0].pc) {
     *basepc = -1;  /* start from the beginning */
-    return f->linedefined;
+    પાછા f->linedefined;
   }
-  else {
-    int i = pc / MAXIWTHABS - 1;  /* get an estimate */
+  નહીંતર {
+    પૂર્ણાંક i = pc / MAXIWTHABS - 1;  /* get an estimate */
     /* estimate must be a lower bound of the correct base */
     lua_assert(i < 0 ||
               (i < f->sizeabslineinfo && f->abslineinfo[i].pc <= pc));
-    while (i + 1 < f->sizeabslineinfo && pc >= f->abslineinfo[i + 1].pc)
+    જ્યારે (i + 1 < f->sizeabslineinfo && pc >= f->abslineinfo[i + 1].pc)
       i++;  /* low estimate; adjust it */
     *basepc = f->abslineinfo[i].pc;
-    return f->abslineinfo[i].line;
+    પાછા f->abslineinfo[i].લીટી;
   }
 }
 
@@ -82,23 +82,23 @@ static int getbaseline (const Proto *f, int pc, int *basepc) {
 ** first gets a base line and from there does the increments until
 ** the desired instruction.
 */
-int luaG_getfuncline (const Proto *f, int pc) {
-  if (f->lineinfo == NULL)  /* no debug information? */
-    return -1;
-  else {
-    int basepc;
-    int baseline = getbaseline(f, pc, &basepc);
-    while (basepc++ < pc) {  /* walk until given instruction */
+પૂર્ણાંક luaG_getfuncline (અચલ Proto *f, પૂર્ણાંક pc) {
+  જો (f->lineinfo == ખાલી)  /* no debug information? */
+    પાછા -1;
+  નહીંતર {
+    પૂર્ણાંક basepc;
+    પૂર્ણાંક baseline = getbaseline(f, pc, &basepc);
+    જ્યારે (basepc++ < pc) {  /* walk until given instruction */
       lua_assert(f->lineinfo[basepc] != ABSLINEINFO);
       baseline += f->lineinfo[basepc];  /* correct line */
     }
-    return baseline;
+    પાછા baseline;
   }
 }
 
 
-static int getcurrentline (CallInfo *ci) {
-  return luaG_getfuncline(ci_func(ci)->p, currentpc(ci));
+સ્થિર પૂર્ણાંક getcurrentline (CallInfo *ci) {
+  પાછા luaG_getfuncline(ci_func(ci)->p, currentpc(ci));
 }
 
 
@@ -113,9 +113,9 @@ static int getcurrentline (CallInfo *ci) {
 ** temporarily broken while inserting a new element. We simply assume it
 ** has no good reasons to do that.)
 */
-static void settraps (CallInfo *ci) {
-  for (; ci != NULL; ci = ci->previous)
-    if (isLua(ci))
+સ્થિર શૂન્ય settraps (CallInfo *ci) {
+  માટે (; ci != ખાલી; ci = ci->previous)
+    જો (isLua(ci))
       ci->u.l.trap = 1;
 }
 
@@ -130,146 +130,146 @@ static void settraps (CallInfo *ci) {
 ** for all platforms where it runs). Moreover, 'hook' is always checked
 ** before being called (see 'luaD_hook').
 */
-LUA_API void lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
-  if (func == NULL || mask == 0) {  /* turn off hooks? */
+LUA_API શૂન્ય lua_sethook (lua_State *L, lua_Hook func, પૂર્ણાંક mask, પૂર્ણાંક ગણતરી) {
+  જો (func == ખાલી || mask == 0) {  /* turn off hooks? */
     mask = 0;
-    func = NULL;
+    func = ખાલી;
   }
   L->hook = func;
-  L->basehookcount = count;
+  L->basehookcount = ગણતરી;
   resethookcount(L);
   L->hookmask = cast_byte(mask);
-  if (mask)
+  જો (mask)
     settraps(L->ci);  /* to trace inside 'luaV_execute' */
 }
 
 
 LUA_API lua_Hook lua_gethook (lua_State *L) {
-  return L->hook;
+  પાછા L->hook;
 }
 
 
-LUA_API int lua_gethookmask (lua_State *L) {
-  return cast_int(L->hookmask);
+LUA_API પૂર્ણાંક lua_gethookmask (lua_State *L) {
+  પાછા cast_int(L->hookmask);
 }
 
 
-LUA_API int lua_gethookcount (lua_State *L) {
-  return L->basehookcount;
+LUA_API પૂર્ણાંક lua_gethookcount (lua_State *L) {
+  પાછા L->basehookcount;
 }
 
 
-LUA_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
-  int status;
+LUA_API પૂર્ણાંક lua_getstack (lua_State *L, પૂર્ણાંક level, lua_Debug *ar) {
+  પૂર્ણાંક status;
   CallInfo *ci;
-  if (level < 0) return 0;  /* invalid (negative) level */
+  જો (level < 0) પાછા 0;  /* invalid (negative) level */
   lua_lock(L);
-  for (ci = L->ci; level > 0 && ci != &L->base_ci; ci = ci->previous)
+  માટે (ci = L->ci; level > 0 && ci != &L->base_ci; ci = ci->previous)
     level--;
-  if (level == 0 && ci != &L->base_ci) {  /* level found? */
+  જો (level == 0 && ci != &L->base_ci) {  /* level found? */
     status = 1;
     ar->i_ci = ci;
   }
-  else status = 0;  /* no such level */
+  નહીંતર status = 0;  /* no such level */
   lua_unlock(L);
-  return status;
+  પાછા status;
 }
 
 
-static const char *upvalname (const Proto *p, int uv) {
+સ્થિર અચલ અક્ષર *upvalname (અચલ Proto *p, પૂર્ણાંક uv) {
   TString *s = check_exp(uv < p->sizeupvalues, p->upvalues[uv].name);
-  if (s == NULL) return "?";
-  else return getstr(s);
+  જો (s == ખાલી) પાછા "?";
+  નહીંતર પાછા getstr(s);
 }
 
 
-static const char *findvararg (CallInfo *ci, int n, StkId *pos) {
-  if (clLvalue(s2v(ci->func.p))->p->flag & PF_VAHID) {
-    int nextra = ci->u.l.nextraargs;
-    if (n >= -nextra) {  /* 'n' is negative */
+સ્થિર અચલ અક્ષર *findvararg (CallInfo *ci, પૂર્ણાંક n, StkId *pos) {
+  જો (clLvalue(s2v(ci->func.p))->p->flag & PF_VAHID) {
+    પૂર્ણાંક nextra = ci->u.l.nextraargs;
+    જો (n >= -nextra) {  /* 'n' is negative */
       *pos = ci->func.p - nextra - (n + 1);
-      return "(vararg)";  /* generic name for any vararg */
+      પાછા "(vararg)";  /* generic name for any vararg */
     }
   }
-  return NULL;  /* no such vararg */
+  પાછા ખાલી;  /* no such vararg */
 }
 
 
-const char *luaG_findlocal (lua_State *L, CallInfo *ci, int n, StkId *pos) {
+અચલ અક્ષર *luaG_findlocal (lua_State *L, CallInfo *ci, પૂર્ણાંક n, StkId *pos) {
   StkId base = ci->func.p + 1;
-  const char *name = NULL;
-  if (isLua(ci)) {
-    if (n < 0)  /* access to vararg values? */
-      return findvararg(ci, n, pos);
-    else
+  અચલ અક્ષર *name = ખાલી;
+  જો (isLua(ci)) {
+    જો (n < 0)  /* access to vararg values? */
+      પાછા findvararg(ci, n, pos);
+    નહીંતર
       name = luaF_getlocalname(ci_func(ci)->p, cast_uint(n), currentpc(ci));
   }
-  if (name == NULL) {  /* no 'standard' name? */
-    StkId limit = (ci == L->ci) ? L->top.p : ci->next->func.p;
-    if (limit - base >= n && n > 0) {  /* is 'n' inside 'ci' stack? */
+  જો (name == ખાલી) {  /* no 'standard' name? */
+    StkId limit = (ci == L->ci) ? L->ટોચ.p : ci->next->func.p;
+    જો (limit - base >= n && n > 0) {  /* is 'n' inside 'ci' stack? */
       /* generic name for any valid slot */
       name = isLua(ci) ? "(temporary)" : "(C temporary)";
     }
-    else
-      return NULL;  /* no name */
+    નહીંતર
+      પાછા ખાલી;  /* no name */
   }
-  if (pos)
+  જો (pos)
     *pos = base + (n - 1);
-  return name;
+  પાછા name;
 }
 
 
-LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
-  const char *name;
+LUA_API અચલ અક્ષર *lua_getlocal (lua_State *L, અચલ lua_Debug *ar, પૂર્ણાંક n) {
+  અચલ અક્ષર *name;
   lua_lock(L);
-  if (ar == NULL) {  /* information about non-active function? */
-    if (!isLfunction(s2v(L->top.p - 1)))  /* not a Lua function? */
-      name = NULL;
-    else  /* consider live variables at function start (parameters) */
-      name = luaF_getlocalname(clLvalue(s2v(L->top.p - 1))->p, cast_uint(n), 0);
+  જો (ar == ખાલી) {  /* information about non-active function? */
+    જો (!isLfunction(s2v(L->ટોચ.p - 1)))  /* not a Lua function? */
+      name = ખાલી;
+    નહીંતર  /* consider live variables at function start (parameters) */
+      name = luaF_getlocalname(clLvalue(s2v(L->ટોચ.p - 1))->p, cast_uint(n), 0);
   }
-  else {  /* active function; get information through 'ar' */
-    StkId pos = NULL;  /* to avoid warnings */
+  નહીંતર {  /* active function; get information through 'ar' */
+    StkId pos = ખાલી;  /* to avoid warnings */
     name = luaG_findlocal(L, ar->i_ci, n, &pos);
-    if (name) {
-      setobjs2s(L, L->top.p, pos);
-      api_incr_top(L);
+    જો (name) {
+      setobjs2s(L, L->ટોચ.p, pos);
+      api_incr_ટોચ(L);
     }
   }
   lua_unlock(L);
-  return name;
+  પાછા name;
 }
 
 
-LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
-  StkId pos = NULL;  /* to avoid warnings */
-  const char *name;
+LUA_API અચલ અક્ષર *lua_setlocal (lua_State *L, અચલ lua_Debug *ar, પૂર્ણાંક n) {
+  StkId pos = ખાલી;  /* to avoid warnings */
+  અચલ અક્ષર *name;
   lua_lock(L);
   name = luaG_findlocal(L, ar->i_ci, n, &pos);
-  if (name) {
+  જો (name) {
     api_checkpop(L, 1);
-    setobjs2s(L, pos, L->top.p - 1);
-    L->top.p--;  /* pop value */
+    setobjs2s(L, pos, L->ટોચ.p - 1);
+    L->ટોચ.p--;  /* pop value */
   }
   lua_unlock(L);
-  return name;
+  પાછા name;
 }
 
 
-static void funcinfo (lua_Debug *ar, Closure *cl) {
-  if (!LuaClosure(cl)) {
+સ્થિર શૂન્ય funcinfo (lua_Debug *ar, Closure *cl) {
+  જો (!LuaClosure(cl)) {
     ar->source = "=[C]";
     ar->srclen = LL("=[C]");
     ar->linedefined = -1;
     ar->lastlinedefined = -1;
     ar->what = "C";
   }
-  else {
-    const Proto *p = cl->l.p;
-    if (p->source) {
+  નહીંતર {
+    અચલ Proto *p = cl->l.p;
+    જો (p->source) {
       ar->source = getlstr(p->source, ar->srclen);
     }
-    else {
+    નહીંતર {
       ar->source = "=?";
       ar->srclen = LL("=?");
     }
@@ -281,37 +281,37 @@ static void funcinfo (lua_Debug *ar, Closure *cl) {
 }
 
 
-static int nextline (const Proto *p, int currentline, int pc) {
-  if (p->lineinfo[pc] != ABSLINEINFO)
-    return currentline + p->lineinfo[pc];
-  else
-    return luaG_getfuncline(p, pc);
+સ્થિર પૂર્ણાંક nextline (અચલ Proto *p, પૂર્ણાંક currentline, પૂર્ણાંક pc) {
+  જો (p->lineinfo[pc] != ABSLINEINFO)
+    પાછા currentline + p->lineinfo[pc];
+  નહીંતર
+    પાછા luaG_getfuncline(p, pc);
 }
 
 
-static void collectvalidlines (lua_State *L, Closure *f) {
-  if (!LuaClosure(f)) {
-    setnilvalue2s(L->top.p);
-    api_incr_top(L);
+સ્થિર શૂન્ય collectvalidlines (lua_State *L, Closure *f) {
+  જો (!LuaClosure(f)) {
+    setnilvalue2s(L->ટોચ.p);
+    api_incr_ટોચ(L);
   }
-  else {
-    const Proto *p = f->l.p;
-    int currentline = p->linedefined;
+  નહીંતર {
+    અચલ Proto *p = f->l.p;
+    પૂર્ણાંક currentline = p->linedefined;
     Table *t = luaH_new(L);  /* new table to store active lines */
-    sethvalue2s(L, L->top.p, t);  /* push it on stack */
-    api_incr_top(L);
-    if (p->lineinfo != NULL) {  /* proto with debug information? */
-      int i;
+    sethvalue2s(L, L->ટોચ.p, t);  /* push it on stack */
+    api_incr_ટોચ(L);
+    જો (p->lineinfo != ખાલી) {  /* proto with debug information? */
+      પૂર્ણાંક i;
       TValue v;
       setbtvalue(&v);  /* boolean 'true' to be the value of all indices */
-      if (!(isvararg(p)))  /* regular function? */
+      જો (!(isvararg(p)))  /* regular function? */
         i = 0;  /* consider all instructions */
-      else {  /* vararg function */
+      નહીંતર {  /* vararg function */
         lua_assert(GET_OPCODE(p->code[0]) == OP_VARARGPREP);
         currentline = nextline(p, currentline, 0);
         i = 1;  /* skip first instruction (OP_VARARGPREP) */
       }
-      for (; i < p->sizelineinfo; i++) {  /* for each instruction */
+      માટે (; i < p->sizelineinfo; i++) {  /* for each instruction */
         currentline = nextline(p, currentline, i);  /* get its line */
         luaH_setint(L, t, currentline, &v);  /* table[line] = true */
       }
@@ -320,106 +320,106 @@ static void collectvalidlines (lua_State *L, Closure *f) {
 }
 
 
-static const char *getfuncname (lua_State *L, CallInfo *ci, const char **name) {
+સ્થિર અચલ અક્ષર *getfuncname (lua_State *L, CallInfo *ci, અચલ અક્ષર **name) {
   /* calling function is a known function? */
-  if (ci != NULL && !(ci->callstatus & CIST_TAIL))
-    return funcnamefromcall(L, ci->previous, name);
-  else return NULL;  /* no way to find a name */
+  જો (ci != ખાલી && !(ci->callstatus & CIST_TAIL))
+    પાછા funcnamefromcall(L, ci->previous, name);
+  નહીંતર પાછા ખાલી;  /* no way to find a name */
 }
 
 
-static int auxgetinfo (lua_State *L, const char *what, lua_Debug *ar,
+સ્થિર પૂર્ણાંક auxgetinfo (lua_State *L, અચલ અક્ષર *what, lua_Debug *ar,
                        Closure *f, CallInfo *ci) {
-  int status = 1;
-  for (; *what; what++) {
-    switch (*what) {
-      case 'S': {
+  પૂર્ણાંક status = 1;
+  માટે (; *what; what++) {
+    પસંદગી (*what) {
+      સ્થિતિ 'S': {
         funcinfo(ar, f);
-        break;
+        તોડો;
       }
-      case 'l': {
+      સ્થિતિ 'l': {
         ar->currentline = (ci && isLua(ci)) ? getcurrentline(ci) : -1;
-        break;
+        તોડો;
       }
-      case 'u': {
-        ar->nups = (f == NULL) ? 0 : f->c.nupvalues;
-        if (!LuaClosure(f)) {
+      સ્થિતિ 'u': {
+        ar->nups = (f == ખાલી) ? 0 : f->c.nupvalues;
+        જો (!LuaClosure(f)) {
           ar->isvararg = 1;
           ar->nparams = 0;
         }
-        else {
+        નહીંતર {
           ar->isvararg = (isvararg(f->l.p)) ? 1 : 0;
           ar->nparams = f->l.p->numparams;
         }
-        break;
+        તોડો;
       }
-      case 't': {
-        if (ci != NULL) {
+      સ્થિતિ 't': {
+        જો (ci != ખાલી) {
           ar->istailcall = !!(ci->callstatus & CIST_TAIL);
           ar->extraargs =
                    cast_uchar((ci->callstatus & MAX_CCMT) >> CIST_CCMT);
         }
-        else {
+        નહીંતર {
           ar->istailcall = 0;
           ar->extraargs = 0;
         }
-        break;
+        તોડો;
       }
-      case 'n': {
+      સ્થિતિ 'n': {
         ar->namewhat = getfuncname(L, ci, &ar->name);
-        if (ar->namewhat == NULL) {
+        જો (ar->namewhat == ખાલી) {
           ar->namewhat = "";  /* not found */
-          ar->name = NULL;
+          ar->name = ખાલી;
         }
-        break;
+        તોડો;
       }
-      case 'r': {
-        if (ci == NULL || !(ci->callstatus & CIST_HOOKED))
+      સ્થિતિ 'r': {
+        જો (ci == ખાલી || !(ci->callstatus & CIST_HOOKED))
           ar->ftransfer = ar->ntransfer = 0;
-        else {
+        નહીંતર {
           ar->ftransfer = L->transferinfo.ftransfer;
           ar->ntransfer = L->transferinfo.ntransfer;
         }
-        break;
+        તોડો;
       }
-      case 'L':
-      case 'f':  /* handled by lua_getinfo */
-        break;
-      default: status = 0;  /* invalid option */
+      સ્થિતિ 'L':
+      સ્થિતિ 'f':  /* handled by lua_getinfo */
+        તોડો;
+      મૂળભૂત: status = 0;  /* invalid option */
     }
   }
-  return status;
+  પાછા status;
 }
 
 
-LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
-  int status;
+LUA_API પૂર્ણાંક lua_getinfo (lua_State *L, અચલ અક્ષર *what, lua_Debug *ar) {
+  પૂર્ણાંક status;
   Closure *cl;
   CallInfo *ci;
   TValue *func;
   lua_lock(L);
-  if (*what == '>') {
-    ci = NULL;
-    func = s2v(L->top.p - 1);
+  જો (*what == '>') {
+    ci = ખાલી;
+    func = s2v(L->ટોચ.p - 1);
     api_check(L, ttisfunction(func), "function expected");
     what++;  /* skip the '>' */
-    L->top.p--;  /* pop function */
+    L->ટોચ.p--;  /* pop function */
   }
-  else {
+  નહીંતર {
     ci = ar->i_ci;
     func = s2v(ci->func.p);
     lua_assert(ttisfunction(func));
   }
-  cl = ttisclosure(func) ? clvalue(func) : NULL;
+  cl = ttisclosure(func) ? clvalue(func) : ખાલી;
   status = auxgetinfo(L, what, ar, cl, ci);
-  if (strchr(what, 'f')) {
-    setobj2s(L, L->top.p, func);
-    api_incr_top(L);
+  જો (strchr(what, 'f')) {
+    setobj2s(L, L->ટોચ.p, func);
+    api_incr_ટોચ(L);
   }
-  if (strchr(what, 'L'))
+  જો (strchr(what, 'L'))
     collectvalidlines(L, cl);
   lua_unlock(L);
-  return status;
+  પાછા status;
 }
 
 
@@ -430,115 +430,115 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
 */
 
 
-static int filterpc (int pc, int jmptarget) {
-  if (pc < jmptarget)  /* is code conditional (inside a jump)? */
-    return -1;  /* cannot know who sets that register */
-  else return pc;  /* current position sets that register */
+સ્થિર પૂર્ણાંક filterpc (પૂર્ણાંક pc, પૂર્ણાંક jmptarget) {
+  જો (pc < jmptarget)  /* is code conditional (inside a jump)? */
+    પાછા -1;  /* cannot know who sets that register */
+  નહીંતર પાછા pc;  /* current position sets that register */
 }
 
 
 /*
 ** Try to find last instruction before 'lastpc' that modified register 'reg'.
 */
-static int findsetreg (const Proto *p, int lastpc, int reg) {
-  int pc;
-  int setreg = -1;  /* keep last instruction that changed 'reg' */
-  int jmptarget = 0;  /* any code before this address is conditional */
-  if (testMMMode(GET_OPCODE(p->code[lastpc])))
+સ્થિર પૂર્ણાંક findsetreg (અચલ Proto *p, પૂર્ણાંક lastpc, પૂર્ણાંક reg) {
+  પૂર્ણાંક pc;
+  પૂર્ણાંક setreg = -1;  /* keep last instruction that changed 'reg' */
+  પૂર્ણાંક jmptarget = 0;  /* any code before this address is conditional */
+  જો (testMMMode(GET_OPCODE(p->code[lastpc])))
     lastpc--;  /* previous instruction was not actually executed */
-  for (pc = 0; pc < lastpc; pc++) {
+  માટે (pc = 0; pc < lastpc; pc++) {
     Instruction i = p->code[pc];
     OpCode op = GET_OPCODE(i);
-    int a = GETARG_A(i);
-    int change;  /* true if current instruction changed 'reg' */
-    switch (op) {
-      case OP_LOADNIL: {  /* set registers from 'a' to 'a+b' */
-        int b = GETARG_B(i);
+    પૂર્ણાંક a = GETARG_A(i);
+    પૂર્ણાંક change;  /* true if current instruction changed 'reg' */
+    પસંદગી (op) {
+      સ્થિતિ OP_LOADNIL: {  /* set registers from 'a' to 'a+b' */
+        પૂર્ણાંક b = GETARG_B(i);
         change = (a <= reg && reg <= a + b);
-        break;
+        તોડો;
       }
-      case OP_TFORCALL: {  /* affect all regs above its base */
+      સ્થિતિ OP_TFORCALL: {  /* affect all regs above its base */
         change = (reg >= a + 2);
-        break;
+        તોડો;
       }
-      case OP_CALL:
-      case OP_TAILCALL: {  /* affect all registers above base */
+      સ્થિતિ OP_CALL:
+      સ્થિતિ OP_TAILCALL: {  /* affect all registers above base */
         change = (reg >= a);
-        break;
+        તોડો;
       }
-      case OP_JMP: {  /* doesn't change registers, but changes 'jmptarget' */
-        int b = GETARG_sJ(i);
-        int dest = pc + 1 + b;
+      સ્થિતિ OP_JMP: {  /* doesn't change registers, but changes 'jmptarget' */
+        પૂર્ણાંક b = GETARG_sJ(i);
+        પૂર્ણાંક dest = pc + 1 + b;
         /* jump does not skip 'lastpc' and is larger than current one? */
-        if (dest <= lastpc && dest > jmptarget)
+        જો (dest <= lastpc && dest > jmptarget)
           jmptarget = dest;  /* update 'jmptarget' */
         change = 0;
-        break;
+        તોડો;
       }
-      default:  /* any instruction that sets A */
+      મૂળભૂત:  /* any instruction that sets A */
         change = (testAMode(op) && reg == a);
-        break;
+        તોડો;
     }
-    if (change)
+    જો (change)
       setreg = filterpc(pc, jmptarget);
   }
-  return setreg;
+  પાછા setreg;
 }
 
 
 /*
 ** Find a "name" for the constant 'c'.
 */
-static const char *kname (const Proto *p, int index, const char **name) {
+સ્થિર અચલ અક્ષર *kname (અચલ Proto *p, પૂર્ણાંક index, અચલ અક્ષર **name) {
   TValue *kvalue = &p->k[index];
-  if (ttisstring(kvalue)) {
+  જો (ttisstring(kvalue)) {
     *name = getstr(tsvalue(kvalue));
-    return "constant";
+    પાછા "constant";
   }
-  else {
+  નહીંતર {
     *name = "?";
-    return NULL;
+    પાછા ખાલી;
   }
 }
 
 
-static const char *basicgetobjname (const Proto *p, int *ppc, int reg,
-                                    const char **name) {
-  int pc = *ppc;
+સ્થિર અચલ અક્ષર *basicgetobjname (અચલ Proto *p, પૂર્ણાંક *ppc, પૂર્ણાંક reg,
+                                    અચલ અક્ષર **name) {
+  પૂર્ણાંક pc = *ppc;
   *name = luaF_getlocalname(p, cast_uint(reg + 1), pc);
-  if (*name)  /* is a local? */
-    return strlocal;
+  જો (*name)  /* is a local? */
+    પાછા strlocal;
   /* else try symbolic execution */
   *ppc = pc = findsetreg(p, pc, reg);
-  if (pc != -1) {  /* could find instruction? */
+  જો (pc != -1) {  /* could find instruction? */
     Instruction i = p->code[pc];
     OpCode op = GET_OPCODE(i);
-    switch (op) {
-      case OP_MOVE: {
-        int b = GETARG_B(i);  /* move from 'b' to 'a' */
-        if (b < GETARG_A(i))
-          return basicgetobjname(p, ppc, b, name);  /* get name for 'b' */
-        break;
+    પસંદગી (op) {
+      સ્થિતિ OP_MOVE: {
+        પૂર્ણાંક b = GETARG_B(i);  /* move from 'b' to 'a' */
+        જો (b < GETARG_A(i))
+          પાછા basicgetobjname(p, ppc, b, name);  /* get name for 'b' */
+        તોડો;
       }
-      case OP_GETUPVAL: {
+      સ્થિતિ OP_GETUPVAL: {
         *name = upvalname(p, GETARG_B(i));
-        return strupval;
+        પાછા strupval;
       }
-      case OP_LOADK: return kname(p, GETARG_Bx(i), name);
-      case OP_LOADKX: return kname(p, GETARG_Ax(p->code[pc + 1]), name);
-      default: break;
+      સ્થિતિ OP_LOADK: પાછા kname(p, GETARG_Bx(i), name);
+      સ્થિતિ OP_LOADKX: પાછા kname(p, GETARG_Ax(p->code[pc + 1]), name);
+      મૂળભૂત: તોડો;
     }
   }
-  return NULL;  /* could not find reasonable name */
+  પાછા ખાલી;  /* could not find reasonable name */
 }
 
 
 /*
 ** Find a "name" for the register 'c'.
 */
-static void rname (const Proto *p, int pc, int c, const char **name) {
-  const char *what = basicgetobjname(p, &pc, c, name); /* search for 'c' */
-  if (!(what && *what == 'c'))  /* did not find a constant name? */
+સ્થિર શૂન્ય rname (અચલ Proto *p, પૂર્ણાંક pc, પૂર્ણાંક c, અચલ અક્ષર **name) {
+  અચલ અક્ષર *what = basicgetobjname(p, &pc, c, name); /* search for 'c' */
+  જો (!(what && *what == 'c'))  /* did not find a constant name? */
     *name = "?";
 }
 
@@ -547,62 +547,62 @@ static void rname (const Proto *p, int pc, int c, const char **name) {
 ** Check whether table being indexed by instruction 'i' is the
 ** environment '_ENV'
 */
-static const char *isEnv (const Proto *p, int pc, Instruction i, int isup) {
-  int t = GETARG_B(i);  /* table index */
-  const char *name;  /* name of indexed variable */
-  if (isup)  /* is 't' an upvalue? */
+સ્થિર અચલ અક્ષર *isEnv (અચલ Proto *p, પૂર્ણાંક pc, Instruction i, પૂર્ણાંક isup) {
+  પૂર્ણાંક t = GETARG_B(i);  /* table index */
+  અચલ અક્ષર *name;  /* name of indexed variable */
+  જો (isup)  /* is 't' an upvalue? */
     name = upvalname(p, t);
-  else {  /* 't' is a register */
-    const char *what = basicgetobjname(p, &pc, t, &name);
+  નહીંતર {  /* 't' is a register */
+    અચલ અક્ષર *what = basicgetobjname(p, &pc, t, &name);
     /* 'name' must be the name of a local variable (at the current
        level or an upvalue) */
-    if (what != strlocal && what != strupval)
-      name = NULL;  /* cannot be the variable _ENV */
+    જો (what != strlocal && what != strupval)
+      name = ખાલી;  /* cannot be the variable _ENV */
   }
-  return (name && strcmp(name, LUA_ENV) == 0) ? "global" : "field";
+  પાછા (name && strcmp(name, LUA_ENV) == 0) ? "global" : "field";
 }
 
 
 /*
 ** Extend 'basicgetobjname' to handle table accesses
 */
-static const char *getobjname (const Proto *p, int lastpc, int reg,
-                               const char **name) {
-  const char *kind = basicgetobjname(p, &lastpc, reg, name);
-  if (kind != NULL)
-    return kind;
-  else if (lastpc != -1) {  /* could find instruction? */
+સ્થિર અચલ અક્ષર *getobjname (અચલ Proto *p, પૂર્ણાંક lastpc, પૂર્ણાંક reg,
+                               અચલ અક્ષર **name) {
+  અચલ અક્ષર *kind = basicgetobjname(p, &lastpc, reg, name);
+  જો (kind != ખાલી)
+    પાછા kind;
+  નહીંતર જો (lastpc != -1) {  /* could find instruction? */
     Instruction i = p->code[lastpc];
     OpCode op = GET_OPCODE(i);
-    switch (op) {
-      case OP_GETTABUP: {
-        int k = GETARG_C(i);  /* key index */
+    પસંદગી (op) {
+      સ્થિતિ OP_GETTABUP: {
+        પૂર્ણાંક k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return isEnv(p, lastpc, i, 1);
+        પાછા isEnv(p, lastpc, i, 1);
       }
-      case OP_GETTABLE: case OP_GETVARG: {
-        int k = GETARG_C(i);  /* key index */
+      સ્થિતિ OP_GETTABLE: સ્થિતિ OP_GETVARG: {
+        પૂર્ણાંક k = GETARG_C(i);  /* key index */
         rname(p, lastpc, k, name);
-        return isEnv(p, lastpc, i, 0);
+        પાછા isEnv(p, lastpc, i, 0);
       }
-      case OP_GETI: {
+      સ્થિતિ OP_GETI: {
         *name = "integer index";
-        return "field";
+        પાછા "field";
       }
-      case OP_GETFIELD: {
-        int k = GETARG_C(i);  /* key index */
+      સ્થિતિ OP_GETFIELD: {
+        પૂર્ણાંક k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return isEnv(p, lastpc, i, 0);
+        પાછા isEnv(p, lastpc, i, 0);
       }
-      case OP_SELF: {
-        int k = GETARG_C(i);  /* key index */
+      સ્થિતિ OP_SELF: {
+        પૂર્ણાંક k = GETARG_C(i);  /* key index */
         kname(p, k, name);
-        return "method";
+        પાછા "method";
       }
-      default: break;  /* go through to return NULL */
+      મૂળભૂત: તોડો;  /* go through to return NULL */
     }
   }
-  return NULL;  /* could not find reasonable name */
+  પાછા ખાલી;  /* could not find reasonable name */
 }
 
 
@@ -612,64 +612,64 @@ static const char *getobjname (const Proto *p, int lastpc, int reg,
 ** Returns what the name is (e.g., "for iterator", "method",
 ** "metamethod") and sets '*name' to point to the name.
 */
-static const char *funcnamefromcode (lua_State *L, const Proto *p,
-                                     int pc, const char **name) {
+સ્થિર અચલ અક્ષર *funcnamefromcode (lua_State *L, અચલ Proto *p,
+                                     પૂર્ણાંક pc, અચલ અક્ષર **name) {
   TMS tm = (TMS)0;  /* (initial value avoids warnings) */
   Instruction i = p->code[pc];  /* calling instruction */
-  switch (GET_OPCODE(i)) {
-    case OP_CALL:
-    case OP_TAILCALL:
-      return getobjname(p, pc, GETARG_A(i), name);  /* get function name */
-    case OP_TFORCALL: {  /* for iterator */
+  પસંદગી (GET_OPCODE(i)) {
+    સ્થિતિ OP_CALL:
+    સ્થિતિ OP_TAILCALL:
+      પાછા getobjname(p, pc, GETARG_A(i), name);  /* get function name */
+    સ્થિતિ OP_TFORCALL: {  /* for iterator */
       *name = "for iterator";
-       return "for iterator";
+       પાછા "for iterator";
     }
     /* other instructions can do calls through metamethods */
-    case OP_SELF: case OP_GETTABUP: case OP_GETTABLE:
-    case OP_GETI: case OP_GETFIELD:
+    સ્થિતિ OP_SELF: સ્થિતિ OP_GETTABUP: સ્થિતિ OP_GETTABLE:
+    સ્થિતિ OP_GETI: સ્થિતિ OP_GETFIELD:
       tm = TM_INDEX;
-      break;
-    case OP_SETTABUP: case OP_SETTABLE: case OP_SETI: case OP_SETFIELD:
+      તોડો;
+    સ્થિતિ OP_SETTABUP: સ્થિતિ OP_SETTABLE: સ્થિતિ OP_SETI: સ્થિતિ OP_SETFIELD:
       tm = TM_NEWINDEX;
-      break;
-    case OP_MMBIN: case OP_MMBINI: case OP_MMBINK: {
+      તોડો;
+    સ્થિતિ OP_MMBIN: સ્થિતિ OP_MMBINI: સ્થિતિ OP_MMBINK: {
       tm = cast(TMS, GETARG_C(i));
-      break;
+      તોડો;
     }
-    case OP_UNM: tm = TM_UNM; break;
-    case OP_BNOT: tm = TM_BNOT; break;
-    case OP_LEN: tm = TM_LEN; break;
-    case OP_CONCAT: tm = TM_CONCAT; break;
-    case OP_EQ: tm = TM_EQ; break;
+    સ્થિતિ OP_UNM: tm = TM_UNM; તોડો;
+    સ્થિતિ OP_BNOT: tm = TM_BNOT; તોડો;
+    સ્થિતિ OP_LEN: tm = TM_LEN; તોડો;
+    સ્થિતિ OP_CONCAT: tm = TM_CONCAT; તોડો;
+    સ્થિતિ OP_EQ: tm = TM_EQ; તોડો;
     /* no cases for OP_EQI and OP_EQK, as they don't call metamethods */
-    case OP_LT: case OP_LTI: case OP_GTI: tm = TM_LT; break;
-    case OP_LE: case OP_LEI: case OP_GEI: tm = TM_LE; break;
-    case OP_CLOSE: case OP_RETURN: tm = TM_CLOSE; break;
-    default:
-      return NULL;  /* cannot find a reasonable name */
+    સ્થિતિ OP_LT: સ્થિતિ OP_LTI: સ્થિતિ OP_GTI: tm = TM_LT; તોડો;
+    સ્થિતિ OP_LE: સ્થિતિ OP_LEI: સ્થિતિ OP_GEI: tm = TM_LE; તોડો;
+    સ્થિતિ OP_CLOSE: સ્થિતિ OP_RETURN: tm = TM_CLOSE; તોડો;
+    મૂળભૂત:
+      પાછા ખાલી;  /* cannot find a reasonable name */
   }
   *name = getshrstr(G(L)->tmname[tm]) + 2;
-  return "metamethod";
+  પાછા "metamethod";
 }
 
 
 /*
 ** Try to find a name for a function based on how it was called.
 */
-static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
-                                                   const char **name) {
-  if (ci->callstatus & CIST_HOOKED) {  /* was it called inside a hook? */
+સ્થિર અચલ અક્ષર *funcnamefromcall (lua_State *L, CallInfo *ci,
+                                                   અચલ અક્ષર **name) {
+  જો (ci->callstatus & CIST_HOOKED) {  /* was it called inside a hook? */
     *name = "?";
-    return "hook";
+    પાછા "hook";
   }
-  else if (ci->callstatus & CIST_FIN) {  /* was it called as a finalizer? */
+  નહીંતર જો (ci->callstatus & CIST_FIN) {  /* was it called as a finalizer? */
     *name = "__gc";
-    return "metamethod";  /* report it as such */
+    પાછા "metamethod";  /* report it as such */
   }
-  else if (isLua(ci))
-    return funcnamefromcode(L, ci_func(ci)->p, currentpc(ci), name);
-  else
-    return NULL;
+  નહીંતર જો (isLua(ci))
+    પાછા funcnamefromcode(L, ci_func(ci)->p, currentpc(ci), name);
+  નહીંતર
+    પાછા ખાલી;
 }
 
 /* }====================================================== */
@@ -682,14 +682,14 @@ static const char *funcnamefromcall (lua_State *L, CallInfo *ci,
 ** not point to a value in this stack, we cannot compare it with the
 ** region boundaries (undefined behavior in ISO C).
 */
-static int instack (CallInfo *ci, const TValue *o) {
-  int pos;
+સ્થિર પૂર્ણાંક instack (CallInfo *ci, અચલ TValue *o) {
+  પૂર્ણાંક pos;
   StkId base = ci->func.p + 1;
-  for (pos = 0; base + pos < ci->top.p; pos++) {
-    if (o == s2v(base + pos))
-      return pos;
+  માટે (pos = 0; base + pos < ci->ટોચ.p; pos++) {
+    જો (o == s2v(base + pos))
+      પાછા pos;
   }
-  return -1;  /* not found */
+  પાછા -1;  /* not found */
 }
 
 
@@ -698,54 +698,54 @@ static int instack (CallInfo *ci, const TValue *o) {
 ** with instructions OP_GETTABUP/OP_SETTABUP, which operate directly on
 ** upvalues.)
 */
-static const char *getupvalname (CallInfo *ci, const TValue *o,
-                                 const char **name) {
+સ્થિર અચલ અક્ષર *getupvalname (CallInfo *ci, અચલ TValue *o,
+                                 અચલ અક્ષર **name) {
   LClosure *c = ci_func(ci);
-  int i;
-  for (i = 0; i < c->nupvalues; i++) {
-    if (c->upvals[i]->v.p == o) {
+  પૂર્ણાંક i;
+  માટે (i = 0; i < c->nupvalues; i++) {
+    જો (c->upvals[i]->v.p == o) {
       *name = upvalname(c->p, i);
-      return strupval;
+      પાછા strupval;
     }
   }
-  return NULL;
+  પાછા ખાલી;
 }
 
 
-static const char *formatvarinfo (lua_State *L, const char *kind,
-                                                const char *name) {
-  if (kind == NULL)
-    return "";  /* no information */
-  else
-    return luaO_pushfstring(L, " (%s '%s')", kind, name);
+સ્થિર અચલ અક્ષર *formatvarinfo (lua_State *L, અચલ અક્ષર *kind,
+                                                અચલ અક્ષર *name) {
+  જો (kind == ખાલી)
+    પાછા "";  /* no information */
+  નહીંતર
+    પાછા luaO_pushfstring(L, " (%s '%s')", kind, name);
 }
 
 /*
 ** Build a string with a "description" for the value 'o', such as
 ** "variable 'x'" or "upvalue 'y'".
 */
-static const char *varinfo (lua_State *L, const TValue *o) {
+સ્થિર અચલ અક્ષર *varinfo (lua_State *L, અચલ TValue *o) {
   CallInfo *ci = L->ci;
-  const char *name = NULL;  /* to avoid warnings */
-  const char *kind = NULL;
-  if (isLua(ci)) {
+  અચલ અક્ષર *name = ખાલી;  /* to avoid warnings */
+  અચલ અક્ષર *kind = ખાલી;
+  જો (isLua(ci)) {
     kind = getupvalname(ci, o, &name);  /* check whether 'o' is an upvalue */
-    if (!kind) {  /* not an upvalue? */
-      int reg = instack(ci, o);  /* try a register */
-      if (reg >= 0)  /* is 'o' a register? */
+    જો (!kind) {  /* not an upvalue? */
+      પૂર્ણાંક reg = instack(ci, o);  /* try a register */
+      જો (reg >= 0)  /* is 'o' a register? */
         kind = getobjname(ci_func(ci)->p, currentpc(ci), reg, &name);
     }
   }
-  return formatvarinfo(L, kind, name);
+  પાછા formatvarinfo(L, kind, name);
 }
 
 
 /*
 ** Raise a type error
 */
-static l_noret typeerror (lua_State *L, const TValue *o, const char *op,
-                          const char *extra) {
-  const char *t = luaT_objtypename(L, o);
+સ્થિર l_noret typeerror (lua_State *L, અચલ TValue *o, અચલ અક્ષર *op,
+                          અચલ અક્ષર *extra) {
+  અચલ અક્ષર *t = luaT_objtypename(L, o);
   luaG_runerror(L, "attempt to %s a %s value%s", op, t, extra);
 }
 
@@ -754,7 +754,7 @@ static l_noret typeerror (lua_State *L, const TValue *o, const char *op,
 ** Raise a type error with "standard" information about the faulty
 ** object 'o' (using 'varinfo').
 */
-l_noret luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
+l_noret luaG_typeerror (lua_State *L, અચલ TValue *o, અચલ અક્ષર *op) {
   typeerror(L, o, op, varinfo(L, o));
 }
 
@@ -764,107 +764,107 @@ l_noret luaG_typeerror (lua_State *L, const TValue *o, const char *op) {
 ** for the object based on how it was called ('funcnamefromcall'); if it
 ** cannot get a name there, try 'varinfo'.
 */
-l_noret luaG_callerror (lua_State *L, const TValue *o) {
+l_noret luaG_callerror (lua_State *L, અચલ TValue *o) {
   CallInfo *ci = L->ci;
-  const char *name = NULL;  /* to avoid warnings */
-  const char *kind = funcnamefromcall(L, ci, &name);
-  const char *extra = kind ? formatvarinfo(L, kind, name) : varinfo(L, o);
+  અચલ અક્ષર *name = ખાલી;  /* to avoid warnings */
+  અચલ અક્ષર *kind = funcnamefromcall(L, ci, &name);
+  અચલ અક્ષર *extra = kind ? formatvarinfo(L, kind, name) : varinfo(L, o);
   typeerror(L, o, "call", extra);
 }
 
 
-l_noret luaG_forerror (lua_State *L, const TValue *o, const char *what) {
+l_noret luaG_forerror (lua_State *L, અચલ TValue *o, અચલ અક્ષર *what) {
   luaG_runerror(L, "bad 'for' %s (number expected, got %s)",
                    what, luaT_objtypename(L, o));
 }
 
 
-l_noret luaG_concaterror (lua_State *L, const TValue *p1, const TValue *p2) {
-  if (ttisstring(p1) || cvt2str(p1)) p1 = p2;
+l_noret luaG_concaterror (lua_State *L, અચલ TValue *p1, અચલ TValue *p2) {
+  જો (ttisstring(p1) || cvt2str(p1)) p1 = p2;
   luaG_typeerror(L, p1, "concatenate");
 }
 
 
-l_noret luaG_opinterror (lua_State *L, const TValue *p1,
-                         const TValue *p2, const char *msg) {
-  if (!ttisnumber(p1))  /* first operand is wrong? */
+l_noret luaG_opinterror (lua_State *L, અચલ TValue *p1,
+                         અચલ TValue *p2, અચલ અક્ષર *સંદેશ) {
+  જો (!ttisnumber(p1))  /* first operand is wrong? */
     p2 = p1;  /* now second is wrong */
-  luaG_typeerror(L, p2, msg);
+  luaG_typeerror(L, p2, સંદેશ);
 }
 
 
 /*
 ** Error when both values are convertible to numbers, but not to integers
 */
-l_noret luaG_tointerror (lua_State *L, const TValue *p1, const TValue *p2) {
+l_noret luaG_tointerror (lua_State *L, અચલ TValue *p1, અચલ TValue *p2) {
   lua_Integer temp;
-  if (!luaV_tointegerns(p1, &temp, LUA_FLOORN2I))
+  જો (!luaV_tointegerns(p1, &temp, LUA_FLOORN2I))
     p2 = p1;
   luaG_runerror(L, "number%s has no integer representation", varinfo(L, p2));
 }
 
 
-l_noret luaG_ordererror (lua_State *L, const TValue *p1, const TValue *p2) {
-  const char *t1 = luaT_objtypename(L, p1);
-  const char *t2 = luaT_objtypename(L, p2);
-  if (strcmp(t1, t2) == 0)
+l_noret luaG_ordererror (lua_State *L, અચલ TValue *p1, અચલ TValue *p2) {
+  અચલ અક્ષર *t1 = luaT_objtypename(L, p1);
+  અચલ અક્ષર *t2 = luaT_objtypename(L, p2);
+  જો (strcmp(t1, t2) == 0)
     luaG_runerror(L, "attempt to compare two %s values", t1);
-  else
+  નહીંતર
     luaG_runerror(L, "attempt to compare %s with %s", t1, t2);
 }
 
 
-l_noret luaG_errnnil (lua_State *L, LClosure *cl, int k) {
-  const char *globalname = "?";  /* default name if k == 0 */
-  if (k > 0)
+l_noret luaG_errnnil (lua_State *L, LClosure *cl, પૂર્ણાંક k) {
+  અચલ અક્ષર *globalname = "?";  /* default name if k == 0 */
+  જો (k > 0)
     kname(cl->p, k - 1, &globalname);
   luaG_runerror(L, "global '%s' already defined", globalname);
 }
 
 
 /* add src:line information to 'msg' */
-const char *luaG_addinfo (lua_State *L, const char *msg, TString *src,
-                                        int line) {
-  if (src == NULL)  /* no debug information? */
-    return luaO_pushfstring(L, "?:?: %s", msg);
-  else {
-    char buff[LUA_IDSIZE];
+અચલ અક્ષર *luaG_addinfo (lua_State *L, અચલ અક્ષર *સંદેશ, TString *src,
+                                        પૂર્ણાંક લીટી) {
+  જો (src == ખાલી)  /* no debug information? */
+    પાછા luaO_pushfstring(L, "?:?: %s", સંદેશ);
+  નહીંતર {
+    અક્ષર buff[LUA_IDSIZE];
     size_t idlen;
-    const char *id = getlstr(src, idlen);
+    અચલ અક્ષર *id = getlstr(src, idlen);
     luaO_chunkid(buff, id, idlen);
-    return luaO_pushfstring(L, "%s:%d: %s", buff, line, msg);
+    પાછા luaO_pushfstring(L, "%s:%d: %s", buff, લીટી, સંદેશ);
   }
 }
 
 
 l_noret luaG_errormsg (lua_State *L) {
-  if (L->errfunc != 0) {  /* is there an error handling function? */
+  જો (L->errfunc != 0) {  /* is there an error handling function? */
     StkId errfunc = restorestack(L, L->errfunc);
     lua_assert(ttisfunction(s2v(errfunc)));
-    setobjs2s(L, L->top.p, L->top.p - 1);  /* move argument */
-    setobjs2s(L, L->top.p - 1, errfunc);  /* push function */
-    L->top.p++;  /* assume EXTRA_STACK */
-    luaD_callnoyield(L, L->top.p - 2, 1);  /* call it */
+    setobjs2s(L, L->ટોચ.p, L->ટોચ.p - 1);  /* move argument */
+    setobjs2s(L, L->ટોચ.p - 1, errfunc);  /* push function */
+    L->ટોચ.p++;  /* assume EXTRA_STACK */
+    luaD_callnoyield(L, L->ટોચ.p - 2, 1);  /* call it */
   }
-  if (ttisnil(s2v(L->top.p - 1))) {  /* error object is nil? */
+  જો (ttisnil(s2v(L->ટોચ.p - 1))) {  /* error object is nil? */
     /* change it to a proper message */
-    setsvalue2s(L, L->top.p - 1, luaS_newliteral(L, "<no error object>"));
+    setsvalue2s(L, L->ટોચ.p - 1, luaS_newliteral(L, "<no error object>"));
   }
   luaD_throw(L, LUA_ERRRUN);
 }
 
 
-l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
+l_noret luaG_runerror (lua_State *L, અચલ અક્ષર *fmt, ...) {
   CallInfo *ci = L->ci;
-  const char *msg;
+  અચલ અક્ષર *સંદેશ;
   va_list argp;
   luaC_checkGC(L);  /* error message uses memory */
-  pushvfstring(L, argp, fmt, msg);
-  if (isLua(ci)) {  /* Lua function? */
+  pushvfstring(L, argp, fmt, સંદેશ);
+  જો (isLua(ci)) {  /* Lua function? */
     /* add source:line information */
-    luaG_addinfo(L, msg, ci_func(ci)->p->source, getcurrentline(ci));
-    setobjs2s(L, L->top.p - 2, L->top.p - 1);  /* remove 'msg' */
-    L->top.p--;
+    luaG_addinfo(L, સંદેશ, ci_func(ci)->p->source, getcurrentline(ci));
+    setobjs2s(L, L->ટોચ.p - 2, L->ટોચ.p - 1);  /* remove 'msg' */
+    L->ટોચ.p--;
   }
   luaG_errormsg(L);
 }
@@ -878,24 +878,24 @@ l_noret luaG_runerror (lua_State *L, const char *fmt, ...) {
 ** too far apart, there is a good chance of a ABSLINEINFO in the way,
 ** so it goes directly to 'luaG_getfuncline'.
 */
-static int changedline (const Proto *p, int oldpc, int newpc) {
-  if (p->lineinfo == NULL)  /* no debug information? */
-    return 0;
-  if (newpc - oldpc < MAXIWTHABS / 2) {  /* not too far apart? */
-    int delta = 0;  /* line difference */
-    int pc = oldpc;
-    for (;;) {
-      int lineinfo = p->lineinfo[++pc];
-      if (lineinfo == ABSLINEINFO)
-        break;  /* cannot compute delta; fall through */
+સ્થિર પૂર્ણાંક changedline (અચલ Proto *p, પૂર્ણાંક oldpc, પૂર્ણાંક newpc) {
+  જો (p->lineinfo == ખાલી)  /* no debug information? */
+    પાછા 0;
+  જો (newpc - oldpc < MAXIWTHABS / 2) {  /* not too far apart? */
+    પૂર્ણાંક delta = 0;  /* line difference */
+    પૂર્ણાંક pc = oldpc;
+    માટે (;;) {
+      પૂર્ણાંક lineinfo = p->lineinfo[++pc];
+      જો (lineinfo == ABSLINEINFO)
+        તોડો;  /* cannot compute delta; fall through */
       delta += lineinfo;
-      if (pc == newpc)
-        return (delta != 0);  /* delta computed successfully */
+      જો (pc == newpc)
+        પાછા (delta != 0);  /* delta computed successfully */
     }
   }
   /* either instructions are too far apart or there is an absolute line
      info in the way; compute line difference explicitly */
-  return (luaG_getfuncline(p, oldpc) != luaG_getfuncline(p, newpc));
+  પાછા (luaG_getfuncline(p, oldpc) != luaG_getfuncline(p, newpc));
 }
 
 
@@ -907,17 +907,17 @@ static int changedline (const Proto *p, int oldpc, int newpc) {
 ** a line/count hook before the call hook. Functions coming from
 ** an yield already called 'luaD_hookcall' before yielding.)
 */
-int luaG_tracecall (lua_State *L) {
+પૂર્ણાંક luaG_tracecall (lua_State *L) {
   CallInfo *ci = L->ci;
   Proto *p = ci_func(ci)->p;
   ci->u.l.trap = 1;  /* ensure hooks will be checked */
-  if (ci->u.l.savedpc == p->code) {  /* first instruction (not resuming)? */
-    if (isvararg(p))
-      return 0;  /* hooks will start at VARARGPREP instruction */
-    else if (!(ci->callstatus & CIST_HOOKYIELD))  /* not yielded? */
+  જો (ci->u.l.savedpc == p->code) {  /* first instruction (not resuming)? */
+    જો (isvararg(p))
+      પાછા 0;  /* hooks will start at VARARGPREP instruction */
+    નહીંતર જો (!(ci->callstatus & CIST_HOOKYIELD))  /* not yielded? */
       luaD_hookcall(L, ci);  /* check 'call' hook */
   }
-  return 1;  /* keep 'trap' on */
+  પાછા 1;  /* keep 'trap' on */
 }
 
 
@@ -933,47 +933,47 @@ int luaG_tracecall (lua_State *L) {
 ** This function is not "Protected" when called, so it should correct
 ** 'L->top.p' before calling anything that can run the GC.
 */
-int luaG_traceexec (lua_State *L, const Instruction *pc) {
+પૂર્ણાંક luaG_traceexec (lua_State *L, અચલ Instruction *pc) {
   CallInfo *ci = L->ci;
   lu_byte mask = cast_byte(L->hookmask);
-  const Proto *p = ci_func(ci)->p;
-  int counthook;
-  if (!(mask & (LUA_MASKLINE | LUA_MASKCOUNT))) {  /* no hooks? */
+  અચલ Proto *p = ci_func(ci)->p;
+  પૂર્ણાંક counthook;
+  જો (!(mask & (LUA_MASKLINE | LUA_MASKCOUNT))) {  /* no hooks? */
     ci->u.l.trap = 0;  /* don't need to stop again */
-    return 0;  /* turn off 'trap' */
+    પાછા 0;  /* turn off 'trap' */
   }
   pc++;  /* reference is always next instruction */
   ci->u.l.savedpc = pc;  /* save 'pc' */
   counthook = (mask & LUA_MASKCOUNT) && (--L->hookcount == 0);
-  if (counthook)
+  જો (counthook)
     resethookcount(L);  /* reset count */
-  else if (!(mask & LUA_MASKLINE))
-    return 1;  /* no line hook and count != 0; nothing to be done now */
-  if (ci->callstatus & CIST_HOOKYIELD) {  /* hook yielded last time? */
+  નહીંતર જો (!(mask & LUA_MASKLINE))
+    પાછા 1;  /* no line hook and count != 0; nothing to be done now */
+  જો (ci->callstatus & CIST_HOOKYIELD) {  /* hook yielded last time? */
     ci->callstatus &= ~CIST_HOOKYIELD;  /* erase mark */
-    return 1;  /* do not call hook again (VM yielded, so it did not move) */
+    પાછા 1;  /* do not call hook again (VM yielded, so it did not move) */
   }
-  if (!luaP_isIT(*(ci->u.l.savedpc - 1)))  /* top not being used? */
-    L->top.p = ci->top.p;  /* correct top */
-  if (counthook)
+  જો (!luaP_isIT(*(ci->u.l.savedpc - 1)))  /* top not being used? */
+    L->ટોચ.p = ci->ટોચ.p;  /* correct top */
+  જો (counthook)
     luaD_hook(L, LUA_HOOKCOUNT, -1, 0, 0);  /* call count hook */
-  if (mask & LUA_MASKLINE) {
+  જો (mask & LUA_MASKLINE) {
     /* 'L->oldpc' may be invalid; use zero in this case */
-    int oldpc = (L->oldpc < p->sizecode) ? L->oldpc : 0;
-    int npci = pcRel(pc, p);
-    if (npci <= oldpc ||  /* call hook when jump back (loop), */
+    પૂર્ણાંક oldpc = (L->oldpc < p->sizecode) ? L->oldpc : 0;
+    પૂર્ણાંક npci = pcRel(pc, p);
+    જો (npci <= oldpc ||  /* call hook when jump back (loop), */
         changedline(p, oldpc, npci)) {  /* or when enter new line */
-      int newline = luaG_getfuncline(p, npci);
+      પૂર્ણાંક newline = luaG_getfuncline(p, npci);
       luaD_hook(L, LUA_HOOKLINE, newline, 0, 0);  /* call line hook */
     }
     L->oldpc = npci;  /* 'pc' of last call to line hook */
   }
-  if (L->status == LUA_YIELD) {  /* did hook yield? */
-    if (counthook)
+  જો (L->status == LUA_YIELD) {  /* did hook yield? */
+    જો (counthook)
       L->hookcount = 1;  /* undo decrement to zero */
     ci->callstatus |= CIST_HOOKYIELD;  /* mark that it yielded */
     luaD_throw(L, LUA_YIELD);
   }
-  return 1;  /* keep 'trap' on */
+  પાછા 1;  /* keep 'trap' on */
 }
 

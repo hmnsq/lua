@@ -8,14 +8,14 @@
 #define ltm_h
 
 
-#include "lobject.h"
+#અન્તર્ભાવ "lobject.h"
 
 
 /*
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER TM" and "ORDER OP"
 */
-typedef enum {
+પ્રકારવ્યાખ્યા ગણના {
   TM_INDEX,
   TM_NEWINDEX,
   TM_GC,
@@ -60,46 +60,46 @@ typedef enum {
 */
 #define notm(tm)	ttisnil(tm)
 
-#define checknoTM(mt,e)	((mt) == NULL || (mt)->flags & (1u<<(e)))
+#define checknoTM(mt,e)	((mt) == ખાલી || (mt)->flags & (1u<<(e)))
 
 #define gfasttm(g,mt,e)  \
-  (checknoTM(mt, e) ? NULL : luaT_gettm(mt, e, (g)->tmname[e]))
+  (checknoTM(mt, e) ? ખાલી : luaT_gettm(mt, e, (g)->tmname[e]))
 
 #define fasttm(l,mt,e)	gfasttm(G(l), mt, e)
 
 #define ttypename(x)	luaT_typenames_[(x) + 1]
 
-LUAI_DDEC(const char *const luaT_typenames_[LUA_TOTALTYPES];)
+LUAI_DDEC(અચલ અક્ષર *અચલ luaT_typenames_[LUA_TOTALTYPES];)
 
 
-LUAI_FUNC const char *luaT_objtypename (lua_State *L, const TValue *o);
+LUAI_FUNC અચલ અક્ષર *luaT_objtypename (lua_State *L, અચલ TValue *o);
 
-LUAI_FUNC const TValue *luaT_gettm (Table *events, TMS event, TString *ename);
-LUAI_FUNC const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o,
+LUAI_FUNC અચલ TValue *luaT_gettm (Table *events, TMS event, TString *ename);
+LUAI_FUNC અચલ TValue *luaT_gettmbyobj (lua_State *L, અચલ TValue *o,
                                                        TMS event);
-LUAI_FUNC void luaT_init (lua_State *L);
+LUAI_FUNC શૂન્ય luaT_init (lua_State *L);
 
-LUAI_FUNC void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
-                            const TValue *p2, const TValue *p3);
-LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, const TValue *f,
-                               const TValue *p1, const TValue *p2, StkId p3);
-LUAI_FUNC void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
+LUAI_FUNC શૂન્ય luaT_callTM (lua_State *L, અચલ TValue *f, અચલ TValue *p1,
+                            અચલ TValue *p2, અચલ TValue *p3);
+LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, અચલ TValue *f,
+                               અચલ TValue *p1, અચલ TValue *p2, StkId p3);
+LUAI_FUNC શૂન્ય luaT_trybinTM (lua_State *L, અચલ TValue *p1, અચલ TValue *p2,
                               StkId res, TMS event);
-LUAI_FUNC void luaT_tryconcatTM (lua_State *L);
-LUAI_FUNC void luaT_trybinassocTM (lua_State *L, const TValue *p1,
-       const TValue *p2, int inv, StkId res, TMS event);
-LUAI_FUNC void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                               int inv, StkId res, TMS event);
-LUAI_FUNC int luaT_callorderTM (lua_State *L, const TValue *p1,
-                                const TValue *p2, TMS event);
-LUAI_FUNC int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                                 int inv, int isfloat, TMS event);
+LUAI_FUNC શૂન્ય luaT_tryconcatTM (lua_State *L);
+LUAI_FUNC શૂન્ય luaT_trybinassocTM (lua_State *L, અચલ TValue *p1,
+       અચલ TValue *p2, પૂર્ણાંક inv, StkId res, TMS event);
+LUAI_FUNC શૂન્ય luaT_trybiniTM (lua_State *L, અચલ TValue *p1, lua_Integer i2,
+                               પૂર્ણાંક inv, StkId res, TMS event);
+LUAI_FUNC પૂર્ણાંક luaT_callorderTM (lua_State *L, અચલ TValue *p1,
+                                અચલ TValue *p2, TMS event);
+LUAI_FUNC પૂર્ણાંક luaT_callorderiTM (lua_State *L, અચલ TValue *p1, પૂર્ણાંક v2,
+                                 પૂર્ણાંક inv, પૂર્ણાંક isfloat, TMS event);
 
-LUAI_FUNC void luaT_adjustvarargs (lua_State *L, struct CallInfo *ci,
-                                                 const Proto *p);
-LUAI_FUNC void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
-LUAI_FUNC void luaT_getvarargs (lua_State *L, struct CallInfo *ci, StkId where,
-                                              int wanted, int vatab);
+LUAI_FUNC શૂન્ય luaT_adjustvarargs (lua_State *L, સંરચના CallInfo *ci,
+                                                 અચલ Proto *p);
+LUAI_FUNC શૂન્ય luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
+LUAI_FUNC શૂન્ય luaT_getvarargs (lua_State *L, સંરચના CallInfo *ci, StkId where,
+                                              પૂર્ણાંક wanted, પૂર્ણાંક vatab);
 
 
 #endif

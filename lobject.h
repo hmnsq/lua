@@ -9,11 +9,11 @@
 #define lobject_h
 
 
-#include <stdarg.h>
+#અન્તર્ભાવ <stdarg.h>
 
 
-#include "llimits.h"
-#include "lua.h"
+#અન્તર્ભાવ "llimits.h"
+#અન્તર્ભાવ "lua.h"
 
 
 /*
@@ -46,15 +46,15 @@
 /*
 ** Union of all Lua values
 */
-typedef union Value {
-  struct GCObject *gc;    /* collectable objects */
-  void *p;         /* light userdata */
+પ્રકારવ્યાખ્યા સંઘ કિંમત_2 {
+  સંરચના GCObject *gc;    /* collectable objects */
+  શૂન્ય *p;         /* light userdata */
   lua_CFunction f; /* light C functions */
   lua_Integer i;   /* integer numbers */
-  lua_Number n;    /* float numbers */
+  lua_સંખ્યા n;    /* float numbers */
   /* not used, but may avoid warnings for uninitialized value */
   lu_byte ub;
-} Value;
+} કિંમત_2;
 
 
 /*
@@ -62,14 +62,14 @@ typedef union Value {
 ** an actual value plus a tag with its type.
 */
 
-#define TValuefields	Value value_; lu_byte tt_
+#define TValuefields	કિંમત_2 કિંમત_3; lu_byte tt_
 
-typedef struct TValue {
+પ્રકારવ્યાખ્યા સંરચના TValue {
   TValuefields;
 } TValue;
 
 
-#define val_(o)		((o)->value_)
+#define val_(o)		((o)->કિંમત_3)
 #define valraw(o)	(val_(o))
 
 
@@ -104,8 +104,8 @@ typedef struct TValue {
 ** macros using this one to be used where L is not available.
 */
 #define checkliveness(L,obj) \
-	((void)L, lua_longassert(!iscollectable(obj) || \
-		(righttt(obj) && (L == NULL || !isdead(G(L),gcvalue(obj))))))
+	((શૂન્ય)L, lua_longassert(!iscollectable(obj) || \
+		(righttt(obj) && (L == ખાલી || !isdead(G(L),gcvalue(obj))))))
 
 
 /* Macros to set values */
@@ -116,8 +116,8 @@ typedef struct TValue {
 
 /* main macro to copy values (from 'obj2' to 'obj1') */
 #define setobj(L,obj1,obj2) \
-	{ TValue *io1=(obj1); const TValue *io2=(obj2); \
-          io1->value_ = io2->value_; settt_(io1, io2->tt_); \
+	{ TValue *io1=(obj1); અચલ TValue *io2=(obj2); \
+          io1->કિંમત_3 = io2->કિંમત_3; settt_(io1, io2->tt_); \
 	  checkliveness(L,io1); lua_assert(!isnonstrictnil(io1)); }
 
 /*
@@ -145,24 +145,24 @@ typedef struct TValue {
 ** their real delta is always the maximum value that fits in
 ** that field.
 */
-typedef union StackValue {
+પ્રકારવ્યાખ્યા સંઘ ઢગલો_કિંમત {
   TValue val;
-  struct {
+  સંરચના {
     TValuefields;
     unsigned short delta;
   } tbclist;
-} StackValue;
+} ઢગલો_કિંમત;
 
 
 /* index to stack elements */
-typedef StackValue *StkId;
+પ્રકારવ્યાખ્યા ઢગલો_કિંમત *StkId;
 
 
 /*
 ** When reallocating the stack, change all pointers to the stack into
 ** proper offsets.
 */
-typedef union {
+પ્રકારવ્યાખ્યા સંઘ {
   StkId p;  /* actual pointer */
   ptrdiff_t offset;  /* used while the stack is being reallocated */
 } StkIdRel;
@@ -230,7 +230,7 @@ typedef union {
 
 
 /* macro defining a value corresponding to an absent key */
-#define ABSTKEYCONSTANT		{NULL}, LUA_VABSTKEY
+#define ABSTKEYCONSTANT		{ખાલી}, LUA_VABSTKEY
 
 
 /* mark an entry as empty */
@@ -299,11 +299,11 @@ typedef union {
 ** Common Header for all collectable objects (in macro form, to be
 ** included in other objects)
 */
-#define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked
+#define CommonHeader	સંરચના GCObject *next; lu_byte tt; lu_byte marked
 
 
 /* Common type for all collectable objects */
-typedef struct GCObject {
+પ્રકારવ્યાખ્યા સંરચના GCObject {
   CommonHeader;
 } GCObject;
 
@@ -342,7 +342,7 @@ typedef struct GCObject {
 #define ttisinteger(o)		checktag((o), LUA_VNUMINT)
 
 #define nvalue(o)	check_exp(ttisnumber(o), \
-	(ttisinteger(o) ? cast_num(ivalue(o)) : fltvalue(o)))
+	(ttisinteger(o) ? cast_અંક(ivalue(o)) : fltvalue(o)))
 #define fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
 #define ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
 
@@ -403,18 +403,18 @@ typedef struct GCObject {
 /*
 ** Header for a string value.
 */
-typedef struct TString {
+પ્રકારવ્યાખ્યા સંરચના TString {
   CommonHeader;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   ls_byte shrlen;  /* length for short strings, negative for long strings */
-  unsigned int hash;
-  union {
+  unsigned પૂર્ણાંક hash;
+  સંઘ {
     size_t lnglen;  /* length for long strings */
-    struct TString *hnext;  /* linked list for hash table */
+    સંરચના TString *hnext;  /* linked list for hash table */
   } u;
-  char *contents;  /* pointer to content in long strings */
+  અક્ષર *contents;  /* pointer to content in long strings */
   lua_Alloc falloc;  /* deallocation function for external strings */
-  void *ud;  /* user data for external strings */
+  શૂન્ય *ud;  /* user data for external strings */
 } TString;
 
 
@@ -479,7 +479,7 @@ typedef struct TString {
 
 
 /* Ensures that addresses after this type are always fully aligned. */
-typedef union UValue {
+પ્રકારવ્યાખ્યા સંઘ UValue {
   TValue uv;
   LUAI_MAXALIGN;  /* ensures maximum alignment for udata bytes */
 } UValue;
@@ -489,11 +489,11 @@ typedef union UValue {
 ** Header for userdata with user values;
 ** memory area follows the end of this structure.
 */
-typedef struct Udata {
+પ્રકારવ્યાખ્યા સંરચના Udata {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
+  સંરચના Table *metatable;
   GCObject *gclist;
   UValue uv[1];  /* user values */
 } Udata;
@@ -508,19 +508,19 @@ typedef struct Udata {
 ** this representation. (The 'bindata' field in its end ensures correct
 ** alignment for binary data following this header.)
 */
-typedef struct Udata0 {
+પ્રકારવ્યાખ્યા સંરચના Udata0 {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
-  union {LUAI_MAXALIGN;} bindata;
+  સંરચના Table *metatable;
+  સંઘ {LUAI_MAXALIGN;} bindata;
 } Udata0;
 
 
 /* compute the offset of the memory area of a userdata */
 #define udatamemoffset(nuv) \
        ((nuv) == 0 ? offsetof(Udata0, bindata)  \
-		   : offsetof(Udata, uv) + (sizeof(UValue) * (nuv)))
+		   : offsetof(Udata, uv) + (કદ(UValue) * (nuv)))
 
 /* get the address of the memory block inside 'Udata' */
 #define getudatamem(u)	(cast_charp(u) + udatamemoffset((u)->nuvalue))
@@ -540,13 +540,13 @@ typedef struct Udata0 {
 #define LUA_VPROTO	makevariant(LUA_TPROTO, 0)
 
 
-typedef l_uint32 Instruction;
+પ્રકારવ્યાખ્યા l_uint32 Instruction;
 
 
 /*
 ** Description of an upvalue for function prototypes
 */
-typedef struct Upvaldesc {
+પ્રકારવ્યાખ્યા સંરચના Upvaldesc {
   TString *name;  /* upvalue name (for debug information) */
   lu_byte instack;  /* whether it is in stack (register) */
   lu_byte idx;  /* index of upvalue (in stack or in outer function's list) */
@@ -558,10 +558,10 @@ typedef struct Upvaldesc {
 ** Description of a local variable for function prototypes
 ** (used for debug information)
 */
-typedef struct LocVar {
+પ્રકારવ્યાખ્યા સંરચના LocVar {
   TString *varname;
-  int startpc;  /* first point where variable is active */
-  int endpc;    /* first point where variable is dead */
+  પૂર્ણાંક startpc;  /* first point where variable is active */
+  પૂર્ણાંક endpc;    /* first point where variable is dead */
 } LocVar;
 
 
@@ -575,10 +575,10 @@ typedef struct LocVar {
 ** absolute-line array, but we must traverse the 'lineinfo' array
 ** linearly to compute a line.)
 */
-typedef struct AbsLineInfo {
-  int pc;
-  int line;
-} AbsLineInfo;
+પ્રકારવ્યાખ્યા સંરચના Abs_લીટી_Info {
+  પૂર્ણાંક pc;
+  પૂર્ણાંક લીટી;
+} Abs_લીટી_Info;
 
 
 /*
@@ -600,26 +600,26 @@ typedef struct AbsLineInfo {
 /*
 ** Function Prototypes
 */
-typedef struct Proto {
+પ્રકારવ્યાખ્યા સંરચના Proto {
   CommonHeader;
   lu_byte numparams;  /* number of fixed (named) parameters */
   lu_byte flag;
   lu_byte maxstacksize;  /* number of registers needed by this function */
-  int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of 'k' */
-  int sizecode;
-  int sizelineinfo;
-  int sizep;  /* size of 'p' */
-  int sizelocvars;
-  int sizeabslineinfo;  /* size of 'abslineinfo' */
-  int linedefined;  /* debug information  */
-  int lastlinedefined;  /* debug information  */
+  પૂર્ણાંક sizeupvalues;  /* size of 'upvalues' */
+  પૂર્ણાંક sizek;  /* size of 'k' */
+  પૂર્ણાંક sizecode;
+  પૂર્ણાંક sizelineinfo;
+  પૂર્ણાંક sizep;  /* size of 'p' */
+  પૂર્ણાંક sizelocvars;
+  પૂર્ણાંક sizeabslineinfo;  /* size of 'abslineinfo' */
+  પૂર્ણાંક linedefined;  /* debug information  */
+  પૂર્ણાંક lastlinedefined;  /* debug information  */
   TValue *k;  /* constants used by the function */
   Instruction *code;  /* opcodes */
-  struct Proto **p;  /* functions defined inside the function */
+  સંરચના Proto **p;  /* functions defined inside the function */
   Upvaldesc *upvalues;  /* upvalue information */
   ls_byte *lineinfo;  /* information about source lines (debug information) */
-  AbsLineInfo *abslineinfo;  /* idem */
+  Abs_લીટી_Info *abslineinfo;  /* idem */
   LocVar *locvars;  /* information about local variables (debug information) */
   TString  *source;  /* used for debug information */
   GCObject *gclist;
@@ -677,18 +677,18 @@ typedef struct Proto {
 /*
 ** Upvalues for Lua closures
 */
-typedef struct UpVal {
+પ્રકારવ્યાખ્યા સંરચના UpVal {
   CommonHeader;
-  union {
+  સંઘ {
     TValue *p;  /* points to stack or to its own value */
     ptrdiff_t offset;  /* used while the stack is being reallocated */
   } v;
-  union {
-    struct {  /* (when open) */
-      struct UpVal *next;  /* linked list */
-      struct UpVal **previous;
+  સંઘ {
+    સંરચના {  /* (when open) */
+      સંરચના UpVal *next;  /* linked list */
+      સંરચના UpVal **previous;
     } open;
-    TValue value;  /* the value (when closed) */
+    TValue કિંમત;  /* the value (when closed) */
   } u;
 } UpVal;
 
@@ -697,21 +697,21 @@ typedef struct UpVal {
 #define ClosureHeader \
 	CommonHeader; lu_byte nupvalues; GCObject *gclist
 
-typedef struct CClosure {
+પ્રકારવ્યાખ્યા સંરચના CClosure {
   ClosureHeader;
   lua_CFunction f;
   TValue upvalue[1];  /* list of upvalues */
 } CClosure;
 
 
-typedef struct LClosure {
+પ્રકારવ્યાખ્યા સંરચના LClosure {
   ClosureHeader;
-  struct Proto *p;
+  સંરચના Proto *p;
   UpVal *upvals[1];  /* list of upvalues */
 } LClosure;
 
 
-typedef union Closure {
+પ્રકારવ્યાખ્યા સંઘ Closure {
   CClosure c;
   LClosure l;
 } Closure;
@@ -749,39 +749,39 @@ typedef union Closure {
 ** 'TValue' allows for a smaller size for 'Node' both in 4-byte
 ** and 8-byte alignments.
 */
-typedef union Node {
-  struct NodeKey {
+પ્રકારવ્યાખ્યા સંઘ ગાંઠ_2 {
+  સંરચના ગાંઠ_ચાવી {
     TValuefields;  /* fields for value */
-    lu_byte key_tt;  /* key type */
-    int next;  /* for chaining */
-    Value key_val;  /* key value */
+    lu_byte ચાવી_tt;  /* key type */
+    પૂર્ણાંક next;  /* for chaining */
+    કિંમત_2 ચાવી_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
-} Node;
+} ગાંઠ_2;
 
 
 /* copy a value into a key */
-#define setnodekey(node,obj) \
-	{ Node *n_=(node); const TValue *io_=(obj); \
-	  n_->u.key_val = io_->value_; n_->u.key_tt = io_->tt_; }
+#define setnodekey(ગાંઠ,obj) \
+	{ ગાંઠ_2 *n_=(ગાંઠ); અચલ TValue *io_=(obj); \
+	  n_->u.ચાવી_val = io_->કિંમત_3; n_->u.ચાવી_tt = io_->tt_; }
 
 
 /* copy a value from a key */
-#define getnodekey(L,obj,node) \
-	{ TValue *io_=(obj); const Node *n_=(node); \
-	  io_->value_ = n_->u.key_val; io_->tt_ = n_->u.key_tt; \
+#define getnodekey(L,obj,ગાંઠ) \
+	{ TValue *io_=(obj); અચલ ગાંઠ_2 *n_=(ગાંઠ); \
+	  io_->કિંમત_3 = n_->u.ચાવી_val; io_->tt_ = n_->u.ચાવી_tt; \
 	  checkliveness(L,io_); }
 
 
 
-typedef struct Table {
+પ્રકારવ્યાખ્યા સંરચના Table {
   CommonHeader;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
-  unsigned int asize;  /* number of slots in 'array' array */
-  Value *array;  /* array part */
-  Node *node;
-  struct Table *metatable;
+  unsigned પૂર્ણાંક asize;  /* number of slots in 'array' array */
+  કિંમત_2 *array;  /* array part */
+  ગાંઠ_2 *ગાંઠ;
+  સંરચના Table *metatable;
   GCObject *gclist;
 } Table;
 
@@ -789,21 +789,21 @@ typedef struct Table {
 /*
 ** Macros to manipulate keys inserted in nodes
 */
-#define keytt(node)		((node)->u.key_tt)
-#define keyval(node)		((node)->u.key_val)
+#define keytt(ગાંઠ)		((ગાંઠ)->u.ચાવી_tt)
+#define keyval(ગાંઠ)		((ગાંઠ)->u.ચાવી_val)
 
-#define keyisnil(node)		(keytt(node) == LUA_TNIL)
-#define keyisinteger(node)	(keytt(node) == LUA_VNUMINT)
-#define keyival(node)		(keyval(node).i)
-#define keyisshrstr(node)	(keytt(node) == ctb(LUA_VSHRSTR))
-#define keystrval(node)		(gco2ts(keyval(node).gc))
+#define keyisnil(ગાંઠ)		(keytt(ગાંઠ) == LUA_TNIL)
+#define keyisinteger(ગાંઠ)	(keytt(ગાંઠ) == LUA_VNUMINT)
+#define keyival(ગાંઠ)		(keyval(ગાંઠ).i)
+#define keyisshrstr(ગાંઠ)	(keytt(ગાંઠ) == ctb(LUA_VSHRSTR))
+#define keystrval(ગાંઠ)		(gco2ts(keyval(ગાંઠ).gc))
 
-#define setnilkey(node)		(keytt(node) = LUA_TNIL)
+#define setnilkey(ગાંઠ)		(keytt(ગાંઠ) = LUA_TNIL)
 
 #define keyiscollectable(n)	(keytt(n) & BIT_ISCOLLECTABLE)
 
 #define gckey(n)	(keyval(n).gc)
-#define gckeyN(n)	(keyiscollectable(n) ? gckey(n) : NULL)
+#define gckeyN(n)	(keyiscollectable(n) ? gckey(n) : ખાલી)
 
 
 /*
@@ -812,8 +812,8 @@ typedef struct Table {
 ** be found when searched in a special way. ('next' needs that to find
 ** keys removed from a table during a traversal.)
 */
-#define setdeadkey(node)	(keytt(node) = LUA_TDEADKEY)
-#define keyisdead(node)		(keytt(node) == LUA_TDEADKEY)
+#define setdeadkey(ગાંઠ)	(keytt(ગાંઠ) = LUA_TDEADKEY)
+#define keyisdead(ગાંઠ)		(keytt(ગાંઠ) == LUA_TDEADKEY)
 
 /* }================================================================== */
 
@@ -835,30 +835,30 @@ typedef struct Table {
 
 
 /* macro to call 'luaO_pushvfstring' correctly */
-#define pushvfstring(L, argp, fmt, msg)	\
+#define pushvfstring(L, argp, fmt, સંદેશ)	\
   { va_start(argp, fmt); \
-  msg = luaO_pushvfstring(L, fmt, argp); \
+  સંદેશ = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  જો (સંદેશ == ખાલી) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
-LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);
-LUAI_FUNC lu_byte luaO_ceillog2 (unsigned int x);
-LUAI_FUNC lu_byte luaO_codeparam (unsigned int p);
+LUAI_FUNC પૂર્ણાંક luaO_utf8esc (અક્ષર *buff, l_uint32 x);
+LUAI_FUNC lu_byte luaO_ceillog2 (unsigned પૂર્ણાંક x);
+LUAI_FUNC lu_byte luaO_codeparam (unsigned પૂર્ણાંક p);
 LUAI_FUNC l_mem luaO_applyparam (lu_byte p, l_mem x);
 
-LUAI_FUNC int luaO_rawarith (lua_State *L, int op, const TValue *p1,
-                             const TValue *p2, TValue *res);
-LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
-                           const TValue *p2, StkId res);
-LUAI_FUNC size_t luaO_str2num (const char *s, TValue *o);
-LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, char *buff);
-LUAI_FUNC lu_byte luaO_hexavalue (int c);
-LUAI_FUNC void luaO_tostring (lua_State *L, TValue *obj);
-LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
+LUAI_FUNC પૂર્ણાંક luaO_rawarith (lua_State *L, પૂર્ણાંક op, અચલ TValue *p1,
+                             અચલ TValue *p2, TValue *res);
+LUAI_FUNC શૂન્ય luaO_arith (lua_State *L, પૂર્ણાંક op, અચલ TValue *p1,
+                           અચલ TValue *p2, StkId res);
+LUAI_FUNC size_t luaO_str2num (અચલ અક્ષર *s, TValue *o);
+LUAI_FUNC unsigned luaO_tostringbuff (અચલ TValue *obj, અક્ષર *buff);
+LUAI_FUNC lu_byte luaO_hexavalue (પૂર્ણાંક c);
+LUAI_FUNC શૂન્ય luaO_tostring (lua_State *L, TValue *obj);
+LUAI_FUNC અચલ અક્ષર *luaO_pushvfstring (lua_State *L, અચલ અક્ષર *fmt,
                                                        va_list argp);
-LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
-LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
+LUAI_FUNC અચલ અક્ષર *luaO_pushfstring (lua_State *L, અચલ અક્ષર *fmt, ...);
+LUAI_FUNC શૂન્ય luaO_chunkid (અક્ષર *out, અચલ અક્ષર *source, size_t srclen);
 
 
 #endif

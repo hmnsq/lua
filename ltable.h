@@ -7,10 +7,10 @@
 #ifndef ltable_h
 #define ltable_h
 
-#include "lobject.h"
+#અન્તર્ભાવ "lobject.h"
 
 
-#define gnode(t,i)	(&(t)->node[i])
+#define gnode(t,i)	(&(t)->ગાંઠ[i])
 #define gval(n)		(&(n)->i_val)
 #define gnext(n)	((n)->u.next)
 
@@ -42,26 +42,26 @@
 
 
 /* returns the Node, given the value of a table entry */
-#define nodefromval(v)	cast(Node *, (v))
+#define nodefromval(v)	cast(ગાંઠ_2 *, (v))
 
 
 
 #define luaH_fastgeti(t,k,res,tag) \
   { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
+    જો ((u < h->asize)) { \
       tag = *getArrTag(h, u); \
-      if (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
-    else { tag = luaH_getint(h, (k), res); }}
+      જો (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
+    નહીંતર { tag = luaH_getint(h, (k), res); }}
 
 
 #define luaH_fastseti(t,k,val,hres) \
   { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
+    જો ((u < h->asize)) { \
       lu_byte *tag = getArrTag(h, u); \
-      if (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
+      જો (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
         { fval2arr(h, u, tag, val); hres = HOK; } \
-      else hres = ~cast_int(u); } \
-    else { hres = luaH_psetint(h, k, val); }}
+      નહીંતર hres = ~cast_int(u); } \
+    નહીંતર { hres = luaH_psetint(h, k, val); }}
 
 
 /* results from pset */
@@ -110,7 +110,7 @@
 */
 
 /* Computes the address of the tag for the abstract C-index 'k' */
-#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + sizeof(unsigned) + (k))
+#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + કદ(unsigned) + (k))
 
 /* Computes the address of the value for the abstract C-index 'k' */
 #define getArrVal(t,k)	((t)->array - 1 - (k))
@@ -128,10 +128,10 @@
 ** Move TValues to/from arrays, using C indices
 */
 #define arr2obj(h,k,val)  \
-  ((val)->tt_ = *getArrTag(h,(k)), (val)->value_ = *getArrVal(h,(k)))
+  ((val)->tt_ = *getArrTag(h,(k)), (val)->કિંમત_3 = *getArrVal(h,(k)))
 
 #define obj2arr(h,k,val)  \
-  (*getArrTag(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+  (*getArrTag(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->કિંમત_3)
 
 
 /*
@@ -140,44 +140,44 @@
 ** precomputed tag value or address as an extra argument.
 */
 #define farr2val(h,k,tag,res)  \
-  ((res)->tt_ = tag, (res)->value_ = *getArrVal(h,(k)))
+  ((res)->tt_ = tag, (res)->કિંમત_3 = *getArrVal(h,(k)))
 
 #define fval2arr(h,k,tag,val)  \
-  (*tag = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+  (*tag = (val)->tt_, *getArrVal(h,(k)) = (val)->કિંમત_3)
 
 
-LUAI_FUNC lu_byte luaH_get (Table *t, const TValue *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res);
+LUAI_FUNC lu_byte luaH_get (Table *t, અચલ TValue *ચાવી, TValue *res);
+LUAI_FUNC lu_byte luaH_getshortstr (Table *t, TString *ચાવી, TValue *res);
+LUAI_FUNC lu_byte luaH_getstr (Table *t, TString *ચાવી, TValue *res);
+LUAI_FUNC lu_byte luaH_getint (Table *t, lua_Integer ચાવી, TValue *res);
 
 /* Special get for metamethods */
-LUAI_FUNC const TValue *luaH_Hgetshortstr (Table *t, TString *key);
+LUAI_FUNC અચલ TValue *luaH_Hgetshortstr (Table *t, TString *ચાવી);
 
-LUAI_FUNC int luaH_psetint (Table *t, lua_Integer key, TValue *val);
-LUAI_FUNC int luaH_psetshortstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_psetstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_pset (Table *t, const TValue *key, TValue *val);
+LUAI_FUNC પૂર્ણાંક luaH_psetint (Table *t, lua_Integer ચાવી, TValue *val);
+LUAI_FUNC પૂર્ણાંક luaH_psetshortstr (Table *t, TString *ચાવી, TValue *val);
+LUAI_FUNC પૂર્ણાંક luaH_psetstr (Table *t, TString *ચાવી, TValue *val);
+LUAI_FUNC પૂર્ણાંક luaH_pset (Table *t, અચલ TValue *ચાવી, TValue *val);
 
-LUAI_FUNC void luaH_setint (lua_State *L, Table *t, lua_Integer key,
-                                                    TValue *value);
-LUAI_FUNC void luaH_set (lua_State *L, Table *t, const TValue *key,
-                                                 TValue *value);
+LUAI_FUNC શૂન્ય luaH_setint (lua_State *L, Table *t, lua_Integer ચાવી,
+                                                    TValue *કિંમત);
+LUAI_FUNC શૂન્ય luaH_set (lua_State *L, Table *t, અચલ TValue *ચાવી,
+                                                 TValue *કિંમત);
 
-LUAI_FUNC void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                              TValue *value, int hres);
+LUAI_FUNC શૂન્ય luaH_finishset (lua_State *L, Table *t, અચલ TValue *ચાવી,
+                                              TValue *કિંમત, પૂર્ણાંક hres);
 LUAI_FUNC Table *luaH_new (lua_State *L);
-LUAI_FUNC void luaH_resize (lua_State *L, Table *t, unsigned nasize,
+LUAI_FUNC શૂન્ય luaH_resize (lua_State *L, Table *t, unsigned nasize,
                                                     unsigned nhsize);
-LUAI_FUNC void luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
+LUAI_FUNC શૂન્ય luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
 LUAI_FUNC lu_mem luaH_size (Table *t);
-LUAI_FUNC void luaH_free (lua_State *L, Table *t);
-LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key);
+LUAI_FUNC શૂન્ય luaH_free (lua_State *L, Table *t);
+LUAI_FUNC પૂર્ણાંક luaH_next (lua_State *L, Table *t, StkId ચાવી);
 LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, Table *t);
 
 
-#if defined(LUA_DEBUG)
-LUAI_FUNC Node *luaH_mainposition (const Table *t, const TValue *key);
+#જો defined(LUA_DEBUG)
+LUAI_FUNC ગાંઠ_2 *luaH_mainposition (અચલ Table *t, અચલ TValue *ચાવી);
 #endif
 
 

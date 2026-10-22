@@ -7,25 +7,25 @@
 #define llex_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#અન્તર્ભાવ "lprefix.h"
 
 
-#include <locale.h>
-#include <string.h>
+#અન્તર્ભાવ <locale.h>
+#અન્તર્ભાવ <string.h>
 
-#include "lua.h"
+#અન્તર્ભાવ "lua.h"
 
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "llex.h"
-#include "lobject.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lzio.h"
+#અન્તર્ભાવ "lctype.h"
+#અન્તર્ભાવ "ldebug.h"
+#અન્તર્ભાવ "ldo.h"
+#અન્તર્ભાવ "lgc.h"
+#અન્તર્ભાવ "llex.h"
+#અન્તર્ભાવ "lobject.h"
+#અન્તર્ભાવ "lparser.h"
+#અન્તર્ભાવ "lstate.h"
+#અન્તર્ભાવ "lstring.h"
+#અન્તર્ભાવ "ltable.h"
+#અન્તર્ભાવ "lzio.h"
 
 
 
@@ -33,7 +33,7 @@
 
 
 /* minimum size for string buffer */
-#if !defined(LUA_MINBUFFER)
+#જો !defined(LUA_MINBUFFER)
 #define LUA_MINBUFFER   32
 #endif
 
@@ -42,7 +42,7 @@
 
 
 /* ORDER RESERVED */
-static const char *const luaX_tokens [] = {
+સ્થિર અચલ અક્ષર *અચલ luaX_tokens [] = {
     "and", "break", "do", "else", "elseif",
     "end", "false", "for", "function", "global", "goto", "if",
     "in", "local", "nil", "not", "or", "repeat",
@@ -56,14 +56,14 @@ static const char *const luaX_tokens [] = {
 #define save_and_next(ls) (save(ls, ls->current), next(ls))
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token);
+સ્થિર l_noret lexerror (LexState *ls, અચલ અક્ષર *સંદેશ, પૂર્ણાંક token);
 
 
-static void save (LexState *ls, int c) {
+સ્થિર શૂન્ય save (LexState *ls, પૂર્ણાંક c) {
   Mbuffer *b = ls->buff;
-  if (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
+  જો (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
     size_t newsize = luaZ_sizebuffer(b);  /* get old size */;
-    if (newsize >= (MAX_SIZE/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
+    જો (newsize >= (MAX_SIZE/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
       lexerror(ls, "lexical element too long", 0);
     newsize += (newsize >> 1);  /* new size is 1.5 times the old one */
     luaZ_resizebuffer(ls->L, b, newsize);
@@ -72,11 +72,11 @@ static void save (LexState *ls, int c) {
 }
 
 
-void luaX_init (lua_State *L) {
-  int i;
+શૂન્ય luaX_init (lua_State *L) {
+  પૂર્ણાંક i;
   TString *e = luaS_newliteral(L, LUA_ENV);  /* create env name */
   luaC_fix(L, obj2gco(e));  /* never collect this name */
-  for (i=0; i<NUM_RESERVED; i++) {
+  માટે (i=0; i<અંક_RESERVED; i++) {
     TString *ts = luaS_new(L, luaX_tokens[i]);
     luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
     ts->extra = cast_byte(i+1);  /* reserved word */
@@ -84,45 +84,45 @@ void luaX_init (lua_State *L) {
 }
 
 
-const char *luaX_token2str (LexState *ls, int token) {
-  if (token < FIRST_RESERVED) {  /* single-byte symbols? */
-    if (lisprint(token))
-      return luaO_pushfstring(ls->L, "'%c'", token);
-    else  /* control character */
-      return luaO_pushfstring(ls->L, "'<\\%d>'", token);
+અચલ અક્ષર *luaX_token2str (LexState *ls, પૂર્ણાંક token) {
+  જો (token < FIRST_RESERVED) {  /* single-byte symbols? */
+    જો (lisprint(token))
+      પાછા luaO_pushfstring(ls->L, "'%c'", token);
+    નહીંતર  /* control character */
+      પાછા luaO_pushfstring(ls->L, "'<\\%d>'", token);
   }
-  else {
-    const char *s = luaX_tokens[token - FIRST_RESERVED];
-    if (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
-      return luaO_pushfstring(ls->L, "'%s'", s);
-    else  /* names, strings, and numerals */
-      return s;
+  નહીંતર {
+    અચલ અક્ષર *s = luaX_tokens[token - FIRST_RESERVED];
+    જો (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
+      પાછા luaO_pushfstring(ls->L, "'%s'", s);
+    નહીંતર  /* names, strings, and numerals */
+      પાછા s;
   }
 }
 
 
-static const char *txtToken (LexState *ls, int token) {
-  switch (token) {
-    case TK_NAME: case TK_STRING:
-    case TK_FLT: case TK_INT:
+સ્થિર અચલ અક્ષર *txtToken (LexState *ls, પૂર્ણાંક token) {
+  પસંદગી (token) {
+    સ્થિતિ TK_NAME: સ્થિતિ TK_STRING:
+    સ્થિતિ TK_FLT: સ્થિતિ TK_INT:
       save(ls, '\0');
-      return luaO_pushfstring(ls->L, "'%s'", luaZ_buffer(ls->buff));
-    default:
-      return luaX_token2str(ls, token);
+      પાછા luaO_pushfstring(ls->L, "'%s'", luaZ_buffer(ls->buff));
+    મૂળભૂત:
+      પાછા luaX_token2str(ls, token);
   }
 }
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token) {
-  msg = luaG_addinfo(ls->L, msg, ls->source, ls->linenumber);
-  if (token)
-    luaO_pushfstring(ls->L, "%s near %s", msg, txtToken(ls, token));
+સ્થિર l_noret lexerror (LexState *ls, અચલ અક્ષર *સંદેશ, પૂર્ણાંક token) {
+  સંદેશ = luaG_addinfo(ls->L, સંદેશ, ls->source, ls->linenumber);
+  જો (token)
+    luaO_pushfstring(ls->L, "%s near %s", સંદેશ, txtToken(ls, token));
   luaD_throw(ls->L, LUA_ERRSYNTAX);
 }
 
 
-l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
-  lexerror(ls, msg, ls->t.token);
+l_noret luaX_syntaxerror (LexState *ls, અચલ અક્ષર *સંદેશ) {
+  lexerror(ls, સંદેશ, ls->t.token);
 }
 
 
@@ -132,20 +132,20 @@ l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
 ** somewhere. It also internalizes long strings, ensuring there is only
 ** one copy of each unique string.
 */
-static TString *anchorstr (LexState *ls, TString *ts) {
+સ્થિર TString *anchorstr (LexState *ls, TString *ts) {
   lua_State *L = ls->L;
   TValue oldts;
-  int tag = luaH_getstr(ls->h, ts, &oldts);
-  if (!tagisempty(tag))  /* string already present? */
-    return tsvalue(&oldts);  /* use stored value */
-  else {  /* create a new entry */
-    TValue *stv = s2v(L->top.p++);  /* reserve stack space for string */
+  પૂર્ણાંક tag = luaH_getstr(ls->h, ts, &oldts);
+  જો (!tagisempty(tag))  /* string already present? */
+    પાછા tsvalue(&oldts);  /* use stored value */
+  નહીંતર {  /* create a new entry */
+    TValue *stv = s2v(L->ટોચ.p++);  /* reserve stack space for string */
     setsvalue(L, stv, ts);  /* push (anchor) the string on the stack */
     luaH_set(L, ls->h, stv, stv);  /* t[string] = string */
     /* table is not a metatable, so it does not need to invalidate cache */
     luaC_checkGC(L);
-    L->top.p--;  /* remove string from stack */
-    return ts;
+    L->ટોચ.p--;  /* remove string from stack */
+    પાછા ts;
   }
 }
 
@@ -153,8 +153,8 @@ static TString *anchorstr (LexState *ls, TString *ts) {
 /*
 ** Creates a new string and anchors it in scanner's table.
 */
-TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
-  return anchorstr(ls, luaS_newlstr(ls->L, str, l));
+TString *luaX_newstring (LexState *ls, અચલ અક્ષર *str, size_t l) {
+  પાછા anchorstr(ls, luaS_newlstr(ls->L, str, l));
 }
 
 
@@ -162,25 +162,25 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
 ** increment line number and skips newline sequence (any of
 ** \n, \r, \n\r, or \r\n)
 */
-static void inclinenumber (LexState *ls) {
-  int old = ls->current;
+સ્થિર શૂન્ય inclinenumber (LexState *ls) {
+  પૂર્ણાંક old = ls->current;
   lua_assert(currIsNewline(ls));
   next(ls);  /* skip '\n' or '\r' */
-  if (currIsNewline(ls) && ls->current != old)
+  જો (currIsNewline(ls) && ls->current != old)
     next(ls);  /* skip '\n\r' or '\r\n' */
-  if (++ls->linenumber >= INT_MAX)
+  જો (++ls->linenumber >= INT_MAX)
     lexerror(ls, "chunk has too many lines", 0);
 }
 
 
-void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
-                    int firstchar) {
+શૂન્ય luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
+                    પૂર્ણાંક firstchar) {
   ls->t.token = 0;
   ls->L = L;
   ls->current = firstchar;
   ls->lookahead.token = TK_EOS;  /* no look-ahead token */
   ls->z = z;
-  ls->fs = NULL;
+  ls->fs = ખાલી;
   ls->linenumber = 1;
   ls->lastline = 1;
   ls->source = source;
@@ -188,7 +188,7 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
      so they cannot be collected */
   ls->envn = luaS_newliteral(L, LUA_ENV);  /* get env string */
   ls->brkn = luaS_newliteral(L, "break");  /* get "break" string */
-#if LUA_COMPAT_GLOBAL
+#જો LUA_COMPAT_GLOBAL
   /* compatibility mode: "global" is not a reserved word */
   ls->glbn = luaS_newliteral(L, "global");  /* get "global" string */
   ls->glbn->extra = 0;  /* mark it as not reserved */
@@ -205,12 +205,12 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
 */
 
 
-static int check_next1 (LexState *ls, int c) {
-  if (ls->current == c) {
+સ્થિર પૂર્ણાંક check_next1 (LexState *ls, પૂર્ણાંક c) {
+  જો (ls->current == c) {
     next(ls);
-    return 1;
+    પાછા 1;
   }
-  else return 0;
+  નહીંતર પાછા 0;
 }
 
 
@@ -218,13 +218,13 @@ static int check_next1 (LexState *ls, int c) {
 ** Check whether current char is in set 'set' (with two chars) and
 ** saves it
 */
-static int check_next2 (LexState *ls, const char *set) {
+સ્થિર પૂર્ણાંક check_next2 (LexState *ls, અચલ અક્ષર *set) {
   lua_assert(set[2] == '\0');
-  if (ls->current == set[0] || ls->current == set[1]) {
+  જો (ls->current == set[0] || ls->current == set[1]) {
     save_and_next(ls);
-    return 1;
+    પાછા 1;
   }
-  else return 0;
+  નહીંતર પાછા 0;
 }
 
 
@@ -241,34 +241,34 @@ static int check_next2 (LexState *ls, const char *set) {
 **
 ** The caller might have already read an initial dot.
 */
-static int read_numeral (LexState *ls, SemInfo *seminfo) {
+સ્થિર પૂર્ણાંક read_numeral (LexState *ls, SemInfo *seminfo) {
   TValue obj;
-  const char *expo = "Ee";
-  int first = ls->current;
+  અચલ અક્ષર *expo = "Ee";
+  પૂર્ણાંક first = ls->current;
   lua_assert(lisdigit(ls->current));
   save_and_next(ls);
-  if (first == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
+  જો (first == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
     expo = "Pp";
-  for (;;) {
-    if (check_next2(ls, expo))  /* exponent mark? */
+  માટે (;;) {
+    જો (check_next2(ls, expo))  /* exponent mark? */
       check_next2(ls, "-+");  /* optional exponent sign */
-    else if (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
+    નહીંતર જો (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
       save_and_next(ls);
-    else break;
+    નહીંતર તોડો;
   }
-  if (lislalpha(ls->current))  /* is numeral touching a letter? */
+  જો (lislalpha(ls->current))  /* is numeral touching a letter? */
     save_and_next(ls);  /* force an error */
   save(ls, '\0');
-  if (luaO_str2num(luaZ_buffer(ls->buff), &obj) == 0)  /* format error? */
+  જો (luaO_str2num(luaZ_buffer(ls->buff), &obj) == 0)  /* format error? */
     lexerror(ls, "malformed number", TK_FLT);
-  if (ttisinteger(&obj)) {
+  જો (ttisinteger(&obj)) {
     seminfo->i = ivalue(&obj);
-    return TK_INT;
+    પાછા TK_INT;
   }
-  else {
+  નહીંતર {
     lua_assert(ttisfloat(&obj));
     seminfo->r = fltvalue(&obj);
-    return TK_FLT;
+    પાછા TK_FLT;
   }
 }
 
@@ -279,81 +279,81 @@ static int read_numeral (LexState *ls, SemInfo *seminfo) {
 ** return 1 if it is a single bracket (no '='s and no 2nd bracket);
 ** otherwise (an unfinished '[==...') return 0.
 */
-static size_t skip_sep (LexState *ls) {
-  size_t count = 0;
-  int s = ls->current;
+સ્થિર size_t skip_sep (LexState *ls) {
+  size_t ગણતરી = 0;
+  પૂર્ણાંક s = ls->current;
   lua_assert(s == '[' || s == ']');
   save_and_next(ls);
-  while (ls->current == '=') {
+  જ્યારે (ls->current == '=') {
     save_and_next(ls);
-    count++;
+    ગણતરી++;
   }
-  return (ls->current == s) ? count + 2
-         : (count == 0) ? 1
+  પાછા (ls->current == s) ? ગણતરી + 2
+         : (ગણતરી == 0) ? 1
          : 0;
 }
 
 
-static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
-  int line = ls->linenumber;  /* initial line (for error message) */
+સ્થિર શૂન્ય read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
+  પૂર્ણાંક લીટી = ls->linenumber;  /* initial line (for error message) */
   save_and_next(ls);  /* skip 2nd '[' */
-  if (currIsNewline(ls))  /* string starts with a newline? */
+  જો (currIsNewline(ls))  /* string starts with a newline? */
     inclinenumber(ls);  /* skip it */
-  for (;;) {
-    switch (ls->current) {
-      case EOZ: {  /* error */
-        const char *what = (seminfo ? "string" : "comment");
-        const char *msg = luaO_pushfstring(ls->L,
-                     "unfinished long %s (starting at line %d)", what, line);
-        lexerror(ls, msg, TK_EOS);
-        break;  /* to avoid warnings */
+  માટે (;;) {
+    પસંદગી (ls->current) {
+      સ્થિતિ EOZ: {  /* error */
+        અચલ અક્ષર *what = (seminfo ? "string" : "comment");
+        અચલ અક્ષર *સંદેશ = luaO_pushfstring(ls->L,
+                     "unfinished long %s (starting at line %d)", what, લીટી);
+        lexerror(ls, સંદેશ, TK_EOS);
+        તોડો;  /* to avoid warnings */
       }
-      case ']': {
-        if (skip_sep(ls) == sep) {
+      સ્થિતિ ']': {
+        જો (skip_sep(ls) == sep) {
           save_and_next(ls);  /* skip 2nd ']' */
-          goto endloop;
+          જાઓ endloop;
         }
-        break;
+        તોડો;
       }
-      case '\n': case '\r': {
+      સ્થિતિ '\n': સ્થિતિ '\r': {
         save(ls, '\n');
         inclinenumber(ls);
-        if (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
-        break;
+        જો (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
+        તોડો;
       }
-      default: {
-        if (seminfo) save_and_next(ls);
-        else next(ls);
+      મૂળભૂત: {
+        જો (seminfo) save_and_next(ls);
+        નહીંતર next(ls);
       }
     }
   } endloop:
-  if (seminfo)
+  જો (seminfo)
     seminfo->ts = luaX_newstring(ls, luaZ_buffer(ls->buff) + sep,
                                      luaZ_bufflen(ls->buff) - 2 * sep);
 }
 
 
-static void esccheck (LexState *ls, int c, const char *msg) {
-  if (!c) {
-    if (ls->current != EOZ)
+સ્થિર શૂન્ય esccheck (LexState *ls, પૂર્ણાંક c, અચલ અક્ષર *સંદેશ) {
+  જો (!c) {
+    જો (ls->current != EOZ)
       save_and_next(ls);  /* add current to buffer for error message */
-    lexerror(ls, msg, TK_STRING);
+    lexerror(ls, સંદેશ, TK_STRING);
   }
 }
 
 
-static int gethexa (LexState *ls) {
+સ્થિર પૂર્ણાંક gethexa (LexState *ls) {
   save_and_next(ls);
   esccheck (ls, lisxdigit(ls->current), "hexadecimal digit expected");
-  return luaO_hexavalue(ls->current);
+  પાછા luaO_hexavalue(ls->current);
 }
 
 
-static int readhexaesc (LexState *ls) {
-  int r = gethexa(ls);
+સ્થિર પૂર્ણાંક readhexaesc (LexState *ls) {
+  પૂર્ણાંક r = gethexa(ls);
   r = (r << 4) + gethexa(ls);
   luaZ_buffremove(ls->buff, 2);  /* remove saved chars from buffer */
-  return r;
+  પાછા r;
 }
 
 
@@ -362,13 +362,13 @@ static int readhexaesc (LexState *ls) {
 ** for error reporting in case of errors; 'i' counts the number of
 ** saved characters, so that they can be removed if case of success.
 */
-static l_uint32 readutf8esc (LexState *ls) {
+સ્થિર l_uint32 readutf8esc (LexState *ls) {
   l_uint32 r;
-  int i = 4;  /* number of chars to be removed: start with #"\u{X" */
+  પૂર્ણાંક i = 4;  /* number of chars to be removed: start with #"\u{X" */
   save_and_next(ls);  /* skip 'u' */
   esccheck(ls, ls->current == '{', "missing '{'");
   r = cast_uint(gethexa(ls));  /* must have at least one digit */
-  while (cast_void(save_and_next(ls)), lisxdigit(ls->current)) {
+  જ્યારે (cast_void(save_and_next(ls)), lisxdigit(ls->current)) {
     i++;
     esccheck(ls, r <= (0x7FFFFFFFu >> 4), "UTF-8 value too large");
     r = (r << 4) + luaO_hexavalue(ls->current);
@@ -376,73 +376,73 @@ static l_uint32 readutf8esc (LexState *ls) {
   esccheck(ls, ls->current == '}', "missing '}'");
   next(ls);  /* skip '}' */
   luaZ_buffremove(ls->buff, i);  /* remove saved chars from buffer */
-  return r;
+  પાછા r;
 }
 
 
-static void utf8esc (LexState *ls) {
-  char buff[UTF8BUFFSZ];
-  int n = luaO_utf8esc(buff, readutf8esc(ls));
-  for (; n > 0; n--)  /* add 'buff' to string */
+સ્થિર શૂન્ય utf8esc (LexState *ls) {
+  અક્ષર buff[UTF8BUFFSZ];
+  પૂર્ણાંક n = luaO_utf8esc(buff, readutf8esc(ls));
+  માટે (; n > 0; n--)  /* add 'buff' to string */
     save(ls, buff[UTF8BUFFSZ - n]);
 }
 
 
-static int readdecesc (LexState *ls) {
-  int i;
-  int r = 0;  /* result accumulator */
-  for (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
+સ્થિર પૂર્ણાંક readdecesc (LexState *ls) {
+  પૂર્ણાંક i;
+  પૂર્ણાંક r = 0;  /* result accumulator */
+  માટે (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
     r = 10*r + ls->current - '0';
     save_and_next(ls);
   }
   esccheck(ls, r <= UCHAR_MAX, "decimal escape too large");
   luaZ_buffremove(ls->buff, i);  /* remove read digits from buffer */
-  return r;
+  પાછા r;
 }
 
 
-static void read_string (LexState *ls, int del, SemInfo *seminfo) {
+સ્થિર શૂન્ય read_string (LexState *ls, પૂર્ણાંક del, SemInfo *seminfo) {
   save_and_next(ls);  /* keep delimiter (for error messages) */
-  while (ls->current != del) {
-    switch (ls->current) {
-      case EOZ:
+  જ્યારે (ls->current != del) {
+    પસંદગી (ls->current) {
+      સ્થિતિ EOZ:
         lexerror(ls, "unfinished string", TK_EOS);
-        break;  /* to avoid warnings */
-      case '\n':
-      case '\r':
+        તોડો;  /* to avoid warnings */
+      સ્થિતિ '\n':
+      સ્થિતિ '\r':
         lexerror(ls, "unfinished string", TK_STRING);
-        break;  /* to avoid warnings */
-      case '\\': {  /* escape sequences */
-        int c;  /* final character to be saved */
+        તોડો;  /* to avoid warnings */
+      સ્થિતિ '\\': {  /* escape sequences */
+        પૂર્ણાંક c;  /* final character to be saved */
         save_and_next(ls);  /* keep '\\' for error messages */
-        switch (ls->current) {
-          case 'a': c = '\a'; goto read_save;
-          case 'b': c = '\b'; goto read_save;
-          case 'f': c = '\f'; goto read_save;
-          case 'n': c = '\n'; goto read_save;
-          case 'r': c = '\r'; goto read_save;
-          case 't': c = '\t'; goto read_save;
-          case 'v': c = '\v'; goto read_save;
-          case 'x': c = readhexaesc(ls); goto read_save;
-          case 'u': utf8esc(ls);  goto no_save;
-          case '\n': case '\r':
-            inclinenumber(ls); c = '\n'; goto only_save;
-          case '\\': case '\"': case '\'':
-            c = ls->current; goto read_save;
-          case EOZ: goto no_save;  /* will raise an error next loop */
-          case 'z': {  /* zap following span of spaces */
+        પસંદગી (ls->current) {
+          સ્થિતિ 'a': c = '\a'; જાઓ read_save;
+          સ્થિતિ 'b': c = '\b'; જાઓ read_save;
+          સ્થિતિ 'f': c = '\f'; જાઓ read_save;
+          સ્થિતિ 'n': c = '\n'; જાઓ read_save;
+          સ્થિતિ 'r': c = '\r'; જાઓ read_save;
+          સ્થિતિ 't': c = '\t'; જાઓ read_save;
+          સ્થિતિ 'v': c = '\v'; જાઓ read_save;
+          સ્થિતિ 'x': c = readhexaesc(ls); જાઓ read_save;
+          સ્થિતિ 'u': utf8esc(ls);  જાઓ no_save;
+          સ્થિતિ '\n': સ્થિતિ '\r':
+            inclinenumber(ls); c = '\n'; જાઓ only_save;
+          સ્થિતિ '\\': સ્થિતિ '\"': સ્થિતિ '\'':
+            c = ls->current; જાઓ read_save;
+          સ્થિતિ EOZ: જાઓ no_save;  /* will raise an error next loop */
+          સ્થિતિ 'z': {  /* zap following span of spaces */
             luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
             next(ls);  /* skip the 'z' */
-            while (lisspace(ls->current)) {
-              if (currIsNewline(ls)) inclinenumber(ls);
-              else next(ls);
+            જ્યારે (lisspace(ls->current)) {
+              જો (currIsNewline(ls)) inclinenumber(ls);
+              નહીંતર next(ls);
             }
-            goto no_save;
+            જાઓ no_save;
           }
-          default: {
+          મૂળભૂત: {
             esccheck(ls, lisdigit(ls->current), "invalid escape sequence");
             c = readdecesc(ls);  /* digital escape '\ddd' */
-            goto only_save;
+            જાઓ only_save;
           }
         }
        read_save:
@@ -452,9 +452,9 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
          luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
          save(ls, c);
          /* go through */
-       no_save: break;
+       no_save: તોડો;
       }
-      default:
+      મૂળભૂત:
         save_and_next(ls);
     }
   }
@@ -464,120 +464,120 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
 }
 
 
-static int llex (LexState *ls, SemInfo *seminfo) {
+સ્થિર પૂર્ણાંક llex (LexState *ls, SemInfo *seminfo) {
   luaZ_resetbuffer(ls->buff);
-  for (;;) {
-    switch (ls->current) {
-      case '\n': case '\r': {  /* line breaks */
+  માટે (;;) {
+    પસંદગી (ls->current) {
+      સ્થિતિ '\n': સ્થિતિ '\r': {  /* line breaks */
         inclinenumber(ls);
-        break;
+        તોડો;
       }
-      case ' ': case '\f': case '\t': case '\v': {  /* spaces */
+      સ્થિતિ ' ': સ્થિતિ '\f': સ્થિતિ '\t': સ્થિતિ '\v': {  /* spaces */
         next(ls);
-        break;
+        તોડો;
       }
-      case '-': {  /* '-' or '--' (comment) */
+      સ્થિતિ '-': {  /* '-' or '--' (comment) */
         next(ls);
-        if (ls->current != '-') return '-';
+        જો (ls->current != '-') પાછા '-';
         /* else is a comment */
         next(ls);
-        if (ls->current == '[') {  /* long comment? */
+        જો (ls->current == '[') {  /* long comment? */
           size_t sep = skip_sep(ls);
           luaZ_resetbuffer(ls->buff);  /* 'skip_sep' may dirty the buffer */
-          if (sep >= 2) {
-            read_long_string(ls, NULL, sep);  /* skip long comment */
+          જો (sep >= 2) {
+            read_long_string(ls, ખાલી, sep);  /* skip long comment */
             luaZ_resetbuffer(ls->buff);  /* previous call may dirty the buff. */
-            break;
+            તોડો;
           }
         }
         /* else short comment */
-        while (!currIsNewline(ls) && ls->current != EOZ)
+        જ્યારે (!currIsNewline(ls) && ls->current != EOZ)
           next(ls);  /* skip until end of line (or end of file) */
-        break;
+        તોડો;
       }
-      case '[': {  /* long string or simply '[' */
+      સ્થિતિ '[': {  /* long string or simply '[' */
         size_t sep = skip_sep(ls);
-        if (sep >= 2) {
+        જો (sep >= 2) {
           read_long_string(ls, seminfo, sep);
-          return TK_STRING;
+          પાછા TK_STRING;
         }
-        else if (sep == 0)  /* '[=...' missing second bracket? */
+        નહીંતર જો (sep == 0)  /* '[=...' missing second bracket? */
           lexerror(ls, "invalid long string delimiter", TK_STRING);
-        return '[';
+        પાછા '[';
       }
-      case '=': {
+      સ્થિતિ '=': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_EQ;  /* '==' */
-        else return '=';
+        જો (check_next1(ls, '=')) પાછા TK_EQ;  /* '==' */
+        નહીંતર પાછા '=';
       }
-      case '<': {
+      સ્થિતિ '<': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_LE;  /* '<=' */
-        else if (check_next1(ls, '<')) return TK_SHL;  /* '<<' */
-        else return '<';
+        જો (check_next1(ls, '=')) પાછા TK_LE;  /* '<=' */
+        નહીંતર જો (check_next1(ls, '<')) પાછા TK_SHL;  /* '<<' */
+        નહીંતર પાછા '<';
       }
-      case '>': {
+      સ્થિતિ '>': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_GE;  /* '>=' */
-        else if (check_next1(ls, '>')) return TK_SHR;  /* '>>' */
-        else return '>';
+        જો (check_next1(ls, '=')) પાછા TK_GE;  /* '>=' */
+        નહીંતર જો (check_next1(ls, '>')) પાછા TK_SHR;  /* '>>' */
+        નહીંતર પાછા '>';
       }
-      case '/': {
+      સ્થિતિ '/': {
         next(ls);
-        if (check_next1(ls, '/')) return TK_IDIV;  /* '//' */
-        else return '/';
+        જો (check_next1(ls, '/')) પાછા TK_IDIV;  /* '//' */
+        નહીંતર પાછા '/';
       }
-      case '~': {
+      સ્થિતિ '~': {
         next(ls);
-        if (check_next1(ls, '=')) return TK_NE;  /* '~=' */
-        else return '~';
+        જો (check_next1(ls, '=')) પાછા TK_NE;  /* '~=' */
+        નહીંતર પાછા '~';
       }
-      case ':': {
+      સ્થિતિ ':': {
         next(ls);
-        if (check_next1(ls, ':')) return TK_DBCOLON;  /* '::' */
-        else return ':';
+        જો (check_next1(ls, ':')) પાછા TK_DBCOLON;  /* '::' */
+        નહીંતર પાછા ':';
       }
-      case '"': case '\'': {  /* short literal strings */
+      સ્થિતિ '"': સ્થિતિ '\'': {  /* short literal strings */
         read_string(ls, ls->current, seminfo);
-        return TK_STRING;
+        પાછા TK_STRING;
       }
-      case '.': {  /* '.', '..', '...', or number */
+      સ્થિતિ '.': {  /* '.', '..', '...', or number */
         save_and_next(ls);
-        if (check_next1(ls, '.')) {
-          if (check_next1(ls, '.'))
-            return TK_DOTS;   /* '...' */
-          else return TK_CONCAT;   /* '..' */
+        જો (check_next1(ls, '.')) {
+          જો (check_next1(ls, '.'))
+            પાછા TK_DOTS;   /* '...' */
+          નહીંતર પાછા TK_CONCAT;   /* '..' */
         }
-        else if (!lisdigit(ls->current)) return '.';
-        else return read_numeral(ls, seminfo);
+        નહીંતર જો (!lisdigit(ls->current)) પાછા '.';
+        નહીંતર પાછા read_numeral(ls, seminfo);
       }
-      case '0': case '1': case '2': case '3': case '4':
-      case '5': case '6': case '7': case '8': case '9': {
-        return read_numeral(ls, seminfo);
+      સ્થિતિ '0': સ્થિતિ '1': સ્થિતિ '2': સ્થિતિ '3': સ્થિતિ '4':
+      સ્થિતિ '5': સ્થિતિ '6': સ્થિતિ '7': સ્થિતિ '8': સ્થિતિ '9': {
+        પાછા read_numeral(ls, seminfo);
       }
-      case EOZ: {
-        return TK_EOS;
+      સ્થિતિ EOZ: {
+        પાછા TK_EOS;
       }
-      default: {
-        if (lislalpha(ls->current)) {  /* identifier or reserved word? */
+      મૂળભૂત: {
+        જો (lislalpha(ls->current)) {  /* identifier or reserved word? */
           TString *ts;
-          do {
+          કરો {
             save_and_next(ls);
-          } while (lislalnum(ls->current));
+          } જ્યારે (lislalnum(ls->current));
           /* find or create string */
           ts = luaS_newlstr(ls->L, luaZ_buffer(ls->buff),
                                    luaZ_bufflen(ls->buff));
-          if (isreserved(ts))   /* reserved word? */
-            return ts->extra - 1 + FIRST_RESERVED;
-          else {
+          જો (isreserved(ts))   /* reserved word? */
+            પાછા ts->extra - 1 + FIRST_RESERVED;
+          નહીંતર {
             seminfo->ts = anchorstr(ls, ts);
-            return TK_NAME;
+            પાછા TK_NAME;
           }
         }
-        else {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
-          int c = ls->current;
+        નહીંતર {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
+          પૂર્ણાંક c = ls->current;
           next(ls);
-          return c;
+          પાછા c;
         }
       }
     }
@@ -585,20 +585,20 @@ static int llex (LexState *ls, SemInfo *seminfo) {
 }
 
 
-void luaX_next (LexState *ls) {
+શૂન્ય luaX_next (LexState *ls) {
   ls->lastline = ls->linenumber;
-  if (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
+  જો (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
     ls->t = ls->lookahead;  /* use this one */
     ls->lookahead.token = TK_EOS;  /* and discharge it */
   }
-  else
+  નહીંતર
     ls->t.token = llex(ls, &ls->t.seminfo);  /* read next token */
 }
 
 
-int luaX_lookahead (LexState *ls) {
+પૂર્ણાંક luaX_lookahead (LexState *ls) {
   lua_assert(ls->lookahead.token == TK_EOS);
   ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);
-  return ls->lookahead.token;
+  પાછા ls->lookahead.token;
 }
 

@@ -7,19 +7,19 @@
 #define lmem_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#અન્તર્ભાવ "lprefix.h"
 
 
-#include <stddef.h>
+#અન્તર્ભાવ <stddef.h>
 
-#include "lua.h"
+#અન્તર્ભાવ "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
+#અન્તર્ભાવ "ldebug.h"
+#અન્તર્ભાવ "ldo.h"
+#અન્તર્ભાવ "lgc.h"
+#અન્તર્ભાવ "lmem.h"
+#અન્તર્ભાવ "lobject.h"
+#અન્તર્ભાવ "lstate.h"
 
 
 
@@ -60,19 +60,19 @@
 
 
 
-#if defined(EMERGENCYGCTESTS)
+#જો defined(EMERGENCYGCTESTS)
 /*
 ** First allocation will fail except when freeing a block (frees never
 ** fail) and when it cannot try again; this fail will trigger 'tryagain'
 ** and a full GC cycle at every allocation.
 */
-static void *firsttry (global_State *g, void *block, size_t os, size_t ns) {
-  if (ns > 0 && cantryagain(g))
-    return NULL;  /* fail */
-  else  /* normal allocation */
-    return callfrealloc(g, block, os, ns);
+સ્થિર શૂન્ય *firsttry (global_State *g, શૂન્ય *block, size_t os, size_t ns) {
+  જો (ns > 0 && cantryagain(g))
+    પાછા ખાલી;  /* fail */
+  નહીંતર  /* normal allocation */
+    પાછા callfrealloc(g, block, os, ns);
 }
-#else
+#નહીંતર
 #define firsttry(g,block,os,ns)    callfrealloc(g, block, os, ns)
 #endif
 
@@ -94,20 +94,20 @@ static void *firsttry (global_State *g, void *block, size_t os, size_t ns) {
 #define MINSIZEARRAY	4
 
 
-void *luaM_growaux_ (lua_State *L, void *block, int nelems, int *psize,
-                     unsigned size_elems, int limit, const char *what) {
-  void *newblock;
-  int size = *psize;
-  if (nelems + 1 <= size)  /* does one extra element still fit? */
-    return block;  /* nothing to be done */
-  if (size >= limit / 2) {  /* cannot double it? */
-    if (l_unlikely(size >= limit))  /* cannot grow even a little? */
+શૂન્ય *luaM_growaux_ (lua_State *L, શૂન્ય *block, પૂર્ણાંક nelems, પૂર્ણાંક *psize,
+                     unsigned size_elems, પૂર્ણાંક limit, અચલ અક્ષર *what) {
+  શૂન્ય *newblock;
+  પૂર્ણાંક size = *psize;
+  જો (nelems + 1 <= size)  /* does one extra element still fit? */
+    પાછા block;  /* nothing to be done */
+  જો (size >= limit / 2) {  /* cannot double it? */
+    જો (l_unlikely(size >= limit))  /* cannot grow even a little? */
       luaG_runerror(L, "too many %s (limit is %d)", what, limit);
     size = limit;  /* still have at least one free place */
   }
-  else {
+  નહીંતર {
     size *= 2;
-    if (size < MINSIZEARRAY)
+    જો (size < MINSIZEARRAY)
       size = MINSIZEARRAY;  /* minimum size */
   }
   lua_assert(nelems + 1 <= size && size <= limit);
@@ -115,7 +115,7 @@ void *luaM_growaux_ (lua_State *L, void *block, int nelems, int *psize,
   newblock = luaM_saferealloc_(L, block, cast_sizet(*psize) * size_elems,
                                          cast_sizet(size) * size_elems);
   *psize = size;  /* update only when everything else is OK */
-  return newblock;
+  પાછા newblock;
 }
 
 
@@ -125,15 +125,15 @@ void *luaM_growaux_ (lua_State *L, void *block, int nelems, int *psize,
 ** to its number of elements, the only option is to raise an
 ** error.
 */
-void *luaM_shrinkvector_ (lua_State *L, void *block, int *size,
-                          int final_n, unsigned size_elem) {
-  void *newblock;
+શૂન્ય *luaM_shrinkvector_ (lua_State *L, શૂન્ય *block, પૂર્ણાંક *size,
+                          પૂર્ણાંક final_n, unsigned size_elem) {
+  શૂન્ય *newblock;
   size_t oldsize = cast_sizet(*size) * size_elem;
   size_t newsize = cast_sizet(final_n) * size_elem;
   lua_assert(newsize <= oldsize);
   newblock = luaM_saferealloc_(L, block, oldsize, newsize);
   *size = final_n;
-  return newblock;
+  પાછા newblock;
 }
 
 /* }================================================================== */
@@ -147,9 +147,9 @@ l_noret luaM_toobig (lua_State *L) {
 /*
 ** Free memory
 */
-void luaM_free_ (lua_State *L, void *block, size_t osize) {
+શૂન્ય luaM_free_ (lua_State *L, શૂન્ય *block, size_t osize) {
   global_State *g = G(L);
-  lua_assert((osize == 0) == (block == NULL));
+  lua_assert((osize == 0) == (block == ખાલી));
   callfrealloc(g, block, osize, 0);
   g->GCdebt += cast(l_mem, osize);
 }
@@ -159,57 +159,57 @@ void luaM_free_ (lua_State *L, void *block, size_t osize) {
 ** In case of allocation fail, this function will do an emergency
 ** collection to free some memory and then try the allocation again.
 */
-static void *tryagain (lua_State *L, void *block,
+સ્થિર શૂન્ય *tryagain (lua_State *L, શૂન્ય *block,
                        size_t osize, size_t nsize) {
   global_State *g = G(L);
-  if (cantryagain(g)) {
+  જો (cantryagain(g)) {
     luaC_fullgc(L, 1);  /* try to free some memory... */
-    return callfrealloc(g, block, osize, nsize);  /* try again */
+    પાછા callfrealloc(g, block, osize, nsize);  /* try again */
   }
-  else return NULL;  /* cannot run an emergency collection */
+  નહીંતર પાછા ખાલી;  /* cannot run an emergency collection */
 }
 
 
 /*
 ** Generic allocation routine.
 */
-void *luaM_realloc_ (lua_State *L, void *block, size_t osize, size_t nsize) {
-  void *newblock;
+શૂન્ય *luaM_realloc_ (lua_State *L, શૂન્ય *block, size_t osize, size_t nsize) {
+  શૂન્ય *newblock;
   global_State *g = G(L);
-  lua_assert((osize == 0) == (block == NULL));
+  lua_assert((osize == 0) == (block == ખાલી));
   newblock = firsttry(g, block, osize, nsize);
-  if (l_unlikely(newblock == NULL && nsize > 0)) {
+  જો (l_unlikely(newblock == ખાલી && nsize > 0)) {
     newblock = tryagain(L, block, osize, nsize);
-    if (newblock == NULL)  /* still no memory? */
-      return NULL;  /* do not update 'GCdebt' */
+    જો (newblock == ખાલી)  /* still no memory? */
+      પાછા ખાલી;  /* do not update 'GCdebt' */
   }
-  lua_assert((nsize == 0) == (newblock == NULL));
+  lua_assert((nsize == 0) == (newblock == ખાલી));
   g->GCdebt -= cast(l_mem, nsize) - cast(l_mem, osize);
-  return newblock;
+  પાછા newblock;
 }
 
 
-void *luaM_saferealloc_ (lua_State *L, void *block, size_t osize,
+શૂન્ય *luaM_saferealloc_ (lua_State *L, શૂન્ય *block, size_t osize,
                                                     size_t nsize) {
-  void *newblock = luaM_realloc_(L, block, osize, nsize);
-  if (l_unlikely(newblock == NULL && nsize > 0))  /* allocation failed? */
+  શૂન્ય *newblock = luaM_realloc_(L, block, osize, nsize);
+  જો (l_unlikely(newblock == ખાલી && nsize > 0))  /* allocation failed? */
     luaM_error(L);
-  return newblock;
+  પાછા newblock;
 }
 
 
-void *luaM_malloc_ (lua_State *L, size_t size, int tag) {
-  if (size == 0)
-    return NULL;  /* that's all */
-  else {
+શૂન્ય *luaM_malloc_ (lua_State *L, size_t size, પૂર્ણાંક tag) {
+  જો (size == 0)
+    પાછા ખાલી;  /* that's all */
+  નહીંતર {
     global_State *g = G(L);
-    void *newblock = firsttry(g, NULL, cast_sizet(tag), size);
-    if (l_unlikely(newblock == NULL)) {
-      newblock = tryagain(L, NULL, cast_sizet(tag), size);
-      if (newblock == NULL)
+    શૂન્ય *newblock = firsttry(g, ખાલી, cast_sizet(tag), size);
+    જો (l_unlikely(newblock == ખાલી)) {
+      newblock = tryagain(L, ખાલી, cast_sizet(tag), size);
+      જો (newblock == ખાલી)
         luaM_error(L);
     }
     g->GCdebt -= cast(l_mem, size);
-    return newblock;
+    પાછા newblock;
   }
 }

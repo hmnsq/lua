@@ -8,8 +8,8 @@
 #define ltests_h
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#અન્તર્ભાવ <stdio.h>
+#અન્તર્ભાવ <stdlib.h>
 
 /* test Lua with compatibility code */
 #define LUA_COMPAT_MATHLIB
@@ -25,14 +25,14 @@
 
 
 /* to avoid warnings, and to make sure value is really unused */
-#define UNUSED(x)       (x=0, (void)(x))
+#define UNUSED(x)       (x=0, (શૂન્ય)(x))
 
 
 /* test for sizes in 'l_sprintf' (make sure whole buffer is available) */
 #undef l_sprintf
-#if !defined(LUA_USE_C89)
+#જો !defined(LUA_USE_C89)
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), snprintf(s,sz,f,i))
-#else
+#નહીંતર
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), sprintf(s,f,i))
 #endif
 
@@ -50,8 +50,8 @@
 
 
 /* memory-allocator control variables */
-typedef struct Memcontrol {
-  int failnext;
+પ્રકારવ્યાખ્યા સંરચના Memcontrol {
+  પૂર્ણાંક failnext;
   unsigned long numblocks;
   unsigned long total;
   unsigned long maxmem;
@@ -64,46 +64,46 @@ LUA_API Memcontrol l_memcontrol;
 
 
 #define luai_tracegc(L,f)		luai_tracegctest(L, f)
-extern void luai_tracegctest (lua_State *L, int first);
+બાહ્ય શૂન્ય luai_tracegctest (lua_State *L, પૂર્ણાંક first);
 
 
 /*
 ** generic variable for debug tricks
 */
-extern void *l_Trick;
+બાહ્ય શૂન્ય *l_Trick;
 
 
 /*
 ** Function to traverse and check all memory used by Lua
 */
-extern int lua_checkmemory (lua_State *L);
+બાહ્ય પૂર્ણાંક lua_checkmemory (lua_State *L);
 
 /*
 ** Function to print an object GC-friendly
 */
-struct GCObject;
-extern void lua_printobj (lua_State *L, struct GCObject *o);
+સંરચના GCObject;
+બાહ્ય શૂન્ય lua_printobj (lua_State *L, સંરચના GCObject *o);
 
 
 /*
 ** Function to print a value
 */
-struct TValue;
-extern void lua_printvalue (struct TValue *v);
+સંરચના TValue;
+બાહ્ય શૂન્ય lua_printvalue (સંરચના TValue *v);
 
 /*
 ** Function to print the stack
 */
-extern void lua_printstack (lua_State *L);
-extern int lua_printallstack (lua_State *L);
+બાહ્ય શૂન્ય lua_printstack (lua_State *L);
+બાહ્ય પૂર્ણાંક lua_printallstack (lua_State *L);
 
 
 /* test for lock/unlock */
 
-struct L_EXTRA { int lock; int *plock; };
+સંરચના L_EXTRA { પૂર્ણાંક lock; પૂર્ણાંક *plock; };
 #undef LUA_EXTRASPACE
-#define LUA_EXTRASPACE	sizeof(struct L_EXTRA)
-#define getlock(l)	cast(struct L_EXTRA*, lua_getextraspace(l))
+#define LUA_EXTRASPACE	કદ(સંરચના L_EXTRA)
+#define getlock(l)	cast(સંરચના L_EXTRA*, lua_getextraspace(l))
 #define luai_userstateopen(l)  \
 	(getlock(l)->lock = 0, getlock(l)->plock = &(getlock(l)->lock))
 #define luai_userstateclose(l)  \
@@ -117,18 +117,18 @@ struct L_EXTRA { int lock; int *plock; };
 
 
 
-LUA_API int luaB_opentests (lua_State *L);
+LUA_API પૂર્ણાંક luaB_opentests (lua_State *L);
 
-LUA_API void *debug_realloc (void *ud, void *block,
+LUA_API શૂન્ય *debug_realloc (શૂન્ય *ud, શૂન્ય *block,
                              size_t osize, size_t nsize);
 
 
 #define luaL_newstate()  \
-	lua_newstate(debug_realloc, &l_memcontrol, luaL_makeseed(NULL))
+	lua_newstate(debug_realloc, &l_memcontrol, luaL_makeseed(ખાલી))
 #define luai_openlibs(L)  \
   {  luaL_openlibs(L); \
      luaL_requiref(L, "T", luaB_opentests, 1); \
-     lua_pop(L, 1); }
+     lua_કાઢો(L, 1); }
 
 
 

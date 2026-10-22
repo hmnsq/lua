@@ -8,31 +8,31 @@
 #define lapi_h
 
 
-#include "llimits.h"
-#include "lstate.h"
+#અન્તર્ભાવ "llimits.h"
+#અન્તર્ભાવ "lstate.h"
 
 
-#if defined(LUA_USE_APICHECK)
-#include <assert.h>
-#define api_check(l,e,msg)	assert(e)
-#else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
+#જો defined(LUA_USE_APICHECK)
+#અન્તર્ભાવ <assert.h>
+#define api_check(l,e,સંદેશ)	પ્રતિજ્ઞા(e)
+#નહીંતર	/* for testing */
+#define api_check(l,e,સંદેશ)	((શૂન્ય)(l), lua_assert((e) && સંદેશ))
 #endif
 
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)  \
-    (L->top.p++, api_check(L, L->top.p <= L->ci->top.p, "stack overflow"))
+#define api_incr_ટોચ(L)  \
+    (L->ટોચ.p++, api_check(L, L->ટોચ.p <= L->ci->ટોચ.p, "stack overflow"))
 
 
 /*
 ** macros that are executed whenever program enters the Lua core
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
-#if !defined(lua_lock)
-#define lua_lock(L)	((void) 0)
-#define lua_unlock(L)	((void) 0)
+#જો !defined(lua_lock)
+#define lua_lock(L)	((શૂન્ય) 0)
+#define lua_unlock(L)	((શૂન્ય) 0)
 #endif
 
 
@@ -43,13 +43,13 @@
 ** increases its stack space ('L->ci->top.p').
 */
 #define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
-	L->ci->top.p = L->top.p; }
+    { જો ((nres) <= LUA_MULTRET && L->ci->ટોચ.p < L->ટોચ.p) \
+	L->ci->ટોચ.p = L->ટોચ.p; }
 
 
 /* Ensure the stack has at least 'n' elements */
 #define api_checknelems(L,n) \
-       api_check(L, (n) < (L->top.p - L->ci->func.p), \
+       api_check(L, (n) < (L->ટોચ.p - L->ci->func.p), \
                          "not enough elements in the stack")
 
 
@@ -58,8 +58,8 @@
 ** is only an optimization for a pop followed by a push.)
 */
 #define api_checkpop(L,n) \
-	api_check(L, (n) < L->top.p - L->ci->func.p &&  \
-                     L->tbclist.p < L->top.p - (n), \
+	api_check(L, (n) < L->ટોચ.p - L->ci->func.p &&  \
+                     L->tbclist.p < L->ટોચ.p - (n), \
 			  "not enough free elements in the stack")
 
 #endif
