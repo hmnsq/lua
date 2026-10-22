@@ -4,28 +4,28 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lstring_c
-#define LUA_CORE
+#घोषणा lstring_c
+#घोषणा LUA_CORE
 
-#include "lprefix.h"
+#समावेश "lprefix.h"
 
 
-#include <string.h>
+#समावेश <string.h>
 
-#include "lua.h"
+#समावेश "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
+#समावेश "ldebug.h"
+#समावेश "ldo.h"
+#समावेश "lmem.h"
+#समावेश "lobject.h"
+#समावेश "lstate.h"
+#समावेश "lstring.h"
 
 
 /*
 ** Maximum size for string table.
 */
-#define MAXSTRTB	cast_int(luaM_limitN(INT_MAX, TString*))
+#घोषणा MAXSTRTB	cast_int(luaM_limitN(पूर्णांक_उच्च, TString*))
 
 /*
 ** Initial size for the string table (must be power of 2).
@@ -33,52 +33,52 @@
 ** metaevent keys + a few others). Libraries would typically add
 ** a few dozens more.
 */
-#if !defined(MINSTRTABSIZE)
-#define MINSTRTABSIZE   128
-#endif
+#अगर !defined(MINSTRTABSIZE)
+#घोषणा MINSTRTABSIZE   128
+#पूर्ण_अगर
 
 
 /*
 ** generic equality for strings
 */
-int luaS_eqstr (TString *a, TString *b) {
-  size_t len1, len2;
-  const char *s1 = getlstr(a, len1);
-  const char *s2 = getlstr(b, len2);
-  return ((len1 == len2) &&  /* equal length and ... */
-          (memcmp(s1, s2, len1) == 0));  /* equal contents */
+पूर्णांक luaS_eqstr (TString *a, TString *b) {
+  माप_प्रकार len1, len2;
+  स्थिर अक्षर *s1 = getlstr(a, len1);
+  स्थिर अक्षर *s2 = getlstr(b, len2);
+  वापस ((len1 == len2) &&  /* equal length and ... */
+          (स_भेद(s1, s2, len1) == 0));  /* equal contents */
 }
 
 
-static unsigned luaS_hash (const char *str, size_t l, unsigned seed) {
-  unsigned int h = seed ^ cast_uint(l);
-  for (; l > 0; l--)
+अटल अचिन्हित luaS_hash (स्थिर अक्षर *str, माप_प्रकार l, अचिन्हित seed) {
+  अचिन्हित पूर्णांक h = seed ^ cast_uint(l);
+  क्रम (; l > 0; l--)
     h ^= ((h<<5) + (h>>2) + cast_byte(str[l - 1]));
-  return h;
+  वापस h;
 }
 
 
-unsigned luaS_hashlongstr (TString *ts) {
+अचिन्हित luaS_hashlongstr (TString *ts) {
   lua_assert(ts->tt == LUA_VLNGSTR);
-  if (ts->extra == 0) {  /* no hash? */
-    size_t len = ts->u.lnglen;
+  अगर (ts->extra == 0) {  /* no hash? */
+    माप_प्रकार len = ts->u.lnglen;
     ts->hash = luaS_hash(getlngstr(ts), len, ts->hash);
     ts->extra = 1;  /* now it has its hash */
   }
-  return ts->hash;
+  वापस ts->hash;
 }
 
 
-static void tablerehash (TString **vect, int osize, int nsize) {
-  int i;
-  for (i = osize; i < nsize; i++)  /* clear new elements */
-    vect[i] = NULL;
-  for (i = 0; i < osize; i++) {  /* rehash old part of the array */
+अटल व्योम tablerehash (TString **vect, पूर्णांक osize, पूर्णांक nsize) {
+  पूर्णांक i;
+  क्रम (i = osize; i < nsize; i++)  /* clear new elements */
+    vect[i] = शून्य;
+  क्रम (i = 0; i < osize; i++) {  /* rehash old part of the array */
     TString *p = vect[i];
-    vect[i] = NULL;
-    while (p) {  /* for each string in the list */
+    vect[i] = शून्य;
+    जबतक (p) {  /* for each string in the list */
       TString *hnext = p->u.hnext;  /* save next */
-      unsigned int h = lmod(p->hash, nsize);  /* new position */
+      अचिन्हित पूर्णांक h = lmod(p->hash, nsize);  /* new position */
       p->u.hnext = vect[h];  /* chain it into array */
       vect[h] = p;
       p = hnext;
@@ -92,22 +92,22 @@ static void tablerehash (TString **vect, int osize, int nsize) {
 ** (This can degrade performance, but any non-zero size should work
 ** correctly.)
 */
-void luaS_resize (lua_State *L, int nsize) {
+व्योम luaS_resize (lua_State *L, पूर्णांक nsize) {
   stringtable *tb = &G(L)->strt;
-  int osize = tb->size;
+  पूर्णांक osize = tb->आकार;
   TString **newvect;
-  if (nsize < osize)  /* shrinking table? */
+  अगर (nsize < osize)  /* shrinking table? */
     tablerehash(tb->hash, osize, nsize);  /* depopulate shrinking part */
   newvect = luaM_reallocvector(L, tb->hash, osize, nsize, TString*);
-  if (l_unlikely(newvect == NULL)) {  /* reallocation failed? */
-    if (nsize < osize)  /* was it shrinking table? */
+  अगर (l_unlikely(newvect == शून्य)) {  /* reallocation failed? */
+    अगर (nsize < osize)  /* was it shrinking table? */
       tablerehash(tb->hash, nsize, osize);  /* restore to original size */
     /* leave table as it was */
   }
-  else {  /* allocation succeeded */
+  अन्यथा {  /* allocation succeeded */
     tb->hash = newvect;
-    tb->size = nsize;
-    if (nsize > osize)
+    tb->आकार = nsize;
+    अगर (nsize > osize)
       tablerehash(newvect, osize, nsize);  /* rehash for new size */
   }
 }
@@ -117,11 +117,11 @@ void luaS_resize (lua_State *L, int nsize) {
 ** Clear API string cache. (Entries cannot be empty, so fill them with
 ** a non-collectable string.)
 */
-void luaS_clearcache (global_State *g) {
-  int i, j;
-  for (i = 0; i < STRCACHE_N; i++)
-    for (j = 0; j < STRCACHE_M; j++) {
-      if (iswhite(g->strcache[i][j]))  /* will entry be collected? */
+व्योम luaS_clearcache (global_State *g) {
+  पूर्णांक i, j;
+  क्रम (i = 0; i < STRCACHE_N; i++)
+    क्रम (j = 0; j < STRCACHE_M; j++) {
+      अगर (iswhite(g->strcache[i][j]))  /* will entry be collected? */
         g->strcache[i][j] = g->memerrmsg;  /* replace it with something fixed */
     }
 }
@@ -130,33 +130,33 @@ void luaS_clearcache (global_State *g) {
 /*
 ** Initialize the string table and the string cache
 */
-void luaS_init (lua_State *L) {
+व्योम luaS_init (lua_State *L) {
   global_State *g = G(L);
-  int i, j;
+  पूर्णांक i, j;
   stringtable *tb = &G(L)->strt;
   tb->hash = luaM_newvector(L, MINSTRTABSIZE, TString*);
   tablerehash(tb->hash, 0, MINSTRTABSIZE);  /* clear array */
-  tb->size = MINSTRTABSIZE;
+  tb->आकार = MINSTRTABSIZE;
   /* pre-create memory-error message */
   g->memerrmsg = luaS_newliteral(L, MEMERRMSG);
   luaC_fix(L, obj2gco(g->memerrmsg));  /* it should never be collected */
-  for (i = 0; i < STRCACHE_N; i++)  /* fill cache with valid strings */
-    for (j = 0; j < STRCACHE_M; j++)
+  क्रम (i = 0; i < STRCACHE_N; i++)  /* fill cache with valid strings */
+    क्रम (j = 0; j < STRCACHE_M; j++)
       g->strcache[i][j] = g->memerrmsg;
 }
 
 
-size_t luaS_sizelngstr (size_t len, int kind) {
-  switch (kind) {
-    case LSTRREG:  /* regular long string */
+माप_प्रकार luaS_sizelngstr (माप_प्रकार len, पूर्णांक kind) {
+  चयन (kind) {
+    हाल LSTRREG:  /* regular long string */
       /* don't need 'falloc'/'ud', but need space for content */
-      return offsetof(TString, falloc) + (len + 1) * sizeof(char);
-    case LSTRFIX:  /* fixed external long string */
+      वापस दुरत्व(TString, falloc) + (len + 1) * माप(अक्षर);
+    हाल LSTRFIX:  /* fixed external long string */
       /* don't need 'falloc'/'ud' */
-      return offsetof(TString, falloc);
-    default:  /* external long string with deallocation */
+      वापस दुरत्व(TString, falloc);
+    शेष:  /* external long string with deallocation */
       lua_assert(kind == LSTRMEM);
-      return sizeof(TString);
+      वापस माप(TString);
   }
 }
 
@@ -164,98 +164,98 @@ size_t luaS_sizelngstr (size_t len, int kind) {
 /*
 ** creates a new string object
 */
-static TString *createstrobj (lua_State *L, size_t totalsize, lu_byte tag,
-                              unsigned h) {
+अटल TString *createstrobj (lua_State *L, माप_प्रकार totalsize, lu_byte tag,
+                              अचिन्हित h) {
   TString *ts;
   GCObject *o;
   o = luaC_newobj(L, tag, totalsize);
   ts = gco2ts(o);
   ts->hash = h;
   ts->extra = 0;
-  return ts;
+  वापस ts;
 }
 
 
-TString *luaS_createlngstrobj (lua_State *L, size_t l) {
-  size_t totalsize = luaS_sizelngstr(l, LSTRREG);
+TString *luaS_createlngstrobj (lua_State *L, माप_प्रकार l) {
+  माप_प्रकार totalsize = luaS_sizelngstr(l, LSTRREG);
   TString *ts = createstrobj(L, totalsize, LUA_VLNGSTR, G(L)->seed);
   ts->u.lnglen = l;
   ts->shrlen = LSTRREG;  /* signals that it is a regular long string */
-  ts->contents = cast_charp(ts) + offsetof(TString, falloc);
+  ts->contents = cast_charp(ts) + दुरत्व(TString, falloc);
   ts->contents[l] = '\0';  /* ending 0 */
-  return ts;
+  वापस ts;
 }
 
 
-void luaS_remove (lua_State *L, TString *ts) {
+व्योम luaS_remove (lua_State *L, TString *ts) {
   stringtable *tb = &G(L)->strt;
-  TString **p = &tb->hash[lmod(ts->hash, tb->size)];
-  while (*p != ts)  /* find previous element */
+  TString **p = &tb->hash[lmod(ts->hash, tb->आकार)];
+  जबतक (*p != ts)  /* find previous element */
     p = &(*p)->u.hnext;
   *p = (*p)->u.hnext;  /* remove element from its list */
   tb->nuse--;
 }
 
 
-static void growstrtab (lua_State *L, stringtable *tb) {
-  if (l_unlikely(tb->nuse == INT_MAX)) {  /* too many strings? */
+अटल व्योम growstrtab (lua_State *L, stringtable *tb) {
+  अगर (l_unlikely(tb->nuse == पूर्णांक_उच्च)) {  /* too many strings? */
     luaC_fullgc(L, 1);  /* try to free some... */
-    if (tb->nuse == INT_MAX)  /* still too many? */
+    अगर (tb->nuse == पूर्णांक_उच्च)  /* still too many? */
       luaM_error(L);  /* cannot even create a message... */
   }
-  if (tb->size <= MAXSTRTB / 2)  /* can grow string table? */
-    luaS_resize(L, tb->size * 2);
+  अगर (tb->आकार <= MAXSTRTB / 2)  /* can grow string table? */
+    luaS_resize(L, tb->आकार * 2);
 }
 
 
 /*
 ** Checks whether short string exists and reuses it or creates a new one.
 */
-static TString *internshrstr (lua_State *L, const char *str, size_t l) {
+अटल TString *internshrstr (lua_State *L, स्थिर अक्षर *str, माप_प्रकार l) {
   TString *ts;
   global_State *g = G(L);
   stringtable *tb = &g->strt;
-  unsigned int h = luaS_hash(str, l, g->seed);
-  TString **list = &tb->hash[lmod(h, tb->size)];
-  lua_assert(str != NULL);  /* otherwise 'memcmp'/'memcpy' are undefined */
-  for (ts = *list; ts != NULL; ts = ts->u.hnext) {
-    if (l == cast_uint(ts->shrlen) &&
-        (memcmp(str, getshrstr(ts), l * sizeof(char)) == 0)) {
+  अचिन्हित पूर्णांक h = luaS_hash(str, l, g->seed);
+  TString **list = &tb->hash[lmod(h, tb->आकार)];
+  lua_assert(str != शून्य);  /* otherwise 'memcmp'/'memcpy' are undefined */
+  क्रम (ts = *list; ts != शून्य; ts = ts->u.hnext) {
+    अगर (l == cast_uint(ts->shrlen) &&
+        (स_भेद(str, getshrstr(ts), l * माप(अक्षर)) == 0)) {
       /* found! */
-      if (isdead(g, ts))  /* dead (but not collected yet)? */
+      अगर (isdead(g, ts))  /* dead (but not collected yet)? */
         changewhite(ts);  /* resurrect it */
-      return ts;
+      वापस ts;
     }
   }
   /* else must create a new string */
-  if (tb->nuse >= tb->size) {  /* need to grow string table? */
+  अगर (tb->nuse >= tb->आकार) {  /* need to grow string table? */
     growstrtab(L, tb);
-    list = &tb->hash[lmod(h, tb->size)];  /* rehash with new size */
+    list = &tb->hash[lmod(h, tb->आकार)];  /* rehash with new size */
   }
   ts = createstrobj(L, sizestrshr(l), LUA_VSHRSTR, h);
   ts->shrlen = cast(ls_byte, l);
   getshrstr(ts)[l] = '\0';  /* ending 0 */
-  memcpy(getshrstr(ts), str, l * sizeof(char));
+  स_नकल(getshrstr(ts), str, l * माप(अक्षर));
   ts->u.hnext = *list;
   *list = ts;
   tb->nuse++;
-  return ts;
+  वापस ts;
 }
 
 
 /*
 ** new string (with explicit length)
 */
-TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
-  if (l <= LUAI_MAXSHORTLEN)  /* short string? */
-    return internshrstr(L, str, l);
-  else {
+TString *luaS_newlstr (lua_State *L, स्थिर अक्षर *str, माप_प्रकार l) {
+  अगर (l <= LUAI_MAXSHORTLEN)  /* short string? */
+    वापस internshrstr(L, str, l);
+  अन्यथा {
     TString *ts;
-    if (l_unlikely(l * sizeof(char) >= (MAX_SIZE - sizeof(TString))))
+    अगर (l_unlikely(l * माप(अक्षर) >= (MAX_आकार - माप(TString))))
       luaM_toobig(L);
     ts = luaS_createlngstrobj(L, l);
-    memcpy(getlngstr(ts), str, l * sizeof(char));
-    return ts;
+    स_नकल(getlngstr(ts), str, l * माप(अक्षर));
+    वापस ts;
   }
 }
 
@@ -266,65 +266,65 @@ TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
 ** only zero-terminated strings, so it is safe to use 'strcmp' to
 ** check hits.
 */
-TString *luaS_new (lua_State *L, const char *str) {
-  unsigned int i = point2uint(str) % STRCACHE_N;  /* hash */
-  int j;
+TString *luaS_new (lua_State *L, स्थिर अक्षर *str) {
+  अचिन्हित पूर्णांक i = point2uint(str) % STRCACHE_N;  /* hash */
+  पूर्णांक j;
   TString **p = G(L)->strcache[i];
-  for (j = 0; j < STRCACHE_M; j++) {
-    if (strcmp(str, getstr(p[j])) == 0)  /* hit? */
-      return p[j];  /* that is it */
+  क्रम (j = 0; j < STRCACHE_M; j++) {
+    अगर (म_भेद(str, getstr(p[j])) == 0)  /* hit? */
+      वापस p[j];  /* that is it */
   }
   /* normal route */
-  for (j = STRCACHE_M - 1; j > 0; j--)
+  क्रम (j = STRCACHE_M - 1; j > 0; j--)
     p[j] = p[j - 1];  /* move out last element */
   /* new element is first in the list */
-  p[0] = luaS_newlstr(L, str, strlen(str));
-  return p[0];
+  p[0] = luaS_newlstr(L, str, म_माप(str));
+  वापस p[0];
 }
 
 
-Udata *luaS_newudata (lua_State *L, size_t s, unsigned short nuvalue) {
+Udata *luaS_newudata (lua_State *L, माप_प्रकार s, अचिन्हित लघु nuvalue) {
   Udata *u;
-  int i;
+  पूर्णांक i;
   GCObject *o;
-  if (l_unlikely(s > MAX_SIZE - udatamemoffset(nuvalue)))
+  अगर (l_unlikely(s > MAX_आकार - udatamemoffset(nuvalue)))
     luaM_toobig(L);
   o = luaC_newobj(L, LUA_VUSERDATA, sizeudata(nuvalue, s));
   u = gco2u(o);
   u->len = s;
   u->nuvalue = nuvalue;
-  u->metatable = NULL;
-  for (i = 0; i < nuvalue; i++)
+  u->metatable = शून्य;
+  क्रम (i = 0; i < nuvalue; i++)
     setnilvalue(&u->uv[i].uv);
-  return u;
+  वापस u;
 }
 
 
-struct NewExt {
+काष्ठा NewExt {
   ls_byte kind;
-  const char *s;
-   size_t len;
+  स्थिर अक्षर *s;
+   माप_प्रकार len;
   TString *ts;  /* output */
 };
 
 
-static void f_newext (lua_State *L, void *ud) {
-  struct NewExt *ne = cast(struct NewExt *, ud);
-  size_t size = luaS_sizelngstr(0, ne->kind);
-  ne->ts = createstrobj(L, size, LUA_VLNGSTR, G(L)->seed);
+अटल व्योम f_newext (lua_State *L, व्योम *ud) {
+  काष्ठा NewExt *ne = cast(काष्ठा NewExt *, ud);
+  माप_प्रकार आकार = luaS_sizelngstr(0, ne->kind);
+  ne->ts = createstrobj(L, आकार, LUA_VLNGSTR, G(L)->seed);
 }
 
 
 TString *luaS_newextlstr (lua_State *L,
-	          const char *s, size_t len, lua_Alloc falloc, void *ud) {
-  struct NewExt ne;
-  if (!falloc) {
+	          स्थिर अक्षर *s, माप_प्रकार len, lua_Alloc falloc, व्योम *ud) {
+  काष्ठा NewExt ne;
+  अगर (!falloc) {
     ne.kind = LSTRFIX;
     f_newext(L, &ne);  /* just create header */
   }
-  else {
+  अन्यथा {
     ne.kind = LSTRMEM;
-    if (luaD_rawrunprotected(L, f_newext, &ne) != LUA_OK) {  /* mem. error? */
+    अगर (luaD_rawrunprotected(L, f_newext, &ne) != LUA_OK) {  /* mem. error? */
       (*falloc)(ud, cast_voidp(s), len + 1, 0);  /* free external string */
       luaM_error(L);  /* re-raise memory error */
     }
@@ -334,7 +334,7 @@ TString *luaS_newextlstr (lua_State *L,
   ne.ts->shrlen = ne.kind;
   ne.ts->u.lnglen = len;
   ne.ts->contents = cast_charp(s);
-  return ne.ts;
+  वापस ne.ts;
 }
 
 
@@ -342,12 +342,12 @@ TString *luaS_newextlstr (lua_State *L,
 ** Normalize an external string: If it is short, internalize it.
 */
 TString *luaS_normstr (lua_State *L, TString *ts) {
-  size_t len = ts->u.lnglen;
-  if (len > LUAI_MAXSHORTLEN)
-    return ts;  /* long string; keep the original */
-  else {
-    const char *str = getlngstr(ts);
-    return internshrstr(L, str, len);
+  माप_प्रकार len = ts->u.lnglen;
+  अगर (len > LUAI_MAXSHORTLEN)
+    वापस ts;  /* long string; keep the original */
+  अन्यथा {
+    स्थिर अक्षर *str = getlngstr(ts);
+    वापस internshrstr(L, str, len);
   }
 }
 

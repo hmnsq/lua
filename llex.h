@@ -4,32 +4,32 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llex_h
-#define llex_h
+#अगर_अघोषित llex_h
+#घोषणा llex_h
 
-#include <limits.h>
+#समावेश <limits.h>
 
-#include "lobject.h"
-#include "lzio.h"
+#समावेश "lobject.h"
+#समावेश "lzio.h"
 
 
 /*
 ** Single-char tokens (terminal symbols) are represented by their own
 ** numeric code. Other tokens start at the following value.
 */
-#define FIRST_RESERVED	(UCHAR_MAX + 1)
+#घोषणा FIRST_RESERVED	(अच_अक्षर_उच्च + 1)
 
 
-#if !defined(LUA_ENV)
-#define LUA_ENV		"_ENV"
-#endif
+#अगर !defined(LUA_ENV)
+#घोषणा LUA_ENV		"_ENV"
+#पूर्ण_अगर
 
 
 /*
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER RESERVED"
 */
-enum RESERVED {
+क्रमागत RESERVED {
   /* terminal symbols denoted by reserved words */
   TK_AND = FIRST_RESERVED, TK_BREAK,
   TK_DO, TK_ELSE, TK_ELSEIF, TK_END, TK_FALSE, TK_FOR, TK_FUNCTION,
@@ -43,36 +43,36 @@ enum RESERVED {
 };
 
 /* number of reserved words */
-#define NUM_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
+#घोषणा अंक_RESERVED	(cast_int(TK_WHILE-FIRST_RESERVED + 1))
 
 
-typedef union {
-  lua_Number r;
+प्रकार जोड़ {
+  lua_संख्या r;
   lua_Integer i;
   TString *ts;
 } SemInfo;  /* semantics information */
 
 
-typedef struct Token {
-  int token;
+प्रकार काष्ठा Token {
+  पूर्णांक token;
   SemInfo seminfo;
 } Token;
 
 
 /* state of the scanner plus state of the parser when shared by all
    functions */
-typedef struct LexState {
-  int current;  /* current character (charint) */
-  int linenumber;  /* input line counter */
-  int lastline;  /* line of last token 'consumed' */
+प्रकार काष्ठा LexState {
+  पूर्णांक current;  /* current character (charint) */
+  पूर्णांक linenumber;  /* input line counter */
+  पूर्णांक lastline;  /* line of last token 'consumed' */
   Token t;  /* current token */
   Token lookahead;  /* look ahead token */
-  struct FuncState *fs;  /* current function (parser) */
-  struct lua_State *L;
+  काष्ठा FuncState *fs;  /* current function (parser) */
+  काष्ठा lua_State *L;
   ZIO *z;  /* input stream */
   Mbuffer *buff;  /* buffer for tokens */
   Table *h;  /* to avoid collection/reuse strings */
-  struct Dyndata *dyd;  /* dynamic structures used by the parser */
+  काष्ठा Dyndata *dyd;  /* dynamic structures used by the parser */
   TString *source;  /* current source name */
   TString *envn;  /* environment variable name */
   TString *brkn;  /* "break" name (used as a label) */
@@ -80,14 +80,14 @@ typedef struct LexState {
 } LexState;
 
 
-LUAI_FUNC void luaX_init (lua_State *L);
-LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
-                              TString *source, int firstchar);
-LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l);
-LUAI_FUNC void luaX_next (LexState *ls);
-LUAI_FUNC int luaX_lookahead (LexState *ls);
-LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, const char *s);
-LUAI_FUNC const char *luaX_token2str (LexState *ls, int token);
+LUAI_FUNC व्योम luaX_init (lua_State *L);
+LUAI_FUNC व्योम luaX_setinput (lua_State *L, LexState *ls, ZIO *z,
+                              TString *source, पूर्णांक firstchar);
+LUAI_FUNC TString *luaX_newstring (LexState *ls, स्थिर अक्षर *str, माप_प्रकार l);
+LUAI_FUNC व्योम lua_X_अग्र (LexState *ls);
+LUAI_FUNC पूर्णांक luaX_lookahead (LexState *ls);
+LUAI_FUNC l_noret luaX_syntaxerror (LexState *ls, स्थिर अक्षर *s);
+LUAI_FUNC स्थिर अक्षर *luaX_token2str (LexState *ls, पूर्णांक token);
 
 
-#endif
+#पूर्ण_अगर

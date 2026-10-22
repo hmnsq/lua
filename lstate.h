@@ -4,19 +4,19 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lstate_h
-#define lstate_h
+#अगर_अघोषित lstate_h
+#घोषणा lstate_h
 
-#include "lua.h"
+#समावेश "lua.h"
 
 
 /* Some header files included here need this definition */
-typedef struct CallInfo CallInfo;
+प्रकार काष्ठा CallInfo CallInfo;
 
 
-#include "lobject.h"
-#include "ltm.h"
-#include "lzio.h"
+#समावेश "lobject.h"
+#समावेश "ltm.h"
+#समावेश "lzio.h"
 
 
 /*
@@ -101,35 +101,35 @@ typedef struct CallInfo CallInfo;
 
 
 /* true if this thread does not have non-yieldable calls in the stack */
-#define yieldable(L)		(((L)->nCcalls & 0xffff0000) == 0)
+#घोषणा yieldable(L)		(((L)->nCcalls & 0xffff0000) == 0)
 
 /* real number of C calls */
-#define getCcalls(L)	((L)->nCcalls & 0xffff)
+#घोषणा getCcalls(L)	((L)->nCcalls & 0xffff)
 
 
 /* Increment the number of non-yieldable calls */
-#define incnny(L)	((L)->nCcalls += 0x10000)
+#घोषणा incnny(L)	((L)->nCcalls += 0x10000)
 
 /* Decrement the number of non-yieldable calls */
-#define decnny(L)	((L)->nCcalls -= 0x10000)
+#घोषणा decnny(L)	((L)->nCcalls -= 0x10000)
 
 /* Non-yieldable call increment */
-#define nyci	(0x10000 | 1)
+#घोषणा nyci	(0x10000 | 1)
 
 
 
 
-struct lua_longjmp;  /* defined in ldo.c */
+काष्ठा lua_longjmp;  /* defined in ldo.c */
 
 
 /*
 ** Atomic type (relative to signals) to better ensure that 'lua_sethook'
 ** is thread safe
 */
-#if !defined(l_signalT)
-#include <signal.h>
-#define l_signalT	sig_atomic_t
-#endif
+#अगर !defined(l_signalT)
+#समावेश <signal.h>
+#घोषणा l_signalT	संक_पूर्ण_प्रकार
+#पूर्ण_अगर
 
 
 /*
@@ -139,7 +139,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** there will be a stack check soon after the push. Function frames
 ** never use this extra space, so it does not need to be kept clean.
 */
-#define EXTRA_STACK   5
+#घोषणा EXTRA_ढेर   5
 
 
 /*
@@ -147,27 +147,27 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** sets (better be a prime) and "M" is the size of each set.
 ** (M == 1 makes a direct cache.)
 */
-#if !defined(STRCACHE_N)
-#define STRCACHE_N              53
-#define STRCACHE_M              2
-#endif
+#अगर !defined(STRCACHE_N)
+#घोषणा STRCACHE_N              53
+#घोषणा STRCACHE_M              2
+#पूर्ण_अगर
 
 
-#define BASIC_STACK_SIZE        (2*LUA_MINSTACK)
+#घोषणा BASIC_ढेर_आकार        (2*LUA_MINSTACK)
 
-#define stacksize(th)	cast_int((th)->stack_last.p - (th)->stack.p)
+#घोषणा stacksize(th)	cast_int((th)->ढेर_last.p - (th)->ढेर.p)
 
 
 /* kinds of Garbage Collection */
-#define KGC_INC		0	/* incremental gc */
-#define KGC_GENMINOR	1	/* generational gc in minor (regular) mode */
-#define KGC_GENMAJOR	2	/* generational in major mode */
+#घोषणा KGC_INC		0	/* incremental gc */
+#घोषणा KGC_GENMINOR	1	/* generational gc in minor (regular) mode */
+#घोषणा KGC_GENMAJOR	2	/* generational in major mode */
 
 
-typedef struct stringtable {
+प्रकार काष्ठा stringtable {
   TString **hash;  /* array of buckets (linked lists of strings) */
-  int nuse;  /* number of elements */
-  int size;  /* number of buckets */
+  पूर्णांक nuse;  /* number of elements */
+  पूर्णांक आकार;  /* number of buckets */
 } stringtable;
 
 
@@ -184,26 +184,26 @@ typedef struct stringtable {
 ** - field 'nres' is used only while closing tbc variables when
 ** returning from a function;
 */
-struct CallInfo {
+काष्ठा CallInfo {
   StkIdRel func;  /* function index in the stack */
-  StkIdRel top;  /* top for this function */
-  struct CallInfo *previous, *next;  /* dynamic call link */
-  union {
-    struct {  /* only for Lua functions */
-      const Instruction *savedpc;
-      volatile l_signalT trap;  /* function is tracing lines/counts */
-      int nextraargs;  /* # of extra arguments in vararg functions */
+  StkIdRel शीर्ष;  /* top for this function */
+  काष्ठा CallInfo *previous, *अग्र;  /* dynamic call link */
+  जोड़ {
+    काष्ठा {  /* only for Lua functions */
+      स्थिर Instruction *savedpc;
+      अस्थिर l_signalT trap;  /* function is tracing lines/counts */
+      पूर्णांक nextraargs;  /* # of extra arguments in vararg functions */
     } l;
-    struct {  /* only for C functions */
+    काष्ठा {  /* only for C functions */
       lua_KFunction k;  /* continuation in case of yields */
-      ptrdiff_t old_errfunc;
+      सूचक_भेद_प्रकार old_errfunc;
       lua_KContext ctx;  /* context info. in case of yields */
     } c;
   } u;
-  union {
-    int funcidx;  /* called-function index */
-    int nyield;  /* number of values yielded */
-    int nres;  /* number of values returned */
+  जोड़ {
+    पूर्णांक funcidx;  /* called-function index */
+    पूर्णांक nyield;  /* number of values yielded */
+    पूर्णांक nres;  /* number of values returned */
   } u2;
   l_uint32 callstatus;
 };
@@ -213,45 +213,45 @@ struct CallInfo {
 ** Maximum expected number of results from a function
 ** (must fit in CIST_NRESULTS).
 */
-#define MAXRESULTS	250
+#घोषणा MAXRESULTS	250
 
 
 /*
 ** Bits in CallInfo status
 */
 /* bits 0-7 are the expected number of results from this function + 1 */
-#define CIST_NRESULTS	0xffu
+#घोषणा CIST_NRESULTS	0xffu
 
 /* bits 8-11 count call metamethods (and their extra arguments) */
-#define CIST_CCMT	8  /* the offset, not the mask */
-#define MAX_CCMT	(0xfu << CIST_CCMT)
+#घोषणा CIST_CCMT	8  /* the offset, not the mask */
+#घोषणा MAX_CCMT	(0xfu << CIST_CCMT)
 
 /* Bits 12-14 are used for CIST_RECST (see below) */
-#define CIST_RECST	12  /* the offset, not the mask */
+#घोषणा CIST_RECST	12  /* the offset, not the mask */
 
 /* call is running a C function (still in first 16 bits) */
-#define CIST_C		(1u << (CIST_RECST + 3))
+#घोषणा CIST_C		(1u << (CIST_RECST + 3))
 /* call is on a fresh "luaV_execute" frame */
-#define CIST_FRESH	(cast(l_uint32, CIST_C) << 1)
+#घोषणा CIST_FRESH	(cast(l_uint32, CIST_C) << 1)
 /* function is closing tbc variables */
-#define CIST_CLSRET	(CIST_FRESH << 1)
+#घोषणा CIST_CLSRET	(CIST_FRESH << 1)
 /* function has tbc variables to close */
-#define CIST_TBC	(CIST_CLSRET << 1)
+#घोषणा CIST_TBC	(CIST_CLSRET << 1)
 /* original value of 'allowhook' */
-#define CIST_OAH	(CIST_TBC << 1)
+#घोषणा CIST_OAH	(CIST_TBC << 1)
 /* call is running a debug hook */
-#define CIST_HOOKED	(CIST_OAH << 1)
+#घोषणा CIST_HOOKED	(CIST_OAH << 1)
 /* doing a yieldable protected call */
-#define CIST_YPCALL	(CIST_HOOKED << 1)
+#घोषणा CIST_YPCALL	(CIST_HOOKED << 1)
 /* call was tail called */
-#define CIST_TAIL	(CIST_YPCALL << 1)
+#घोषणा CIST_पुच्छ	(CIST_YPCALL << 1)
 /* last hook called yielded */
-#define CIST_HOOKYIELD	(CIST_TAIL << 1)
+#घोषणा CIST_HOOKYIELD	(CIST_पुच्छ << 1)
 /* function "called" a finalizer */
-#define CIST_FIN	(CIST_HOOKYIELD << 1)
+#घोषणा CIST_FIN	(CIST_HOOKYIELD << 1)
 
 
-#define get_nresults(cs)  (cast_int((cs) & CIST_NRESULTS) - 1)
+#घोषणा get_nresults(cs)  (cast_int((cs) & CIST_NRESULTS) - 1)
 
 /*
 ** Field CIST_RECST stores the "recover status", used to keep the error
@@ -259,55 +259,55 @@ struct CallInfo {
 ** Lua can correctly resume after an yield from a __close method called
 ** because of an error.  (Three bits are enough for error status.)
 */
-#define getcistrecst(ci)     (((ci)->callstatus >> CIST_RECST) & 7)
-#define setcistrecst(ci,st)  \
+#घोषणा getcistrecst(ci)     (((ci)->callstatus >> CIST_RECST) & 7)
+#घोषणा setcistrecst(ci,st)  \
   check_exp(((st) & 7) == (st),   /* status must fit in three bits */  \
             ((ci)->callstatus = ((ci)->callstatus & ~(7u << CIST_RECST))  \
                                 | (cast(l_uint32, st) << CIST_RECST)))
 
 
 /* active function is a Lua function */
-#define isLua(ci)	(!((ci)->callstatus & CIST_C))
+#घोषणा isLua(ci)	(!((ci)->callstatus & CIST_C))
 
 /* call is running Lua code (not a hook) */
-#define isLuacode(ci)	(!((ci)->callstatus & (CIST_C | CIST_HOOKED)))
+#घोषणा isLuacode(ci)	(!((ci)->callstatus & (CIST_C | CIST_HOOKED)))
 
 
-#define setoah(ci,v)  \
+#घोषणा setoah(ci,v)  \
   ((ci)->callstatus = ((v) ? (ci)->callstatus | CIST_OAH  \
                            : (ci)->callstatus & ~CIST_OAH))
-#define getoah(ci)  (((ci)->callstatus & CIST_OAH) ? 1 : 0)
+#घोषणा getoah(ci)  (((ci)->callstatus & CIST_OAH) ? 1 : 0)
 
 
 /*
 ** 'per thread' state
 */
-struct lua_State {
+काष्ठा lua_State {
   CommonHeader;
   lu_byte allowhook;
   TStatus status;
-  StkIdRel top;  /* first free slot in the stack */
-  struct global_State *l_G;
+  StkIdRel शीर्ष;  /* first free slot in the stack */
+  काष्ठा global_State *l_G;
   CallInfo *ci;  /* call info for current function */
-  StkIdRel stack_last;  /* end of stack (last element + 1) */
-  StkIdRel stack;  /* stack base */
+  StkIdRel ढेर_last;  /* end of stack (last element + 1) */
+  StkIdRel ढेर;  /* stack base */
   UpVal *openupval;  /* list of open upvalues in this stack */
   StkIdRel tbclist;  /* list of to-be-closed variables */
   GCObject *gclist;
-  struct lua_State *twups;  /* list of threads with open upvalues */
-  struct lua_longjmp *errorJmp;  /* current error recover point */
+  काष्ठा lua_State *twups;  /* list of threads with open upvalues */
+  काष्ठा lua_longjmp *errorJmp;  /* current error recover point */
   CallInfo base_ci;  /* CallInfo for first level (C host) */
-  volatile lua_Hook hook;
-  ptrdiff_t errfunc;  /* current error handling function (stack index) */
+  अस्थिर lua_Hook hook;
+  सूचक_भेद_प्रकार errfunc;  /* current error handling function (stack index) */
   l_uint32 nCcalls;  /* number of nested non-yieldable or C calls */
-  int oldpc;  /* last pc traced */
-  int nci;  /* number of items in 'ci' list */
-  int basehookcount;
-  int hookcount;
-  volatile l_signalT hookmask;
-  struct {  /* info about transferred values (for call/return hooks) */
-    int ftransfer;  /* offset of first value transferred */
-    int ntransfer;  /* number of values transferred */
+  पूर्णांक oldpc;  /* last pc traced */
+  पूर्णांक nci;  /* number of items in 'ci' list */
+  पूर्णांक basehookcount;
+  पूर्णांक hookcount;
+  अस्थिर l_signalT hookmask;
+  काष्ठा {  /* info about transferred values (for call/return hooks) */
+    पूर्णांक ftransfer;  /* offset of first value transferred */
+    पूर्णांक ntransfer;  /* number of values transferred */
   } transferinfo;
 };
 
@@ -315,7 +315,7 @@ struct lua_State {
 /*
 ** thread state + extra space
 */
-typedef struct LX {
+प्रकार काष्ठा LX {
   lu_byte extra_[LUA_EXTRASPACE];
   lua_State l;
 } LX;
@@ -324,9 +324,9 @@ typedef struct LX {
 /*
 ** 'global state', shared by all threads of this state
 */
-typedef struct global_State {
+प्रकार काष्ठा global_State {
   lua_Alloc frealloc;  /* function to reallocate memory */
-  void *ud;         /* auxiliary data to 'frealloc' */
+  व्योम *ud;         /* auxiliary data to 'frealloc' */
   l_mem GCtotalbytes;  /* number of bytes currently allocated + debt */
   l_mem GCdebt;  /* bytes counted but not yet allocated */
   l_mem GCmarked;  /* number of objects marked in a GC cycle */
@@ -334,7 +334,7 @@ typedef struct global_State {
   stringtable strt;  /* hash table for strings */
   TValue l_registry;
   TValue nilvalue;  /* a nil value */
-  unsigned int seed;  /* randomized seed for hashes */
+  अचिन्हित पूर्णांक seed;  /* randomized seed for hashes */
   lu_byte gcparams[LUA_GCPN];
   lu_byte currentwhite;
   lu_byte gcstate;  /* state of garbage collector */
@@ -360,26 +360,26 @@ typedef struct global_State {
   GCObject *finobjsur;  /* list of survival objects with finalizers */
   GCObject *finobjold1;  /* list of old1 objects with finalizers */
   GCObject *finobjrold;  /* list of really old objects with finalizers */
-  struct lua_State *twups;  /* list of threads with open upvalues */
+  काष्ठा lua_State *twups;  /* list of threads with open upvalues */
   lua_CFunction panic;  /* to be called in unprotected errors */
   TString *memerrmsg;  /* message for memory-allocation errors */
   TString *tmname[TM_N];  /* array with tag-method names */
-  struct Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
+  काष्ठा Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
   TString *strcache[STRCACHE_N][STRCACHE_M];  /* cache for strings in API */
   lua_WarnFunction warnf;  /* warning function */
-  void *ud_warn;         /* auxiliary data to 'warnf' */
+  व्योम *ud_warn;         /* auxiliary data to 'warnf' */
   LX mainth;  /* main thread of this state */
 } global_State;
 
 
-#define G(L)	(L->l_G)
-#define mainthread(G)	(&(G)->mainth.l)
+#घोषणा G(L)	(L->l_G)
+#घोषणा mainthread(G)	(&(G)->mainth.l)
 
 /*
 ** 'g->nilvalue' being a nil value flags that the state was completely
 ** build.
 */
-#define completestate(g)	ttisnil(&g->nilvalue)
+#घोषणा completestate(g)	ttisnil(&g->nilvalue)
 
 
 /*
@@ -391,15 +391,15 @@ typedef struct global_State {
 ** part of any of them anywhere that a declaration of the complete type
 ** of the union is visible."
 */
-union GCUnion {
+जोड़ GCUnion {
   GCObject gc;  /* common header */
-  struct TString ts;
-  struct Udata u;
-  union Closure cl;
-  struct Table h;
-  struct Proto p;
-  struct lua_State th;  /* thread */
-  struct UpVal upv;
+  काष्ठा TString ts;
+  काष्ठा Udata u;
+  जोड़ Closure cl;
+  काष्ठा Table h;
+  काष्ठा Proto p;
+  काष्ठा lua_State th;  /* thread */
+  काष्ठा UpVal upv;
 };
 
 
@@ -411,41 +411,41 @@ union GCUnion {
 ** behavior is undefined. Otherwise, when converted back again, the
 ** result shall compare equal to the original pointer."
 */
-#define gco2(v,T,o)	check_exp((o)->tt == v, cast(T*, o))
-#define gco2nv(t,T,o)	check_exp(novariant((o)->tt) == t, cast(T*, o))
-#define gco2ts(o)	gco2nv(LUA_TSTRING, TString, o)
-#define gco2u(o)	gco2(LUA_VUSERDATA, Udata, o)
-#define gco2lcl(o)	(&gco2(LUA_VLCL, Closure, o)->l)
-#define gco2ccl(o)	(&gco2(LUA_VCCL, Closure, o)->c)
-#define gco2cl(o)	gco2nv(LUA_TFUNCTION, Closure, o)
-#define gco2t(o)	gco2(LUA_VTABLE, Table, o)
-#define gco2p(o)	gco2(LUA_VPROTO, Proto, o)
-#define gco2th(o)	gco2(LUA_VTHREAD, lua_State, o)
-#define gco2upv(o)	gco2(LUA_VUPVAL, UpVal, o)
+#घोषणा gco2(v,T,o)	check_exp((o)->tt == v, cast(T*, o))
+#घोषणा gco2nv(t,T,o)	check_exp(novariant((o)->tt) == t, cast(T*, o))
+#घोषणा gco2ts(o)	gco2nv(LUA_TSTRING, TString, o)
+#घोषणा gco2u(o)	gco2(LUA_VUSERDATA, Udata, o)
+#घोषणा gco2lcl(o)	(&gco2(LUA_VLCL, Closure, o)->l)
+#घोषणा gco2ccl(o)	(&gco2(LUA_VCCL, Closure, o)->c)
+#घोषणा gco2cl(o)	gco2nv(LUA_TFUNCTION, Closure, o)
+#घोषणा gco2t(o)	gco2(LUA_VTABLE, Table, o)
+#घोषणा gco2p(o)	gco2(LUA_VPROTO, Proto, o)
+#घोषणा gco2th(o)	gco2(LUA_VTHREAD, lua_State, o)
+#घोषणा gco2upv(o)	gco2(LUA_VUPVAL, UpVal, o)
 
 
 /*
 ** macro to convert a Lua object into a GCObject
 */
-#define obj2gco(v)  \
+#घोषणा obj2gco(v)  \
 	check_exp(novariant((v)->tt) >= LUA_TSTRING, cast(GCObject*, v))
 
 
 /* actual number of total memory allocated */
-#define gettotalbytes(g)	((g)->GCtotalbytes - (g)->GCdebt)
+#घोषणा gettotalbytes(g)	((g)->GCtotalbytes - (g)->GCdebt)
 
 
-LUAI_FUNC void luaE_setdebt (global_State *g, l_mem debt);
-LUAI_FUNC void luaE_freethread (lua_State *L, lua_State *L1);
+LUAI_FUNC व्योम luaE_setdebt (global_State *g, l_mem debt);
+LUAI_FUNC व्योम luaE_freethread (lua_State *L, lua_State *L1);
 LUAI_FUNC lu_mem luaE_threadsize (lua_State *L);
-LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
-LUAI_FUNC void luaE_shrinkCI (lua_State *L);
-LUAI_FUNC void luaE_checkcstack (lua_State *L);
-LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
-LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
+LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, पूर्णांक err);
+LUAI_FUNC व्योम luaE_shrinkCI (lua_State *L);
+LUAI_FUNC व्योम luaE_checkcstack (lua_State *L);
+LUAI_FUNC व्योम luaE_incCstack (lua_State *L);
+LUAI_FUNC व्योम luaE_warning (lua_State *L, स्थिर अक्षर *संदेश, पूर्णांक tocont);
+LUAI_FUNC व्योम luaE_warnerror (lua_State *L, स्थिर अक्षर *where);
 LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
 
 
-#endif
+#पूर्ण_अगर
 

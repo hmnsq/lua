@@ -4,10 +4,10 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lctype_h
-#define lctype_h
+#अगर_अघोषित lctype_h
+#घोषणा lctype_h
 
-#include "lua.h"
+#समावेश "lua.h"
 
 
 /*
@@ -16,50 +16,50 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#अगर !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#अगर 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
-#define LUA_USE_CTYPE	0
-#else
+#घोषणा LUA_USE_CTYPE	0
+#अन्यथा
 /* must use standard C ctype */
-#define LUA_USE_CTYPE	1
-#endif
+#घोषणा LUA_USE_CTYPE	1
+#पूर्ण_अगर
 
-#endif
-
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
-
-#include "llimits.h"
+#पूर्ण_अगर
 
 
-#define ALPHABIT	0
-#define DIGITBIT	1
-#define PRINTBIT	2
-#define SPACEBIT	3
-#define XDIGITBIT	4
+#अगर !LUA_USE_CTYPE	/* { */
+
+#समावेश <limits.h>
+
+#समावेश "llimits.h"
 
 
-#define MASK(B)		(1 << (B))
+#घोषणा ALPHABIT	0
+#घोषणा DIGITBIT	1
+#घोषणा PRINTBIT	2
+#घोषणा SPACEBIT	3
+#घोषणा XDIGITBIT	4
+
+
+#घोषणा MASK(B)		(1 << (B))
 
 
 /*
 ** add 1 to char to allow index -1 (EOZ)
 */
-#define testprop(c,p)	(luai_ctype_[(c)+1] & (p))
+#घोषणा testprop(c,p)	(luai_ctype_[(c)+1] & (p))
 
 /*
 ** 'lalpha' (Lua alphabetic) and 'lalnum' (Lua alphanumeric) both include '_'
 */
-#define lislalpha(c)	testprop(c, MASK(ALPHABIT))
-#define lislalnum(c)	testprop(c, (MASK(ALPHABIT) | MASK(DIGITBIT)))
-#define lisdigit(c)	testprop(c, MASK(DIGITBIT))
-#define lisspace(c)	testprop(c, MASK(SPACEBIT))
-#define lisprint(c)	testprop(c, MASK(PRINTBIT))
-#define lisxdigit(c)	testprop(c, MASK(XDIGITBIT))
+#घोषणा lislalpha(c)	testprop(c, MASK(ALPHABIT))
+#घोषणा lislalnum(c)	testprop(c, (MASK(ALPHABIT) | MASK(DIGITBIT)))
+#घोषणा lisdigit(c)	testprop(c, MASK(DIGITBIT))
+#घोषणा lisspace(c)	testprop(c, MASK(SPACEBIT))
+#घोषणा lisprint(c)	testprop(c, MASK(PRINTBIT))
+#घोषणा lisxdigit(c)	testprop(c, MASK(XDIGITBIT))
 
 
 /*
@@ -68,34 +68,34 @@
 ** the character either is an upper-case letter or is unchanged by
 ** the transformation, which holds for lower-case letters and '.'.)
 */
-#define ltolower(c)  \
+#घोषणा ltolower(c)  \
   check_exp(('A' <= (c) && (c) <= 'Z') || (c) == ((c) | ('A' ^ 'a')),  \
             (c) | ('A' ^ 'a'))
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(स्थिर lu_byte luai_ctype_[अच_अक्षर_उच्च + 2];)
 
 
-#else			/* }{ */
+#अन्यथा			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#समावेश <ctype.h>
 
 
-#define lislalpha(c)	(isalpha(c) || (c) == '_')
-#define lislalnum(c)	(isalnum(c) || (c) == '_')
-#define lisdigit(c)	(isdigit(c))
-#define lisspace(c)	(isspace(c))
-#define lisprint(c)	(isprint(c))
-#define lisxdigit(c)	(isxdigit(c))
+#घोषणा lislalpha(c)	(है_अक्षर(c) || (c) == '_')
+#घोषणा lislalnum(c)	(है_अक्षर_अंक(c) || (c) == '_')
+#घोषणा lisdigit(c)	(है_अंक(c))
+#घोषणा lisspace(c)	(है_खाली(c))
+#घोषणा lisprint(c)	(है_छाप(c))
+#घोषणा lisxdigit(c)	(है_षष्ठादशक(c))
 
-#define ltolower(c)	(tolower(c))
+#घोषणा ltolower(c)	(छोटे(c))
 
-#endif			/* } */
+#पूर्ण_अगर			/* } */
 
-#endif
+#पूर्ण_अगर
 

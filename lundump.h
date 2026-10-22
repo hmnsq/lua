@@ -4,37 +4,37 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lundump_h
-#define lundump_h
+#अगर_अघोषित lundump_h
+#घोषणा lundump_h
 
-#include <limits.h>
+#समावेश <limits.h>
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#समावेश "llimits.h"
+#समावेश "lobject.h"
+#समावेश "lzio.h"
 
 
 /* data to catch conversion errors */
-#define LUAC_DATA	"\x19\x93\r\n\x1a\n"
+#घोषणा LUAC_तथ्य	"\x19\x93\r\n\x1a\n"
 
-#define LUAC_INT	-0x5678
-#define LUAC_INST	0x12345678
-#define LUAC_NUM	cast_num(-370.5)
+#घोषणा LUAC_INT	-0x5678
+#घोषणा LUAC_INST	0x12345678
+#घोषणा LUAC_अंक	cast_अंक(-370.5)
 
 /*
 ** Encode major-minor version in one byte, one nibble for each
 */
-#define LUAC_VERSION	(LUA_VERSION_MAJOR_N*16+LUA_VERSION_MINOR_N)
+#घोषणा LUAC_VERSION	(LUA_VERSION_MAJOR_N*16+LUA_VERSION_MINOR_N)
 
-#define LUAC_FORMAT	0	/* this is the official format */
+#घोषणा LUAC_FORMAT	0	/* this is the official format */
 
 
 /* load one chunk; from lundump.c */
 LUAI_FUNC LClosure* luaU_undump (lua_State* L, ZIO* Z, Table *anchor,
-                                 const char* name, int fixed);
+                                 स्थिर अक्षर* name, पूर्णांक fixed);
 
 /* dump one chunk; from ldump.c */
-LUAI_FUNC int luaU_dump (lua_State* L, const Proto* f, lua_Writer w,
-                         void* data, int strip);
+LUAI_FUNC पूर्णांक luaU_dump (lua_State* L, स्थिर Proto* f, lua_Writer w,
+                         व्योम* तथ्य, पूर्णांक strip);
 
-#endif
+#पूर्ण_अगर

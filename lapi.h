@@ -4,36 +4,36 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lapi_h
-#define lapi_h
+#अगर_अघोषित lapi_h
+#घोषणा lapi_h
 
 
-#include "llimits.h"
-#include "lstate.h"
+#समावेश "llimits.h"
+#समावेश "lstate.h"
 
 
-#if defined(LUA_USE_APICHECK)
-#include <assert.h>
-#define api_check(l,e,msg)	assert(e)
-#else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
-#endif
+#अगर defined(LUA_USE_APICHECK)
+#समावेश <assert.h>
+#घोषणा api_check(l,e,संदेश)	निश्चित(e)
+#अन्यथा	/* for testing */
+#घोषणा api_check(l,e,संदेश)	((व्योम)(l), lua_assert((e) && संदेश))
+#पूर्ण_अगर
 
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)  \
-    (L->top.p++, api_check(L, L->top.p <= L->ci->top.p, "stack overflow"))
+#घोषणा api_incr_शीर्ष(L)  \
+    (L->शीर्ष.p++, api_check(L, L->शीर्ष.p <= L->ci->शीर्ष.p, "stack overflow"))
 
 
 /*
 ** macros that are executed whenever program enters the Lua core
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
-#if !defined(lua_lock)
-#define lua_lock(L)	((void) 0)
-#define lua_unlock(L)	((void) 0)
-#endif
+#अगर !defined(lua_lock)
+#घोषणा lua_lock(L)	((व्योम) 0)
+#घोषणा lua_unlock(L)	((व्योम) 0)
+#पूर्ण_अगर
 
 
 
@@ -42,14 +42,14 @@
 ** stack space to accommodate all results. In this case, this macro
 ** increases its stack space ('L->ci->top.p').
 */
-#define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
-	L->ci->top.p = L->top.p; }
+#घोषणा adjustresults(L,nres) \
+    { अगर ((nres) <= LUA_MULTRET && L->ci->शीर्ष.p < L->शीर्ष.p) \
+	L->ci->शीर्ष.p = L->शीर्ष.p; }
 
 
 /* Ensure the stack has at least 'n' elements */
-#define api_checknelems(L,n) \
-       api_check(L, (n) < (L->top.p - L->ci->func.p), \
+#घोषणा api_checknelems(L,n) \
+       api_check(L, (n) < (L->शीर्ष.p - L->ci->func.p), \
                          "not enough elements in the stack")
 
 
@@ -57,9 +57,9 @@
 ** functions only update a slot after checking it for popping, but that
 ** is only an optimization for a pop followed by a push.)
 */
-#define api_checkpop(L,n) \
-	api_check(L, (n) < L->top.p - L->ci->func.p &&  \
-                     L->tbclist.p < L->top.p - (n), \
+#घोषणा api_checkpop(L,n) \
+	api_check(L, (n) < L->शीर्ष.p - L->ci->func.p &&  \
+                     L->tbclist.p < L->शीर्ष.p - (n), \
 			  "not enough free elements in the stack")
 
-#endif
+#पूर्ण_अगर

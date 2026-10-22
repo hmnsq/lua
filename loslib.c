@@ -4,23 +4,23 @@
 ** See Copyright Notice in lua.h
 */
 
-#define loslib_c
-#define LUA_LIB
+#घोषणा loslib_c
+#घोषणा LUA_LIB
 
-#include "lprefix.h"
+#समावेश "lprefix.h"
 
 
-#include <errno.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#समावेश <errno.h>
+#समावेश <locale.h>
+#समावेश <stdlib.h>
+#समावेश <string.h>
+#समावेश <time.h>
 
-#include "lua.h"
+#समावेश "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#समावेश "lauxlib.h"
+#समावेश "lualib.h"
+#समावेश "llimits.h"
 
 
 /*
@@ -29,19 +29,19 @@
 ** options are grouped by length; group of length 2 start with '||'.
 ** ===================================================================
 */
-#if !defined(LUA_STRFTIMEOPTIONS)	/* { */
+#अगर !defined(LUA_STRFTIMEOPTIONS)	/* { */
 
-#if defined(LUA_USE_WINDOWS)
-#define LUA_STRFTIMEOPTIONS  "aAbBcdHIjmMpSUwWxXyYzZ%" \
+#अगर defined(LUA_USE_WINDOWS)
+#घोषणा LUA_STRFTIMEOPTIONS  "aAbBcdHIjmMpSUwWxXyYzZ%" \
     "||" "#c#x#d#H#I#j#m#M#S#U#w#W#y#Y"  /* two-char options */
-#elif defined(LUA_USE_C89)  /* C89 (only 1-char options) */
-#define LUA_STRFTIMEOPTIONS  "aAbBcdHIjmMpSUwWxXyYZ%"
-#else  /* C99 specification */
-#define LUA_STRFTIMEOPTIONS  "aAbBcCdDeFgGhHIjmMnprRStTuUVwWxXyYzZ%" \
+#या_अगर defined(LUA_USE_C89)  /* C89 (only 1-char options) */
+#घोषणा LUA_STRFTIMEOPTIONS  "aAbBcdHIjmMpSUwWxXyYZ%"
+#अन्यथा  /* C99 specification */
+#घोषणा LUA_STRFTIMEOPTIONS  "aAbBcCdDeFgGhHIjmMnprRStTuUVwWxXyYzZ%" \
     "||" "EcECExEXEyEY" "OdOeOHOIOmOMOSOuOUOVOwOWOy"  /* two-char options */
-#endif
+#पूर्ण_अगर
 
-#endif					/* } */
+#पूर्ण_अगर					/* } */
 /* }================================================================== */
 
 
@@ -54,41 +54,41 @@
 /*
 ** type to represent time_t in Lua
 */
-#if !defined(LUA_NUMTIME)	/* { */
+#अगर !defined(LUA_NUMTIME)	/* { */
 
-#define l_timet			lua_Integer
-#define l_pushtime(L,t)		lua_pushinteger(L,(lua_Integer)(t))
-#define l_gettime(L,arg)	luaL_checkinteger(L, arg)
+#घोषणा l_timet			lua_Integer
+#घोषणा l_pushtime(L,t)		lua_pushinteger(L,(lua_Integer)(t))
+#घोषणा l_gettime(L,arg)	luaL_checkinteger(L, arg)
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
-#define l_timet			lua_Number
-#define l_pushtime(L,t)		lua_pushnumber(L,(lua_Number)(t))
-#define l_gettime(L,arg)	luaL_checknumber(L, arg)
+#घोषणा l_timet			lua_संख्या
+#घोषणा l_pushtime(L,t)		lua_pushnumber(L,(lua_संख्या)(t))
+#घोषणा l_gettime(L,arg)	luaL_checknumber(L, arg)
 
-#endif				/* } */
+#पूर्ण_अगर				/* } */
 
 
-#if !defined(l_gmtime)		/* { */
+#अगर !defined(l_gmtime)		/* { */
 /*
 ** By default, Lua uses gmtime/localtime, except when POSIX is available,
 ** where it uses gmtime_r/localtime_r
 */
 
-#if defined(LUA_USE_POSIX)	/* { */
+#अगर defined(LUA_USE_POSIX)	/* { */
 
-#define l_gmtime(t,r)		gmtime_r(t,r)
-#define l_localtime(t,r)	localtime_r(t,r)
+#घोषणा l_gmtime(t,r)		gmtime_r(t,r)
+#घोषणा l_localtime(t,r)	localtime_r(t,r)
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
 /* ISO C definitions */
-#define l_gmtime(t,r)		((void)(r)->tm_sec, gmtime(t))
-#define l_localtime(t,r)	((void)(r)->tm_sec, localtime(t))
+#घोषणा l_gmtime(t,r)		((व्योम)(r)->tm_sec, स_जमट(t))
+#घोषणा l_localtime(t,r)	((व्योम)(r)->tm_sec, स_स्थानीय(t))
 
-#endif				/* } */
+#पूर्ण_अगर				/* } */
 
-#endif				/* } */
+#पूर्ण_अगर				/* } */
 
 /* }================================================================== */
 
@@ -100,95 +100,95 @@
 ** it uses mkstemp.
 ** ===================================================================
 */
-#if !defined(lua_tmpnam)	/* { */
+#अगर !defined(lua_tmpnam)	/* { */
 
-#if defined(LUA_USE_POSIX)	/* { */
+#अगर defined(LUA_USE_POSIX)	/* { */
 
-#include <unistd.h>
+#समावेश <unistd.h>
 
-#define LUA_TMPNAMBUFSIZE	32
+#घोषणा LUA_TMPNAMBUFSIZE	32
 
-#if !defined(LUA_TMPNAMTEMPLATE)
-#define LUA_TMPNAMTEMPLATE	"/tmp/lua_XXXXXX"
-#endif
+#अगर !defined(LUA_TMPNAMTEMPLATE)
+#घोषणा LUA_TMPNAMTEMPLATE	"/tmp/lua_XXXXXX"
+#पूर्ण_अगर
 
-#define lua_tmpnam(b,e) { \
-        strcpy(b, LUA_TMPNAMTEMPLATE); \
+#घोषणा lua_tmpnam(b,e) { \
+        म_नकल(b, LUA_TMPNAMTEMPLATE); \
         e = mkstemp(b); \
-        if (e != -1) close(e); \
+        अगर (e != -1) बंद(e); \
         e = (e == -1); }
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
 /* ISO C definitions */
-#define LUA_TMPNAMBUFSIZE	L_tmpnam
-#define lua_tmpnam(b,e)		{ e = (tmpnam(b) == NULL); }
+#घोषणा LUA_TMPNAMBUFSIZE	ब_क्षणिक
+#घोषणा lua_tmpnam(b,e)		{ e = (क्षणिक(b) == शून्य); }
 
-#endif				/* } */
+#पूर्ण_अगर				/* } */
 
-#endif				/* } */
+#पूर्ण_अगर				/* } */
 /* }================================================================== */
 
 
-#if !defined(l_system)
-#if defined(LUA_USE_IOS)
+#अगर !defined(l_system)
+#अगर defined(LUA_USE_IOS)
 /* Despite claiming to be ISO C, iOS does not implement 'system'. */
-#define l_system(cmd) ((cmd) == NULL ? 0 : -1)
-#else
-#define l_system(cmd)	system(cmd)  /* default definition */
-#endif
-#endif
+#घोषणा l_system(cmd) ((cmd) == शून्य ? 0 : -1)
+#अन्यथा
+#घोषणा l_system(cmd)	प्रणाली(cmd)  /* default definition */
+#पूर्ण_अगर
+#पूर्ण_अगर
 
 
-static int os_execute (lua_State *L) {
-  const char *cmd = luaL_optstring(L, 1, NULL);
-  int stat;
-  errno = 0;
+अटल पूर्णांक os_execute (lua_State *L) {
+  स्थिर अक्षर *cmd = luaL_optstring(L, 1, शून्य);
+  पूर्णांक stat;
+  त्रुटि_सं = 0;
   stat = l_system(cmd);
-  if (cmd != NULL)
-    return luaL_execresult(L, stat);
-  else {
+  अगर (cmd != शून्य)
+    वापस luaL_execresult(L, stat);
+  अन्यथा {
     lua_pushboolean(L, stat);  /* true if there is a shell */
-    return 1;
+    वापस 1;
   }
 }
 
 
-static int os_remove (lua_State *L) {
-  const char *filename = luaL_checkstring(L, 1);
-  errno = 0;
-  return luaL_fileresult(L, remove(filename) == 0, filename);
+अटल पूर्णांक os_remove (lua_State *L) {
+  स्थिर अक्षर *filename = luaL_checkstring(L, 1);
+  त्रुटि_सं = 0;
+  वापस luaL_fileresult(L, हटाओ(filename) == 0, filename);
 }
 
 
-static int os_rename (lua_State *L) {
-  const char *fromname = luaL_checkstring(L, 1);
-  const char *toname = luaL_checkstring(L, 2);
-  errno = 0;
-  return luaL_fileresult(L, rename(fromname, toname) == 0, NULL);
+अटल पूर्णांक os_rename (lua_State *L) {
+  स्थिर अक्षर *fromname = luaL_checkstring(L, 1);
+  स्थिर अक्षर *toname = luaL_checkstring(L, 2);
+  त्रुटि_सं = 0;
+  वापस luaL_fileresult(L, नाम(fromname, toname) == 0, शून्य);
 }
 
 
-static int os_tmpname (lua_State *L) {
-  char buff[LUA_TMPNAMBUFSIZE];
-  int err;
+अटल पूर्णांक os_tmpname (lua_State *L) {
+  अक्षर buff[LUA_TMPNAMBUFSIZE];
+  पूर्णांक err;
   lua_tmpnam(buff, err);
-  if (l_unlikely(err))
-    return luaL_error(L, "unable to generate a unique filename");
+  अगर (l_unlikely(err))
+    वापस luaL_error(L, "unable to generate a unique filename");
   lua_pushstring(L, buff);
-  return 1;
+  वापस 1;
 }
 
 
-static int os_getenv (lua_State *L) {
-  lua_pushstring(L, getenv(luaL_checkstring(L, 1)));  /* if NULL push nil */
-  return 1;
+अटल पूर्णांक os_getenv (lua_State *L) {
+  lua_pushstring(L, दो_पर्या(luaL_checkstring(L, 1)));  /* if NULL push nil */
+  वापस 1;
 }
 
 
-static int os_clock (lua_State *L) {
-  lua_pushnumber(L, ((lua_Number)clock())/(lua_Number)CLOCKS_PER_SEC);
-  return 1;
+अटल पूर्णांक os_clock (lua_State *L) {
+  lua_pushnumber(L, ((lua_संख्या)घड़ी())/(lua_संख्या)CLOCKS_PER_SEC);
+  वापस 1;
 }
 
 
@@ -209,28 +209,28 @@ static int os_clock (lua_State *L) {
 ** time 0x1.e1853b0d184f6p+55 would cause an overflow when adding 1900
 ** to compute the year.
 */
-static void setfield (lua_State *L, const char *key, int value, int delta) {
-  #if (defined(LUA_NUMTIME) && LUA_MAXINTEGER <= INT_MAX)
-    if (l_unlikely(value > LUA_MAXINTEGER - delta))
-      luaL_error(L, "field '%s' is out-of-bound", key);
-  #endif
-  lua_pushinteger(L, (lua_Integer)value + delta);
-  lua_setfield(L, -2, key);
+अटल व्योम setfield (lua_State *L, स्थिर अक्षर *कुंजी, पूर्णांक मूल्य, पूर्णांक delta) {
+  #अगर (defined(LUA_NUMTIME) && LUA_MAXINTEGER <= पूर्णांक_उच्च)
+    अगर (l_unlikely(मूल्य > LUA_MAXINTEGER - delta))
+      luaL_error(L, "field '%s' is out-of-bound", कुंजी);
+  #पूर्ण_अगर
+  lua_pushinteger(L, (lua_Integer)मूल्य + delta);
+  lua_setfield(L, -2, कुंजी);
 }
 
 
-static void setboolfield (lua_State *L, const char *key, int value) {
-  if (value < 0)  /* undefined? */
-    return;  /* does not set field */
-  lua_pushboolean(L, value);
-  lua_setfield(L, -2, key);
+अटल व्योम setboolfield (lua_State *L, स्थिर अक्षर *कुंजी, पूर्णांक मूल्य) {
+  अगर (मूल्य < 0)  /* undefined? */
+    वापस;  /* does not set field */
+  lua_pushboolean(L, मूल्य);
+  lua_setfield(L, -2, कुंजी);
 }
 
 
 /*
 ** Set all fields from structure 'tm' in the table on top of the stack
 */
-static void setallfields (lua_State *L, struct tm *stm) {
+अटल व्योम setallfields (lua_State *L, काष्ठा पंचांग *stm) {
   setfield(L, "year", stm->tm_year, 1900);
   setfield(L, "month", stm->tm_mon, 1);
   setfield(L, "day", stm->tm_mday, 0);
@@ -243,125 +243,125 @@ static void setallfields (lua_State *L, struct tm *stm) {
 }
 
 
-static int getboolfield (lua_State *L, const char *key) {
-  int res;
-  res = (lua_getfield(L, -1, key) == LUA_TNIL) ? -1 : lua_toboolean(L, -1);
-  lua_pop(L, 1);
-  return res;
+अटल पूर्णांक getboolfield (lua_State *L, स्थिर अक्षर *कुंजी) {
+  पूर्णांक res;
+  res = (lua_getfield(L, -1, कुंजी) == LUA_TNIL) ? -1 : lua_toboolean(L, -1);
+  lua_निकालो(L, 1);
+  वापस res;
 }
 
 
-static int getfield (lua_State *L, const char *key, int d, int delta) {
-  int isnum;
-  int t = lua_getfield(L, -1, key);  /* get field and its type */
+अटल पूर्णांक getfield (lua_State *L, स्थिर अक्षर *कुंजी, पूर्णांक d, पूर्णांक delta) {
+  पूर्णांक isnum;
+  पूर्णांक t = lua_getfield(L, -1, कुंजी);  /* get field and its type */
   lua_Integer res = lua_tointegerx(L, -1, &isnum);
-  if (!isnum) {  /* field is not an integer? */
-    if (l_unlikely(t != LUA_TNIL))  /* some other value? */
-      return luaL_error(L, "field '%s' is not an integer", key);
-    else if (l_unlikely(d < 0))  /* absent field; no default? */
-      return luaL_error(L, "field '%s' missing in date table", key);
+  अगर (!isnum) {  /* field is not an integer? */
+    अगर (l_unlikely(t != LUA_TNIL))  /* some other value? */
+      वापस luaL_error(L, "field '%s' is not an integer", कुंजी);
+    अन्यथा अगर (l_unlikely(d < 0))  /* absent field; no default? */
+      वापस luaL_error(L, "field '%s' missing in date table", कुंजी);
     res = d;
   }
-  else {
-    if (!(res >= 0 ? res - delta <= INT_MAX : INT_MIN + delta <= res))
-      return luaL_error(L, "field '%s' is out-of-bound", key);
+  अन्यथा {
+    अगर (!(res >= 0 ? res - delta <= पूर्णांक_उच्च : पूर्णांक_न्यून + delta <= res))
+      वापस luaL_error(L, "field '%s' is out-of-bound", कुंजी);
     res -= delta;
   }
-  lua_pop(L, 1);
-  return (int)res;
+  lua_निकालो(L, 1);
+  वापस (पूर्णांक)res;
 }
 
 
-static const char *checkoption (lua_State *L, const char *conv,
-                                size_t convlen, char *buff) {
-  const char *option = LUA_STRFTIMEOPTIONS;
-  unsigned oplen = 1;  /* length of options being checked */
-  for (; *option != '\0' && oplen <= convlen; option += oplen) {
-    if (*option == '|')  /* next block? */
+अटल स्थिर अक्षर *checkoption (lua_State *L, स्थिर अक्षर *conv,
+                                माप_प्रकार convlen, अक्षर *buff) {
+  स्थिर अक्षर *option = LUA_STRFTIMEOPTIONS;
+  अचिन्हित oplen = 1;  /* length of options being checked */
+  क्रम (; *option != '\0' && oplen <= convlen; option += oplen) {
+    अगर (*option == '|')  /* next block? */
       oplen++;  /* will check options with next length (+1) */
-    else if (memcmp(conv, option, oplen) == 0) {  /* match? */
-      memcpy(buff, conv, oplen);  /* copy valid option to buffer */
+    अन्यथा अगर (स_भेद(conv, option, oplen) == 0) {  /* match? */
+      स_नकल(buff, conv, oplen);  /* copy valid option to buffer */
       buff[oplen] = '\0';
-      return conv + oplen;  /* return next item */
+      वापस conv + oplen;  /* return next item */
     }
   }
   luaL_argerror(L, 1,
     lua_pushfstring(L, "invalid conversion specifier '%%%s'", conv));
-  return conv;  /* to avoid warnings */
+  वापस conv;  /* to avoid warnings */
 }
 
 
-static time_t l_checktime (lua_State *L, int arg) {
+अटल समय_प्रकार l_checktime (lua_State *L, पूर्णांक arg) {
   l_timet t = l_gettime(L, arg);
-  luaL_argcheck(L, (time_t)t == t, arg, "time out-of-bounds");
-  return (time_t)t;
+  luaL_argcheck(L, (समय_प्रकार)t == t, arg, "time out-of-bounds");
+  वापस (समय_प्रकार)t;
 }
 
 
 /* maximum size for an individual 'strftime' item */
-#define SIZETIMEFMT	250
+#घोषणा SIZETIMEFMT	250
 
 
-static int os_date (lua_State *L) {
-  size_t slen;
-  const char *s = luaL_optlstring(L, 1, "%c", &slen);
-  time_t t = luaL_opt(L, l_checktime, 2, time(NULL));
-  const char *se = s + slen;  /* 's' end */
-  struct tm tmr, *stm;
-  if (*s == '!') {  /* UTC? */
+अटल पूर्णांक os_date (lua_State *L) {
+  माप_प्रकार slen;
+  स्थिर अक्षर *s = luaL_optlstring(L, 1, "%c", &slen);
+  समय_प्रकार t = luaL_opt(L, l_checktime, 2, समय(शून्य));
+  स्थिर अक्षर *se = s + slen;  /* 's' end */
+  काष्ठा पंचांग tmr, *stm;
+  अगर (*s == '!') {  /* UTC? */
     stm = l_gmtime(&t, &tmr);
     s++;  /* skip '!' */
   }
-  else
+  अन्यथा
     stm = l_localtime(&t, &tmr);
-  if (stm == NULL)  /* invalid date? */
-    return luaL_error(L,
+  अगर (stm == शून्य)  /* invalid date? */
+    वापस luaL_error(L,
                  "date result cannot be represented in this installation");
-  if (strcmp(s, "*t") == 0) {
+  अगर (म_भेद(s, "*t") == 0) {
     lua_createtable(L, 0, 9);  /* 9 = number of fields */
     setallfields(L, stm);
   }
-  else {
-    char cc[4];  /* buffer for individual conversion specifiers */
-    luaL_Buffer b;
+  अन्यथा {
+    अक्षर cc[4];  /* buffer for individual conversion specifiers */
+    lua_L_बफर b;
     cc[0] = '%';
     luaL_buffinit(L, &b);
-    while (s < se) {
-      if (*s != '%')  /* not a conversion specifier? */
+    जबतक (s < se) {
+      अगर (*s != '%')  /* not a conversion specifier? */
         luaL_addchar(&b, *s++);
-      else {
-        size_t reslen;
-        char *buff = luaL_prepbuffsize(&b, SIZETIMEFMT);
+      अन्यथा {
+        माप_प्रकार reslen;
+        अक्षर *buff = luaL_prepbuffsize(&b, SIZETIMEFMT);
         s++;  /* skip '%' */
         /* copy specifier to 'cc' */
         s = checkoption(L, s, ct_diff2sz(se - s), cc + 1);
-        reslen = strftime(buff, SIZETIMEFMT, cc, stm);
+        reslen = स_माला(buff, SIZETIMEFMT, cc, stm);
         luaL_addsize(&b, reslen);
       }
     }
     luaL_pushresult(&b);
   }
-  return 1;
+  वापस 1;
 }
 
 
-static int os_time_aux (lua_State *L, time_t t, int err) {
-  if (err || t != (time_t)(l_timet)t)
-    return luaL_error(L,
+अटल पूर्णांक os_time_aux (lua_State *L, समय_प्रकार t, पूर्णांक err) {
+  अगर (err || t != (समय_प्रकार)(l_timet)t)
+    वापस luaL_error(L,
                   "time result cannot be represented in this installation");
   l_pushtime(L, t);
-  return 1;
+  वापस 1;
 }
 
 
-static int os_time (lua_State *L) {
-  if (lua_isnoneornil(L, 1)) {  /* called without args? */
-    time_t t = time(NULL);  /* get current time; error if it is -1 */
-    return os_time_aux(L, t, (t == (time_t)(-1)));
+अटल पूर्णांक os_time (lua_State *L) {
+  अगर (lua_isnoneornil(L, 1)) {  /* called without args? */
+    समय_प्रकार t = समय(शून्य);  /* get current time; error if it is -1 */
+    वापस os_time_aux(L, t, (t == (समय_प्रकार)(-1)));
   }
-  else {
-    time_t t;
-    struct tm ts;
+  अन्यथा {
+    समय_प्रकार t;
+    काष्ठा पंचांग ts;
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_settop(L, 1);  /* make sure table is at the top */
     ts.tm_year = getfield(L, "year", -1, 1900);
@@ -372,50 +372,50 @@ static int os_time (lua_State *L) {
     ts.tm_sec = getfield(L, "sec", 0, 0);
     ts.tm_isdst = getboolfield(L, "isdst");
     ts.tm_wday = -1;  /* if call succeeds, it will set this value */
-    t = mktime(&ts);
+    t = स_गढ़ो(&ts);
     setallfields(L, &ts);  /* update fields with normalized values */
     /* error if tm_wday was not set */
-    return os_time_aux(L, t, ts.tm_wday == -1);
+    वापस os_time_aux(L, t, ts.tm_wday == -1);
   }
 }
 
 
-static int os_difftime (lua_State *L) {
-  time_t t1 = l_checktime(L, 1);
-  time_t t2 = l_checktime(L, 2);
-  lua_pushnumber(L, (lua_Number)difftime(t1, t2));
-  return 1;
+अटल पूर्णांक os_difftime (lua_State *L) {
+  समय_प्रकार t1 = l_checktime(L, 1);
+  समय_प्रकार t2 = l_checktime(L, 2);
+  lua_pushnumber(L, (lua_संख्या)स_अंतर(t1, t2));
+  वापस 1;
 }
 
 /* }====================================================== */
 
 
-static int os_setlocale (lua_State *L) {
-  static const int cat[] = {LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
+अटल पूर्णांक os_setlocale (lua_State *L) {
+  अटल स्थिर पूर्णांक cat[] = {LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
                       LC_NUMERIC, LC_TIME};
-  static const char *const catnames[] = {"all", "collate", "ctype", "monetary",
-     "numeric", "time", NULL};
-  const char *l = luaL_optstring(L, 1, NULL);
-  int op = luaL_checkoption(L, 2, "all", catnames);
-  lua_pushstring(L, setlocale(cat[op], l));
-  return 1;
+  अटल स्थिर अक्षर *स्थिर catnames[] = {"all", "collate", "ctype", "monetary",
+     "numeric", "time", शून्य};
+  स्थिर अक्षर *l = luaL_optstring(L, 1, शून्य);
+  पूर्णांक op = luaL_checkoption(L, 2, "all", catnames);
+  lua_pushstring(L, रखो_क्षेत्र(cat[op], l));
+  वापस 1;
 }
 
 
-static int os_exit (lua_State *L) {
-  int status;
-  if (lua_isboolean(L, 1))
-    status = (lua_toboolean(L, 1) ? EXIT_SUCCESS : EXIT_FAILURE);
-  else
-    status = (int)luaL_optinteger(L, 1, EXIT_SUCCESS);
-  if (lua_toboolean(L, 2))
+अटल पूर्णांक os_exit (lua_State *L) {
+  पूर्णांक status;
+  अगर (lua_isboolean(L, 1))
+    status = (lua_toboolean(L, 1) ? निकास_सफल : निकास_त्रुटि);
+  अन्यथा
+    status = (पूर्णांक)luaL_optinteger(L, 1, निकास_सफल);
+  अगर (lua_toboolean(L, 2))
     lua_close(L);
-  if (L) exit(status);  /* 'if' to avoid warnings for unreachable 'return' */
-  return 0;
+  अगर (L) निकास(status);  /* 'if' to avoid warnings for unreachable 'return' */
+  वापस 0;
 }
 
 
-static const luaL_Reg syslib[] = {
+अटल स्थिर luaL_Reg syslib[] = {
   {"clock", os_clock},
   {"date", os_date},
   {"difftime", os_difftime},
@@ -427,15 +427,15 @@ static const luaL_Reg syslib[] = {
   {"setlocale", os_setlocale},
   {"time", os_time},
   {"tmpname", os_tmpname},
-  {NULL, NULL}
+  {शून्य, शून्य}
 };
 
 /* }====================================================== */
 
 
 
-LUAMOD_API int luaopen_os (lua_State *L) {
+LUAMOD_API पूर्णांक luaopen_os (lua_State *L) {
   luaL_newlib(L, syslib);
-  return 1;
+  वापस 1;
 }
 

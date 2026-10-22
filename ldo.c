@@ -4,51 +4,51 @@
 ** See Copyright Notice in lua.h
 */
 
-#define ldo_c
-#define LUA_CORE
+#घोषणा ldo_c
+#घोषणा LUA_CORE
 
-#include "lprefix.h"
-
-
-#include <setjmp.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "lua.h"
-
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lundump.h"
-#include "lvm.h"
-#include "lzio.h"
+#समावेश "lprefix.h"
 
 
+#समावेश <setjmp.h>
+#समावेश <stdlib.h>
+#समावेश <string.h>
 
-#define errorstatus(s)	((s) > LUA_YIELD)
+#समावेश "lua.h"
+
+#समावेश "lapi.h"
+#समावेश "ldebug.h"
+#समावेश "ldo.h"
+#समावेश "lfunc.h"
+#समावेश "lgc.h"
+#समावेश "lmem.h"
+#समावेश "lobject.h"
+#समावेश "lopcodes.h"
+#समावेश "lparser.h"
+#समावेश "lstate.h"
+#समावेश "lstring.h"
+#समावेश "ltable.h"
+#समावेश "ltm.h"
+#समावेश "lundump.h"
+#समावेश "lvm.h"
+#समावेश "lzio.h"
+
+
+
+#घोषणा errorstatus(s)	((s) > LUA_YIELD)
 
 
 /*
 ** these macros allow user-specific actions when a thread is
 ** resumed/yielded.
 */
-#if !defined(luai_userstateresume)
-#define luai_userstateresume(L,n)	((void)L)
-#endif
+#अगर !defined(luai_userstateresume)
+#घोषणा luai_userstateresume(L,n)	((व्योम)L)
+#पूर्ण_अगर
 
-#if !defined(luai_userstateyield)
-#define luai_userstateyield(L,n)	((void)L)
-#endif
+#अगर !defined(luai_userstateyield)
+#घोषणा luai_userstateyield(L,n)	((व्योम)L)
+#पूर्ण_अगर
 
 
 /*
@@ -58,10 +58,10 @@
 */
 
 /* chained list of long jump buffers */
-typedef struct lua_longjmp {
-  struct lua_longjmp *previous;
-  jmp_buf b;
-  volatile TStatus status;  /* error code */
+प्रकार काष्ठा lua_longjmp {
+  काष्ठा lua_longjmp *previous;
+  लाँघ_बफ b;
+  अस्थिर TStatus status;  /* error code */
 } lua_longjmp;
 
 
@@ -71,19 +71,19 @@ typedef struct lua_longjmp {
 ** C++ code, with _longjmp/_setjmp when available (POSIX), and with
 ** longjmp/setjmp otherwise.
 */
-#if !defined(LUAI_THROW)				/* { */
+#अगर !defined(LUAI_THROW)				/* { */
 
-#if defined(__cplusplus) && !defined(LUA_USE_LONGJMP)	/* { */
+#अगर defined(__cplusplus) && !defined(LUA_USE_LONGJMP)	/* { */
 
 /* C++ exceptions */
-#define LUAI_THROW(L,c)		throw(c)
+#घोषणा LUAI_THROW(L,c)		throw(c)
 
-static void LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, void *ud) {
+अटल व्योम LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, व्योम *ud) {
   try {
     f(L, ud);  /* call function protected */
   }
   catch (lua_longjmp *c1) { /* Lua error */
-    if (c1 != c)  /* not the correct level? */
+    अगर (c1 != c)  /* not the correct level? */
       throw;  /* rethrow to upper level */
   }
   catch (...) {  /* non-Lua exception */
@@ -92,72 +92,72 @@ static void LUAI_TRY (lua_State *L, lua_longjmp *c, Pfunc f, void *ud) {
 }
 
 
-#elif defined(LUA_USE_POSIX)				/* }{ */
+#या_अगर defined(LUA_USE_POSIX)				/* }{ */
 
 /* in POSIX, use _longjmp/_setjmp (more efficient) */
-#define LUAI_THROW(L,c)		_longjmp((c)->b, 1)
-#define LUAI_TRY(L,c,f,ud)	if (_setjmp((c)->b) == 0) ((f)(L, ud))
+#घोषणा LUAI_THROW(L,c)		_longjmp((c)->b, 1)
+#घोषणा LUAI_TRY(L,c,f,ud)	अगर (_setjmp((c)->b) == 0) ((f)(L, ud))
 
-#else							/* }{ */
+#अन्यथा							/* }{ */
 
 /* ISO C handling with long jumps */
-#define LUAI_THROW(L,c)		longjmp((c)->b, 1)
-#define LUAI_TRY(L,c,f,ud)	if (setjmp((c)->b) == 0) ((f)(L, ud))
+#घोषणा LUAI_THROW(L,c)		दीर्घ_लाँघ((c)->b, 1)
+#घोषणा LUAI_TRY(L,c,f,ud)	अगर (बनाओ_लाँघ((c)->b) == 0) ((f)(L, ud))
 
-#endif							/* } */
+#पूर्ण_अगर							/* } */
 
-#endif							/* } */
+#पूर्ण_अगर							/* } */
 
 
-void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop) {
-  if (errcode == LUA_ERRMEM) {  /* memory error? */
+व्योम luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop) {
+  अगर (errcode == LUA_ERRMEM) {  /* memory error? */
     setsvalue2s(L, oldtop, G(L)->memerrmsg); /* reuse preregistered msg. */
   }
-  else {
+  अन्यथा {
     lua_assert(errorstatus(errcode));  /* must be a real error */
-    lua_assert(!ttisnil(s2v(L->top.p - 1)));  /* with a non-nil object */
-    setobjs2s(L, oldtop, L->top.p - 1);  /* move it to 'oldtop' */
+    lua_assert(!ttisnil(s2v(L->शीर्ष.p - 1)));  /* with a non-nil object */
+    setobjs2s(L, oldtop, L->शीर्ष.p - 1);  /* move it to 'oldtop' */
   }
-  L->top.p = oldtop + 1;  /* top goes back to old top plus error object */
+  L->शीर्ष.p = oldtop + 1;  /* top goes back to old top plus error object */
 }
 
 
 l_noret luaD_throw (lua_State *L, TStatus errcode) {
-  if (L->errorJmp) {  /* thread has an error handler? */
+  अगर (L->errorJmp) {  /* thread has an error handler? */
     L->errorJmp->status = errcode;  /* set status */
     LUAI_THROW(L, L->errorJmp);  /* jump to it */
   }
-  else {  /* thread has no error handler */
+  अन्यथा {  /* thread has no error handler */
     global_State *g = G(L);
     lua_State *mainth = mainthread(g);
     errcode = luaE_resetthread(L, errcode);  /* close all upvalues */
     L->status = errcode;
-    if (mainth->errorJmp) {  /* main thread has a handler? */
-      setobjs2s(L, mainth->top.p++, L->top.p - 1);  /* copy error obj. */
+    अगर (mainth->errorJmp) {  /* main thread has a handler? */
+      setobjs2s(L, mainth->शीर्ष.p++, L->शीर्ष.p - 1);  /* copy error obj. */
       luaD_throw(mainth, errcode);  /* re-throw in main thread */
     }
-    else {  /* no handler at all; abort */
-      if (g->panic) {  /* panic function? */
+    अन्यथा {  /* no handler at all; abort */
+      अगर (g->panic) {  /* panic function? */
         lua_unlock(L);
         g->panic(L);  /* call panic function (last chance to jump out) */
       }
-      abort();
+      पात();
     }
   }
 }
 
 
 l_noret luaD_throwbaselevel (lua_State *L, TStatus errcode) {
-  if (L->errorJmp) {
+  अगर (L->errorJmp) {
     /* unroll error entries up to the first level */
-    while (L->errorJmp->previous != NULL)
+    जबतक (L->errorJmp->previous != शून्य)
       L->errorJmp = L->errorJmp->previous;
   }
   luaD_throw(L, errcode);
 }
 
 
-TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
+TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, व्योम *ud) {
   l_uint32 oldnCcalls = L->nCcalls;
   lua_longjmp lj;
   lj.status = LUA_OK;
@@ -166,7 +166,7 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
   LUAI_TRY(L, &lj, f, ud);  /* call 'f' catching errors */
   L->errorJmp = lj.previous;  /* restore old error handler */
   L->nCcalls = oldnCcalls;
-  return lj.status;
+  वापस lj.status;
 }
 
 /* }====================================================== */
@@ -179,7 +179,7 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
 */
 
 /* some stack space for error handling */
-#define STACKERRSPACE	200
+#घोषणा STACKERRSPACE	200
 
 
 /*
@@ -187,35 +187,35 @@ TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
 ** It must fit into INT_MAX/2.
 */
 
-#if !defined(LUAI_MAXSTACK)
-#if 1000000 < (INT_MAX / 2)
-#define LUAI_MAXSTACK           1000000
-#else
-#define LUAI_MAXSTACK           (INT_MAX / 2u)
-#endif
-#endif
+#अगर !defined(LUAI_MAXSTACK)
+#अगर 1000000 < (पूर्णांक_उच्च / 2)
+#घोषणा LUAI_MAXSTACK           1000000
+#अन्यथा
+#घोषणा LUAI_MAXSTACK           (पूर्णांक_उच्च / 2u)
+#पूर्ण_अगर
+#पूर्ण_अगर
 
 
 /* maximum stack size that respects size_t */
-#define MAXSTACK_BYSIZET  ((MAX_SIZET / sizeof(StackValue)) - STACKERRSPACE)
+#घोषणा MAXSTACK_BYSIZET  ((MAX_SIZET / माप(ढेर_मूल्य)) - STACKERRSPACE)
 
 /*
 ** Minimum between LUAI_MAXSTACK and MAXSTACK_BYSIZET
 ** (Maximum size for the stack must respect size_t.)
 */
-#define MAXSTACK	cast_int(LUAI_MAXSTACK < MAXSTACK_BYSIZET  \
+#घोषणा MAXSTACK	cast_int(LUAI_MAXSTACK < MAXSTACK_BYSIZET  \
 			        ? LUAI_MAXSTACK : MAXSTACK_BYSIZET)
 
 
 /* stack size with extra space for error handling */
-#define ERRORSTACKSIZE	(MAXSTACK + STACKERRSPACE)
+#घोषणा ERRORSTACKSIZE	(MAXSTACK + STACKERRSPACE)
 
 
 /* raise a stack error while running the message handler */
 l_noret luaD_errerr (lua_State *L) {
-  TString *msg = luaS_newliteral(L, "error in error handling");
-  setsvalue2s(L, L->top.p, msg);
-  L->top.p++;  /* assume EXTRA_STACK */
+  TString *संदेश = luaS_newliteral(L, "error in error handling");
+  setsvalue2s(L, L->शीर्ष.p, संदेश);
+  L->शीर्ष.p++;  /* assume EXTRA_STACK */
   luaD_throw(L, LUA_ERRERR);
 }
 
@@ -225,17 +225,17 @@ l_noret luaD_errerr (lua_State *L) {
 ** as a finalizer): At least BASIC_STACK_SIZE in the Lua stack, two
 ** available CallInfos, and two "slots" in the C stack.
 */
-int luaD_checkminstack (lua_State *L) {
-  if (getCcalls(L) >= LUAI_MAXCCALLS - 2)
-    return 0;  /* not enough C-stack slots */
-  if (L->ci->next == NULL && luaE_extendCI(L, 0) == NULL)
-    return 0;  /* unable to allocate first ci */
-  if (L->ci->next->next == NULL && luaE_extendCI(L, 0) == NULL)
-    return 0;  /* unable to allocate second ci */
-  if (L->stack_last.p - L->top.p >= BASIC_STACK_SIZE)
-    return 1;  /* enough (BASIC_STACK_SIZE) free slots in the Lua stack */
-  else  /* try to grow stack to a size with enough free slots */
-    return luaD_growstack(L, BASIC_STACK_SIZE, 0);
+पूर्णांक luaD_checkminstack (lua_State *L) {
+  अगर (getCcalls(L) >= LUAI_MAXCCALLS - 2)
+    वापस 0;  /* not enough C-stack slots */
+  अगर (L->ci->अग्र == शून्य && luaE_extendCI(L, 0) == शून्य)
+    वापस 0;  /* unable to allocate first ci */
+  अगर (L->ci->अग्र->अग्र == शून्य && luaE_extendCI(L, 0) == शून्य)
+    वापस 0;  /* unable to allocate second ci */
+  अगर (L->ढेर_last.p - L->शीर्ष.p >= BASIC_ढेर_आकार)
+    वापस 1;  /* enough (BASIC_STACK_SIZE) free slots in the Lua stack */
+  अन्यथा  /* try to grow stack to a size with enough free slots */
+    वापस luaD_growstack(L, BASIC_ढेर_आकार, 0);
 }
 
 
@@ -249,23 +249,23 @@ int luaD_checkminstack (lua_State *L) {
 ** That is not strict ISO C, but seems to work fine everywhere.
 ** The following macro chooses how strict is the code.
 */
-#if !defined(LUAI_STRICT_ADDRESS)
-#define LUAI_STRICT_ADDRESS	1
-#endif
+#अगर !defined(LUAI_STRICT_ADDRESS)
+#घोषणा LUAI_STRICT_ADDRESS	1
+#पूर्ण_अगर
 
-#if LUAI_STRICT_ADDRESS
+#अगर LUAI_STRICT_ADDRESS
 /*
 ** Change all pointers to the stack into offsets.
 */
-static void relstack (lua_State *L) {
+अटल व्योम relstack (lua_State *L) {
   CallInfo *ci;
   UpVal *up;
-  L->top.offset = savestack(L, L->top.p);
+  L->शीर्ष.offset = savestack(L, L->शीर्ष.p);
   L->tbclist.offset = savestack(L, L->tbclist.p);
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  क्रम (up = L->openupval; up != शून्य; up = up->u.खोलो.अग्र)
     up->v.offset = savestack(L, uplevel(up));
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.offset = savestack(L, ci->top.p);
+  क्रम (ci = L->ci; ci != शून्य; ci = ci->previous) {
+    ci->शीर्ष.offset = savestack(L, ci->शीर्ष.p);
     ci->func.offset = savestack(L, ci->func.p);
   }
 }
@@ -274,52 +274,52 @@ static void relstack (lua_State *L) {
 /*
 ** Change back all offsets into pointers.
 */
-static void correctstack (lua_State *L, StkId oldstack) {
+अटल व्योम correctstack (lua_State *L, StkId oldstack) {
   CallInfo *ci;
   UpVal *up;
   UNUSED(oldstack);
-  L->top.p = restorestack(L, L->top.offset);
+  L->शीर्ष.p = restorestack(L, L->शीर्ष.offset);
   L->tbclist.p = restorestack(L, L->tbclist.offset);
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  क्रम (up = L->openupval; up != शून्य; up = up->u.खोलो.अग्र)
     up->v.p = s2v(restorestack(L, up->v.offset));
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.p = restorestack(L, ci->top.offset);
+  क्रम (ci = L->ci; ci != शून्य; ci = ci->previous) {
+    ci->शीर्ष.p = restorestack(L, ci->शीर्ष.offset);
     ci->func.p = restorestack(L, ci->func.offset);
-    if (isLua(ci))
+    अगर (isLua(ci))
       ci->u.l.trap = 1;  /* signal to update 'trap' in 'luaV_execute' */
   }
 }
 
-#else
+#अन्यथा
 /*
 ** Assume that it is fine to use an address after its deallocation,
 ** as long as we do not dereference it.
 */
 
-static void relstack (lua_State *L) { UNUSED(L); }  /* do nothing */
+अटल व्योम relstack (lua_State *L) { UNUSED(L); }  /* do nothing */
 
 
 /*
 ** Correct pointers into 'oldstack' to point into 'L->stack'.
 */
-static void correctstack (lua_State *L, StkId oldstack) {
+अटल व्योम correctstack (lua_State *L, StkId oldstack) {
   CallInfo *ci;
   UpVal *up;
-  StkId newstack = L->stack.p;
-  if (oldstack == newstack)
-    return;
-  L->top.p = L->top.p - oldstack + newstack;
+  StkId newstack = L->ढेर.p;
+  अगर (oldstack == newstack)
+    वापस;
+  L->शीर्ष.p = L->शीर्ष.p - oldstack + newstack;
   L->tbclist.p = L->tbclist.p - oldstack + newstack;
-  for (up = L->openupval; up != NULL; up = up->u.open.next)
+  क्रम (up = L->openupval; up != शून्य; up = up->u.खोलो.अग्र)
     up->v.p = s2v(uplevel(up) - oldstack + newstack);
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    ci->top.p = ci->top.p - oldstack + newstack;
+  क्रम (ci = L->ci; ci != शून्य; ci = ci->previous) {
+    ci->शीर्ष.p = ci->शीर्ष.p - oldstack + newstack;
     ci->func.p = ci->func.p - oldstack + newstack;
-    if (isLua(ci))
+    अगर (isLua(ci))
       ci->u.l.trap = 1;  /* signal to update 'trap' in 'luaV_execute' */
   }
 }
-#endif
+#पूर्ण_अगर
 
 
 /*
@@ -327,30 +327,30 @@ static void correctstack (lua_State *L, StkId oldstack) {
 ** In case of allocation error, raise an error or return false according
 ** to 'raiseerror'.
 */
-int luaD_reallocstack (lua_State *L, int newsize, int raiseerror) {
-  int oldsize = stacksize(L);
-  int i;
+पूर्णांक luaD_reallocstack (lua_State *L, पूर्णांक newsize, पूर्णांक raiseerror) {
+  पूर्णांक oldsize = stacksize(L);
+  पूर्णांक i;
   StkId newstack;
-  StkId oldstack = L->stack.p;
+  StkId oldstack = L->ढेर.p;
   lu_byte oldgcstop = G(L)->gcstopem;
   lua_assert(newsize <= MAXSTACK || newsize == ERRORSTACKSIZE);
   relstack(L);  /* change pointers to offsets */
   G(L)->gcstopem = 1;  /* stop emergency collection */
-  newstack = luaM_reallocvector(L, oldstack, oldsize + EXTRA_STACK,
-                                   newsize + EXTRA_STACK, StackValue);
+  newstack = luaM_reallocvector(L, oldstack, oldsize + EXTRA_ढेर,
+                                   newsize + EXTRA_ढेर, ढेर_मूल्य);
   G(L)->gcstopem = oldgcstop;  /* restore emergency collection */
-  if (l_unlikely(newstack == NULL)) {  /* reallocation failed? */
+  अगर (l_unlikely(newstack == शून्य)) {  /* reallocation failed? */
     correctstack(L, oldstack);  /* change offsets back to pointers */
-    if (raiseerror)
+    अगर (raiseerror)
       luaM_error(L);
-    else return 0;  /* do not raise an error */
+    अन्यथा वापस 0;  /* do not raise an error */
   }
-  L->stack.p = newstack;
+  L->ढेर.p = newstack;
   correctstack(L, oldstack);  /* change offsets back to pointers */
-  L->stack_last.p = L->stack.p + newsize;
-  for (i = oldsize + EXTRA_STACK; i < newsize + EXTRA_STACK; i++)
+  L->ढेर_last.p = L->ढेर.p + newsize;
+  क्रम (i = oldsize + EXTRA_ढेर; i < newsize + EXTRA_ढेर; i++)
     setnilvalue2s(newstack + i); /* erase new segment */
-  return 1;
+  वापस 1;
 }
 
 
@@ -358,33 +358,33 @@ int luaD_reallocstack (lua_State *L, int newsize, int raiseerror) {
 ** Try to grow the stack by at least 'n' elements. When 'raiseerror'
 ** is true, raises any error; otherwise, return 0 in case of errors.
 */
-int luaD_growstack (lua_State *L, int n, int raiseerror) {
-  int size = stacksize(L);
-  if (l_unlikely(size > MAXSTACK)) {
+पूर्णांक luaD_growstack (lua_State *L, पूर्णांक n, पूर्णांक raiseerror) {
+  पूर्णांक आकार = stacksize(L);
+  अगर (l_unlikely(आकार > MAXSTACK)) {
     /* if stack is larger than maximum, thread is already using the
        extra space reserved for errors, that is, thread is handling
        a stack error; cannot grow further than that. */
     lua_assert(stacksize(L) == ERRORSTACKSIZE);
-    if (raiseerror)
+    अगर (raiseerror)
       luaD_errerr(L);  /* stack error inside message handler */
-    return 0;  /* if not 'raiseerror', just signal it */
+    वापस 0;  /* if not 'raiseerror', just signal it */
   }
-  else if (n < MAXSTACK) {  /* avoids arithmetic overflows */
-    int newsize = size + (size >> 1);  /* tentative new size (size * 1.5) */
-    int needed = cast_int(L->top.p - L->stack.p) + n;
-    if (newsize > MAXSTACK)  /* cannot cross the limit */
+  अन्यथा अगर (n < MAXSTACK) {  /* avoids arithmetic overflows */
+    पूर्णांक newsize = आकार + (आकार >> 1);  /* tentative new size (size * 1.5) */
+    पूर्णांक needed = cast_int(L->शीर्ष.p - L->ढेर.p) + n;
+    अगर (newsize > MAXSTACK)  /* cannot cross the limit */
       newsize = MAXSTACK;
-    if (newsize < needed)  /* but must respect what was asked for */
+    अगर (newsize < needed)  /* but must respect what was asked for */
       newsize = needed;
-    if (l_likely(newsize <= MAXSTACK))
-      return luaD_reallocstack(L, newsize, raiseerror);
+    अगर (l_likely(newsize <= MAXSTACK))
+      वापस luaD_reallocstack(L, newsize, raiseerror);
   }
   /* else stack overflow */
   /* add extra size to be able to handle the error message */
   luaD_reallocstack(L, ERRORSTACKSIZE, raiseerror);
-  if (raiseerror)
+  अगर (raiseerror)
     luaG_runerror(L, "stack overflow");
-  return 0;
+  वापस 0;
 }
 
 
@@ -392,18 +392,18 @@ int luaD_growstack (lua_State *L, int n, int raiseerror) {
 ** Compute how much of the stack is being used, by computing the
 ** maximum top of all call frames in the stack and the current top.
 */
-static int stackinuse (lua_State *L) {
+अटल पूर्णांक stackinuse (lua_State *L) {
   CallInfo *ci;
-  int res;
-  StkId lim = L->top.p;
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {
-    if (lim < ci->top.p) lim = ci->top.p;
+  पूर्णांक res;
+  StkId lim = L->शीर्ष.p;
+  क्रम (ci = L->ci; ci != शून्य; ci = ci->previous) {
+    अगर (lim < ci->शीर्ष.p) lim = ci->शीर्ष.p;
   }
-  lua_assert(lim <= L->stack_last.p + EXTRA_STACK);
-  res = cast_int(lim - L->stack.p) + 1;  /* part of stack in use */
-  if (res < LUA_MINSTACK)
+  lua_assert(lim <= L->ढेर_last.p + EXTRA_ढेर);
+  res = cast_int(lim - L->ढेर.p) + 1;  /* part of stack in use */
+  अगर (res < LUA_MINSTACK)
     res = LUA_MINSTACK;  /* ensure a minimum size */
-  return res;
+  वापस res;
 }
 
 
@@ -416,17 +416,17 @@ static int stackinuse (lua_State *L) {
 ** stacksize (equal to ERRORSTACKSIZE in this case), and so the stack
 ** will be reduced to a "regular" size.
 */
-void luaD_shrinkstack (lua_State *L) {
-  int inuse = stackinuse(L);
-  int max = (inuse > MAXSTACK / 3) ? MAXSTACK : inuse * 3;
+व्योम luaD_shrinkstack (lua_State *L) {
+  पूर्णांक inuse = stackinuse(L);
+  पूर्णांक max = (inuse > MAXSTACK / 3) ? MAXSTACK : inuse * 3;
   /* if thread is currently not handling a stack overflow and its
      size is larger than maximum "reasonable" size, shrink it */
-  if (inuse <= MAXSTACK && stacksize(L) > max) {
-    int nsize = (inuse > MAXSTACK / 2) ? MAXSTACK : inuse * 2;
+  अगर (inuse <= MAXSTACK && stacksize(L) > max) {
+    पूर्णांक nsize = (inuse > MAXSTACK / 2) ? MAXSTACK : inuse * 2;
     luaD_reallocstack(L, nsize, 0);  /* ok if that fails */
   }
-  else  /* don't change stack */
-    condmovestack(L,(void)0,(void)0);  /* (change only for debugging) */
+  अन्यथा  /* don't change stack */
+    condmovestack(L,(व्योम)0,(व्योम)0);  /* (change only for debugging) */
   luaE_shrinkCI(L);  /* shrink CI list */
 }
 
@@ -438,24 +438,24 @@ void luaD_shrinkstack (lua_State *L) {
 ** called. (Both 'L->hook' and 'L->hookmask', which trigger this
 ** function, can be changed asynchronously by signals.)
 */
-void luaD_hook (lua_State *L, int event, int line,
-                              int ftransfer, int ntransfer) {
+व्योम luaD_hook (lua_State *L, पूर्णांक event, पूर्णांक पंक्ति,
+                              पूर्णांक ftransfer, पूर्णांक ntransfer) {
   lua_Hook hook = L->hook;
-  if (hook && L->allowhook) {  /* make sure there is a hook */
+  अगर (hook && L->allowhook) {  /* make sure there is a hook */
     CallInfo *ci = L->ci;
-    ptrdiff_t top = savestack(L, L->top.p);  /* preserve original 'top' */
-    ptrdiff_t ci_top = savestack(L, ci->top.p);  /* idem for 'ci->top' */
+    सूचक_भेद_प्रकार शीर्ष = savestack(L, L->शीर्ष.p);  /* preserve original 'top' */
+    सूचक_भेद_प्रकार ci_शीर्ष = savestack(L, ci->शीर्ष.p);  /* idem for 'ci->top' */
     lua_Debug ar;
     ar.event = event;
-    ar.currentline = line;
+    ar.currentline = पंक्ति;
     ar.i_ci = ci;
     L->transferinfo.ftransfer = ftransfer;
     L->transferinfo.ntransfer = ntransfer;
-    if (isLua(ci) && L->top.p < ci->top.p)
-      L->top.p = ci->top.p;  /* protect entire activation register */
+    अगर (isLua(ci) && L->शीर्ष.p < ci->शीर्ष.p)
+      L->शीर्ष.p = ci->शीर्ष.p;  /* protect entire activation register */
     luaD_checkstack(L, LUA_MINSTACK);  /* ensure minimum stack size */
-    if (ci->top.p < L->top.p + LUA_MINSTACK)
-      ci->top.p = L->top.p + LUA_MINSTACK;
+    अगर (ci->शीर्ष.p < L->शीर्ष.p + LUA_MINSTACK)
+      ci->शीर्ष.p = L->शीर्ष.p + LUA_MINSTACK;
     L->allowhook = 0;  /* cannot call hooks inside a hook */
     ci->callstatus |= CIST_HOOKED;
     lua_unlock(L);
@@ -463,8 +463,8 @@ void luaD_hook (lua_State *L, int event, int line,
     lua_lock(L);
     lua_assert(!L->allowhook);
     L->allowhook = 1;
-    ci->top.p = restorestack(L, ci_top);
-    L->top.p = restorestack(L, top);
+    ci->शीर्ष.p = restorestack(L, ci_शीर्ष);
+    L->शीर्ष.p = restorestack(L, शीर्ष);
     ci->callstatus &= ~CIST_HOOKED;
   }
 }
@@ -475,10 +475,10 @@ void luaD_hook (lua_State *L, int event, int line,
 ** whenever 'hookmask' is not zero, so it checks whether call hooks are
 ** active.
 */
-void luaD_hookcall (lua_State *L, CallInfo *ci) {
+व्योम luaD_hookcall (lua_State *L, CallInfo *ci) {
   L->oldpc = 0;  /* set 'oldpc' for new function */
-  if (L->hookmask & LUA_MASKCALL) {  /* is call hook on? */
-    int event = (ci->callstatus & CIST_TAIL) ? LUA_HOOKTAILCALL
+  अगर (L->hookmask & LUA_MASKCALL) {  /* is call hook on? */
+    पूर्णांक event = (ci->callstatus & CIST_पुच्छ) ? LUA_HOOKTAILCALL
                                              : LUA_HOOKCALL;
     Proto *p = ci_func(ci)->p;
     ci->u.l.savedpc++;  /* hooks assume 'pc' is already incremented */
@@ -493,14 +493,14 @@ void luaD_hookcall (lua_State *L, CallInfo *ci) {
 ** 'oldpc'. (Note that this correction is needed by the line hook, so it
 ** is done even when return hooks are off.)
 */
-static void rethook (lua_State *L, CallInfo *ci, int nres) {
-  if (L->hookmask & LUA_MASKRET) {  /* is return hook on? */
-    StkId firstres = L->top.p - nres;  /* index of first result */
-    int delta = 0;  /* correction for vararg functions */
-    int ftransfer;
-    if (isLua(ci)) {
+अटल व्योम rethook (lua_State *L, CallInfo *ci, पूर्णांक nres) {
+  अगर (L->hookmask & LUA_MASKRET) {  /* is return hook on? */
+    StkId firstres = L->शीर्ष.p - nres;  /* index of first result */
+    पूर्णांक delta = 0;  /* correction for vararg functions */
+    पूर्णांक ftransfer;
+    अगर (isLua(ci)) {
       Proto *p = ci_func(ci)->p;
-      if (p->flag & PF_VAHID)
+      अगर (p->flag & PF_VAHID)
         delta = ci->u.l.nextraargs + p->numparams + 1;
     }
     ci->func.p += delta;  /* if vararg, back to virtual 'func' */
@@ -508,7 +508,7 @@ static void rethook (lua_State *L, CallInfo *ci, int nres) {
     luaD_hook(L, LUA_HOOKRET, -1, ftransfer, nres);  /* call it */
     ci->func.p -= delta;
   }
-  if (isLua(ci = ci->previous))
+  अगर (isLua(ci = ci->previous))
     L->oldpc = pcRel(ci->u.l.savedpc, ci_func(ci)->p);  /* set 'oldpc' */
 }
 
@@ -522,34 +522,34 @@ static void rethook (lua_State *L, CallInfo *ci, int nres) {
 ** (This count will be saved in the 'callstatus' of the call).
 **  Raise an error if this counter overflows.
 */
-static unsigned tryfuncTM (lua_State *L, StkId func, unsigned status) {
-  const TValue *tm;
+अटल अचिन्हित tryfuncTM (lua_State *L, StkId func, अचिन्हित status) {
+  स्थिर TValue *पंचांग;
   StkId p;
-  tm = luaT_gettmbyobj(L, s2v(func), TM_CALL);
-  if (l_unlikely(ttisnil(tm)))  /* no metamethod? */
+  पंचांग = luaT_gettmbyobj(L, s2v(func), TM_CALL);
+  अगर (l_unlikely(ttisnil(पंचांग)))  /* no metamethod? */
     luaG_callerror(L, s2v(func));
-  for (p = L->top.p; p > func; p--)  /* open space for metamethod */
+  क्रम (p = L->शीर्ष.p; p > func; p--)  /* open space for metamethod */
     setobjs2s(L, p, p-1);
-  L->top.p++;  /* stack space pre-allocated by the caller */
-  setobj2s(L, func, tm);  /* metamethod is the new function to be called */
-  if ((status & MAX_CCMT) == MAX_CCMT)  /* is counter full? */
+  L->शीर्ष.p++;  /* stack space pre-allocated by the caller */
+  setobj2s(L, func, पंचांग);  /* metamethod is the new function to be called */
+  अगर ((status & MAX_CCMT) == MAX_CCMT)  /* is counter full? */
     luaG_runerror(L, "'__call' chain too long");
-  return status + (1u << CIST_CCMT);  /* increment counter */
+  वापस status + (1u << CIST_CCMT);  /* increment counter */
 }
 
 
 /* Generic case for 'moveresult' */
-l_sinline void genmoveresults (lua_State *L, StkId res, int nres,
-                                             int wanted) {
-  StkId firstresult = L->top.p - nres;  /* index of first result */
-  int i;
-  if (nres > wanted)  /* extra results? */
+l_sinline व्योम genmoveresults (lua_State *L, StkId res, पूर्णांक nres,
+                                             पूर्णांक wanted) {
+  StkId firstresult = L->शीर्ष.p - nres;  /* index of first result */
+  पूर्णांक i;
+  अगर (nres > wanted)  /* extra results? */
     nres = wanted;  /* don't need them */
-  for (i = 0; i < nres; i++)  /* move all results to correct place */
+  क्रम (i = 0; i < nres; i++)  /* move all results to correct place */
     setobjs2s(L, res + i, firstresult + i);
-  for (; i < wanted; i++)  /* complete wanted number of results */
+  क्रम (; i < wanted; i++)  /* complete wanted number of results */
     setnilvalue2s(res + i);
-  L->top.p = res + wanted;  /* top points after the last result */
+  L->शीर्ष.p = res + wanted;  /* top points after the last result */
 }
 
 
@@ -560,39 +560,39 @@ l_sinline void genmoveresults (lua_State *L, StkId res, int nres,
 ** parameters) separated. The flag CIST_TBC in 'fwanted', if set,
 ** forces the switch to go to the default case.
 */
-l_sinline void moveresults (lua_State *L, StkId res, int nres,
+l_sinline व्योम moveresults (lua_State *L, StkId res, पूर्णांक nres,
                                           l_uint32 fwanted) {
-  switch (fwanted) {  /* handle typical cases separately */
-    case 0 + 1:  /* no values needed */
-      L->top.p = res;
-      return;
-    case 1 + 1:  /* one value needed */
-      if (nres == 0)   /* no results? */
+  चयन (fwanted) {  /* handle typical cases separately */
+    हाल 0 + 1:  /* no values needed */
+      L->शीर्ष.p = res;
+      वापस;
+    हाल 1 + 1:  /* one value needed */
+      अगर (nres == 0)   /* no results? */
         setnilvalue2s(res);  /* adjust with nil */
-      else  /* at least one result */
-        setobjs2s(L, res, L->top.p - nres);  /* move it to proper place */
-      L->top.p = res + 1;
-      return;
-    case LUA_MULTRET + 1:
+      अन्यथा  /* at least one result */
+        setobjs2s(L, res, L->शीर्ष.p - nres);  /* move it to proper place */
+      L->शीर्ष.p = res + 1;
+      वापस;
+    हाल LUA_MULTRET + 1:
       genmoveresults(L, res, nres, nres);  /* we want all results */
-      break;
-    default: {  /* two/more results and/or to-be-closed variables */
-      int wanted = get_nresults(fwanted);
-      if (fwanted & CIST_TBC) {  /* to-be-closed variables? */
+      अवरोध;
+    शेष: {  /* two/more results and/or to-be-closed variables */
+      पूर्णांक wanted = get_nresults(fwanted);
+      अगर (fwanted & CIST_TBC) {  /* to-be-closed variables? */
         L->ci->u2.nres = nres;
         L->ci->callstatus |= CIST_CLSRET;  /* in case of yields */
         res = luaF_close(L, res, CLOSEKTOP, 1);
         L->ci->callstatus &= ~CIST_CLSRET;
-        if (L->hookmask) {  /* if needed, call hook after '__close's */
-          ptrdiff_t savedres = savestack(L, res);
+        अगर (L->hookmask) {  /* if needed, call hook after '__close's */
+          सूचक_भेद_प्रकार savedres = savestack(L, res);
           rethook(L, L->ci, nres);
           res = restorestack(L, savedres);  /* hook can move stack */
         }
-        if (wanted == LUA_MULTRET)
+        अगर (wanted == LUA_MULTRET)
           wanted = nres;  /* we want all results */
       }
       genmoveresults(L, res, nres, wanted);
-      break;
+      अवरोध;
     }
   }
 }
@@ -604,9 +604,9 @@ l_sinline void moveresults (lua_State *L, StkId res, int nres,
 ** info. If function has to close variables, hook must be called after
 ** that.
 */
-void luaD_poscall (lua_State *L, CallInfo *ci, int nres) {
+व्योम luaD_poscall (lua_State *L, CallInfo *ci, पूर्णांक nres) {
   l_uint32 fwanted = ci->callstatus & (CIST_TBC | CIST_NRESULTS);
-  if (l_unlikely(L->hookmask) && !(fwanted & CIST_TBC))
+  अगर (l_unlikely(L->hookmask) && !(fwanted & CIST_TBC))
     rethook(L, ci, nres);
   /* move results to proper place */
   moveresults(L, ci->func.p, nres, fwanted);
@@ -618,7 +618,7 @@ void luaD_poscall (lua_State *L, CallInfo *ci, int nres) {
 
 
 
-#define next_ci(L)  (L->ci->next ? L->ci->next : luaE_extendCI(L, 1))
+#घोषणा अग्र_ci(L)  (L->ci->अग्र ? L->ci->अग्र : luaE_extendCI(L, 1))
 
 
 /*
@@ -627,30 +627,30 @@ void luaD_poscall (lua_State *L, CallInfo *ci, int nres) {
 ** CIST_C (if it's a C function), and number of extra arguments.
 ** (All these bit-fields fit in 16-bit values.)
 */
-l_sinline CallInfo *prepCallInfo (lua_State *L, StkId func, unsigned status,
-                                                StkId top) {
-  CallInfo *ci = L->ci = next_ci(L);  /* new frame */
+l_sinline CallInfo *prepCallInfo (lua_State *L, StkId func, अचिन्हित status,
+                                                StkId शीर्ष) {
+  CallInfo *ci = L->ci = अग्र_ci(L);  /* new frame */
   ci->func.p = func;
   lua_assert((status & ~(CIST_NRESULTS | CIST_C | MAX_CCMT)) == 0);
   ci->callstatus = status;
-  ci->top.p = top;
-  return ci;
+  ci->शीर्ष.p = शीर्ष;
+  वापस ci;
 }
 
 
 /*
 ** precall for C functions
 */
-l_sinline int precallC (lua_State *L, StkId func, unsigned status,
+l_sinline पूर्णांक precallC (lua_State *L, StkId func, अचिन्हित status,
                                             lua_CFunction f) {
-  int n;  /* number of returns */
+  पूर्णांक n;  /* number of returns */
   CallInfo *ci;
   checkstackp(L, LUA_MINSTACK, func);  /* ensure minimum stack size */
   L->ci = ci = prepCallInfo(L, func, status | CIST_C,
-                               L->top.p + LUA_MINSTACK);
-  lua_assert(ci->top.p <= L->stack_last.p);
-  if (l_unlikely(L->hookmask & LUA_MASKCALL)) {
-    int narg = cast_int(L->top.p - func) - 1;
+                               L->शीर्ष.p + LUA_MINSTACK);
+  lua_assert(ci->शीर्ष.p <= L->ढेर_last.p);
+  अगर (l_unlikely(L->hookmask & LUA_MASKCALL)) {
+    पूर्णांक narg = cast_int(L->शीर्ष.p - func) - 1;
     luaD_hook(L, LUA_HOOKCALL, -1, 1, narg);
   }
   lua_unlock(L);
@@ -658,7 +658,7 @@ l_sinline int precallC (lua_State *L, StkId func, unsigned status,
   lua_lock(L);
   api_checknelems(L, n);
   luaD_poscall(L, ci, n);
-  return n;
+  वापस n;
 }
 
 
@@ -668,39 +668,39 @@ l_sinline int precallC (lua_State *L, StkId func, unsigned status,
 ** (so that it includes the function itself). Return the number of
 ** results, if it was a C function, or -1 for a Lua function.
 */
-int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
-                                    int narg1, int delta) {
-  unsigned status = LUA_MULTRET + 1;
+पूर्णांक luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
+                                    पूर्णांक narg1, पूर्णांक delta) {
+  अचिन्हित status = LUA_MULTRET + 1;
  retry:
-  switch (ttypetag(s2v(func))) {
-    case LUA_VCCL:  /* C closure */
-      return precallC(L, func, status, clCvalue(s2v(func))->f);
-    case LUA_VLCF:  /* light C function */
-      return precallC(L, func, status, fvalue(s2v(func)));
-    case LUA_VLCL: {  /* Lua function */
+  चयन (ttypetag(s2v(func))) {
+    हाल LUA_VCCL:  /* C closure */
+      वापस precallC(L, func, status, clCvalue(s2v(func))->f);
+    हाल LUA_VLCF:  /* light C function */
+      वापस precallC(L, func, status, fvalue(s2v(func)));
+    हाल LUA_VLCL: {  /* Lua function */
       Proto *p = clLvalue(s2v(func))->p;
-      int fsize = p->maxstacksize;  /* frame size */
-      int nfixparams = p->numparams;
-      int i;
+      पूर्णांक fsize = p->maxstacksize;  /* frame size */
+      पूर्णांक nfixparams = p->numparams;
+      पूर्णांक i;
       checkstackp(L, fsize - delta, func);
       ci->func.p -= delta;  /* restore 'func' (if vararg) */
-      for (i = 0; i < narg1; i++)  /* move down function and arguments */
+      क्रम (i = 0; i < narg1; i++)  /* move down function and arguments */
         setobjs2s(L, ci->func.p + i, func + i);
       func = ci->func.p;  /* moved-down function */
-      for (; narg1 <= nfixparams; narg1++)
+      क्रम (; narg1 <= nfixparams; narg1++)
         setnilvalue2s(func + narg1);  /* complete missing arguments */
-      ci->top.p = func + 1 + fsize;  /* top for new function */
-      lua_assert(ci->top.p <= L->stack_last.p);
+      ci->शीर्ष.p = func + 1 + fsize;  /* top for new function */
+      lua_assert(ci->शीर्ष.p <= L->ढेर_last.p);
       ci->u.l.savedpc = p->code;  /* starting point */
-      ci->callstatus |= CIST_TAIL;
-      L->top.p = func + narg1;  /* set top */
-      return -1;
+      ci->callstatus |= CIST_पुच्छ;
+      L->शीर्ष.p = func + narg1;  /* set top */
+      वापस -1;
     }
-    default: {  /* not a function */
+    शेष: {  /* not a function */
       checkstackp(L, 1, func);  /* space for metamethod */
       status = tryfuncTM(L, func, status);  /* try '__call' metamethod */
       narg1++;
-      goto retry;  /* try again */
+      जाओ retry;  /* try again */
     }
   }
 }
@@ -714,35 +714,35 @@ int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
 ** returns NULL, with all the results on the stack, starting at the
 ** original function position.
 */
-CallInfo *luaD_precall (lua_State *L, StkId func, int nresults) {
-  unsigned status = cast_uint(nresults + 1);
+CallInfo *luaD_precall (lua_State *L, StkId func, पूर्णांक nresults) {
+  अचिन्हित status = cast_uint(nresults + 1);
   lua_assert(status <= MAXRESULTS + 1);
  retry:
-  switch (ttypetag(s2v(func))) {
-    case LUA_VCCL:  /* C closure */
+  चयन (ttypetag(s2v(func))) {
+    हाल LUA_VCCL:  /* C closure */
       precallC(L, func, status, clCvalue(s2v(func))->f);
-      return NULL;
-    case LUA_VLCF:  /* light C function */
+      वापस शून्य;
+    हाल LUA_VLCF:  /* light C function */
       precallC(L, func, status, fvalue(s2v(func)));
-      return NULL;
-    case LUA_VLCL: {  /* Lua function */
+      वापस शून्य;
+    हाल LUA_VLCL: {  /* Lua function */
       CallInfo *ci;
       Proto *p = clLvalue(s2v(func))->p;
-      int narg = cast_int(L->top.p - func) - 1;  /* number of real arguments */
-      int nfixparams = p->numparams;
-      int fsize = p->maxstacksize;  /* frame size */
+      पूर्णांक narg = cast_int(L->शीर्ष.p - func) - 1;  /* number of real arguments */
+      पूर्णांक nfixparams = p->numparams;
+      पूर्णांक fsize = p->maxstacksize;  /* frame size */
       checkstackp(L, fsize, func);
       L->ci = ci = prepCallInfo(L, func, status, func + 1 + fsize);
       ci->u.l.savedpc = p->code;  /* starting point */
-      for (; narg < nfixparams; narg++)
-        setnilvalue2s(L->top.p++);  /* complete missing arguments */
-      lua_assert(ci->top.p <= L->stack_last.p);
-      return ci;
+      क्रम (; narg < nfixparams; narg++)
+        setnilvalue2s(L->शीर्ष.p++);  /* complete missing arguments */
+      lua_assert(ci->शीर्ष.p <= L->ढेर_last.p);
+      वापस ci;
     }
-    default: {  /* not a function */
+    शेष: {  /* not a function */
       checkstackp(L, 1, func);  /* space for metamethod */
       status = tryfuncTM(L, func, status);  /* try '__call' metamethod */
-      goto retry;  /* try again with metamethod */
+      जाओ retry;  /* try again with metamethod */
     }
   }
 }
@@ -756,14 +756,14 @@ CallInfo *luaD_precall (lua_State *L, StkId func, int nresults) {
 ** check the stack before doing anything else. 'luaD_precall' already
 ** does that.
 */
-l_sinline void ccall (lua_State *L, StkId func, int nResults, l_uint32 inc) {
+l_sinline व्योम ccall (lua_State *L, StkId func, पूर्णांक nResults, l_uint32 inc) {
   CallInfo *ci;
   L->nCcalls += inc;
-  if (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS)) {
+  अगर (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS)) {
     checkstackp(L, 0, func);  /* free any use of EXTRA_STACK */
     luaE_checkcstack(L);
   }
-  if ((ci = luaD_precall(L, func, nResults)) != NULL) {  /* Lua function? */
+  अगर ((ci = luaD_precall(L, func, nResults)) != शून्य) {  /* Lua function? */
     ci->callstatus |= CIST_FRESH;  /* mark that it is a "fresh" execute */
     luaV_execute(L, ci);  /* call it */
   }
@@ -774,7 +774,7 @@ l_sinline void ccall (lua_State *L, StkId func, int nResults, l_uint32 inc) {
 /*
 ** External interface for 'ccall'
 */
-void luaD_call (lua_State *L, StkId func, int nResults) {
+व्योम luaD_call (lua_State *L, StkId func, पूर्णांक nResults) {
   ccall(L, func, nResults, 1);
 }
 
@@ -782,7 +782,7 @@ void luaD_call (lua_State *L, StkId func, int nResults) {
 /*
 ** Similar to 'luaD_call', but does not allow yields during the call.
 */
-void luaD_callnoyield (lua_State *L, StkId func, int nResults) {
+व्योम luaD_callnoyield (lua_State *L, StkId func, पूर्णांक nResults) {
   ccall(L, func, nResults, nyci);
 }
 
@@ -803,11 +803,11 @@ void luaD_callnoyield (lua_State *L, StkId func, int nResults) {
 ** particular, field CIST_RECST preserves the error status across these
 ** multiple runs, changing only if there is a new error.
 */
-static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
+अटल TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
   TStatus status = getcistrecst(ci);  /* get original status */
-  if (l_likely(status == LUA_OK))  /* no error? */
+  अगर (l_likely(status == LUA_OK))  /* no error? */
     status = LUA_YIELD;  /* was interrupted by an yield */
-  else {  /* error */
+  अन्यथा {  /* error */
     StkId func = restorestack(L, ci->u2.funcidx);
     L->allowhook = getoah(ci);  /* restore 'allowhook' */
     func = luaF_close(L, func, status, 1);  /* can yield or raise an error */
@@ -819,7 +819,7 @@ static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
   L->errfunc = ci->u.c.old_errfunc;
   /* if it is here, there were errors or yields; unlike 'lua_pcallk',
      do not change status */
-  return status;
+  वापस status;
 }
 
 
@@ -836,19 +836,19 @@ static TStatus finishpcallk (lua_State *L,  CallInfo *ci) {
 ** of the function called by 'lua_callk'/'lua_pcallk', so we are
 ** conservative and use LUA_MULTRET (always adjust).
 */
-static void finishCcall (lua_State *L, CallInfo *ci) {
-  int n;  /* actual number of results from C function */
-  if (ci->callstatus & CIST_CLSRET) {  /* was closing TBC variable? */
+अटल व्योम finishCcall (lua_State *L, CallInfo *ci) {
+  पूर्णांक n;  /* actual number of results from C function */
+  अगर (ci->callstatus & CIST_CLSRET) {  /* was closing TBC variable? */
     lua_assert(ci->callstatus & CIST_TBC);
     n = ci->u2.nres;  /* just redo 'luaD_poscall' */
     /* don't need to reset CIST_CLSRET, as it will be set again anyway */
   }
-  else {
+  अन्यथा {
     TStatus status = LUA_YIELD;  /* default if there were no errors */
     lua_KFunction kf = ci->u.c.k;  /* continuation function */
     /* must have a continuation and must be able to call it */
-    lua_assert(kf != NULL && yieldable(L));
-    if (ci->callstatus & CIST_YPCALL)   /* was inside a 'lua_pcallk'? */
+    lua_assert(kf != शून्य && yieldable(L));
+    अगर (ci->callstatus & CIST_YPCALL)   /* was inside a 'lua_pcallk'? */
       status = finishpcallk(L, ci);  /* finish it */
     adjustresults(L, LUA_MULTRET);  /* finish 'lua_callk' */
     lua_unlock(L);
@@ -865,13 +865,13 @@ static void finishCcall (lua_State *L, CallInfo *ci) {
 ** previously interrupted coroutine until the stack is empty (or another
 ** interruption long-jumps out of the loop).
 */
-static void unroll (lua_State *L, void *ud) {
+अटल व्योम unroll (lua_State *L, व्योम *ud) {
   CallInfo *ci;
   UNUSED(ud);
-  while ((ci = L->ci) != &L->base_ci) {  /* something in the stack */
-    if (!isLua(ci))  /* C function? */
+  जबतक ((ci = L->ci) != &L->base_ci) {  /* something in the stack */
+    अगर (!isLua(ci))  /* C function? */
       finishCcall(L, ci);  /* complete its execution */
-    else {  /* Lua function */
+    अन्यथा {  /* Lua function */
       luaV_finishOp(L);  /* finish interrupted instruction */
       luaV_execute(L, ci);  /* execute down to higher C 'boundary' */
     }
@@ -883,13 +883,13 @@ static void unroll (lua_State *L, void *ud) {
 ** Try to find a suspended protected call (a "recover point") for the
 ** given thread.
 */
-static CallInfo *findpcall (lua_State *L) {
+अटल CallInfo *findpcall (lua_State *L) {
   CallInfo *ci;
-  for (ci = L->ci; ci != NULL; ci = ci->previous) {  /* search for a pcall */
-    if (ci->callstatus & CIST_YPCALL)
-      return ci;
+  क्रम (ci = L->ci; ci != शून्य; ci = ci->previous) {  /* search for a pcall */
+    अगर (ci->callstatus & CIST_YPCALL)
+      वापस ci;
   }
-  return NULL;  /* no pending pcall */
+  वापस शून्य;  /* no pending pcall */
 }
 
 
@@ -898,13 +898,13 @@ static CallInfo *findpcall (lua_State *L) {
 ** of the coroutine itself. (Such errors should not be handled by any
 ** coroutine error handler and should not kill the coroutine.)
 */
-static int resume_error (lua_State *L, const char *msg, int narg) {
+अटल पूर्णांक resume_error (lua_State *L, स्थिर अक्षर *संदेश, पूर्णांक narg) {
   api_checkpop(L, narg);
-  L->top.p -= narg;  /* remove args from the stack */
-  setsvalue2s(L, L->top.p, luaS_new(L, msg));  /* push error message */
-  api_incr_top(L);
+  L->शीर्ष.p -= narg;  /* remove args from the stack */
+  setsvalue2s(L, L->शीर्ष.p, luaS_new(L, संदेश));  /* push error message */
+  api_incr_शीर्ष(L);
   lua_unlock(L);
-  return LUA_ERRRUN;
+  वापस LUA_ERRRUN;
 }
 
 
@@ -915,25 +915,25 @@ static int resume_error (lua_State *L, const char *msg, int narg) {
 ** function), plus erroneous cases: non-suspended coroutine or dead
 ** coroutine.
 */
-static void resume (lua_State *L, void *ud) {
-  int n = *(cast(int*, ud));  /* number of arguments */
-  StkId firstArg = L->top.p - n;  /* first argument */
+अटल व्योम resume (lua_State *L, व्योम *ud) {
+  पूर्णांक n = *(cast(पूर्णांक*, ud));  /* number of arguments */
+  StkId firstArg = L->शीर्ष.p - n;  /* first argument */
   CallInfo *ci = L->ci;
-  if (L->status == LUA_OK)  /* starting a coroutine? */
+  अगर (L->status == LUA_OK)  /* starting a coroutine? */
     ccall(L, firstArg - 1, LUA_MULTRET, 0);  /* just call its body */
-  else {  /* resuming from previous yield */
+  अन्यथा {  /* resuming from previous yield */
     lua_assert(L->status == LUA_YIELD);
     L->status = LUA_OK;  /* mark that it is running (again) */
-    if (isLua(ci)) {  /* yielded inside a hook? */
+    अगर (isLua(ci)) {  /* yielded inside a hook? */
       /* undo increment made by 'luaG_traceexec': instruction was not
          executed yet */
       lua_assert(ci->callstatus & CIST_HOOKYIELD);
       ci->u.l.savedpc--;
-      L->top.p = firstArg;  /* discard arguments */
+      L->शीर्ष.p = firstArg;  /* discard arguments */
       luaV_execute(L, ci);  /* just continue running Lua code */
     }
-    else {  /* 'common' yield */
-      if (ci->u.c.k != NULL) {  /* does it have a continuation function? */
+    अन्यथा {  /* 'common' yield */
+      अगर (ci->u.c.k != शून्य) {  /* does it have a continuation function? */
         lua_unlock(L);
         n = (*ci->u.c.k)(L, LUA_YIELD, ci->u.c.ctx); /* call continuation */
         lua_lock(L);
@@ -941,7 +941,7 @@ static void resume (lua_State *L, void *ud) {
       }
       luaD_poscall(L, ci, n);  /* finish 'luaD_call' */
     }
-    unroll(L, NULL);  /* run continuation */
+    unroll(L, शून्य);  /* run continuation */
   }
 }
 
@@ -954,92 +954,92 @@ static void resume (lua_State *L, void *ud) {
 ** (status == LUA_YIELD), or an unprotected error ('findpcall' doesn't
 ** find a recover point).
 */
-static TStatus precover (lua_State *L, TStatus status) {
+अटल TStatus precover (lua_State *L, TStatus status) {
   CallInfo *ci;
-  while (errorstatus(status) && (ci = findpcall(L)) != NULL) {
+  जबतक (errorstatus(status) && (ci = findpcall(L)) != शून्य) {
     L->ci = ci;  /* go down to recovery functions */
     setcistrecst(ci, status);  /* status to finish 'pcall' */
-    status = luaD_rawrunprotected(L, unroll, NULL);
+    status = luaD_rawrunprotected(L, unroll, शून्य);
   }
-  return status;
+  वापस status;
 }
 
 
-LUA_API int lua_resume (lua_State *L, lua_State *from, int nargs,
-                                      int *nresults) {
+LUA_API पूर्णांक lua_resume (lua_State *L, lua_State *from, पूर्णांक nargs,
+                                      पूर्णांक *nresults) {
   TStatus status;
   lua_lock(L);
-  if (L->status == LUA_OK) {  /* may be starting a coroutine */
-    if (L->ci != &L->base_ci)  /* not in base level? */
-      return resume_error(L, "cannot resume non-suspended coroutine", nargs);
-    else if (L->top.p - (L->ci->func.p + 1) == nargs)  /* no function? */
-      return resume_error(L, "cannot resume dead coroutine", nargs);
+  अगर (L->status == LUA_OK) {  /* may be starting a coroutine */
+    अगर (L->ci != &L->base_ci)  /* not in base level? */
+      वापस resume_error(L, "cannot resume non-suspended coroutine", nargs);
+    अन्यथा अगर (L->शीर्ष.p - (L->ci->func.p + 1) == nargs)  /* no function? */
+      वापस resume_error(L, "cannot resume dead coroutine", nargs);
   }
-  else if (L->status != LUA_YIELD)  /* ended with errors? */
-    return resume_error(L, "cannot resume dead coroutine", nargs);
+  अन्यथा अगर (L->status != LUA_YIELD)  /* ended with errors? */
+    वापस resume_error(L, "cannot resume dead coroutine", nargs);
   L->nCcalls = (from) ? getCcalls(from) : 0;
-  if (getCcalls(L) >= LUAI_MAXCCALLS)
-    return resume_error(L, "C stack overflow", nargs);
+  अगर (getCcalls(L) >= LUAI_MAXCCALLS)
+    वापस resume_error(L, "C stack overflow", nargs);
   L->nCcalls++;
   luai_userstateresume(L, nargs);
   api_checkpop(L, (L->status == LUA_OK) ? nargs + 1 : nargs);
   status = luaD_rawrunprotected(L, resume, &nargs);
    /* continue running after recoverable errors */
   status = precover(L, status);
-  if (l_likely(!errorstatus(status)))
+  अगर (l_likely(!errorstatus(status)))
     lua_assert(status == L->status);  /* normal end or yield */
-  else {  /* unrecoverable error */
+  अन्यथा {  /* unrecoverable error */
     L->status = status;  /* mark thread as 'dead' */
-    luaD_seterrorobj(L, status, L->top.p);  /* push error message */
-    L->ci->top.p = L->top.p;
+    luaD_seterrorobj(L, status, L->शीर्ष.p);  /* push error message */
+    L->ci->शीर्ष.p = L->शीर्ष.p;
   }
   *nresults = (status == LUA_YIELD) ? L->ci->u2.nyield
-                                    : cast_int(L->top.p - (L->ci->func.p + 1));
+                                    : cast_int(L->शीर्ष.p - (L->ci->func.p + 1));
   lua_unlock(L);
-  return APIstatus(status);
+  वापस APIstatus(status);
 }
 
 
-LUA_API int lua_isyieldable (lua_State *L) {
-  return yieldable(L);
+LUA_API पूर्णांक lua_isyieldable (lua_State *L) {
+  वापस yieldable(L);
 }
 
 
-LUA_API int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API पूर्णांक lua_yieldk (lua_State *L, पूर्णांक nresults, lua_KContext ctx,
                         lua_KFunction k) {
   CallInfo *ci;
   luai_userstateyield(L, nresults);
   lua_lock(L);
   ci = L->ci;
   api_checkpop(L, nresults);
-  if (l_unlikely(!yieldable(L))) {
-    if (L != mainthread(G(L)))
+  अगर (l_unlikely(!yieldable(L))) {
+    अगर (L != mainthread(G(L)))
       luaG_runerror(L, "attempt to yield across a C-call boundary");
-    else
+    अन्यथा
       luaG_runerror(L, "attempt to yield from outside a coroutine");
   }
   L->status = LUA_YIELD;
   ci->u2.nyield = nresults;  /* save number of results */
-  if (isLua(ci)) {  /* inside a hook? */
+  अगर (isLua(ci)) {  /* inside a hook? */
     lua_assert(!isLuacode(ci));
     api_check(L, nresults == 0, "hooks cannot yield values");
-    api_check(L, k == NULL, "hooks cannot continue after yielding");
+    api_check(L, k == शून्य, "hooks cannot continue after yielding");
   }
-  else {
-    if ((ci->u.c.k = k) != NULL)  /* is there a continuation? */
+  अन्यथा {
+    अगर ((ci->u.c.k = k) != शून्य)  /* is there a continuation? */
       ci->u.c.ctx = ctx;  /* save context */
     luaD_throw(L, LUA_YIELD);
   }
   lua_assert(ci->callstatus & CIST_HOOKED);  /* must be inside a hook */
   lua_unlock(L);
-  return 0;  /* return to 'luaD_hook' */
+  वापस 0;  /* return to 'luaD_hook' */
 }
 
 
 /*
 ** Auxiliary structure to call 'luaF_close' in protected mode.
 */
-struct CloseP {
+काष्ठा CloseP {
   StkId level;
   TStatus status;
 };
@@ -1048,8 +1048,8 @@ struct CloseP {
 /*
 ** Auxiliary function to call 'luaF_close' in protected mode.
 */
-static void closepaux (lua_State *L, void *ud) {
-  struct CloseP *pcl = cast(struct CloseP *, ud);
+अटल व्योम closepaux (lua_State *L, व्योम *ud) {
+  काष्ठा CloseP *pcl = cast(काष्ठा CloseP *, ud);
   luaF_close(L, pcl->level, pcl->status, 0);
 }
 
@@ -1058,16 +1058,16 @@ static void closepaux (lua_State *L, void *ud) {
 ** Calls 'luaF_close' in protected mode. Return the original status
 ** or, in case of errors, the new status.
 */
-TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level, TStatus status) {
+TStatus luaD_closeprotected (lua_State *L, सूचक_भेद_प्रकार level, TStatus status) {
   CallInfo *old_ci = L->ci;
   lu_byte old_allowhooks = L->allowhook;
-  for (;;) {  /* keep closing upvalues until no more errors */
-    struct CloseP pcl;
+  क्रम (;;) {  /* keep closing upvalues until no more errors */
+    काष्ठा CloseP pcl;
     pcl.level = restorestack(L, level); pcl.status = status;
     status = luaD_rawrunprotected(L, &closepaux, &pcl);
-    if (l_likely(status == LUA_OK))  /* no more errors? */
-      return pcl.status;
-    else {  /* an error occurred; restore saved state and repeat */
+    अगर (l_likely(status == LUA_OK))  /* no more errors? */
+      वापस pcl.status;
+    अन्यथा {  /* an error occurred; restore saved state and repeat */
       L->ci = old_ci;
       L->allowhook = old_allowhooks;
     }
@@ -1080,23 +1080,23 @@ TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level, TStatus status) {
 ** thread information ('allowhook', etc.) and in particular
 ** its stack level in case of errors.
 */
-TStatus luaD_pcall (lua_State *L, Pfunc func, void *u, ptrdiff_t old_top,
-                                  ptrdiff_t ef) {
+TStatus luaD_pcall (lua_State *L, Pfunc func, व्योम *u, सूचक_भेद_प्रकार old_शीर्ष,
+                                  सूचक_भेद_प्रकार ef) {
   TStatus status;
   CallInfo *old_ci = L->ci;
   lu_byte old_allowhooks = L->allowhook;
-  ptrdiff_t old_errfunc = L->errfunc;
+  सूचक_भेद_प्रकार old_errfunc = L->errfunc;
   L->errfunc = ef;
   status = luaD_rawrunprotected(L, func, u);
-  if (l_unlikely(status != LUA_OK)) {  /* an error occurred? */
+  अगर (l_unlikely(status != LUA_OK)) {  /* an error occurred? */
     L->ci = old_ci;
     L->allowhook = old_allowhooks;
-    status = luaD_closeprotected(L, old_top, status);
-    luaD_seterrorobj(L, status, restorestack(L, old_top));
+    status = luaD_closeprotected(L, old_शीर्ष, status);
+    luaD_seterrorobj(L, status, restorestack(L, old_शीर्ष));
     luaD_shrinkstack(L);   /* restore stack size in case of overflow */
   }
   L->errfunc = old_errfunc;
-  return status;
+  वापस status;
 }
 
 
@@ -1104,17 +1104,17 @@ TStatus luaD_pcall (lua_State *L, Pfunc func, void *u, ptrdiff_t old_top,
 /*
 ** Execute a protected parser.
 */
-struct SParser {  /* data to 'f_parser' */
+काष्ठा SParser {  /* data to 'f_parser' */
   ZIO *z;
   Mbuffer buff;  /* dynamic structure used by the scanner */
   Dyndata dyd;  /* dynamic structures used by the parser */
-  const char *mode;
-  const char *name;
+  स्थिर अक्षर *mode;
+  स्थिर अक्षर *name;
 };
 
 
-static void checkmode (lua_State *L, const char *mode, const char *x) {
-  if (strchr(mode, x[0]) == NULL) {
+अटल व्योम checkmode (lua_State *L, स्थिर अक्षर *mode, स्थिर अक्षर *x) {
+  अगर (म_अक्षर(mode, x[0]) == शून्य) {
     luaO_pushfstring(L,
        "attempt to load a %s chunk (mode is '%s')", x, mode);
     luaD_throw(L, LUA_ERRSYNTAX);
@@ -1126,31 +1126,31 @@ static void checkmode (lua_State *L, const char *mode, const char *x) {
 ** Before the first call to the reader function, Lua reserves a slot
 ** with a table for anchoring stuff.
 */
-static void f_parser (lua_State *L, void *ud) {
+अटल व्योम f_parser (lua_State *L, व्योम *ud) {
   LClosure *cl;
-  struct SParser *p = cast(struct SParser *, ud);
-  const char *mode = p->mode ? p->mode : "bt";
-  int c;
+  काष्ठा SParser *p = cast(काष्ठा SParser *, ud);
+  स्थिर अक्षर *mode = p->mode ? p->mode : "bt";
+  पूर्णांक c;
   Table *anchor;
-  ptrdiff_t otop = savestack(L, L->top.p);  /* original top */
+  सूचक_भेद_प्रकार otop = savestack(L, L->शीर्ष.p);  /* original top */
   luaD_checkstack(L, 2);
   anchor = luaH_new(L);  /* create the anchor table */
-  sethvalue2s(L, L->top.p++, anchor);  /* anchor the anchor table */
+  sethvalue2s(L, L->शीर्ष.p++, anchor);  /* anchor the anchor table */
   c = zgetc(p->z);  /* read first character */
-  if (c == LUA_SIGNATURE[0]) {
-    int fixed = 0;
-    if (strchr(mode, 'B') != NULL)
+  अगर (c == LUA_SIGNATURE[0]) {
+    पूर्णांक fixed = 0;
+    अगर (म_अक्षर(mode, 'B') != शून्य)
       fixed = 1;
-    else
+    अन्यथा
       checkmode(L, mode, "binary");
     cl = luaU_undump(L, p->z, anchor, p->name, fixed);
   }
-  else {
+  अन्यथा {
     checkmode(L, mode, "text");
     cl = luaY_parser(L, p->z, anchor, &p->buff, &p->dyd, p->name, c);
   }
-  L->top.p = restorestack(L, otop);  /* restore stack */
-  setclLvalue2s(L, L->top.p++, cl);  /* push closure */
+  L->शीर्ष.p = restorestack(L, otop);  /* restore stack */
+  setclLvalue2s(L, L->शीर्ष.p++, cl);  /* push closure */
   lua_assert(cl->nupvalues == cl->p->sizeupvalues);
   luaF_initupvals(L, cl);
 }
@@ -1161,32 +1161,32 @@ static void f_parser (lua_State *L, void *ud) {
 ** temporarily in the stack, as luaH_set may call an emergency GC.
 ** Then, add it in the table with itself as its key.
 */
-void luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj) {
-  setgcovalue(L, s2v(L->top.p++), obj);  /* temporary anchor in the stack */
-  luaH_set(L, anchor, s2v(L->top.p - 1), s2v(L->top.p - 1));
+व्योम luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj) {
+  setgcovalue(L, s2v(L->शीर्ष.p++), obj);  /* temporary anchor in the stack */
+  luaH_set(L, anchor, s2v(L->शीर्ष.p - 1), s2v(L->शीर्ष.p - 1));
   /* Because this is a new key, luaH_set will call the GC barrier, so
      we don't need to call the barrier again here */
-  L->top.p--;
+  L->शीर्ष.p--;
 }
 
 
-TStatus luaD_protectedparser (lua_State *L, ZIO *z, const char *name,
-                                            const char *mode) {
-  struct SParser p;
+TStatus luaD_protectedparser (lua_State *L, ZIO *z, स्थिर अक्षर *name,
+                                            स्थिर अक्षर *mode) {
+  काष्ठा SParser p;
   TStatus status;
   incnny(L);  /* cannot yield during parsing */
   p.z = z; p.name = name; p.mode = mode;
-  p.dyd.actvar.arr = NULL; p.dyd.actvar.size = 0;
-  p.dyd.gt.arr = NULL; p.dyd.gt.size = 0;
-  p.dyd.label.arr = NULL; p.dyd.label.size = 0;
+  p.dyd.actvar.arr = शून्य; p.dyd.actvar.आकार = 0;
+  p.dyd.gt.arr = शून्य; p.dyd.gt.आकार = 0;
+  p.dyd.label.arr = शून्य; p.dyd.label.आकार = 0;
   luaZ_initbuffer(L, &p.buff);
-  status = luaD_pcall(L, f_parser, &p, savestack(L, L->top.p), L->errfunc);
+  status = luaD_pcall(L, f_parser, &p, savestack(L, L->शीर्ष.p), L->errfunc);
   luaZ_freebuffer(L, &p.buff);
-  luaM_freearray(L, p.dyd.actvar.arr, cast_sizet(p.dyd.actvar.size));
-  luaM_freearray(L, p.dyd.gt.arr, cast_sizet(p.dyd.gt.size));
-  luaM_freearray(L, p.dyd.label.arr, cast_sizet(p.dyd.label.size));
+  luaM_freearray(L, p.dyd.actvar.arr, cast_sizet(p.dyd.actvar.आकार));
+  luaM_freearray(L, p.dyd.gt.arr, cast_sizet(p.dyd.gt.आकार));
+  luaM_freearray(L, p.dyd.label.arr, cast_sizet(p.dyd.label.आकार));
   decnny(L);
-  return status;
+  वापस status;
 }
 
 

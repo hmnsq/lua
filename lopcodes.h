@@ -4,11 +4,11 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lopcodes_h
-#define lopcodes_h
+#अगर_अघोषित lopcodes_h
+#घोषणा lopcodes_h
 
-#include "llimits.h"
-#include "lobject.h"
+#समावेश "llimits.h"
+#समावेश "lobject.h"
 
 
 /*===========================================================================
@@ -33,37 +33,37 @@ isJ                           sJ (signed)(25)            |   Op(7)     |
 
 
 /* basic instruction formats */
-enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
+क्रमागत OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 
 
 /*
 ** size and position of opcode arguments.
 */
-#define SIZE_C		8
-#define SIZE_vC		10
-#define SIZE_B		8
-#define SIZE_vB		6
-#define SIZE_Bx		(SIZE_C + SIZE_B + 1)
-#define SIZE_A		8
-#define SIZE_Ax		(SIZE_Bx + SIZE_A)
-#define SIZE_sJ		(SIZE_Bx + SIZE_A)
+#घोषणा आकार_C		8
+#घोषणा आकार_v_C		10
+#घोषणा आकार_B		8
+#घोषणा आकार_v_B		6
+#घोषणा आकार_Bx		(आकार_C + आकार_B + 1)
+#घोषणा आकार_A		8
+#घोषणा आकार_Ax		(आकार_Bx + आकार_A)
+#घोषणा आकार_s_J		(आकार_Bx + आकार_A)
 
-#define SIZE_OP		7
+#घोषणा आकार_OP		7
 
-#define POS_OP		0
+#घोषणा POS_OP		0
 
-#define POS_A		(POS_OP + SIZE_OP)
-#define POS_k		(POS_A + SIZE_A)
-#define POS_B		(POS_k + 1)
-#define POS_vB		(POS_k + 1)
-#define POS_C		(POS_B + SIZE_B)
-#define POS_vC		(POS_vB + SIZE_vB)
+#घोषणा POS_A		(POS_OP + आकार_OP)
+#घोषणा POS_k		(POS_A + आकार_A)
+#घोषणा POS_B		(POS_k + 1)
+#घोषणा POS_vB		(POS_k + 1)
+#घोषणा POS_C		(POS_B + आकार_B)
+#घोषणा POS_vC		(POS_vB + आकार_v_B)
 
-#define POS_Bx		POS_k
+#घोषणा POS_Bx		POS_k
 
-#define POS_Ax		POS_A
+#घोषणा POS_Ax		POS_A
 
-#define POS_sJ		POS_A
+#घोषणा POS_sJ		POS_A
 
 
 /*
@@ -76,143 +76,143 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** Check whether type 'int' has at least 'b' + 1 bits.
 ** 'b' < 32; +1 for the sign bit.
 */
-#define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
+#घोषणा L_INTHASBITS(b)		((अच_पूर्णांक_उच्च >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
-#define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
-#define MAXARG_Bx	INT_MAX
-#endif
+#अगर L_INTHASBITS(आकार_Bx)
+#घोषणा MAXARG_Bx	((1<<आकार_Bx)-1)
+#अन्यथा
+#घोषणा MAXARG_Bx	पूर्णांक_उच्च
+#पूर्ण_अगर
 
-#define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
-
-
-#if L_INTHASBITS(SIZE_Ax)
-#define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
-#define MAXARG_Ax	INT_MAX
-#endif
-
-#if L_INTHASBITS(SIZE_sJ)
-#define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
-#define MAXARG_sJ	INT_MAX
-#endif
-
-#define OFFSET_sJ	(MAXARG_sJ >> 1)
+#घोषणा OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#define MAXARG_A	((1<<SIZE_A)-1)
-#define MAXARG_B	((1<<SIZE_B)-1)
-#define MAXARG_vB	((1<<SIZE_vB)-1)
-#define MAXARG_C	((1<<SIZE_C)-1)
-#define MAXARG_vC	((1<<SIZE_vC)-1)
-#define OFFSET_sC	(MAXARG_C >> 1)
+#अगर L_INTHASBITS(आकार_Ax)
+#घोषणा MAXARG_Ax	((1<<आकार_Ax)-1)
+#अन्यथा
+#घोषणा MAXARG_Ax	पूर्णांक_उच्च
+#पूर्ण_अगर
 
-#define int2sC(i)	((i) + OFFSET_sC)
-#define sC2int(i)	((i) - OFFSET_sC)
+#अगर L_INTHASBITS(आकार_s_J)
+#घोषणा MAXARG_sJ	((1 << आकार_s_J) - 1)
+#अन्यथा
+#घोषणा MAXARG_sJ	पूर्णांक_उच्च
+#पूर्ण_अगर
+
+#घोषणा OFFSET_sJ	(MAXARG_sJ >> 1)
+
+
+#घोषणा MAXARG_A	((1<<आकार_A)-1)
+#घोषणा MAXARG_B	((1<<आकार_B)-1)
+#घोषणा MAXARG_vB	((1<<आकार_v_B)-1)
+#घोषणा MAXARG_C	((1<<आकार_C)-1)
+#घोषणा MAXARG_vC	((1<<आकार_v_C)-1)
+#घोषणा OFFSET_sC	(MAXARG_C >> 1)
+
+#घोषणा int2sC(i)	((i) + OFFSET_sC)
+#घोषणा sC2int(i)	((i) - OFFSET_sC)
 
 
 /* creates a mask with 'n' 1 bits at position 'p' */
-#define MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
+#घोषणा MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
 
 /* creates a mask with 'n' 0 bits at position 'p' */
-#define MASK0(n,p)	(~MASK1(n,p))
+#घोषणा MASK0(n,p)	(~MASK1(n,p))
 
 /*
 ** the following macros help to manipulate instructions
 */
 
-#define GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(SIZE_OP,0)))
-#define SET_OPCODE(i,o)	((i) = (((i)&MASK0(SIZE_OP,POS_OP)) | \
-		((cast_Inst(o)<<POS_OP)&MASK1(SIZE_OP,POS_OP))))
+#घोषणा GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(आकार_OP,0)))
+#घोषणा SET_OPCODE(i,o)	((i) = (((i)&MASK0(आकार_OP,POS_OP)) | \
+		((cast_Inst(o)<<POS_OP)&MASK1(आकार_OP,POS_OP))))
 
-#define checkopm(i,m)	(getOpMode(GET_OPCODE(i)) == m)
-
-
-#define getarg(i,pos,size)	(cast_int(((i)>>(pos)) & MASK1(size,0)))
-#define setarg(i,v,pos,size)	((i) = (((i)&MASK0(size,pos)) | \
-                ((cast_Inst(v)<<pos)&MASK1(size,pos))))
-
-#define GETARG_A(i)	getarg(i, POS_A, SIZE_A)
-#define SETARG_A(i,v)	setarg(i, v, POS_A, SIZE_A)
-
-#define GETARG_B(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_B, SIZE_B))
-#define GETARG_vB(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, SIZE_vB))
-#define GETARG_sB(i)	sC2int(GETARG_B(i))
-#define SETARG_B(i,v)	setarg(i, v, POS_B, SIZE_B)
-#define SETARG_vB(i,v)	setarg(i, v, POS_vB, SIZE_vB)
-
-#define GETARG_C(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_C, SIZE_C))
-#define GETARG_vC(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, SIZE_vC))
-#define GETARG_sC(i)	sC2int(GETARG_C(i))
-#define SETARG_C(i,v)	setarg(i, v, POS_C, SIZE_C)
-#define SETARG_vC(i,v)	setarg(i, v, POS_vC, SIZE_vC)
-
-#define TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
-#define GETARG_k(i)	getarg(i, POS_k, 1)
-#define SETARG_k(i,v)	setarg(i, v, POS_k, 1)
-
-#define GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, SIZE_Bx))
-#define SETARG_Bx(i,v)	setarg(i, v, POS_Bx, SIZE_Bx)
-
-#define GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, SIZE_Ax))
-#define SETARG_Ax(i,v)	setarg(i, v, POS_Ax, SIZE_Ax)
-
-#define GETARG_sBx(i)  \
-	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, SIZE_Bx) - OFFSET_sBx)
-#define SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+OFFSET_sBx))
-
-#define GETARG_sJ(i)  \
-	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, SIZE_sJ) - OFFSET_sJ)
-#define SETARG_sJ(i,j) \
-	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, SIZE_sJ)
+#घोषणा checkopm(i,m)	(getOpMode(GET_OPCODE(i)) == m)
 
 
-#define CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#घोषणा getarg(i,pos,आकार)	(cast_int(((i)>>(pos)) & MASK1(आकार,0)))
+#घोषणा setarg(i,v,pos,आकार)	((i) = (((i)&MASK0(आकार,pos)) | \
+                ((cast_Inst(v)<<pos)&MASK1(आकार,pos))))
+
+#घोषणा GETARG_A(i)	getarg(i, POS_A, आकार_A)
+#घोषणा SETARG_A(i,v)	setarg(i, v, POS_A, आकार_A)
+
+#घोषणा GETARG_B(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_B, आकार_B))
+#घोषणा GETARG_vB(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, आकार_v_B))
+#घोषणा GETARG_sB(i)	sC2int(GETARG_B(i))
+#घोषणा SETARG_B(i,v)	setarg(i, v, POS_B, आकार_B)
+#घोषणा SETARG_vB(i,v)	setarg(i, v, POS_vB, आकार_v_B)
+
+#घोषणा GETARG_C(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_C, आकार_C))
+#घोषणा GETARG_vC(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, आकार_v_C))
+#घोषणा GETARG_sC(i)	sC2int(GETARG_C(i))
+#घोषणा SETARG_C(i,v)	setarg(i, v, POS_C, आकार_C)
+#घोषणा SETARG_vC(i,v)	setarg(i, v, POS_vC, आकार_v_C)
+
+#घोषणा TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
+#घोषणा GETARG_k(i)	getarg(i, POS_k, 1)
+#घोषणा SETARG_k(i,v)	setarg(i, v, POS_k, 1)
+
+#घोषणा GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, आकार_Bx))
+#घोषणा SETARG_Bx(i,v)	setarg(i, v, POS_Bx, आकार_Bx)
+
+#घोषणा GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, आकार_Ax))
+#घोषणा SETARG_Ax(i,v)	setarg(i, v, POS_Ax, आकार_Ax)
+
+#घोषणा GETARG_sBx(i)  \
+	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, आकार_Bx) - OFFSET_sBx)
+#घोषणा SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+OFFSET_sBx))
+
+#घोषणा GETARG_sJ(i)  \
+	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, आकार_s_J) - OFFSET_sJ)
+#घोषणा SETARG_sJ(i,j) \
+	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, आकार_s_J)
+
+
+#घोषणा CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_B) \
 			| (cast_Inst(c)<<POS_C) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#घोषणा CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_vB) \
 			| (cast_Inst(c)<<POS_vC) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
+#घोषणा CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(bc)<<POS_Bx))
 
-#define CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
+#घोषणा CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_Ax))
 
-#define CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
+#घोषणा CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
 			| (cast_Inst(j) << POS_sJ) \
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
-#define MAXINDEXRK	MAXARG_B
-#endif
+#अगर !defined(MAXINDEXRK)  /* (for debugging only) */
+#घोषणा MAXINDEXRK	MAXARG_B
+#पूर्ण_अगर
 
 
 /*
 ** Maximum size for the stack of a Lua function. It must fit in 8 bits.
 ** The highest valid register is one less than this value.
 */
-#define MAX_FSTACK	MAXARG_A
+#घोषणा MAX_FSTACK	MAXARG_A
 
 /*
 ** Invalid register (one more than last valid register).
 */
-#define NO_REG		MAX_FSTACK
+#घोषणा NO_REG		MAX_FSTACK
 
 
 
@@ -228,7 +228,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** See "Notes" below for more information about some instructions.
 */
 
-typedef enum {
+प्रकार क्रमागत {
 /*----------------------------------------------------------------------
   name		args	description
 ------------------------------------------------------------------------*/
@@ -348,7 +348,7 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 } OpCode;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#घोषणा अंक_OPCODES	((पूर्णांक)(OP_EXTRAARG) + 1)
 
 
 
@@ -422,23 +422,23 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 ** bit 7: instruction is an MM instruction (call a metamethod)
 */
 
-LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
+LUAI_DDEC(स्थिर lu_byte luaP_opmodes[अंक_OPCODES];)
 
-#define getOpMode(m)	(cast(enum OpMode, luaP_opmodes[m] & 7))
-#define testAMode(m)	(luaP_opmodes[m] & (1 << 3))
-#define testTMode(m)	(luaP_opmodes[m] & (1 << 4))
-#define testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
+#घोषणा getOpMode(m)	(cast(क्रमागत OpMode, luaP_opmodes[m] & 7))
+#घोषणा testAMode(m)	(luaP_opmodes[m] & (1 << 3))
+#घोषणा testTMode(m)	(luaP_opmodes[m] & (1 << 4))
+#घोषणा testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
 
 
 /* Check whether instruction sets top for next instruction, that is,
 ** it results in multiple values. Used only for tests.
 */
-#define luaP_isOT(i)  \
+#घोषणा luaP_isOT(i)  \
 	(GET_OPCODE(i) == OP_TAILCALL || \
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC पूर्णांक luaP_isIT (Instruction i);
 
 
-#endif
+#पूर्ण_अगर

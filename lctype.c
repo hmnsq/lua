@@ -4,28 +4,28 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lctype_c
-#define LUA_CORE
+#घोषणा lctype_c
+#घोषणा LUA_CORE
 
-#include "lprefix.h"
-
-
-#include "lctype.h"
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
+#समावेश "lprefix.h"
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#समावेश "lctype.h"
+
+#अगर !LUA_USE_CTYPE	/* { */
+
+#समावेश <limits.h>
+
+
+#अगर defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
-#define NONA		0x01
-#else
-#define NONA		0x00	/* default */
-#endif
+#घोषणा NONA		0x01
+#अन्यथा
+#घोषणा NONA		0x00	/* default */
+#पूर्ण_अगर
 
 
-LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
+LUAI_DDEF स्थिर lu_byte luai_ctype_[अच_अक्षर_उच्च + 2] = {
   0x00,  /* EOZ */
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,	/* 0. */
   0x00,  0x08,  0x08,  0x08,  0x08,  0x08,  0x00,  0x00,
@@ -61,4 +61,4 @@ LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00
 };
 
-#endif			/* } */
+#पूर्ण_अगर			/* } */

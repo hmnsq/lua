@@ -4,18 +4,18 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llimits_h
-#define llimits_h
+#अगर_अघोषित llimits_h
+#घोषणा llimits_h
 
 
-#include <limits.h>
-#include <stddef.h>
+#समावेश <limits.h>
+#समावेश <stddef.h>
 
 
-#include "lua.h"
+#समावेश "lua.h"
 
 
-#define l_numbits(t)	cast_int(sizeof(t) * CHAR_BIT)
+#घोषणा l_numbits(t)	cast_int(माप(t) * अक्षर_बिट)
 
 /*
 ** 'l_mem' is a signed integer big enough to count the total memory
@@ -23,50 +23,50 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
-typedef LUAI_MEM l_mem;
-typedef LUAI_UMEM lu_mem;
-#elif LUAI_IS32INT	/* }{ */
-typedef ptrdiff_t l_mem;
-typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
-typedef long l_mem;
-typedef unsigned long lu_mem;
-#endif				/* } */
+#अगर defined(LUAI_MEM)		/* { external definitions? */
+प्रकार LUAI_MEM l_mem;
+प्रकार LUAI_UMEM lu_mem;
+#या_अगर LUAI_IS32INT	/* }{ */
+प्रकार सूचक_भेद_प्रकार l_mem;
+प्रकार माप_प्रकार lu_mem;
+#अन्यथा  /* 16-bit ints */	/* }{ */
+प्रकार दीर्घ l_mem;
+प्रकार अचिन्हित दीर्घ lu_mem;
+#पूर्ण_अगर				/* } */
 
-#define MAX_LMEM  \
+#घोषणा MAX_LMEM  \
 	cast(l_mem, (cast(lu_mem, 1) << (l_numbits(l_mem) - 1)) - 1)
 
 
 /* chars used as small naturals (so that 'char' is reserved for characters) */
-typedef unsigned char lu_byte;
-typedef signed char ls_byte;
+प्रकार अचिन्हित अक्षर lu_byte;
+प्रकार चिन्हित अक्षर ls_byte;
 
 
 /* Type for thread status/error codes */
-typedef lu_byte TStatus;
+प्रकार lu_byte TStatus;
 
 /* The C API still uses 'int' for status/error codes */
-#define APIstatus(st)	cast_int(st)
+#घोषणा APIstatus(st)	cast_int(st)
 
 /* maximum value for size_t */
-#define MAX_SIZET	((size_t)(~(size_t)0))
+#घोषणा MAX_SIZET	((माप_प्रकार)(~(माप_प्रकार)0))
 
 /*
 ** Maximum size for strings and userdata visible for Lua; should be
 ** representable as a lua_Integer and as a size_t.
 */
-#define MAX_SIZE	(sizeof(size_t) < sizeof(lua_Integer) ? MAX_SIZET \
+#घोषणा MAX_आकार	(माप(माप_प्रकार) < माप(lua_Integer) ? MAX_SIZET \
 			  : cast_sizet(LUA_MAXINTEGER))
 
 /*
 ** test whether an unsigned value is a power of 2 (or zero)
 */
-#define ispow2(x)	(((x) & ((x) - 1)) == 0)
+#घोषणा ispow2(x)	(((x) & ((x) - 1)) == 0)
 
 
 /* number of chars of a literal string without the ending \0 */
-#define LL(x)   (sizeof(x)/sizeof(char) - 1)
+#घोषणा LL(x)   (माप(x)/माप(अक्षर) - 1)
 
 
 /*
@@ -75,157 +75,157 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#अगर !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
-#define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
-#define L_P2I	uintmax_t  /* use the largest available integer */
-#endif
-#else  /* C89 option */
-#define L_P2I	size_t
-#endif
+#समावेश <stdint.h>
+#अगर defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#घोषणा L_P2I	uintptr_t
+#अन्यथा  /* no 'intptr'? */
+#घोषणा L_P2I	uintmax_t  /* use the largest available integer */
+#पूर्ण_अगर
+#अन्यथा  /* C89 option */
+#घोषणा L_P2I	माप_प्रकार
+#पूर्ण_अगर
 
-#define point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
+#घोषणा point2uint(p)	cast_uint((L_P2I)(p) & अच_पूर्णांक_उच्च)
 
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+प्रकार LUAI_UACNUMBER l_uac_संख्या;
+प्रकार LUAI_UACINT l_uacInt;
 
 
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
-#undef NDEBUG
-#include <assert.h>
-#define lua_assert(c)           assert(c)
-#define assert_code(c)		c
-#endif
+#अगर defined LUAI_ASSERT
+#अघोषित न_संशोधन
+#समावेश <assert.h>
+#घोषणा lua_assert(c)           निश्चित(c)
+#घोषणा assert_code(c)		c
+#पूर्ण_अगर
 
-#if defined(lua_assert)
-#else
-#define lua_assert(c)		((void)0)
-#define assert_code(c)		((void)0)
-#endif
+#अगर defined(lua_assert)
+#अन्यथा
+#घोषणा lua_assert(c)		((व्योम)0)
+#घोषणा assert_code(c)		((व्योम)0)
+#पूर्ण_अगर
 
-#define check_exp(c,e)		(lua_assert(c), (e))
+#घोषणा check_exp(c,e)		(lua_assert(c), (e))
 /* to avoid problems with conditions too long */
-#define lua_longassert(c)	assert_code((c) ? (void)0 : lua_assert(0))
+#घोषणा lua_longassert(c)	assert_code((c) ? (व्योम)0 : lua_assert(0))
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
-#define UNUSED(x)	((void)(x))
-#endif
+#अगर !defined(UNUSED)
+#घोषणा UNUSED(x)	((व्योम)(x))
+#पूर्ण_अगर
 
 
 /* type casts (a macro highlights casts in the code) */
-#define cast(t, exp)	((t)(exp))
+#घोषणा cast(t, exp)	((t)(exp))
 
-#define cast_void(i)	cast(void, (i))
-#define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
-#define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
-#define cast_byte(i)	cast(lu_byte, (i))
-#define cast_uchar(i)	cast(unsigned char, (i))
-#define cast_char(i)	cast(char, (i))
-#define cast_charp(i)	cast(char *, (i))
-#define cast_sizet(i)	cast(size_t, (i))
-#define cast_Integer(i)	cast(lua_Integer, (i))
-#define cast_Inst(i)	cast(Instruction, (i))
+#घोषणा cast_void(i)	cast(व्योम, (i))
+#घोषणा cast_voidp(i)	cast(व्योम *, (i))
+#घोषणा cast_अंक(i)	cast(lua_संख्या, (i))
+#घोषणा cast_int(i)	cast(पूर्णांक, (i))
+#घोषणा cast_short(i)	cast(लघु, (i))
+#घोषणा cast_uint(i)	cast(अचिन्हित पूर्णांक, (i))
+#घोषणा cast_byte(i)	cast(lu_byte, (i))
+#घोषणा cast_uchar(i)	cast(अचिन्हित अक्षर, (i))
+#घोषणा cast_char(i)	cast(अक्षर, (i))
+#घोषणा cast_charp(i)	cast(अक्षर *, (i))
+#घोषणा cast_sizet(i)	cast(माप_प्रकार, (i))
+#घोषणा cast_Integer(i)	cast(lua_Integer, (i))
+#घोषणा cast_Inst(i)	cast(Instruction, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
-#define l_castS2U(i)	((lua_Unsigned)(i))
-#endif
+#अगर !defined(l_castS2U)
+#घोषणा l_castS2U(i)	((lua_Unsigned)(i))
+#पूर्ण_अगर
 
 /*
 ** cast a lua_Unsigned to a signed lua_Integer; this cast is
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
-#define l_castU2S(i)	((lua_Integer)(i))
-#endif
+#अगर !defined(l_castU2S)
+#घोषणा l_castU2S(i)	((lua_Integer)(i))
+#पूर्ण_अगर
 
 /*
 ** cast a size_t to lua_Integer: These casts are always valid for
 ** sizes of Lua objects (see MAX_SIZE)
 */
-#define cast_st2S(sz)	((lua_Integer)(sz))
+#घोषणा cast_st2S(sz)	((lua_Integer)(sz))
 
 /* Cast a ptrdiff_t to size_t, when it is known that the minuend
 ** comes from the subtrahend (the base)
 */
-#define ct_diff2sz(df)	((size_t)(df))
+#घोषणा ct_diff2sz(df)	((माप_प्रकार)(df))
 
 /* ptrdiff_t to lua_Integer */
-#define ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
+#घोषणा ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
 
 /*
 ** Special type equivalent to '(void*)' for functions (to suppress some
 ** warnings when converting function pointers)
 */
-typedef void (*voidf)(void);
+प्रकार व्योम (*voidf)(व्योम);
 
 /*
 ** Macro to convert pointer-to-void* to pointer-to-function. This cast
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
-#define cast_func(p) (__extension__ (voidf)(p))
-#else
-#define cast_func(p) ((voidf)(p))
-#endif
+#अगर defined(__GNUC__)
+#घोषणा cast_func(p) (__extension__ (voidf)(p))
+#अन्यथा
+#घोषणा cast_func(p) ((voidf)(p))
+#पूर्ण_अगर
 
 
 
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#अगर !defined(l_noret)
 
-#if defined(__GNUC__)
-#define l_noret		void __attribute__((noreturn))
-#elif defined(_MSC_VER) && _MSC_VER >= 1200
-#define l_noret		void __declspec(noreturn)
-#else
-#define l_noret		void
-#endif
+#अगर defined(__GNUC__)
+#घोषणा l_noret		व्योम __attribute__((noreturn))
+#या_अगर defined(_MSC_VER) && _MSC_VER >= 1200
+#घोषणा l_noret		व्योम __declspec(noreturn)
+#अन्यथा
+#घोषणा l_noret		व्योम
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर
 
 
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
-#define l_inline	inline
-#elif defined(__GNUC__)
-#define l_inline	__inline__
-#else
-#define l_inline	/* empty */
-#endif
+#अगर !defined(LUA_USE_C89)
+#घोषणा l_inline	अंतरभूत
+#या_अगर defined(__GNUC__)
+#घोषणा l_inline	__inline__
+#अन्यथा
+#घोषणा l_inline	/* empty */
+#पूर्ण_अगर
 
-#define l_sinline	static l_inline
+#घोषणा l_sinline	अटल l_inline
 
 
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
-typedef unsigned long l_uint32;
-#endif
+#अगर LUAI_IS32INT
+प्रकार अचिन्हित पूर्णांक l_uint32;
+#अन्यथा
+प्रकार अचिन्हित दीर्घ l_uint32;
+#पूर्ण_अगर
 
 
 /*
@@ -233,14 +233,14 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
-#define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
-#endif
+#अगर !defined(luai_numidiv)
+#घोषणा luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
+#पूर्ण_अगर
 
 /* float division */
-#if !defined(luai_numdiv)
-#define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
-#endif
+#अगर !defined(luai_numdiv)
+#घोषणा luai_numdiv(L,a,b)      ((व्योम)L, (a)/(b))
+#पूर्ण_अगर
 
 /*
 ** modulo: defined as 'a - floor(a/b)*b'; the direct computation
@@ -253,31 +253,31 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
-#define luai_nummod(L,a,b,m)  \
-  { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
-#endif
+#अगर !defined(luai_nummod)
+#घोषणा luai_nummod(L,a,b,m)  \
+  { (व्योम)L; (m) = l_mathop(भ_शेष)(a,b); \
+    अगर (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+#पूर्ण_अगर
 
 /* exponentiation */
-#if !defined(luai_numpow)
-#define luai_numpow(L,a,b)  \
-  ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
-#endif
+#अगर !defined(luai_numpow)
+#घोषणा luai_numpow(L,a,b)  \
+  ((व्योम)L, (b == 2) ? (a)*(a) : l_mathop(घात)(a,b))
+#पूर्ण_अगर
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
-#define luai_numadd(L,a,b)      ((void)L, (a)+(b))
-#define luai_numsub(L,a,b)      ((void)L, (a)-(b))
-#define luai_nummul(L,a,b)      ((void)L, (a)*(b))
-#define luai_numunm(L,a)        ((void)L, -(a))
-#define luai_numeq(a,b)         ((a)==(b))
-#define luai_numlt(a,b)         ((a)<(b))
-#define luai_numle(a,b)         ((a)<=(b))
-#define luai_numgt(a,b)         ((a)>(b))
-#define luai_numge(a,b)         ((a)>=(b))
-#define luai_numisnan(a)        (!luai_numeq((a), (a)))
-#endif
+#अगर !defined(luai_numadd)
+#घोषणा luai_numadd(L,a,b)      ((व्योम)L, (a)+(b))
+#घोषणा luai_numsub(L,a,b)      ((व्योम)L, (a)-(b))
+#घोषणा luai_nummul(L,a,b)      ((व्योम)L, (a)*(b))
+#घोषणा luai_numunm(L,a)        ((व्योम)L, -(a))
+#घोषणा luai_numeq(a,b)         ((a)==(b))
+#घोषणा luai_numlt(a,b)         ((a)<(b))
+#घोषणा luai_numle(a,b)         ((a)<=(b))
+#घोषणा luai_numgt(a,b)         ((a)>(b))
+#घोषणा luai_numge(a,b)         ((a)>=(b))
+#घोषणा luai_numisnan(a)        (!luai_numeq((a), (a)))
+#पूर्ण_अगर
 
 
 
@@ -290,9 +290,9 @@ typedef unsigned long l_uint32;
 ** MAXINTEGER may not have one, and therefore its conversion to float
 ** may have an ill-defined value.)
 */
-#define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+#घोषणा lua_numbertointeger(n,p) \
+  ((n) >= (LUA_संख्या)(LUA_MININTEGER) && \
+   (n) < -(LUA_संख्या)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 
@@ -310,24 +310,24 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#अगर !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#अगर defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
-#define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
-#define LUAI_FUNC	extern
-#endif
+#घोषणा LUAI_FUNC	__attribute__((visibility("internal"))) बाह्य
+#अन्यथा
+#घोषणा LUAI_FUNC	बाह्य
+#पूर्ण_अगर
 
-#define LUAI_DDEC(dec)	LUAI_FUNC dec
-#define LUAI_DDEF	/* empty */
+#घोषणा LUAI_DDEC(dec)	LUAI_FUNC dec
+#घोषणा LUAI_DDEF	/* empty */
 
-#endif
+#पूर्ण_अगर
 
 
 /* Give these macros simpler names for internal use */
-#define l_likely(x)	luai_likely(x)
-#define l_unlikely(x)	luai_unlikely(x)
+#घोषणा l_likely(x)	luai_likely(x)
+#घोषणा l_unlikely(x)	luai_unlikely(x)
 
 /*
 ** {==================================================================
@@ -336,22 +336,22 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
-#endif
+#अगर !defined(lua_writestring)
+#घोषणा lua_writestring(s,l)   ख_डालो((s), माप(अक्षर), (l), मानक_निकास)
+#पूर्ण_अगर
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
-#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
-#endif
+#अगर !defined(lua_writeline)
+#घोषणा lua_writeline()        (lua_writestring("\n", 1), ख_साफ(मानक_निकास))
+#पूर्ण_अगर
 
 /* print an error message */
-#if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
-        (fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
+#अगर !defined(lua_writestringerror)
+#घोषणा lua_writestringerror(s,p) \
+        (ख_लिखो(मानक_त्रुटि, (s), (p)), ख_साफ(मानक_त्रुटि))
+#पूर्ण_अगर
 
 /* }================================================================== */
 
-#endif
+#पूर्ण_अगर
 
