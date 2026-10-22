@@ -5,25 +5,25 @@
 */
 
 
-#undef vmdispatch
-#undef vmcase
-#undef vmbreak
+#وصف_رد vmdispatch
+#وصف_رد vmcase
+#وصف_رد vmbreak
 
-#define vmdispatch(x)     goto *disptab[x];
+#وصف_ڪريو vmdispatch(x)     اذهب *disptab[x];
 
-#define vmcase(l)     L_##l:
+#وصف_ڪريو vmcase(l)     L_##l:
 
-#define vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
+#وصف_ڪريو vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
 
 
-static const void *const disptab[NUM_OPCODES] = {
+ساكن ثابت فراغ *ثابت disptab[انگ_OPCODES] = {
 
-#if 0
+#إذا 0
 ** you can update the following list with this command:
 **
 **  sed -n '/^OP_/!d; s/OP_/\&\&L_OP_/ ; s/,.*/,/ ; s/\/.*// ; p'  lopcodes.h
 **
-#endif
+#جيڪڏهن_پورو
 
 &&L_OP_MOVE,
 &&L_OP_LOADI,
@@ -59,7 +59,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_BXORK,
 &&L_OP_SHLI,
 &&L_OP_SHRI,
-&&L_OP_ADD,
+&&L_OP_جوڙيو,
 &&L_OP_SUB,
 &&L_OP_MUL,
 &&L_OP_MOD,
@@ -104,7 +104,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_TFORCALL,
 &&L_OP_TFORLOOP,
 &&L_OP_SETLIST,
-&&L_OP_CLOSURE,
+&&L_OP_گهيرو,
 &&L_OP_VARARG,
 &&L_OP_GETVARG,
 &&L_OP_ERRNNIL,

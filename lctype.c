@@ -4,28 +4,28 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lctype_c
-#define LUA_CORE
+#وصف_ڪريو lctype_c
+#وصف_ڪريو LUA_CORE
 
-#include "lprefix.h"
-
-
-#include "lctype.h"
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
+#ضمن "lprefix.h"
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#ضمن "lctype.h"
+
+#إذا !LUA_USE_CTYPE	/* { */
+
+#ضمن <limits.h>
+
+
+#إذا defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
-#define NONA		0x01
-#else
-#define NONA		0x00	/* default */
-#endif
+#وصف_ڪريو NONA		0x01
+#وإلا
+#وصف_ڪريو NONA		0x00	/* default */
+#جيڪڏهن_پورو
 
 
-LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
+LUAI_DDEF ثابت lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  /* EOZ */
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,	/* 0. */
   0x00,  0x08,  0x08,  0x08,  0x08,  0x08,  0x00,  0x00,
@@ -61,4 +61,4 @@ LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00
 };
 
-#endif			/* } */
+#جيڪڏهن_پورو			/* } */
