@@ -62,6 +62,6 @@ struct Zio {
 };
 
 
-LUAI_FUNC int luaZ_fill (ZIO *z);
+LUAI_FUNC ціле luaZ_fill (ZIO *z);
 
 #endif
