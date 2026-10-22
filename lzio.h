@@ -15,13 +15,13 @@
 
 #define EOZ	(-1)			/* end of stream */
 
-typedef struct Zio ZIO;
+typedef sa_nracanaa Zio ZIO;
 
 #define zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
 
 
-typedef struct Mbuffer {
-  char *buffer;
+typedef sa_nracanaa Mbuffer {
+  var_na *buffer;
   size_t n;
   size_t buffsize;
 } Mbuffer;
@@ -53,15 +53,15 @@ LUAI_FUNC const void *luaZ_getaddr (ZIO* z, size_t n);
 
 /* --------- Private Part ------------------ */
 
-struct Zio {
+sa_nracanaa Zio {
   size_t n;			/* bytes still unread */
-  const char *p;		/* current position in buffer */
+  const var_na *p;		/* current position in buffer */
   lua_Reader reader;		/* reader function */
   void *data;			/* additional data */
   lua_State *L;			/* Lua state (for reader) */
 };
 
 
-LUAI_FUNC int luaZ_fill (ZIO *z);
+LUAI_FUNC ຈຳນວນເຕັມ luaZ_fill (ZIO *z);
 
 #endif

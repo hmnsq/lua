@@ -43,16 +43,16 @@ static const luaL_Reg stdlibs[] = {
 /*
 ** require and preload selected standard libraries
 */
-LUALIB_API void luaL_openselectedlibs (lua_State *L, int load, int preload) {
-  int mask;
+LUALIB_API void luaL_openselectedlibs (lua_State *L, ຈຳນວນເຕັມ load, ຈຳນວນເຕັມ preload) {
+  ຈຳນວນເຕັມ mask;
   const luaL_Reg *lib;
   luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_PRELOAD_TABLE);
-  for (lib = stdlibs, mask = 1; lib->name != NULL; lib++, mask <<= 1) {
-    if (load & mask) {  /* selected? */
+  ສຳລັບ (lib = stdlibs, mask = 1; lib->name != NULL; lib++, mask <<= 1) {
+    ຖ້າ (load & mask) {  /* selected? */
       luaL_requiref(L, lib->name, lib->func, 1);  /* require library */
       lua_pop(L, 1);  /* remove result from the stack */
     }
-    else if (preload & mask) {  /* selected? */
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (preload & mask) {  /* selected? */
       lua_pushcfunction(L, lib->func);
       lua_setfield(L, -2, lib->name);  /* add library to PRELOAD table */
     }
