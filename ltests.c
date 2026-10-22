@@ -4,80 +4,80 @@
 ** See Copyright Notice in lua.h
 */
 
-#define ltests_c
-#define LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ltests_c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
 
-#include <limits.h>
-#include <setjmp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <setjmp.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
-#include "lapi.h"
-#include "lauxlib.h"
-#include "lcode.h"
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lmem.h"
-#include "lopcodes.h"
-#include "lopnames.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lualib.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lapi.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lauxlib.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lcode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lctype.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lfunc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopcodes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopnames.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstate.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lualib.h"
 
 
 
 /*
 ** The whole module only makes sense with LUA_DEBUG on
 */
-#if defined(LUA_DEBUG)
+#ਜੇ defined(LUA_DEBUG)
 
 
-void *l_Trick = 0;
+ਖਾਲੀ *l_Trick = 0;
 
 
-#define obj_at(L,k)	s2v(L->ci->func.p + (k))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ obj_at(L,k)	s2v(L->ci->func.p + (k))
 
 
-static int runC (lua_State *L, lua_State *L1, const char *pc);
+ਸਥਿਰ ਪੂਰਨ ਲੜੀਵਾਰ_C (lua_State *L, lua_State *L1, ਅਚਲ ਅੱਖਰ *pc);
 
 
-static void setnameval (lua_State *L, const char *name, int val) {
+ਸਥਿਰ ਖਾਲੀ setnameval (lua_State *L, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ val) {
   lua_pushinteger(L, val);
   lua_setfield(L, -2, name);
 }
 
 
-static void pushobject (lua_State *L, const TValue *o) {
-  setobj2s(L, L->top.p, o);
-  api_incr_top(L);
+ਸਥਿਰ ਖਾਲੀ pushobject (lua_State *L, ਅਚਲ TValue *o) {
+  setobj2s(L, L->ਸਿਖਰ.p, o);
+  api_incr_ਸਿਖਰ(L);
 }
 
 
-static void badexit (const char *fmt, const char *s1, const char *s2) {
+ਸਥਿਰ ਖਾਲੀ badexit (ਅਚਲ ਅੱਖਰ *fmt, ਅਚਲ ਅੱਖਰ *s1, ਅਚਲ ਅੱਖਰ *s2) {
   fprintf(stderr, fmt, s1);
-  if (s2)
+  ਜੇ (s2)
     fprintf(stderr, "extra info: %s\n", s2);
   /* avoid assertion failures when exiting */
-  l_memcontrol.numblocks = l_memcontrol.total = 0;
-  exit(EXIT_FAILURE);
+  l_memcontrol.numblocks = l_memcontrol.ਕੁੱਲ = 0;
+  ਬਾਹਰ_ਨਿਕਲੋ(EXIT_FAILURE);
 }
 
 
-static int tpanic (lua_State *L) {
-  const char *msg = (lua_type(L, -1) == LUA_TSTRING)
+ਸਥਿਰ ਪੂਰਨ tpanic (lua_State *L) {
+  ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = (lua_type(L, -1) == LUA_TSTRING)
                   ? lua_tostring(L, -1)
                   : "error object is not a string";
-  return (badexit("PANIC: unprotected error in call to Lua API (%s)\n",
-                   msg, NULL),
+  ਵਾਪਸ (badexit("PANIC: unprotected error in call to Lua API (%s)\n",
+                   ਸੁਨੇਹਾ, ਨਿਰਾ),
           0);  /* do not return to Lua */
 }
 
@@ -92,63 +92,63 @@ static int tpanic (lua_State *L) {
 ** - 1.allow: all messages are shown;
 ** - 2.store: all warnings go to the global '_WARN';
 */
-static void warnf (void *ud, const char *msg, int tocont) {
+ਸਥਿਰ ਖਾਲੀ warnf (ਖਾਲੀ *ud, ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ, ਪੂਰਨ tocont) {
   lua_State *L = cast(lua_State *, ud);
-  static char buff[200] = "";  /* should be enough for tests... */
-  static int onoff = 0;
-  static int mode = 0;  /* start in normal mode */
-  static int lasttocont = 0;
-  if (!lasttocont && !tocont && *msg == '@') {  /* control message? */
-    if (buff[0] != '\0')
-      badexit("Control warning during warning: %s\naborting...\n", msg, buff);
-    if (strcmp(msg, "@off") == 0)
+  ਸਥਿਰ ਅੱਖਰ buff[200] = "";  /* should be enough for tests... */
+  ਸਥਿਰ ਪੂਰਨ onoff = 0;
+  ਸਥਿਰ ਪੂਰਨ ਬਹੁਲਕ = 0;  /* start in normal mode */
+  ਸਥਿਰ ਪੂਰਨ lasttocont = 0;
+  ਜੇ (!lasttocont && !tocont && *ਸੁਨੇਹਾ == '@') {  /* control message? */
+    ਜੇ (buff[0] != '\0')
+      badexit("Control warning during warning: %s\naborting...\n", ਸੁਨੇਹਾ, buff);
+    ਜੇ (strcmp(ਸੁਨੇਹਾ, "@off") == 0)
       onoff = 0;
-    else if (strcmp(msg, "@on") == 0)
+    ਨਹੀਂਤਾਂ ਜੇ (strcmp(ਸੁਨੇਹਾ, "@on") == 0)
       onoff = 1;
-    else if (strcmp(msg, "@normal") == 0)
-      mode = 0;
-    else if (strcmp(msg, "@allow") == 0)
-      mode = 1;
-    else if (strcmp(msg, "@store") == 0)
-      mode = 2;
-    else
+    ਨਹੀਂਤਾਂ ਜੇ (strcmp(ਸੁਨੇਹਾ, "@normal") == 0)
+      ਬਹੁਲਕ = 0;
+    ਨਹੀਂਤਾਂ ਜੇ (strcmp(ਸੁਨੇਹਾ, "@allow") == 0)
+      ਬਹੁਲਕ = 1;
+    ਨਹੀਂਤਾਂ ਜੇ (strcmp(ਸੁਨੇਹਾ, "@store") == 0)
+      ਬਹੁਲਕ = 2;
+    ਨਹੀਂਤਾਂ
       badexit("Invalid control warning in test mode: %s\naborting...\n",
-              msg, NULL);
-    return;
+              ਸੁਨੇਹਾ, ਨਿਰਾ);
+    ਵਾਪਸ;
   }
   lasttocont = tocont;
-  if (strlen(msg) >= sizeof(buff) - strlen(buff))
-    badexit("warnf-buffer overflow (%s)\n", msg, buff);
-  strcat(buff, msg);  /* add new message to current warning */
-  if (!tocont) {  /* message finished? */
+  ਜੇ (ਲੜੀ_ਲੰਬਾਈ(ਸੁਨੇਹਾ) >= ਆਕਾਰ(buff) - ਲੜੀ_ਲੰਬਾਈ(buff))
+    badexit("warnf-buffer overflow (%s)\n", ਸੁਨੇਹਾ, buff);
+  strcat(buff, ਸੁਨੇਹਾ);  /* add new message to current warning */
+  ਜੇ (!tocont) {  /* message finished? */
     lua_unlock(L);
     luaL_checkstack(L, 1, "warn stack space");
     lua_getglobal(L, "_WARN");
-    if (!lua_toboolean(L, -1))
-      lua_pop(L, 1);  /* ok, no previous unexpected warning */
-    else {
+    ਜੇ (!lua_toboolean(L, -1))
+      lua_ਕੱਢੋ(L, 1);  /* ok, no previous unexpected warning */
+    ਨਹੀਂਤਾਂ {
       badexit("Unhandled warning in store mode: %s\naborting...\n",
               lua_tostring(L, -1), buff);
     }
-    lua_lock(L);
-    switch (mode) {
-      case 0: {  /* normal */
-        if (buff[0] != '#' && onoff)  /* unexpected warning? */
+    lua_ਤਾਲਾ(L);
+    ਚੋਣ (ਬਹੁਲਕ) {
+      ਹਾਲਤ 0: {  /*ਸਾਧਾਰਨ*/
+        ਜੇ (buff[0] != '#' && onoff)  /* unexpected warning? */
           badexit("Unexpected warning in test mode: %s\naborting...\n",
-                  buff, NULL);
+                  buff, ਨਿਰਾ);
       }  /* FALLTHROUGH */
-      case 1: {  /* allow */
-        if (onoff)
+      ਹਾਲਤ 1: {  /* allow */
+        ਜੇ (onoff)
           fprintf(stderr, "Lua warning: %s\n", buff);  /* print warning */
-        break;
+        ਰੋਕੋ;
       }
-      case 2: {  /* store */
+      ਹਾਲਤ 2: {  /* store */
         lua_unlock(L);
         luaL_checkstack(L, 1, "warn stack space");
         lua_pushstring(L, buff);
         lua_setglobal(L, "_WARN");  /* assign message to global '_WARN' */
-        lua_lock(L);
-        break;
+        lua_ਤਾਲਾ(L);
+        ਰੋਕੋ;
       }
     }
     buff[0] = '\0';  /* prepare buffer for next warning */
@@ -162,30 +162,30 @@ static void warnf (void *ud, const char *msg, int tocont) {
 ** =======================================================================
 */
 
-#define MARK		0x55  /* 01010101 (a nice pattern) */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MARK		0x55  /* 01010101 (a nice pattern) */
 
-typedef union memHeader {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਸੰਘ mem_ਸਿਰਲੇਖ {
   LUAI_MAXALIGN;
-  struct {
-    size_t size;
-    int type;
+  ਬਣਤਰ {
+    size_t ਮਾਪ;
+    ਪੂਰਨ type;
   } d;
-} memHeader;
+} mem_ਸਿਰਲੇਖ;
 
 
-#if !defined(EXTERNMEMCHECK)
+#ਜੇ !defined(EXTERNMEMCHECK)
 
 /* full memory check */
-#define MARKSIZE	16  /* size of marks after each block */
-#define fillmem(mem,size)	memset(mem, -MARK, size)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MARKSIZE	16  /* size of marks after each block */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ fillmem(mem,ਮਾਪ)	memset(mem, -MARK, ਮਾਪ)
 
-#else
+#ਨਹੀਂਤਾਂ
 
 /* external memory check: don't do it twice */
-#define MARKSIZE	0
-#define fillmem(mem,size)	/* empty */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MARKSIZE	0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ fillmem(mem,ਮਾਪ)	/*ਖਾਲੀ_ਥਾਵਾਂ*/
 
-#endif
+#ਜੇ_ਅੰਤ
 
 
 Memcontrol l_memcontrol =
@@ -193,79 +193,79 @@ Memcontrol l_memcontrol =
    {0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL}};
 
 
-static void freeblock (Memcontrol *mc, memHeader *block) {
-  if (block) {
-    size_t size = block->d.size;
-    int i;
-    for (i = 0; i < MARKSIZE; i++)  /* check marks after block */
-      lua_assert(*(cast_charp(block + 1) + size + i) == MARK);
-    mc->objcount[block->d.type]--;
-    fillmem(block, sizeof(memHeader) + size + MARKSIZE);  /* erase block */
-    free(block);  /* actually free block */
+ਸਥਿਰ ਖਾਲੀ freeblock (Memcontrol *mc, mem_ਸਿਰਲੇਖ *ਖੰਡ) {
+  ਜੇ (ਖੰਡ) {
+    size_t ਮਾਪ = ਖੰਡ->d.ਮਾਪ;
+    ਪੂਰਨ i;
+    ਲਈ (i = 0; i < MARKSIZE; i++)  /* check marks after block */
+      lua_assert(*(cast_charp(ਖੰਡ + 1) + ਮਾਪ + i) == MARK);
+    mc->objcount[ਖੰਡ->d.type]--;
+    fillmem(ਖੰਡ, ਆਕਾਰ(mem_ਸਿਰਲੇਖ) + ਮਾਪ + MARKSIZE);  /* erase block */
+    ਮੁਕਤ(ਖੰਡ);  /* actually free block */
     mc->numblocks--;  /* update counts */
-    mc->total -= size;
+    mc->ਕੁੱਲ -= ਮਾਪ;
   }
 }
 
 
-void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
+ਖਾਲੀ *debug_realloc (ਖਾਲੀ *ud, ਖਾਲੀ *b, size_t oldsize, size_t ਮਾਪ) {
   Memcontrol *mc = cast(Memcontrol *, ud);
-  memHeader *block = cast(memHeader *, b);
-  int type;
-  if (mc->memlimit == 0) {  /* first time? */
-    char *limit = getenv("MEMLIMIT");  /* initialize memory limit */
-    mc->memlimit = limit ? strtoul(limit, NULL, 10) : ULONG_MAX;
+  mem_ਸਿਰਲੇਖ *ਖੰਡ = cast(mem_ਸਿਰਲੇਖ *, b);
+  ਪੂਰਨ type;
+  ਜੇ (mc->memlimit == 0) {  /* first time? */
+    ਅੱਖਰ *ਹੱਦਬੰਦੀ = getenv("MEMLIMIT");  /* initialize memory limit */
+    mc->memlimit = ਹੱਦਬੰਦੀ ? strtoul(ਹੱਦਬੰਦੀ, ਨਿਰਾ, 10) : ULONG_MAX;
   }
-  if (block == NULL) {
+  ਜੇ (ਖੰਡ == ਨਿਰਾ) {
     type = (oldsize < LUA_NUMTYPES) ? cast_int(oldsize) : 0;
     oldsize = 0;
   }
-  else {
-    block--;  /* go to real header */
-    type = block->d.type;
-    lua_assert(oldsize == block->d.size);
+  ਨਹੀਂਤਾਂ {
+    ਖੰਡ--;  /* go to real header */
+    type = ਖੰਡ->d.type;
+    lua_assert(oldsize == ਖੰਡ->d.ਮਾਪ);
   }
-  if (size == 0) {
-    freeblock(mc, block);
-    return NULL;
+  ਜੇ (ਮਾਪ == 0) {
+    freeblock(mc, ਖੰਡ);
+    ਵਾਪਸ ਨਿਰਾ;
   }
-  if (mc->failnext) {
+  ਜੇ (mc->failnext) {
     mc->failnext = 0;
-    return NULL;  /* fake a single memory allocation error */
+    ਵਾਪਸ ਨਿਰਾ;  /* fake a single memory allocation error */
   }
-  if (mc->countlimit != ~0UL && size != oldsize) {  /* count limit in use? */
-    if (mc->countlimit == 0)
-      return NULL;  /* fake a memory allocation error */
+  ਜੇ (mc->countlimit != ~0UL && ਮਾਪ != oldsize) {  /* count limit in use? */
+    ਜੇ (mc->countlimit == 0)
+      ਵਾਪਸ ਨਿਰਾ;  /* fake a memory allocation error */
     mc->countlimit--;
   }
-  if (size > oldsize && mc->total+size-oldsize > mc->memlimit)
-    return NULL;  /* fake a memory allocation error */
-  else {
-    memHeader *newblock;
-    int i;
-    size_t commonsize = (oldsize < size) ? oldsize : size;
-    size_t realsize = sizeof(memHeader) + size + MARKSIZE;
-    if (realsize < size) return NULL;  /* arithmetic overflow! */
-    newblock = cast(memHeader *, malloc(realsize));  /* alloc a new block */
-    if (newblock == NULL)
-      return NULL;  /* really out of memory? */
-    if (block) {
-      memcpy(newblock + 1, block + 1, commonsize);  /* copy old contents */
-      freeblock(mc, block);  /* erase (and check) old copy */
+  ਜੇ (ਮਾਪ > oldsize && mc->ਕੁੱਲ+ਮਾਪ-oldsize > mc->memlimit)
+    ਵਾਪਸ ਨਿਰਾ;  /* fake a memory allocation error */
+  ਨਹੀਂਤਾਂ {
+    mem_ਸਿਰਲੇਖ *newblock;
+    ਪੂਰਨ i;
+    size_t commonsize = (oldsize < ਮਾਪ) ? oldsize : ਮਾਪ;
+    size_t realsize = ਆਕਾਰ(mem_ਸਿਰਲੇਖ) + ਮਾਪ + MARKSIZE;
+    ਜੇ (realsize < ਮਾਪ) ਵਾਪਸ ਨਿਰਾ;  /* arithmetic overflow! */
+    newblock = cast(mem_ਸਿਰਲੇਖ *, ਸਮ੍ਰਿਤੀ_ਦਿਓ(realsize));  /* alloc a new block */
+    ਜੇ (newblock == ਨਿਰਾ)
+      ਵਾਪਸ ਨਿਰਾ;  /* really out of memory? */
+    ਜੇ (ਖੰਡ) {
+      ਸਮ੍ਰਿਤੀ_ਨਕਲ(newblock + 1, ਖੰਡ + 1, commonsize);  /* copy old contents */
+      freeblock(mc, ਖੰਡ);  /* erase (and check) old copy */
     }
     /* initialize new part of the block with something weird */
-    fillmem(cast_charp(newblock + 1) + commonsize, size - commonsize);
+    fillmem(cast_charp(newblock + 1) + commonsize, ਮਾਪ - commonsize);
     /* initialize marks after block */
-    for (i = 0; i < MARKSIZE; i++)
-      *(cast_charp(newblock + 1) + size + i) = MARK;
-    newblock->d.size = size;
+    ਲਈ (i = 0; i < MARKSIZE; i++)
+      *(cast_charp(newblock + 1) + ਮਾਪ + i) = MARK;
+    newblock->d.ਮਾਪ = ਮਾਪ;
     newblock->d.type = type;
-    mc->total += size;
-    if (mc->total > mc->maxmem)
-      mc->maxmem = mc->total;
+    mc->ਕੁੱਲ += ਮਾਪ;
+    ਜੇ (mc->ਕੁੱਲ > mc->maxmem)
+      mc->maxmem = mc->ਕੁੱਲ;
     mc->numblocks++;
     mc->objcount[type]++;
-    return newblock + 1;
+    ਵਾਪਸ newblock + 1;
   }
 }
 
@@ -283,7 +283,7 @@ void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
 ** ======================================================================
 */
 
-#include <assert.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <assert.h>
 
 /*
 ** Check GC invariants. For incremental mode, a black object cannot
@@ -294,92 +294,92 @@ void *debug_realloc (void *ud, void *b, size_t oldsize, size_t size) {
 ** continue to be visited in all collections, and therefore can point to
 ** new objects. They, and only they, are old but gray.)
 */
-static int testobjref1 (global_State *g, GCObject *f, GCObject *t) {
-  if (isdead(g,t)) return 0;
-  if (issweepphase(g))
-    return 1;  /* no invariants */
-  else if (g->gckind != KGC_GENMINOR)
-    return !(isblack(f) && iswhite(t));  /* basic incremental invariant */
-  else {  /* generational mode */
-    if ((getage(f) == G_OLD && isblack(f)) && !isold(t))
-      return 0;
-    if ((getage(f) == G_OLD1 || getage(f) == G_TOUCHED2) &&
+ਸਥਿਰ ਪੂਰਨ testobjref1 (global_State *g, GCObject *f, GCObject *t) {
+  ਜੇ (isdead(g,t)) ਵਾਪਸ 0;
+  ਜੇ (issweepphase(g))
+    ਵਾਪਸ 1;  /* no invariants */
+  ਨਹੀਂਤਾਂ ਜੇ (g->gckind != KGC_GENMINOR)
+    ਵਾਪਸ !(isblack(f) && iswhite(t));  /* basic incremental invariant */
+  ਨਹੀਂਤਾਂ {  /* generational mode */
+    ਜੇ ((getage(f) == G_OLD && isblack(f)) && !isold(t))
+      ਵਾਪਸ 0;
+    ਜੇ ((getage(f) == G_OLD1 || getage(f) == G_TOUCHED2) &&
          getage(t) == G_NEW)
-      return 0;
-    return 1;
+      ਵਾਪਸ 0;
+    ਵਾਪਸ 1;
   }
 }
 
 
-static void printobj (global_State *g, GCObject *o) {
-  printf("||%s(%p)-%c%c(%02X)||",
-           ttypename(novariant(o->tt)), (void *)o,
+ਸਥਿਰ ਖਾਲੀ printobj (global_State *g, GCObject *o) {
+  ਲਿਖੋ("||%s(%p)-%c%c(%02X)||",
+           ttypename(novariant(o->tt)), (ਖਾਲੀ *)o,
            isdead(g,o) ? 'd' : isblack(o) ? 'b' : iswhite(o) ? 'w' : 'g',
            "ns01oTt"[getage(o)], o->marked);
-  if (o->tt == LUA_VSHRSTR || o->tt == LUA_VLNGSTR)
-    printf(" '%s'", getstr(gco2ts(o)));
+  ਜੇ (o->tt == LUA_VSHRSTR || o->tt == LUA_VLNGSTR)
+    ਲਿਖੋ(" '%s'", getstr(gco2ts(o)));
 }
 
 
-void lua_printobj (lua_State *L, struct GCObject *o) {
+ਖਾਲੀ lua_printobj (lua_State *L, ਬਣਤਰ GCObject *o) {
   printobj(G(L), o);
 }
 
 
-void lua_printvalue (TValue *v) {
-  switch (ttypetag(v)) {
-    case LUA_VNUMINT: case LUA_VNUMFLT: {
-      char buff[LUA_N2SBUFFSZ];
-      unsigned len = luaO_tostringbuff(v, buff);
+ਖਾਲੀ lua_printvalue (TValue *v) {
+  ਚੋਣ (ttypetag(v)) {
+    ਹਾਲਤ LUA_VNUMINT: ਹਾਲਤ LUA_VNUMFLT: {
+      ਅੱਖਰ buff[LUA_N2SBUFFSZ];
+      ਬਿਨਾਨਿਸ਼ਾਨੀ len = luaO_tostringbuff(v, buff);
       buff[len] = '\0';
-      printf("%s", buff);
-      break;
+      ਲਿਖੋ("%s", buff);
+      ਰੋਕੋ;
     }
-    case LUA_VSHRSTR:
-      printf("'%s'", getstr(tsvalue(v))); break;
-    case LUA_VLNGSTR:
-      printf("'%.30s...'", getstr(tsvalue(v))); break;
-    case LUA_VFALSE:
-      printf("%s", "false"); break;
-    case LUA_VTRUE:
-      printf("%s", "true"); break;
-    case LUA_VLIGHTUSERDATA:
-      printf("light udata: %p", pvalue(v)); break;
-    case LUA_VUSERDATA:
-      printf("full udata: %p", uvalue(v)); break;
-    case LUA_VNIL:
-      printf("nil"); break;
-    case LUA_VLCF:
-      printf("light C function: %p", fvalue(v)); break;
-    case LUA_VCCL:
-      printf("C closure: %p", clCvalue(v)); break;
-    case LUA_VLCL:
-      printf("Lua function: %p", clLvalue(v)); break;
-    case LUA_VTHREAD:
-      printf("thread: %p", thvalue(v)); break;
-    case LUA_VTABLE:
-      printf("table: %p", hvalue(v)); break;
-    default:
+    ਹਾਲਤ LUA_VSHRSTR:
+      ਲਿਖੋ("'%s'", getstr(tsvalue(v))); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VLNGSTR:
+      ਲਿਖੋ("'%.30s...'", getstr(tsvalue(v))); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VFALSE:
+      ਲਿਖੋ("%s", "false"); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VTRUE:
+      ਲਿਖੋ("%s", "true"); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VLIGHTUSERDATA:
+      ਲਿਖੋ("light udata: %p", pvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VUSERDATA:
+      ਲਿਖੋ("full udata: %p", uvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VNIL:
+      ਲਿਖੋ("nil"); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VLCF:
+      ਲਿਖੋ("light C function: %p", fvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VCCL:
+      ਲਿਖੋ("C closure: %p", clCvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VLCL:
+      ਲਿਖੋ("Lua function: %p", clLvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VTHREAD:
+      ਲਿਖੋ("thread: %p", thvalue(v)); ਰੋਕੋ;
+    ਹਾਲਤ LUA_VTABLE:
+      ਲਿਖੋ("table: %p", hvalue(v)); ਰੋਕੋ;
+    ਮੂਲ:
       lua_assert(0);
   }
 }
 
 
-static int testobjref (global_State *g, GCObject *f, GCObject *t) {
-  int r1 = testobjref1(g, f, t);
-  if (!r1) {
-    printf("%d(%02X) - ", g->gcstate, g->currentwhite);
+ਸਥਿਰ ਪੂਰਨ testobjref (global_State *g, GCObject *f, GCObject *t) {
+  ਪੂਰਨ r1 = testobjref1(g, f, t);
+  ਜੇ (!r1) {
+    ਲਿਖੋ("%d(%02X) - ", g->gcstate, g->currentwhite);
     printobj(g, f);
-    printf("  ->  ");
+    ਲਿਖੋ("  ->  ");
     printobj(g, t);
-    printf("\n");
+    ਲਿਖੋ("\n");
   }
-  return r1;
+  ਵਾਪਸ r1;
 }
 
 
-static void checkobjref (global_State *g, GCObject *f, GCObject *t) {
-    assert(testobjref(g, f, t));
+ਸਥਿਰ ਖਾਲੀ checkobjref (global_State *g, GCObject *f, GCObject *t) {
+    ਪ੍ਰਤਿਜ੍ਞਾ(testobjref(g, f, t));
 }
 
 
@@ -389,30 +389,30 @@ static void checkobjref (global_State *g, GCObject *f, GCObject *t) {
 ** definition must be a macro.)  Most checks need this version, because
 ** the check may run while an object is still being created.
 */
-#define checkobjrefN(g,f,t)	{ if (t) checkobjref(g,f,obj2gco(t)); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ checkobjrefN(g,f,t)	{ ਜੇ (t) checkobjref(g,f,obj2gco(t)); }
 
 
-static void checkvalref (global_State *g, GCObject *f, const TValue *t) {
-  assert(!iscollectable(t) || (righttt(t) && testobjref(g, f, gcvalue(t))));
+ਸਥਿਰ ਖਾਲੀ checkvalref (global_State *g, GCObject *f, ਅਚਲ TValue *t) {
+  ਪ੍ਰਤਿਜ੍ਞਾ(!iscollectable(t) || (righttt(t) && testobjref(g, f, gcvalue(t))));
 }
 
 
-static void checktable (global_State *g, Table *h) {
-  unsigned int i;
-  unsigned int asize = h->asize;
-  Node *n, *limit = gnode(h, sizenode(h));
+ਸਥਿਰ ਖਾਲੀ checktable (global_State *g, ਸਾਰਣੀ *h) {
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ i;
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ asize = h->asize;
+  ਗੰਢ_2 *n, *ਹੱਦਬੰਦੀ = gnode(h, sizenode(h));
   GCObject *hgc = obj2gco(h);
   checkobjrefN(g, hgc, h->metatable);
-  for (i = 0; i < asize; i++) {
+  ਲਈ (i = 0; i < asize; i++) {
     TValue aux;
     arr2obj(h, i, &aux);
     checkvalref(g, hgc, &aux);
   }
-  for (n = gnode(h, 0); n < limit; n++) {
-    if (!isempty(gval(n))) {
+  ਲਈ (n = gnode(h, 0); n < ਹੱਦਬੰਦੀ; n++) {
+    ਜੇ (!isempty(gval(n))) {
       TValue k;
       getnodekey(mainthread(g), &k, n);
-      assert(!keyisnil(n));
+      ਪ੍ਰਤਿਜ੍ਞਾ(!keyisnil(n));
       checkvalref(g, hgc, &k);
       checkvalref(g, hgc, gval(n));
     }
@@ -420,124 +420,124 @@ static void checktable (global_State *g, Table *h) {
 }
 
 
-static void checkudata (global_State *g, Udata *u) {
-  int i;
+ਸਥਿਰ ਖਾਲੀ checkudata (global_State *g, Udata *u) {
+  ਪੂਰਨ i;
   GCObject *hgc = obj2gco(u);
   checkobjrefN(g, hgc, u->metatable);
-  for (i = 0; i < u->nuvalue; i++)
+  ਲਈ (i = 0; i < u->nuvalue; i++)
     checkvalref(g, hgc, &u->uv[i].uv);
 }
 
 
-static void checkproto (global_State *g, Proto *f) {
-  int i;
+ਸਥਿਰ ਖਾਲੀ checkproto (global_State *g, Proto *f) {
+  ਪੂਰਨ i;
   GCObject *fgc = obj2gco(f);
-  checkobjrefN(g, fgc, f->source);
-  for (i=0; i<f->sizek; i++) {
-    if (iscollectable(f->k + i))
+  checkobjrefN(g, fgc, f->ਸਰੋਤ);
+  ਲਈ (i=0; i<f->sizek; i++) {
+    ਜੇ (iscollectable(f->k + i))
       checkobjref(g, fgc, gcvalue(f->k + i));
   }
-  for (i=0; i<f->sizeupvalues; i++)
+  ਲਈ (i=0; i<f->sizeupvalues; i++)
     checkobjrefN(g, fgc, f->upvalues[i].name);
-  for (i=0; i<f->sizep; i++)
+  ਲਈ (i=0; i<f->sizep; i++)
     checkobjrefN(g, fgc, f->p[i]);
-  for (i=0; i<f->sizelocvars; i++)
+  ਲਈ (i=0; i<f->sizelocvars; i++)
     checkobjrefN(g, fgc, f->locvars[i].varname);
 }
 
 
-static void checkCclosure (global_State *g, CClosure *cl) {
+ਸਥਿਰ ਖਾਲੀ checkCclosure (global_State *g, CClosure *cl) {
   GCObject *clgc = obj2gco(cl);
-  int i;
-  for (i = 0; i < cl->nupvalues; i++)
+  ਪੂਰਨ i;
+  ਲਈ (i = 0; i < cl->nupvalues; i++)
     checkvalref(g, clgc, &cl->upvalue[i]);
 }
 
 
-static void checkLclosure (global_State *g, LClosure *cl) {
+ਸਥਿਰ ਖਾਲੀ checkLclosure (global_State *g, LClosure *cl) {
   GCObject *clgc = obj2gco(cl);
-  int i;
+  ਪੂਰਨ i;
   checkobjrefN(g, clgc, cl->p);
-  for (i=0; i<cl->nupvalues; i++) {
-    UpVal *uv = cl->upvals[i];
-    if (uv) {
+  ਲਈ (i=0; i<cl->nupvalues; i++) {
+    ਉੱਪਰ_Val *uv = cl->upvals[i];
+    ਜੇ (uv) {
       checkobjrefN(g, clgc, uv);
-      if (!upisopen(uv))
+      ਜੇ (!upisopen(uv))
         checkvalref(g, obj2gco(uv), uv->v.p);
     }
   }
 }
 
 
-static int lua_checkpc (CallInfo *ci) {
-  if (!isLua(ci)) return 1;
-  else {
+ਸਥਿਰ ਪੂਰਨ lua_checkpc (CallInfo *ci) {
+  ਜੇ (!isLua(ci)) ਵਾਪਸ 1;
+  ਨਹੀਂਤਾਂ {
     StkId f = ci->func.p;
     Proto *p = clLvalue(s2v(f))->p;
-    return p->code <= ci->u.l.savedpc &&
-           ci->u.l.savedpc <= p->code + p->sizecode;
+    ਵਾਪਸ p->ਕੋਡ <= ci->u.l.savedpc &&
+           ci->u.l.savedpc <= p->ਕੋਡ + p->sizecode;
   }
 }
 
 
-static void check_stack (global_State *g, lua_State *L1) {
+ਸਥਿਰ ਖਾਲੀ check_ਢੇਰ (global_State *g, lua_State *L1) {
   StkId o;
   CallInfo *ci;
-  UpVal *uv;
-  assert(!isdead(g, L1));
-  if (L1->stack.p == NULL) {  /* incomplete thread? */
-    assert(L1->openupval == NULL && L1->ci == NULL);
-    return;
+  ਉੱਪਰ_Val *uv;
+  ਪ੍ਰਤਿਜ੍ਞਾ(!isdead(g, L1));
+  ਜੇ (L1->ਢੇਰ.p == ਨਿਰਾ) {  /* incomplete thread? */
+    ਪ੍ਰਤਿਜ੍ਞਾ(L1->openupval == ਨਿਰਾ && L1->ci == ਨਿਰਾ);
+    ਵਾਪਸ;
   }
-  for (uv = L1->openupval; uv != NULL; uv = uv->u.open.next)
-    assert(upisopen(uv));  /* must be open */
-  assert(L1->top.p <= L1->stack_last.p);
-  assert(L1->tbclist.p <= L1->top.p);
-  for (ci = L1->ci; ci != NULL; ci = ci->previous) {
-    assert(ci->top.p <= L1->stack_last.p);
-    assert(lua_checkpc(ci));
+  ਲਈ (uv = L1->openupval; uv != ਨਿਰਾ; uv = uv->u.open.ਅਗਲਾ)
+    ਪ੍ਰਤਿਜ੍ਞਾ(upisopen(uv));  /* must be open */
+  ਪ੍ਰਤਿਜ੍ਞਾ(L1->ਸਿਖਰ.p <= L1->ਢੇਰ_ਆਖਰੀ.p);
+  ਪ੍ਰਤਿਜ੍ਞਾ(L1->tbclist.p <= L1->ਸਿਖਰ.p);
+  ਲਈ (ci = L1->ci; ci != ਨਿਰਾ; ci = ci->ਪਿਛਲਾ) {
+    ਪ੍ਰਤਿਜ੍ਞਾ(ci->ਸਿਖਰ.p <= L1->ਢੇਰ_ਆਖਰੀ.p);
+    ਪ੍ਰਤਿਜ੍ਞਾ(lua_checkpc(ci));
   }
-  for (o = L1->stack.p; o < L1->stack_last.p; o++)
+  ਲਈ (o = L1->ਢੇਰ.p; o < L1->ਢੇਰ_ਆਖਰੀ.p; o++)
     checkliveness(L1, s2v(o));  /* entire stack must have valid values */
 }
 
 
-static void checkrefs (global_State *g, GCObject *o) {
-  switch (o->tt) {
-    case LUA_VUSERDATA: {
+ਸਥਿਰ ਖਾਲੀ checkrefs (global_State *g, GCObject *o) {
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VUSERDATA: {
       checkudata(g, gco2u(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VUPVAL: {
+    ਹਾਲਤ LUA_VUPVAL: {
       checkvalref(g, o, gco2upv(o)->v.p);
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VTABLE: {
+    ਹਾਲਤ LUA_VTABLE: {
       checktable(g, gco2t(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VTHREAD: {
-      check_stack(g, gco2th(o));
-      break;
+    ਹਾਲਤ LUA_VTHREAD: {
+      check_ਢੇਰ(g, gco2th(o));
+      ਰੋਕੋ;
     }
-    case LUA_VLCL: {
+    ਹਾਲਤ LUA_VLCL: {
       checkLclosure(g, gco2lcl(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VCCL: {
+    ਹਾਲਤ LUA_VCCL: {
       checkCclosure(g, gco2ccl(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VPROTO: {
+    ਹਾਲਤ LUA_VPROTO: {
       checkproto(g, gco2p(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VSHRSTR:
-    case LUA_VLNGSTR: {
-      assert(!isgray(o));  /* strings are never gray */
-      break;
+    ਹਾਲਤ LUA_VSHRSTR:
+    ਹਾਲਤ LUA_VLNGSTR: {
+      ਪ੍ਰਤਿਜ੍ਞਾ(!isgray(o));  /* strings are never gray */
+      ਰੋਕੋ;
     }
-    default: assert(0);
+    ਮੂਲ: ਪ੍ਰਤਿਜ੍ਞਾ(0);
   }
 }
 
@@ -554,67 +554,67 @@ static void checkrefs (global_State *g, GCObject *o) {
 **     threads, and open upvalues.
 **   * 'touched1' objects must be gray.
 */
-static void checkobject (global_State *g, GCObject *o, int maybedead,
-                         int listage) {
-  if (isdead(g, o))
-    assert(maybedead);
-  else {
-    assert(g->gcstate != GCSpause || iswhite(o));
-    if (g->gckind == KGC_GENMINOR) {  /* generational mode? */
-      assert(getage(o) >= listage);
-      if (isold(o)) {
-        assert(!iswhite(o));
-        assert(isblack(o) ||
+ਸਥਿਰ ਖਾਲੀ checkobject (global_State *g, GCObject *o, ਪੂਰਨ maybedead,
+                         ਪੂਰਨ listage) {
+  ਜੇ (isdead(g, o))
+    ਪ੍ਰਤਿਜ੍ਞਾ(maybedead);
+  ਨਹੀਂਤਾਂ {
+    ਪ੍ਰਤਿਜ੍ਞਾ(g->gcstate != GCSpause || iswhite(o));
+    ਜੇ (g->gckind == KGC_GENMINOR) {  /* generational mode? */
+      ਪ੍ਰਤਿਜ੍ਞਾ(getage(o) >= listage);
+      ਜੇ (isold(o)) {
+        ਪ੍ਰਤਿਜ੍ਞਾ(!iswhite(o));
+        ਪ੍ਰਤਿਜ੍ਞਾ(isblack(o) ||
         getage(o) == G_TOUCHED1 ||
         getage(o) == G_OLD0 ||
         o->tt == LUA_VTHREAD ||
         (o->tt == LUA_VUPVAL && upisopen(gco2upv(o))));
       }
-      assert(getage(o) != G_TOUCHED1 || isgray(o));
+      ਪ੍ਰਤਿਜ੍ਞਾ(getage(o) != G_TOUCHED1 || isgray(o));
     }
     checkrefs(g, o);
   }
 }
 
 
-static l_mem checkgraylist (global_State *g, GCObject *o) {
-  int total = 0;  /* count number of elements in the list */
+ਸਥਿਰ l_mem checkgraylist (global_State *g, GCObject *o) {
+  ਪੂਰਨ ਕੁੱਲ = 0;  /* count number of elements in the list */
   cast_void(g);  /* better to keep it if we need to print an object */
-  while (o) {
-    assert(!!isgray(o) ^ (getage(o) == G_TOUCHED2));
-    assert(!testbit(o->marked, TESTBIT));
-    if (keepinvariant(g))
+  ਜਦੋਂ (o) {
+    ਪ੍ਰਤਿਜ੍ਞਾ(!!isgray(o) ^ (getage(o) == G_TOUCHED2));
+    ਪ੍ਰਤਿਜ੍ਞਾ(!testbit(o->marked, TESTBIT));
+    ਜੇ (keepinvariant(g))
       l_setbit(o->marked, TESTBIT);  /* mark that object is in a gray list */
-    total++;
-    switch (o->tt) {
-      case LUA_VTABLE: o = gco2t(o)->gclist; break;
-      case LUA_VLCL: o = gco2lcl(o)->gclist; break;
-      case LUA_VCCL: o = gco2ccl(o)->gclist; break;
-      case LUA_VTHREAD: o = gco2th(o)->gclist; break;
-      case LUA_VPROTO: o = gco2p(o)->gclist; break;
-      case LUA_VUSERDATA:
-        assert(gco2u(o)->nuvalue > 0);
+    ਕੁੱਲ++;
+    ਚੋਣ (o->tt) {
+      ਹਾਲਤ LUA_VTABLE: o = gco2t(o)->gclist; ਰੋਕੋ;
+      ਹਾਲਤ LUA_VLCL: o = gco2lcl(o)->gclist; ਰੋਕੋ;
+      ਹਾਲਤ LUA_VCCL: o = gco2ccl(o)->gclist; ਰੋਕੋ;
+      ਹਾਲਤ LUA_VTHREAD: o = gco2th(o)->gclist; ਰੋਕੋ;
+      ਹਾਲਤ LUA_VPROTO: o = gco2p(o)->gclist; ਰੋਕੋ;
+      ਹਾਲਤ LUA_VUSERDATA:
+        ਪ੍ਰਤਿਜ੍ਞਾ(gco2u(o)->nuvalue > 0);
         o = gco2u(o)->gclist;
-        break;
-      default: assert(0);  /* other objects cannot be in a gray list */
+        ਰੋਕੋ;
+      ਮੂਲ: ਪ੍ਰਤਿਜ੍ਞਾ(0);  /* other objects cannot be in a gray list */
     }
   }
-  return total;
+  ਵਾਪਸ ਕੁੱਲ;
 }
 
 
 /*
 ** Check objects in gray lists.
 */
-static l_mem checkgrays (global_State *g) {
-  l_mem total = 0;  /* count number of elements in all lists */
-  if (!keepinvariant(g)) return total;
-  total += checkgraylist(g, g->gray);
-  total += checkgraylist(g, g->grayagain);
-  total += checkgraylist(g, g->weak);
-  total += checkgraylist(g, g->allweak);
-  total += checkgraylist(g, g->ephemeron);
-  return total;
+ਸਥਿਰ l_mem checkgrays (global_State *g) {
+  l_mem ਕੁੱਲ = 0;  /* count number of elements in all lists */
+  ਜੇ (!keepinvariant(g)) ਵਾਪਸ ਕੁੱਲ;
+  ਕੁੱਲ += checkgraylist(g, g->ਸਲੇਟੀ);
+  ਕੁੱਲ += checkgraylist(g, g->grayagain);
+  ਕੁੱਲ += checkgraylist(g, g->weak);
+  ਕੁੱਲ += checkgraylist(g, g->allweak);
+  ਕੁੱਲ += checkgraylist(g, g->ephemeron);
+  ਵਾਪਸ ਕੁੱਲ;
 }
 
 
@@ -623,68 +623,68 @@ static l_mem checkgrays (global_State *g) {
 ** 'count' and check its TESTBIT. (It must have been previously set by
 ** 'checkgraylist'.)
 */
-static void incifingray (global_State *g, GCObject *o, l_mem *count) {
-  if (!keepinvariant(g))
-    return;  /* gray lists not being kept in these phases */
-  if (o->tt == LUA_VUPVAL) {
+ਸਥਿਰ ਖਾਲੀ incifingray (global_State *g, GCObject *o, l_mem *ਗਿਣਤੀ_2) {
+  ਜੇ (!keepinvariant(g))
+    ਵਾਪਸ;  /* gray lists not being kept in these phases */
+  ਜੇ (o->tt == LUA_VUPVAL) {
     /* only open upvalues can be gray */
-    assert(!isgray(o) || upisopen(gco2upv(o)));
-    return;  /* upvalues are never in gray lists */
+    ਪ੍ਰਤਿਜ੍ਞਾ(!isgray(o) || upisopen(gco2upv(o)));
+    ਵਾਪਸ;  /* upvalues are never in gray lists */
   }
   /* these are the ones that must be in gray lists */
-  if (isgray(o) || getage(o) == G_TOUCHED2) {
-    (*count)++;
-    assert(testbit(o->marked, TESTBIT));
+  ਜੇ (isgray(o) || getage(o) == G_TOUCHED2) {
+    (*ਗਿਣਤੀ_2)++;
+    ਪ੍ਰਤਿਜ੍ਞਾ(testbit(o->marked, TESTBIT));
     resetbit(o->marked, TESTBIT);  /* prepare for next cycle */
   }
 }
 
 
-static l_mem checklist (global_State *g, int maybedead, int tof,
+ਸਥਿਰ l_mem checklist (global_State *g, ਪੂਰਨ maybedead, ਪੂਰਨ tof,
   GCObject *newl, GCObject *survival, GCObject *old, GCObject *reallyold) {
   GCObject *o;
-  l_mem total = 0;  /* number of object that should be in  gray lists */
-  for (o = newl; o != survival; o = o->next) {
+  l_mem ਕੁੱਲ = 0;  /* number of object that should be in  gray lists */
+  ਲਈ (o = newl; o != survival; o = o->ਅਗਲਾ) {
     checkobject(g, o, maybedead, G_NEW);
-    incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    incifingray(g, o, &ਕੁੱਲ);
+    ਪ੍ਰਤਿਜ੍ਞਾ(!tof == !tofinalize(o));
   }
-  for (o = survival; o != old; o = o->next) {
+  ਲਈ (o = survival; o != old; o = o->ਅਗਲਾ) {
     checkobject(g, o, 0, G_SURVIVAL);
-    incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    incifingray(g, o, &ਕੁੱਲ);
+    ਪ੍ਰਤਿਜ੍ਞਾ(!tof == !tofinalize(o));
   }
-  for (o = old; o != reallyold; o = o->next) {
+  ਲਈ (o = old; o != reallyold; o = o->ਅਗਲਾ) {
     checkobject(g, o, 0, G_OLD1);
-    incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    incifingray(g, o, &ਕੁੱਲ);
+    ਪ੍ਰਤਿਜ੍ਞਾ(!tof == !tofinalize(o));
   }
-  for (o = reallyold; o != NULL; o = o->next) {
+  ਲਈ (o = reallyold; o != ਨਿਰਾ; o = o->ਅਗਲਾ) {
     checkobject(g, o, 0, G_OLD);
-    incifingray(g, o, &total);
-    assert(!tof == !tofinalize(o));
+    incifingray(g, o, &ਕੁੱਲ);
+    ਪ੍ਰਤਿਜ੍ਞਾ(!tof == !tofinalize(o));
   }
-  return total;
+  ਵਾਪਸ ਕੁੱਲ;
 }
 
 
-int lua_checkmemory (lua_State *L) {
+ਪੂਰਨ lua_checkmemory (lua_State *L) {
   global_State *g = G(L);
   GCObject *o;
-  int maybedead;
+  ਪੂਰਨ maybedead;
   l_mem totalin;  /* total of objects that are in gray lists */
   l_mem totalshould;  /* total of objects that should be in gray lists */
-  if (keepinvariant(g)) {
-    assert(!iswhite(mainthread(g)));
-    assert(!iswhite(gcvalue(&g->l_registry)));
+  ਜੇ (keepinvariant(g)) {
+    ਪ੍ਰਤਿਜ੍ਞਾ(!iswhite(mainthread(g)));
+    ਪ੍ਰਤਿਜ੍ਞਾ(!iswhite(gcvalue(&g->l_registry)));
   }
-  assert(!isdead(g, gcvalue(&g->l_registry)));
-  assert(g->sweepgc == NULL || issweepphase(g));
+  ਪ੍ਰਤਿਜ੍ਞਾ(!isdead(g, gcvalue(&g->l_registry)));
+  ਪ੍ਰਤਿਜ੍ਞਾ(g->sweepgc == ਨਿਰਾ || issweepphase(g));
   totalin = checkgrays(g);
 
   /* check 'fixedgc' list */
-  for (o = g->fixedgc; o != NULL; o = o->next) {
-    assert(o->tt == LUA_VSHRSTR && isgray(o) && getage(o) == G_OLD);
+  ਲਈ (o = g->fixedgc; o != ਨਿਰਾ; o = o->ਅਗਲਾ) {
+    ਪ੍ਰਤਿਜ੍ਞਾ(o->tt == LUA_VSHRSTR && isgray(o) && getage(o) == G_OLD);
   }
 
   /* check 'allgc' list */
@@ -697,15 +697,15 @@ int lua_checkmemory (lua_State *L) {
                               g->finobjsur, g->finobjold1, g->finobjrold);
 
   /* check 'tobefnz' list */
-  for (o = g->tobefnz; o != NULL; o = o->next) {
+  ਲਈ (o = g->tobefnz; o != ਨਿਰਾ; o = o->ਅਗਲਾ) {
     checkobject(g, o, 0, G_NEW);
     incifingray(g, o, &totalshould);
-    assert(tofinalize(o));
-    assert(o->tt == LUA_VUSERDATA || o->tt == LUA_VTABLE);
+    ਪ੍ਰਤਿਜ੍ਞਾ(tofinalize(o));
+    ਪ੍ਰਤਿਜ੍ਞਾ(o->tt == LUA_VUSERDATA || o->tt == LUA_VTABLE);
   }
-  if (keepinvariant(g))
-    assert(totalin == totalshould);
-  return 0;
+  ਜੇ (keepinvariant(g))
+    ਪ੍ਰਤਿਜ੍ਞਾ(totalin == totalshould);
+  ਵਾਪਸ 0;
 }
 
 /* }====================================================== */
@@ -719,66 +719,66 @@ int lua_checkmemory (lua_State *L) {
 */
 
 
-static char *buildop (Proto *p, int pc, char *buff) {
-  char *obuff = buff;
-  Instruction i = p->code[pc];
-  OpCode o = GET_OPCODE(i);
-  const char *name = opnames[o];
-  int line = luaG_getfuncline(p, pc);
-  int lineinfo = (p->lineinfo != NULL) ? p->lineinfo[pc] : 0;
-  if (lineinfo == ABSLINEINFO)
+ਸਥਿਰ ਅੱਖਰ *buildop (Proto *p, ਪੂਰਨ pc, ਅੱਖਰ *buff) {
+  ਅੱਖਰ *obuff = buff;
+  Instruction i = p->ਕੋਡ[pc];
+  Op_ਕੋਡ o = GET_OPCODE(i);
+  ਅਚਲ ਅੱਖਰ *name = opnames[o];
+  ਪੂਰਨ ਸਤਰ = luaG_getfuncline(p, pc);
+  ਪੂਰਨ lineinfo = (p->lineinfo != ਨਿਰਾ) ? p->lineinfo[pc] : 0;
+  ਜੇ (lineinfo == ABSLINEINFO)
     buff += sprintf(buff, "(__");
-  else
+  ਨਹੀਂਤਾਂ
     buff += sprintf(buff, "(%2d", lineinfo);
-  buff += sprintf(buff, " - %4d) %4d - ", line, pc);
-  switch (getOpMode(o)) {
-    case iABC:
+  buff += sprintf(buff, " - %4d) %4d - ", ਸਤਰ, pc);
+  ਚੋਣ (get_Op_ਬਹੁਲਕ(o)) {
+    ਹਾਲਤ iABC:
       sprintf(buff, "%-12s%4d %4d %4d%s", name,
               GETARG_A(i), GETARG_B(i), GETARG_C(i),
               GETARG_k(i) ? " (k)" : "");
-      break;
-    case ivABC:
+      ਰੋਕੋ;
+    ਹਾਲਤ ivABC:
       sprintf(buff, "%-12s%4d %4d %4d%s", name,
               GETARG_A(i), GETARG_vB(i), GETARG_vC(i),
               GETARG_k(i) ? " (k)" : "");
-      break;
-    case iABx:
+      ਰੋਕੋ;
+    ਹਾਲਤ iABx:
       sprintf(buff, "%-12s%4d %4d", name, GETARG_A(i), GETARG_Bx(i));
-      break;
-    case iAsBx:
+      ਰੋਕੋ;
+    ਹਾਲਤ iAsBx:
       sprintf(buff, "%-12s%4d %4d", name, GETARG_A(i), GETARG_sBx(i));
-      break;
-    case iAx:
+      ਰੋਕੋ;
+    ਹਾਲਤ iAx:
       sprintf(buff, "%-12s%4d", name, GETARG_Ax(i));
-      break;
-    case isJ:
+      ਰੋਕੋ;
+    ਹਾਲਤ isJ:
       sprintf(buff, "%-12s%4d", name, GETARG_sJ(i));
-      break;
+      ਰੋਕੋ;
   }
-  return obuff;
+  ਵਾਪਸ obuff;
 }
 
 
-#if 0
-void luaI_printcode (Proto *pt, int size) {
-  int pc;
-  for (pc=0; pc<size; pc++) {
-    char buff[100];
-    printf("%s\n", buildop(pt, pc, buff));
+#ਜੇ 0
+ਖਾਲੀ luaI_printcode (Proto *pt, ਪੂਰਨ ਮਾਪ) {
+  ਪੂਰਨ pc;
+  ਲਈ (pc=0; pc<ਮਾਪ; pc++) {
+    ਅੱਖਰ buff[100];
+    ਲਿਖੋ("%s\n", buildop(pt, pc, buff));
   }
-  printf("-------\n");
+  ਲਿਖੋ("-------\n");
 }
 
 
-void luaI_printinst (Proto *pt, int pc) {
-  char buff[100];
-  printf("%s\n", buildop(pt, pc, buff));
+ਖਾਲੀ luaI_printinst (Proto *pt, ਪੂਰਨ pc) {
+  ਅੱਖਰ buff[100];
+  ਲਿਖੋ("%s\n", buildop(pt, pc, buff));
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 
-static int listcode (lua_State *L) {
-  int pc;
+ਸਥਿਰ ਪੂਰਨ listcode (lua_State *L) {
+  ਪੂਰਨ pc;
   Proto *p;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
@@ -786,390 +786,390 @@ static int listcode (lua_State *L) {
   lua_newtable(L);
   setnameval(L, "maxstack", p->maxstacksize);
   setnameval(L, "numparams", p->numparams);
-  for (pc=0; pc<p->sizecode; pc++) {
-    char buff[100];
+  ਲਈ (pc=0; pc<p->sizecode; pc++) {
+    ਅੱਖਰ buff[100];
     lua_pushinteger(L, pc+1);
     lua_pushstring(L, buildop(p, pc, buff));
     lua_settable(L, -3);
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int printcode (lua_State *L) {
-  int pc;
+ਸਥਿਰ ਪੂਰਨ printcode (lua_State *L) {
+  ਪੂਰਨ pc;
   Proto *p;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
-  printf("maxstack: %d\n", p->maxstacksize);
-  printf("numparams: %d\n", p->numparams);
-  for (pc=0; pc<p->sizecode; pc++) {
-    char buff[100];
-    printf("%s\n", buildop(p, pc, buff));
+  ਲਿਖੋ("maxstack: %d\n", p->maxstacksize);
+  ਲਿਖੋ("numparams: %d\n", p->numparams);
+  ਲਈ (pc=0; pc<p->sizecode; pc++) {
+    ਅੱਖਰ buff[100];
+    ਲਿਖੋ("%s\n", buildop(p, pc, buff));
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int listk (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ listk (lua_State *L) {
   Proto *p;
-  int i;
+  ਪੂਰਨ i;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
   lua_createtable(L, p->sizek, 0);
-  for (i=0; i<p->sizek; i++) {
+  ਲਈ (i=0; i<p->sizek; i++) {
     pushobject(L, p->k+i);
     lua_rawseti(L, -2, i+1);
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int listabslineinfo (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ listabslineinfo (lua_State *L) {
   Proto *p;
-  int i;
+  ਪੂਰਨ i;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
-  luaL_argcheck(L, p->abslineinfo != NULL, 1, "function has no debug info");
+  luaL_argcheck(L, p->abslineinfo != ਨਿਰਾ, 1, "function has no debug info");
   lua_createtable(L, 2 * p->sizeabslineinfo, 0);
-  for (i=0; i < p->sizeabslineinfo; i++) {
+  ਲਈ (i=0; i < p->sizeabslineinfo; i++) {
     lua_pushinteger(L, p->abslineinfo[i].pc);
     lua_rawseti(L, -2, 2 * i + 1);
-    lua_pushinteger(L, p->abslineinfo[i].line);
+    lua_pushinteger(L, p->abslineinfo[i].ਸਤਰ);
     lua_rawseti(L, -2, 2 * i + 2);
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int listlocals (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ listlocals (lua_State *L) {
   Proto *p;
-  int pc = cast_int(luaL_checkinteger(L, 2)) - 1;
-  int i = 0;
-  const char *name;
+  ਪੂਰਨ pc = cast_int(luaL_checkinteger(L, 2)) - 1;
+  ਪੂਰਨ i = 0;
+  ਅਚਲ ਅੱਖਰ *name;
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1),
                  1, "Lua function expected");
   p = getproto(obj_at(L, 1));
-  while ((name = luaF_getlocalname(p, cast_uint(++i), pc)) != NULL)
+  ਜਦੋਂ ((name = luaF_getlocalname(p, cast_uint(++i), pc)) != ਨਿਰਾ)
     lua_pushstring(L, name);
-  return i-1;
+  ਵਾਪਸ i-1;
 }
 
 /* }====================================================== */
 
 
 
-void lua_printstack (lua_State *L) {
-  int i;
-  int n = lua_gettop(L);
-  printf("stack: >>\n");
-  for (i = 1; i <= n; i++) {
-    printf("%3d: ", i);
+ਖਾਲੀ lua_printstack (lua_State *L) {
+  ਪੂਰਨ i;
+  ਪੂਰਨ n = lua_gettop(L);
+  ਲਿਖੋ("stack: >>\n");
+  ਲਈ (i = 1; i <= n; i++) {
+    ਲਿਖੋ("%3d: ", i);
     lua_printvalue(s2v(L->ci->func.p + i));
-    printf("\n");
+    ਲਿਖੋ("\n");
   }
-  printf("<<\n");
+  ਲਿਖੋ("<<\n");
 }
 
 
-int lua_printallstack (lua_State *L) {
+ਪੂਰਨ lua_printallstack (lua_State *L) {
   StkId p;
-  int i = 1;
-  CallInfo *ci = &L->base_ci;
-  printf("stack: >>\n");
-  for (p = L->stack.p; p < L->top.p; p++) {
-    if (ci != NULL && p == ci->func.p) {
-      printf("  ---\n");
-      if (ci == L->ci)
-        ci = NULL;  /* printed last frame */
-      else
-        ci = ci->next;
+  ਪੂਰਨ i = 1;
+  CallInfo *ci = &L->ਅਧਾਰ_ci;
+  ਲਿਖੋ("stack: >>\n");
+  ਲਈ (p = L->ਢੇਰ.p; p < L->ਸਿਖਰ.p; p++) {
+    ਜੇ (ci != ਨਿਰਾ && p == ci->func.p) {
+      ਲਿਖੋ("  ---\n");
+      ਜੇ (ci == L->ci)
+        ci = ਨਿਰਾ;  /* printed last frame */
+      ਨਹੀਂਤਾਂ
+        ci = ci->ਅਗਲਾ;
     }
-    printf("%3d: ", i++);
+    ਲਿਖੋ("%3d: ", i++);
     lua_printvalue(s2v(p));
-    printf("\n");
+    ਲਿਖੋ("\n");
   }
-  printf("<<\n");
-  return 0;
+  ਲਿਖੋ("<<\n");
+  ਵਾਪਸ 0;
 }
 
 
-static int get_limits (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ get_limits (lua_State *L) {
   lua_createtable(L, 0, 5);
   setnameval(L, "IS32INT", LUAI_IS32INT);
   setnameval(L, "MAXARG_Ax", MAXARG_Ax);
   setnameval(L, "MAXARG_Bx", MAXARG_Bx);
-  setnameval(L, "OFFSET_sBx", OFFSET_sBx);
-  setnameval(L, "NUM_OPCODES", NUM_OPCODES);
-  return 1;
+  setnameval(L, "OFFSET_sBx", ਵਿੱਥ_s_Bx);
+  setnameval(L, "NUM_OPCODES", ਅੰਕ_OPCODES);
+  ਵਾਪਸ 1;
 }
 
 
-static int get_sizes (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ get_sizes (lua_State *L) {
   lua_newtable(L);
-  setnameval(L, "Lua state", sizeof(lua_State));
-  setnameval(L, "global state", sizeof(global_State));
-  setnameval(L, "TValue", sizeof(TValue));
-  setnameval(L, "Node", sizeof(Node));
-  setnameval(L, "stack Value", sizeof(StackValue));
-  return 1;
+  setnameval(L, "Lua state", ਆਕਾਰ(lua_State));
+  setnameval(L, "global state", ਆਕਾਰ(global_State));
+  setnameval(L, "TValue", ਆਕਾਰ(TValue));
+  setnameval(L, "Node", ਆਕਾਰ(ਗੰਢ_2));
+  setnameval(L, "stack Value", ਆਕਾਰ(ਢੇਰ_ਮੁੱਲ));
+  ਵਾਪਸ 1;
 }
 
 
-static int mem_query (lua_State *L) {
-  if (lua_isnone(L, 1)) {
-    lua_pushinteger(L, cast_Integer(l_memcontrol.total));
+ਸਥਿਰ ਪੂਰਨ mem_query (lua_State *L) {
+  ਜੇ (lua_isnone(L, 1)) {
+    lua_pushinteger(L, cast_Integer(l_memcontrol.ਕੁੱਲ));
     lua_pushinteger(L, cast_Integer(l_memcontrol.numblocks));
     lua_pushinteger(L, cast_Integer(l_memcontrol.maxmem));
-    return 3;
+    ਵਾਪਸ 3;
   }
-  else if (lua_isnumber(L, 1)) {
-    unsigned long limit = cast(unsigned long, luaL_checkinteger(L, 1));
-    if (limit == 0) limit = ULONG_MAX;
-    l_memcontrol.memlimit = limit;
-    return 0;
+  ਨਹੀਂਤਾਂ ਜੇ (lua_isnumber(L, 1)) {
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ ਹੱਦਬੰਦੀ = cast(ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ, luaL_checkinteger(L, 1));
+    ਜੇ (ਹੱਦਬੰਦੀ == 0) ਹੱਦਬੰਦੀ = ULONG_MAX;
+    l_memcontrol.memlimit = ਹੱਦਬੰਦੀ;
+    ਵਾਪਸ 0;
   }
-  else {
-    const char *t = luaL_checkstring(L, 1);
-    int i;
-    for (i = LUA_NUMTYPES - 1; i >= 0; i--) {
-      if (strcmp(t, ttypename(i)) == 0) {
+  ਨਹੀਂਤਾਂ {
+    ਅਚਲ ਅੱਖਰ *t = luaL_checkstring(L, 1);
+    ਪੂਰਨ i;
+    ਲਈ (i = LUA_NUMTYPES - 1; i >= 0; i--) {
+      ਜੇ (strcmp(t, ttypename(i)) == 0) {
         lua_pushinteger(L, cast_Integer(l_memcontrol.objcount[i]));
-        return 1;
+        ਵਾਪਸ 1;
       }
     }
-    return luaL_error(L, "unknown type '%s'", t);
+    ਵਾਪਸ luaL_error(L, "unknown type '%s'", t);
   }
 }
 
 
-static int alloc_count (lua_State *L) {
-  if (lua_isnone(L, 1))
-    l_memcontrol.countlimit = cast(unsigned long, ~0L);
-  else
-    l_memcontrol.countlimit = cast(unsigned long, luaL_checkinteger(L, 1));
-  return 0;
+ਸਥਿਰ ਪੂਰਨ alloc_ਗਿਣਤੀ (lua_State *L) {
+  ਜੇ (lua_isnone(L, 1))
+    l_memcontrol.countlimit = cast(ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ, ~0L);
+  ਨਹੀਂਤਾਂ
+    l_memcontrol.countlimit = cast(ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ, luaL_checkinteger(L, 1));
+  ਵਾਪਸ 0;
 }
 
 
-static int alloc_failnext (lua_State *L) {
-  UNUSED(L);
+ਸਥਿਰ ਪੂਰਨ alloc_failnext (lua_State *L) {
+  ਅਣਵਰਤਿਆ(L);
   l_memcontrol.failnext = 1;
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int settrick (lua_State *L) {
-  if (ttisnil(obj_at(L, 1)))
-    l_Trick = NULL;
-  else
+ਸਥਿਰ ਪੂਰਨ settrick (lua_State *L) {
+  ਜੇ (ttisnil(obj_at(L, 1)))
+    l_Trick = ਨਿਰਾ;
+  ਨਹੀਂਤਾਂ
     l_Trick = gcvalue(obj_at(L, 1));
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int gc_color (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ gc_color (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
+  ਜੇ (!iscollectable(o))
     lua_pushstring(L, "no collectable");
-  else {
+  ਨਹੀਂਤਾਂ {
     GCObject *obj = gcvalue(o);
     lua_pushstring(L, isdead(G(L), obj) ? "dead" :
                       iswhite(obj) ? "white" :
                       isblack(obj) ? "black" : "gray");
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int gc_age (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ gc_age (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
+  ਜੇ (!iscollectable(o))
     lua_pushstring(L, "no collectable");
-  else {
-    static const char *gennames[] = {"new", "survival", "old0", "old1",
+  ਨਹੀਂਤਾਂ {
+    ਸਥਿਰ ਅਚਲ ਅੱਖਰ *gennames[] = {"new", "survival", "old0", "old1",
                                      "old", "touched1", "touched2"};
     GCObject *obj = gcvalue(o);
     lua_pushstring(L, gennames[getage(obj)]);
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int gc_printobj (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ gc_printobj (lua_State *L) {
   TValue *o;
   luaL_checkany(L, 1);
   o = obj_at(L, 1);
-  if (!iscollectable(o))
-    printf("no collectable\n");
-  else {
+  ਜੇ (!iscollectable(o))
+    ਲਿਖੋ("no collectable\n");
+  ਨਹੀਂਤਾਂ {
     GCObject *obj = gcvalue(o);
     printobj(G(L), obj);
-    printf("\n");
+    ਲਿਖੋ("\n");
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static const char *const statenames[] = {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *ਅਚਲ statenames[] = {
   "propagate", "enteratomic", "atomic", "sweepallgc", "sweepfinobj",
   "sweeptobefnz", "sweepend", "callfin", "pause", ""};
 
-static int gc_state (lua_State *L) {
-  static const int states[] = {
+ਸਥਿਰ ਪੂਰਨ gc_state (lua_State *L) {
+  ਸਥਿਰ ਅਚਲ ਪੂਰਨ ਹਾਲਤਾਂ[] = {
     GCSpropagate, GCSenteratomic, GCSatomic, GCSswpallgc, GCSswpfinobj,
     GCSswptobefnz, GCSswpend, GCScallfin, GCSpause, -1};
-  int option = states[luaL_checkoption(L, 1, "", statenames)];
+  ਪੂਰਨ option = ਹਾਲਤਾਂ[luaL_checkoption(L, 1, "", statenames)];
   global_State *g = G(L);
-  if (option == -1) {
+  ਜੇ (option == -1) {
     lua_pushstring(L, statenames[g->gcstate]);
-    return 1;
+    ਵਾਪਸ 1;
   }
-  else {
-    if (g->gckind != KGC_INC)
+  ਨਹੀਂਤਾਂ {
+    ਜੇ (g->gckind != KGC_INC)
       luaL_error(L, "cannot change states in generational mode");
-    lua_lock(L);
-    if (option < g->gcstate) {  /* must cross 'pause'? */
+    lua_ਤਾਲਾ(L);
+    ਜੇ (option < g->gcstate) {  /* must cross 'pause'? */
       luaC_runtilstate(L, GCSpause, 1);  /* run until pause */
     }
     luaC_runtilstate(L, option, 0);  /* do not skip propagation state */
     lua_assert(g->gcstate == option);
     lua_unlock(L);
-    return 0;
+    ਵਾਪਸ 0;
   }
 }
 
 
-static int tracinggc = 0;
-void luai_tracegctest (lua_State *L, int first) {
-  if (!tracinggc) return;
-  else {
+ਸਥਿਰ ਪੂਰਨ tracinggc = 0;
+ਖਾਲੀ luai_tracegctest (lua_State *L, ਪੂਰਨ ਪਹਿਲਾ) {
+  ਜੇ (!tracinggc) ਵਾਪਸ;
+  ਨਹੀਂਤਾਂ {
     global_State *g = G(L);
     lua_unlock(L);
     g->gcstp = GCSTPGC;
     lua_checkstack(L, 10);
     lua_getfield(L, LUA_REGISTRYINDEX, "tracegc");
-    lua_pushboolean(L, first);
+    lua_pushboolean(L, ਪਹਿਲਾ);
     lua_call(L, 1, 0);
     g->gcstp = 0;
-    lua_lock(L);
+    lua_ਤਾਲਾ(L);
   }
 }
 
 
-static int tracegc (lua_State *L) {
-  if (lua_isnil(L, 1))
+ਸਥਿਰ ਪੂਰਨ tracegc (lua_State *L) {
+  ਜੇ (lua_isnil(L, 1))
     tracinggc = 0;
-  else {
+  ਨਹੀਂਤਾਂ {
     tracinggc = 1;
     lua_setfield(L, LUA_REGISTRYINDEX, "tracegc");
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int hash_query (lua_State *L) {
-  if (lua_isnone(L, 2)) {
+ਸਥਿਰ ਪੂਰਨ hash_query (lua_State *L) {
+  ਜੇ (lua_isnone(L, 2)) {
     TString *ts;
     luaL_argcheck(L, lua_type(L, 1) == LUA_TSTRING, 1, "string expected");
     ts = tsvalue(obj_at(L, 1));
-    if (ts->tt == LUA_VLNGSTR)
+    ਜੇ (ts->tt == LUA_VLNGSTR)
       luaS_hashlongstr(ts);  /* make sure long string has a hash */
     lua_pushinteger(L, cast_int(ts->hash));
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     TValue *o = obj_at(L, 1);
-    Table *t;
+    ਸਾਰਣੀ *t;
     luaL_checktype(L, 2, LUA_TTABLE);
     t = hvalue(obj_at(L, 2));
-    lua_pushinteger(L, cast_Integer(luaH_mainposition(t, o) - t->node));
+    lua_pushinteger(L, cast_Integer(luaH_mainposition(t, o) - t->ਗੰਢ));
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int stacklevel (lua_State *L) {
-  int a = 0;
-  lua_pushinteger(L, cast_Integer(L->top.p - L->stack.p));
+ਸਥਿਰ ਪੂਰਨ stacklevel (lua_State *L) {
+  ਪੂਰਨ a = 0;
+  lua_pushinteger(L, cast_Integer(L->ਸਿਖਰ.p - L->ਢੇਰ.p));
   lua_pushinteger(L, stacksize(L));
   lua_pushinteger(L, cast_Integer(L->nCcalls));
   lua_pushinteger(L, L->nci);
   lua_pushinteger(L, (lua_Integer)(size_t)&a);
-  return 5;
+  ਵਾਪਸ 5;
 }
 
 
-static int resetCI (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ resetCI (lua_State *L) {
   CallInfo *ci = L->ci;
-  while (ci->next != NULL) {
-    CallInfo *tofree = ci->next;
-    ci->next = ci->next->next;
+  ਜਦੋਂ (ci->ਅਗਲਾ != ਨਿਰਾ) {
+    CallInfo *tofree = ci->ਅਗਲਾ;
+    ci->ਅਗਲਾ = ci->ਅਗਲਾ->ਅਗਲਾ;
     luaM_free(L, tofree);
     L->nci--;
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int reallocstack (lua_State *L) {
-  int n = cast_int(luaL_checkinteger(L, 1));
-  lua_lock(L);
-  luaD_reallocstack(L, cast_int(L->top.p - L->stack.p) + n, 1);
+ਸਥਿਰ ਪੂਰਨ reallocstack (lua_State *L) {
+  ਪੂਰਨ n = cast_int(luaL_checkinteger(L, 1));
+  lua_ਤਾਲਾ(L);
+  luaD_reallocstack(L, cast_int(L->ਸਿਖਰ.p - L->ਢੇਰ.p) + n, 1);
   lua_unlock(L);
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int table_query (lua_State *L) {
-  const Table *t;
-  int i = cast_int(luaL_optinteger(L, 2, -1));
-  unsigned int asize;
+ਸਥਿਰ ਪੂਰਨ ਸਾਰਣੀ_query (lua_State *L) {
+  ਅਚਲ ਸਾਰਣੀ *t;
+  ਪੂਰਨ i = cast_int(luaL_optinteger(L, 2, -1));
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ asize;
   luaL_checktype(L, 1, LUA_TTABLE);
   t = hvalue(obj_at(L, 1));
   asize = t->asize;
-  if (i == -1) {
+  ਜੇ (i == -1) {
     lua_pushinteger(L, cast_Integer(asize));
     lua_pushinteger(L, cast_Integer(allocsizenode(t)));
     lua_pushinteger(L, cast_Integer(asize > 0 ? *lenhint(t) : 0));
-    return 3;
+    ਵਾਪਸ 3;
   }
-  else if (cast_uint(i) < asize) {
+  ਨਹੀਂਤਾਂ ਜੇ (cast_uint(i) < asize) {
     lua_pushinteger(L, i);
-    if (!tagisempty(*getArrTag(t, i)))
-      arr2obj(t, cast_uint(i), s2v(L->top.p));
-    else
-      setnilvalue2s(L->top.p);
-    api_incr_top(L);
+    ਜੇ (!tagisempty(*get_Arr_ਟੈਗ(t, i)))
+      arr2obj(t, cast_uint(i), s2v(L->ਸਿਖਰ.p));
+    ਨਹੀਂਤਾਂ
+      setnilvalue2s(L->ਸਿਖਰ.p);
+    api_incr_ਸਿਖਰ(L);
     lua_pushnil(L);
   }
-  else if (cast_uint(i -= cast_int(asize)) < sizenode(t)) {
+  ਨਹੀਂਤਾਂ ਜੇ (cast_uint(i -= cast_int(asize)) < sizenode(t)) {
     TValue k;
     getnodekey(L, &k, gnode(t, i));
-    if (!isempty(gval(gnode(t, i))) ||
+    ਜੇ (!isempty(gval(gnode(t, i))) ||
         ttisnil(&k) ||
         ttisnumber(&k)) {
       pushobject(L, &k);
     }
-    else
+    ਨਹੀਂਤਾਂ
       lua_pushliteral(L, "<undef>");
-    if (!isempty(gval(gnode(t, i))))
+    ਜੇ (!isempty(gval(gnode(t, i))))
       pushobject(L, gval(gnode(t, i)));
-    else
+    ਨਹੀਂਤਾਂ
       lua_pushnil(L);
-    lua_pushinteger(L, gnext(&t->node[i]));
+    lua_pushinteger(L, gnext(&t->ਗੰਢ[i]));
   }
-  return 3;
+  ਵਾਪਸ 3;
 }
 
 
-static int gc_query (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ gc_query (lua_State *L) {
   global_State *g = G(L);
   lua_pushstring(L, g->gckind == KGC_INC ? "inc"
                   : g->gckind == KGC_GENMAJOR ? "genmajor"
@@ -1179,285 +1179,285 @@ static int gc_query (lua_State *L) {
   lua_pushinteger(L, cast_st2S(g->GCdebt));
   lua_pushinteger(L, cast_st2S(g->GCmarked));
   lua_pushinteger(L, cast_st2S(g->GCmajorminor));
-  return 6;
+  ਵਾਪਸ 6;
 }
 
 
-static int test_codeparam (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ test_codeparam (lua_State *L) {
   lua_Integer p = luaL_checkinteger(L, 1);
   lua_pushinteger(L, luaO_codeparam(cast_uint(p)));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int test_applyparam (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ test_applyparam (lua_State *L) {
   lua_Integer p = luaL_checkinteger(L, 1);
   lua_Integer x = luaL_checkinteger(L, 2);
   lua_pushinteger(L, cast_Integer(luaO_applyparam(cast_byte(p), x)));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int string_query (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ string_query (lua_State *L) {
   stringtable *tb = &G(L)->strt;
-  int s = cast_int(luaL_optinteger(L, 1, 0)) - 1;
-  if (s == -1) {
-    lua_pushinteger(L ,tb->size);
+  ਪੂਰਨ s = cast_int(luaL_optinteger(L, 1, 0)) - 1;
+  ਜੇ (s == -1) {
+    lua_pushinteger(L ,tb->ਮਾਪ);
     lua_pushinteger(L ,tb->nuse);
-    return 2;
+    ਵਾਪਸ 2;
   }
-  else if (s < tb->size) {
+  ਨਹੀਂਤਾਂ ਜੇ (s < tb->ਮਾਪ) {
     TString *ts;
-    int n = 0;
-    for (ts = tb->hash[s]; ts != NULL; ts = ts->u.hnext) {
-      setsvalue2s(L, L->top.p, ts);
-      api_incr_top(L);
+    ਪੂਰਨ n = 0;
+    ਲਈ (ts = tb->hash[s]; ts != ਨਿਰਾ; ts = ts->u.hnext) {
+      setsvalue2s(L, L->ਸਿਖਰ.p, ts);
+      api_incr_ਸਿਖਰ(L);
       n++;
     }
-    return n;
+    ਵਾਪਸ n;
   }
-  else return 0;
+  ਨਹੀਂਤਾਂ ਵਾਪਸ 0;
 }
 
 
-static int getreftable (lua_State *L) {
-  if (lua_istable(L, 2))  /* is there a table as second argument? */
-    return 2;  /* use it as the table */
-  else
-    return LUA_REGISTRYINDEX;  /* default is to use the register */
+ਸਥਿਰ ਪੂਰਨ getreftable (lua_State *L) {
+  ਜੇ (lua_istable(L, 2))  /* is there a table as second argument? */
+    ਵਾਪਸ 2;  /* use it as the table */
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ LUA_REGISTRYINDEX;  /* default is to use the register */
 }
 
 
-static int tref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+ਸਥਿਰ ਪੂਰਨ tref (lua_State *L) {
+  ਪੂਰਨ t = getreftable(L);
+  ਪੂਰਨ level = lua_gettop(L);
   luaL_checkany(L, 1);
   lua_pushvalue(L, 1);
   lua_pushinteger(L, luaL_ref(L, t));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level+1);  /* +1 for result */
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int getref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+ਸਥਿਰ ਪੂਰਨ getref (lua_State *L) {
+  ਪੂਰਨ t = getreftable(L);
+  ਪੂਰਨ level = lua_gettop(L);
   lua_rawgeti(L, t, luaL_checkinteger(L, 1));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level+1);
-  return 1;
+  ਵਾਪਸ 1;
 }
 
-static int unref (lua_State *L) {
-  int t = getreftable(L);
-  int level = lua_gettop(L);
+ਸਥਿਰ ਪੂਰਨ unref (lua_State *L) {
+  ਪੂਰਨ t = getreftable(L);
+  ਪੂਰਨ level = lua_gettop(L);
   luaL_unref(L, t, cast_int(luaL_checkinteger(L, 1)));
   cast_void(level);  /* to avoid warnings */
   lua_assert(lua_gettop(L) == level);
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int upvalue (lua_State *L) {
-  int n = cast_int(luaL_checkinteger(L, 2));
+ਸਥਿਰ ਪੂਰਨ upvalue (lua_State *L) {
+  ਪੂਰਨ n = cast_int(luaL_checkinteger(L, 2));
   luaL_checktype(L, 1, LUA_TFUNCTION);
-  if (lua_isnone(L, 3)) {
-    const char *name = lua_getupvalue(L, 1, n);
-    if (name == NULL) return 0;
+  ਜੇ (lua_isnone(L, 3)) {
+    ਅਚਲ ਅੱਖਰ *name = lua_getupvalue(L, 1, n);
+    ਜੇ (name == ਨਿਰਾ) ਵਾਪਸ 0;
     lua_pushstring(L, name);
-    return 2;
+    ਵਾਪਸ 2;
   }
-  else {
-    const char *name = lua_setupvalue(L, 1, n);
+  ਨਹੀਂਤਾਂ {
+    ਅਚਲ ਅੱਖਰ *name = lua_setupvalue(L, 1, n);
     lua_pushstring(L, name);
-    return 1;
+    ਵਾਪਸ 1;
   }
 }
 
 
-static int newuserdata (lua_State *L) {
-  size_t size = cast_sizet(luaL_optinteger(L, 1, 0));
-  int nuv = cast_int(luaL_optinteger(L, 2, 0));
-  char *p = cast_charp(lua_newuserdatauv(L, size, nuv));
-  while (size--) *p++ = '\0';
-  return 1;
+ਸਥਿਰ ਪੂਰਨ newuserdata (lua_State *L) {
+  size_t ਮਾਪ = cast_sizet(luaL_optinteger(L, 1, 0));
+  ਪੂਰਨ nuv = cast_int(luaL_optinteger(L, 2, 0));
+  ਅੱਖਰ *p = cast_charp(lua_newuserdatauv(L, ਮਾਪ, nuv));
+  ਜਦੋਂ (ਮਾਪ--) *p++ = '\0';
+  ਵਾਪਸ 1;
 }
 
 
-static int pushuserdata (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ pushuserdata (lua_State *L) {
   lua_Integer u = luaL_checkinteger(L, 1);
   lua_pushlightuserdata(L, cast_voidp(cast_sizet(u)));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int udataval (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ udataval (lua_State *L) {
   lua_pushinteger(L, cast_st2S(cast_sizet(lua_touserdata(L, 1))));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int doonnewstack (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ doonnewstack (lua_State *L) {
   lua_State *L1 = lua_newthread(L);
   size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
-  int status = luaL_loadbufferx(L1, s, l, s, "t");
-  if (status == LUA_OK)
-    status = lua_pcall(L1, 0, 0, 0);
-  lua_pushinteger(L, status);
-  return 1;
+  ਅਚਲ ਅੱਖਰ *s = luaL_checklstring(L, 1, &l);
+  ਪੂਰਨ ਸਥਿਤੀ = luaL_loadbufferx(L1, s, l, s, "t");
+  ਜੇ (ਸਥਿਤੀ == LUA_OK)
+    ਸਥਿਤੀ = lua_pcall(L1, 0, 0, 0);
+  lua_pushinteger(L, ਸਥਿਤੀ);
+  ਵਾਪਸ 1;
 }
 
 
-static int s2d (lua_State *L) {
-  lua_pushnumber(L, cast_num(*cast(const double *, luaL_checkstring(L, 1))));
-  return 1;
+ਸਥਿਰ ਪੂਰਨ s2d (lua_State *L) {
+  lua_pushnumber(L, cast_ਅੰਕ(*cast(ਅਚਲ ਦੁੱਗਣਾ *, luaL_checkstring(L, 1))));
+  ਵਾਪਸ 1;
 }
 
 
-static int d2s (lua_State *L) {
-  double d = cast(double, luaL_checknumber(L, 1));
-  lua_pushlstring(L, cast_charp(&d), sizeof(d));
-  return 1;
+ਸਥਿਰ ਪੂਰਨ d2s (lua_State *L) {
+  ਦੁੱਗਣਾ d = cast(ਦੁੱਗਣਾ, luaL_checknumber(L, 1));
+  lua_pushlstring(L, cast_charp(&d), ਆਕਾਰ(d));
+  ਵਾਪਸ 1;
 }
 
 
-static int num2int (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ num2int (lua_State *L) {
   lua_pushinteger(L, lua_tointeger(L, 1));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int makeseed (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ makeseed (lua_State *L) {
   lua_pushinteger(L, cast_Integer(luaL_makeseed(L)));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int newstate (lua_State *L) {
-  void *ud;
+ਸਥਿਰ ਪੂਰਨ newstate (lua_State *L) {
+  ਖਾਲੀ *ud;
   lua_Alloc f = lua_getallocf(L, &ud);
   lua_State *L1 = lua_newstate(f, ud, 0);
-  if (L1) {
+  ਜੇ (L1) {
     lua_atpanic(L1, tpanic);
     lua_pushlightuserdata(L, L1);
   }
-  else
+  ਨਹੀਂਤਾਂ
     lua_pushnil(L);
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static lua_State *getstate (lua_State *L) {
+ਸਥਿਰ lua_State *getstate (lua_State *L) {
   lua_State *L1 = cast(lua_State *, lua_touserdata(L, 1));
-  luaL_argcheck(L, L1 != NULL, 1, "state expected");
-  return L1;
+  luaL_argcheck(L, L1 != ਨਿਰਾ, 1, "state expected");
+  ਵਾਪਸ L1;
 }
 
 
-static int loadlib (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ loadlib (lua_State *L) {
   lua_State *L1 = getstate(L);
-  int load = cast_int(luaL_checkinteger(L, 2));
-  int preload = cast_int(luaL_checkinteger(L, 3));
-  luaL_openselectedlibs(L1, load, preload);
+  ਪੂਰਨ ਲੱਦੋ = cast_int(luaL_checkinteger(L, 2));
+  ਪੂਰਨ preload = cast_int(luaL_checkinteger(L, 3));
+  luaL_openselectedlibs(L1, ਲੱਦੋ, preload);
   luaL_requiref(L1, "T", luaB_opentests, 0);
   lua_assert(lua_type(L1, -1) == LUA_TTABLE);
   /* 'requiref' should not reload module already loaded... */
-  luaL_requiref(L1, "T", NULL, 1);  /* seg. fault if it reloads */
+  luaL_requiref(L1, "T", ਨਿਰਾ, 1);  /* seg. fault if it reloads */
   /* ...but should return the same module */
   lua_assert(lua_compare(L1, -1, -2, LUA_OPEQ));
-  return 0;
+  ਵਾਪਸ 0;
 }
 
-static int closestate (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ closestate (lua_State *L) {
   lua_State *L1 = getstate(L);
   lua_close(L1);
-  return 0;
+  ਵਾਪਸ 0;
 }
 
-static int doremote (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ doremote (lua_State *L) {
   lua_State *L1 = getstate(L);
   size_t lcode;
-  const char *code = luaL_checklstring(L, 2, &lcode);
-  int status;
+  ਅਚਲ ਅੱਖਰ *ਕੋਡ = luaL_checklstring(L, 2, &lcode);
+  ਪੂਰਨ ਸਥਿਤੀ;
   lua_settop(L1, 0);
-  status = luaL_loadbufferx(L1, code, lcode, code, "t");
-  if (status == LUA_OK)
-    status = lua_pcall(L1, 0, LUA_MULTRET, 0);
-  if (status != LUA_OK) {
+  ਸਥਿਤੀ = luaL_loadbufferx(L1, ਕੋਡ, lcode, ਕੋਡ, "t");
+  ਜੇ (ਸਥਿਤੀ == LUA_OK)
+    ਸਥਿਤੀ = lua_pcall(L1, 0, LUA_MULTRET, 0);
+  ਜੇ (ਸਥਿਤੀ != LUA_OK) {
     lua_pushnil(L);
     lua_pushstring(L, lua_tostring(L1, -1));
-    lua_pushinteger(L, status);
-    return 3;
+    lua_pushinteger(L, ਸਥਿਤੀ);
+    ਵਾਪਸ 3;
   }
-  else {
-    int i = 0;
-    while (!lua_isnone(L1, ++i))
+  ਨਹੀਂਤਾਂ {
+    ਪੂਰਨ i = 0;
+    ਜਦੋਂ (!lua_isnone(L1, ++i))
       lua_pushstring(L, lua_tostring(L1, i));
-    lua_pop(L1, i-1);
-    return i-1;
+    lua_ਕੱਢੋ(L1, i-1);
+    ਵਾਪਸ i-1;
   }
 }
 
 
-static int log2_aux (lua_State *L) {
-  unsigned int x = (unsigned int)luaL_checkinteger(L, 1);
+ਸਥਿਰ ਪੂਰਨ log2_aux (lua_State *L) {
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ x = (ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ)luaL_checkinteger(L, 1);
   lua_pushinteger(L, luaO_ceillog2(x));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-struct Aux { jmp_buf jb; const char *paniccode; lua_State *L; };
+ਬਣਤਰ Aux { jmp_buf jb; ਅਚਲ ਅੱਖਰ *paniccode; lua_State *L; };
 
 /*
 ** does a long-jump back to "main program".
 */
-static int panicback (lua_State *L) {
-  struct Aux *b;
+ਸਥਿਰ ਪੂਰਨ panicback (lua_State *L) {
+  ਬਣਤਰ Aux *b;
   lua_checkstack(L, 1);  /* open space for 'Aux' struct */
   lua_getfield(L, LUA_REGISTRYINDEX, "_jmpbuf");  /* get 'Aux' struct */
-  b = (struct Aux *)lua_touserdata(L, -1);
-  lua_pop(L, 1);  /* remove 'Aux' struct */
-  runC(b->L, L, b->paniccode);  /* run optional panic code */
+  b = (ਬਣਤਰ Aux *)lua_touserdata(L, -1);
+  lua_ਕੱਢੋ(L, 1);  /* remove 'Aux' struct */
+  ਲੜੀਵਾਰ_C(b->L, L, b->paniccode);  /* run optional panic code */
   longjmp(b->jb, 1);
-  return 1;  /* to avoid warnings */
+  ਵਾਪਸ 1;  /* to avoid warnings */
 }
 
-static int checkpanic (lua_State *L) {
-  struct Aux b;
-  void *ud;
+ਸਥਿਰ ਪੂਰਨ checkpanic (lua_State *L) {
+  ਬਣਤਰ Aux b;
+  ਖਾਲੀ *ud;
   lua_State *L1;
-  const char *code = luaL_checkstring(L, 1);
+  ਅਚਲ ਅੱਖਰ *ਕੋਡ = luaL_checkstring(L, 1);
   lua_Alloc f = lua_getallocf(L, &ud);
   b.paniccode = luaL_optstring(L, 2, "");
   b.L = L;
   L1 = lua_newstate(f, ud, 0);  /* create new state */
-  if (L1 == NULL) {  /* error? */
+  ਜੇ (L1 == ਨਿਰਾ) {  /* error? */
     lua_pushstring(L, MEMERRMSG);
-    return 1;
+    ਵਾਪਸ 1;
   }
   lua_atpanic(L1, panicback);  /* set its panic function */
   lua_pushlightuserdata(L1, &b);
   lua_setfield(L1, LUA_REGISTRYINDEX, "_jmpbuf");  /* store 'Aux' struct */
-  if (setjmp(b.jb) == 0) {  /* set jump buffer */
-    runC(L, L1, code);  /* run code unprotected */
+  ਜੇ (setjmp(b.jb) == 0) {  /* set jump buffer */
+    ਲੜੀਵਾਰ_C(L, L1, ਕੋਡ);  /* run code unprotected */
     lua_pushliteral(L, "no errors");
   }
-  else {  /* error handling */
+  ਨਹੀਂਤਾਂ {  /* error handling */
     /* move error message to original state */
     lua_pushstring(L, lua_tostring(L1, -1));
   }
   lua_close(L1);
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
-static int externKstr (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ externKstr (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
-  lua_pushexternalstring(L, s, len, NULL, NULL);
-  return 1;
+  ਅਚਲ ਅੱਖਰ *s = luaL_checklstring(L, 1, &len);
+  lua_pushexternalstring(L, s, len, ਨਿਰਾ, ਨਿਰਾ);
+  ਵਾਪਸ 1;
 }
 
 
@@ -1466,22 +1466,22 @@ static int externKstr (lua_State *L) {
 ** create an external string using that buffer. Use the allocation
 ** function from Lua to create and free the buffer.
 */
-static int externstr (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ externstr (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
-  void *ud;
+  ਅਚਲ ਅੱਖਰ *s = luaL_checklstring(L, 1, &len);
+  ਖਾਲੀ *ud;
   lua_Alloc allocf = lua_getallocf(L, &ud);  /* get allocation function */
   /* create the buffer */
-  char *buff = cast_charp((*allocf)(ud, NULL, 0, len + 1));
-  if (buff == NULL) {  /* memory error? */
+  ਅੱਖਰ *buff = cast_charp((*allocf)(ud, ਨਿਰਾ, 0, len + 1));
+  ਜੇ (buff == ਨਿਰਾ) {  /* memory error? */
     lua_pushliteral(L, "not enough memory");
     lua_error(L);  /* raise a memory error */
   }
   /* copy string content to buffer, including ending 0 */
-  memcpy(buff, s, (len + 1) * sizeof(char));
+  ਸਮ੍ਰਿਤੀ_ਨਕਲ(buff, s, (len + 1) * ਆਕਾਰ(ਅੱਖਰ));
   /* create external string */
   lua_pushexternalstring(L, buff, len, allocf, ud);
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
@@ -1493,116 +1493,116 @@ static int externstr (lua_State *L) {
 */
 
 
-static void sethookaux (lua_State *L, int mask, int count, const char *code);
+ਸਥਿਰ ਖਾਲੀ sethookaux (lua_State *L, ਪੂਰਨ ਨਕਾਬ_2, ਪੂਰਨ ਗਿਣਤੀ_2, ਅਚਲ ਅੱਖਰ *ਕੋਡ);
 
-static const char *const delimits = " \t\n,;";
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *ਅਚਲ delimits = " \t\n,;";
 
-static void skip (const char **pc) {
-  for (;;) {
-    if (**pc != '\0' && strchr(delimits, **pc)) (*pc)++;
-    else if (**pc == '#') {  /* comment? */
-      while (**pc != '\n' && **pc != '\0') (*pc)++;  /* until end-of-line */
+ਸਥਿਰ ਖਾਲੀ skip (ਅਚਲ ਅੱਖਰ **pc) {
+  ਲਈ (;;) {
+    ਜੇ (**pc != '\0' && strchr(delimits, **pc)) (*pc)++;
+    ਨਹੀਂਤਾਂ ਜੇ (**pc == '#') {  /* comment? */
+      ਜਦੋਂ (**pc != '\n' && **pc != '\0') (*pc)++;  /* until end-of-line */
     }
-    else break;
+    ਨਹੀਂਤਾਂ ਰੋਕੋ;
   }
 }
 
-static int getnum_aux (lua_State *L, lua_State *L1, const char **pc) {
-  int res = 0;
-  int sig = 1;
+ਸਥਿਰ ਪੂਰਨ getnum_aux (lua_State *L, lua_State *L1, ਅਚਲ ਅੱਖਰ **pc) {
+  ਪੂਰਨ res = 0;
+  ਪੂਰਨ sig = 1;
   skip(pc);
-  if (**pc == '.') {
+  ਜੇ (**pc == '.') {
     res = cast_int(lua_tointeger(L1, -1));
-    lua_pop(L1, 1);
+    lua_ਕੱਢੋ(L1, 1);
     (*pc)++;
-    return res;
+    ਵਾਪਸ res;
   }
-  else if (**pc == '*') {
+  ਨਹੀਂਤਾਂ ਜੇ (**pc == '*') {
     res = lua_gettop(L1);
     (*pc)++;
-    return res;
+    ਵਾਪਸ res;
   }
-  else if (**pc == '!') {
+  ਨਹੀਂਤਾਂ ਜੇ (**pc == '!') {
     (*pc)++;
-    if (**pc == 'G')
+    ਜੇ (**pc == 'G')
       res = LUA_RIDX_GLOBALS;
-    else if (**pc == 'M')
+    ਨਹੀਂਤਾਂ ਜੇ (**pc == 'M')
       res = LUA_RIDX_MAINTHREAD;
-    else lua_assert(0);
+    ਨਹੀਂਤਾਂ lua_assert(0);
     (*pc)++;
-    return res;
+    ਵਾਪਸ res;
   }
-  else if (**pc == '-') {
+  ਨਹੀਂਤਾਂ ਜੇ (**pc == '-') {
     sig = -1;
     (*pc)++;
   }
-  if (!lisdigit(cast_uchar(**pc)))
+  ਜੇ (!lisdigit(cast_uchar(**pc)))
     luaL_error(L, "number expected (%s)", *pc);
-  while (lisdigit(cast_uchar(**pc))) res = res*10 + (*(*pc)++) - '0';
-  return sig*res;
+  ਜਦੋਂ (lisdigit(cast_uchar(**pc))) res = res*10 + (*(*pc)++) - '0';
+  ਵਾਪਸ sig*res;
 }
 
-static const char *getstring_aux (lua_State *L, char *buff, const char **pc) {
-  int i = 0;
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *getstring_aux (lua_State *L, ਅੱਖਰ *buff, ਅਚਲ ਅੱਖਰ **pc) {
+  ਪੂਰਨ i = 0;
   skip(pc);
-  if (**pc == '"' || **pc == '\'') {  /* quoted string? */
-    int quote = *(*pc)++;
-    while (**pc != quote) {
-      if (**pc == '\0') luaL_error(L, "unfinished string in C script");
+  ਜੇ (**pc == '"' || **pc == '\'') {  /* quoted string? */
+    ਪੂਰਨ quote = *(*pc)++;
+    ਜਦੋਂ (**pc != quote) {
+      ਜੇ (**pc == '\0') luaL_error(L, "unfinished string in C script");
       buff[i++] = *(*pc)++;
     }
     (*pc)++;
   }
-  else {
-    while (**pc != '\0' && !strchr(delimits, **pc))
+  ਨਹੀਂਤਾਂ {
+    ਜਦੋਂ (**pc != '\0' && !strchr(delimits, **pc))
       buff[i++] = *(*pc)++;
   }
   buff[i] = '\0';
-  return buff;
+  ਵਾਪਸ buff;
 }
 
 
-static int getindex_aux (lua_State *L, lua_State *L1, const char **pc) {
+ਸਥਿਰ ਪੂਰਨ getindex_aux (lua_State *L, lua_State *L1, ਅਚਲ ਅੱਖਰ **pc) {
   skip(pc);
-  switch (*(*pc)++) {
-    case 'R': return LUA_REGISTRYINDEX;
-    case 'U': return lua_upvalueindex(getnum_aux(L, L1, pc));
-    default: {
-      int n;
+  ਚੋਣ (*(*pc)++) {
+    ਹਾਲਤ 'R': ਵਾਪਸ LUA_REGISTRYINDEX;
+    ਹਾਲਤ 'U': ਵਾਪਸ lua_upvalueindex(getnum_aux(L, L1, pc));
+    ਮੂਲ: {
+      ਪੂਰਨ n;
       (*pc)--;  /* to read again */
       n = getnum_aux(L, L1, pc);
-      if (n == 0) return 0;
-      else return lua_absindex(L1, n);
+      ਜੇ (n == 0) ਵਾਪਸ 0;
+      ਨਹੀਂਤਾਂ ਵਾਪਸ lua_absindex(L1, n);
     }
   }
 }
 
 
-static const char *const statcodes[] = {"OK", "YIELD", "ERRRUN",
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *ਅਚਲ statcodes[] = {"OK", "YIELD", "ERRRUN",
     "ERRSYNTAX", MEMERRMSG, "ERRERR"};
 
 /*
 ** Avoid these stat codes from being collected, to avoid possible
 ** memory error when pushing them.
 */
-static void regcodes (lua_State *L) {
-  unsigned int i;
-  for (i = 0; i < sizeof(statcodes) / sizeof(statcodes[0]); i++) {
+ਸਥਿਰ ਖਾਲੀ regcodes (lua_State *L) {
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ i;
+  ਲਈ (i = 0; i < ਆਕਾਰ(statcodes) / ਆਕਾਰ(statcodes[0]); i++) {
     lua_pushboolean(L, 1);
     lua_setfield(L, LUA_REGISTRYINDEX, statcodes[i]);
   }
 }
 
 
-#define EQ(s1)	(strcmp(s1, inst) == 0)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ EQ(s1)	(strcmp(s1, inst) == 0)
 
-#define getnum		(getnum_aux(L, L1, &pc))
-#define getstring	(getstring_aux(L, buff, &pc))
-#define getindex	(getindex_aux(L, L1, &pc))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ getnum		(getnum_aux(L, L1, &pc))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ getstring	(getstring_aux(L, buff, &pc))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ getindex	(getindex_aux(L, L1, &pc))
 
 
-static int testC (lua_State *L);
-static int Cfunck (lua_State *L, int status, lua_KContext ctx);
+ਸਥਿਰ ਪੂਰਨ testC (lua_State *L);
+ਸਥਿਰ ਪੂਰਨ Cfunck (lua_State *L, ਪੂਰਨ ਸਥਿਤੀ, lua_KContext ctx);
 
 /*
 ** arithmetic operation encoding for 'arith' instruction
@@ -1612,451 +1612,451 @@ static int Cfunck (lua_State *L, int status, lua_KContext ctx);
 ** LUA_OPUNM   -> _
 ** LUA_OPBNOT  -> !
 */
-static const char ops[] = "+-*%^/\\&|~<>_!";
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ ops[] = "+-*%^/\\&|~<>_!";
 
-static int runC (lua_State *L, lua_State *L1, const char *pc) {
-  char buff[300];
-  int status = 0;
-  if (pc == NULL) return luaL_error(L, "attempt to runC null script");
-  for (;;) {
-    const char *inst = getstring;
-    if EQ("") return 0;
-    else if EQ("absindex") {
+ਸਥਿਰ ਪੂਰਨ ਲੜੀਵਾਰ_C (lua_State *L, lua_State *L1, ਅਚਲ ਅੱਖਰ *pc) {
+  ਅੱਖਰ buff[300];
+  ਪੂਰਨ ਸਥਿਤੀ = 0;
+  ਜੇ (pc == ਨਿਰਾ) ਵਾਪਸ luaL_error(L, "attempt to runC null script");
+  ਲਈ (;;) {
+    ਅਚਲ ਅੱਖਰ *inst = getstring;
+    ਜੇ EQ("") ਵਾਪਸ 0;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("absindex") {
       lua_pushinteger(L1, getindex);
     }
-    else if EQ("append") {
-      int t = getindex;
-      int i = cast_int(lua_rawlen(L1, t));
+    ਨਹੀਂਤਾਂ ਜੇ EQ("append") {
+      ਪੂਰਨ t = getindex;
+      ਪੂਰਨ i = cast_int(lua_rawlen(L1, t));
       lua_rawseti(L1, t, i + 1);
     }
-    else if EQ("arith") {
-      int op;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("arith") {
+      ਪੂਰਨ op;
       skip(&pc);
       op = cast_int(strchr(ops, *pc++) - ops);
       lua_arith(L1, op);
     }
-    else if EQ("call") {
-      int narg = getnum;
-      int nres = getnum;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("call") {
+      ਪੂਰਨ narg = getnum;
+      ਪੂਰਨ nres = getnum;
       lua_call(L1, narg, nres);
     }
-    else if EQ("callk") {
-      int narg = getnum;
-      int nres = getnum;
-      int i = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("callk") {
+      ਪੂਰਨ narg = getnum;
+      ਪੂਰਨ nres = getnum;
+      ਪੂਰਨ i = getindex;
       lua_callk(L1, narg, nres, i, Cfunck);
     }
-    else if EQ("checkstack") {
-      int sz = getnum;
-      const char *msg = getstring;
-      if (*msg == '\0')
-        msg = NULL;  /* to test 'luaL_checkstack' with no message */
-      luaL_checkstack(L1, sz, msg);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("checkstack") {
+      ਪੂਰਨ sz = getnum;
+      ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = getstring;
+      ਜੇ (*ਸੁਨੇਹਾ == '\0')
+        ਸੁਨੇਹਾ = ਨਿਰਾ;  /* to test 'luaL_checkstack' with no message */
+      luaL_checkstack(L1, sz, ਸੁਨੇਹਾ);
     }
-    else if EQ("rawcheckstack") {
-      int sz = getnum;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawcheckstack") {
+      ਪੂਰਨ sz = getnum;
       lua_pushboolean(L1, lua_checkstack(L1, sz));
     }
-    else if EQ("compare") {
-      const char *opt = getstring;  /* EQ, LT, or LE */
-      int op = (opt[0] == 'E') ? LUA_OPEQ
+    ਨਹੀਂਤਾਂ ਜੇ EQ("compare") {
+      ਅਚਲ ਅੱਖਰ *opt = getstring;  /* EQ, LT, or LE */
+      ਪੂਰਨ op = (opt[0] == 'E') ? LUA_OPEQ
                                : (opt[1] == 'T') ? LUA_OPLT : LUA_OPLE;
-      int a = getindex;
-      int b = getindex;
+      ਪੂਰਨ a = getindex;
+      ਪੂਰਨ b = getindex;
       lua_pushboolean(L1, lua_compare(L1, a, b, op));
     }
-    else if EQ("concat") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("concat") {
       lua_concat(L1, getnum);
     }
-    else if EQ("copy") {
-      int f = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("copy") {
+      ਪੂਰਨ f = getindex;
       lua_copy(L1, f, getindex);
     }
-    else if EQ("func2num") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("func2num") {
       lua_CFunction func = lua_tocfunction(L1, getindex);
       lua_pushinteger(L1, cast_st2S(cast_sizet(func)));
     }
-    else if EQ("getfield") {
-      int t = getindex;
-      int tp = lua_getfield(L1, t, getstring);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("getfield") {
+      ਪੂਰਨ t = getindex;
+      ਪੂਰਨ tp = lua_getfield(L1, t, getstring);
       lua_assert(tp == lua_type(L1, -1));
     }
-    else if EQ("getglobal") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("getglobal") {
       lua_getglobal(L1, getstring);
     }
-    else if EQ("getmetatable") {
-      if (lua_getmetatable(L1, getindex) == 0)
+    ਨਹੀਂਤਾਂ ਜੇ EQ("getmetatable") {
+      ਜੇ (lua_getmetatable(L1, getindex) == 0)
         lua_pushnil(L1);
     }
-    else if EQ("gettable") {
-      int tp = lua_gettable(L1, getindex);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("gettable") {
+      ਪੂਰਨ tp = lua_gettable(L1, getindex);
       lua_assert(tp == lua_type(L1, -1));
     }
-    else if EQ("gettop") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("gettop") {
       lua_pushinteger(L1, lua_gettop(L1));
     }
-    else if EQ("gsub") {
-      int a = getnum; int b = getnum; int c = getnum;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("gsub") {
+      ਪੂਰਨ a = getnum; ਪੂਰਨ b = getnum; ਪੂਰਨ c = getnum;
       luaL_gsub(L1, lua_tostring(L1, a),
                     lua_tostring(L1, b),
                     lua_tostring(L1, c));
     }
-    else if EQ("insert") {
-      lua_insert(L1, getnum);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("insert") {
+      lua_ਪਾਓ(L1, getnum);
     }
-    else if EQ("iscfunction") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("iscfunction") {
       lua_pushboolean(L1, lua_iscfunction(L1, getindex));
     }
-    else if EQ("isfunction") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isfunction") {
       lua_pushboolean(L1, lua_isfunction(L1, getindex));
     }
-    else if EQ("isnil") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isnil") {
       lua_pushboolean(L1, lua_isnil(L1, getindex));
     }
-    else if EQ("isnull") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isnull") {
       lua_pushboolean(L1, lua_isnone(L1, getindex));
     }
-    else if EQ("isnumber") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isnumber") {
       lua_pushboolean(L1, lua_isnumber(L1, getindex));
     }
-    else if EQ("isstring") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isstring") {
       lua_pushboolean(L1, lua_isstring(L1, getindex));
     }
-    else if EQ("istable") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("istable") {
       lua_pushboolean(L1, lua_istable(L1, getindex));
     }
-    else if EQ("isudataval") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isudataval") {
       lua_pushboolean(L1, lua_islightuserdata(L1, getindex));
     }
-    else if EQ("isuserdata") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isuserdata") {
       lua_pushboolean(L1, lua_isuserdata(L1, getindex));
     }
-    else if EQ("len") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("len") {
       lua_len(L1, getindex);
     }
-    else if EQ("Llen") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("Llen") {
       lua_pushinteger(L1, luaL_len(L1, getindex));
     }
-    else if EQ("loadfile") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("loadfile") {
       luaL_loadfilex(L1, luaL_checkstring(L1, getnum), "t");
     }
-    else if EQ("loadstring") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("loadstring") {
       size_t slen;
-      const char *s = luaL_checklstring(L1, getnum, &slen);
-      const char *name = getstring;
-      const char *mode = getstring;
-      luaL_loadbufferx(L1, s, slen, name, mode);
+      ਅਚਲ ਅੱਖਰ *s = luaL_checklstring(L1, getnum, &slen);
+      ਅਚਲ ਅੱਖਰ *name = getstring;
+      ਅਚਲ ਅੱਖਰ *ਬਹੁਲਕ = getstring;
+      luaL_loadbufferx(L1, s, slen, name, ਬਹੁਲਕ);
     }
-    else if EQ("newmetatable") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("newmetatable") {
       lua_pushboolean(L1, luaL_newmetatable(L1, getstring));
     }
-    else if EQ("newtable") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("newtable") {
       lua_newtable(L1);
     }
-    else if EQ("newthread") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("newthread") {
       lua_newthread(L1);
     }
-    else if EQ("resetthread") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("resetthread") {
       lua_pushinteger(L1, lua_resetthread(L1));  /* deprecated */
     }
-    else if EQ("newuserdata") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("newuserdata") {
       lua_newuserdata(L1, cast_sizet(getnum));
     }
-    else if EQ("next") {
-      lua_next(L1, -2);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("next") {
+      lua_ਅਗਲਾ(L1, -2);
     }
-    else if EQ("objsize") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("objsize") {
       lua_pushinteger(L1, l_castU2S(lua_rawlen(L1, getindex)));
     }
-    else if EQ("pcall") {
-      int narg = getnum;
-      int nres = getnum;
-      status = lua_pcall(L1, narg, nres, getnum);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pcall") {
+      ਪੂਰਨ narg = getnum;
+      ਪੂਰਨ nres = getnum;
+      ਸਥਿਤੀ = lua_pcall(L1, narg, nres, getnum);
     }
-    else if EQ("pcallk") {
-      int narg = getnum;
-      int nres = getnum;
-      int i = getindex;
-      status = lua_pcallk(L1, narg, nres, 0, i, Cfunck);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pcallk") {
+      ਪੂਰਨ narg = getnum;
+      ਪੂਰਨ nres = getnum;
+      ਪੂਰਨ i = getindex;
+      ਸਥਿਤੀ = lua_pcallk(L1, narg, nres, 0, i, Cfunck);
     }
-    else if EQ("pop") {
-      lua_pop(L1, getnum);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pop") {
+      lua_ਕੱਢੋ(L1, getnum);
     }
-    else if EQ("printstack") {
-      int n = getnum;
-      if (n != 0) {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("printstack") {
+      ਪੂਰਨ n = getnum;
+      ਜੇ (n != 0) {
         lua_printvalue(s2v(L->ci->func.p + n));
-        printf("\n");
+        ਲਿਖੋ("\n");
       }
-      else lua_printstack(L1);
+      ਨਹੀਂਤਾਂ lua_printstack(L1);
     }
-    else if EQ("print") {
-      const char *msg = getstring;
-      printf("%s\n", msg);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("print") {
+      ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = getstring;
+      ਲਿਖੋ("%s\n", ਸੁਨੇਹਾ);
     }
-    else if EQ("warningC") {
-      const char *msg = getstring;
-      lua_warning(L1, msg, 1);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("warningC") {
+      ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = getstring;
+      lua_warning(L1, ਸੁਨੇਹਾ, 1);
     }
-    else if EQ("warning") {
-      const char *msg = getstring;
-      lua_warning(L1, msg, 0);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("warning") {
+      ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = getstring;
+      lua_warning(L1, ਸੁਨੇਹਾ, 0);
     }
-    else if EQ("pushbool") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushbool") {
       lua_pushboolean(L1, getnum);
     }
-    else if EQ("pushcclosure") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushcclosure") {
       lua_pushcclosure(L1, testC, getnum);
     }
-    else if EQ("pushint") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushint") {
       lua_pushinteger(L1, getnum);
     }
-    else if EQ("pushnil") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushnil") {
       lua_pushnil(L1);
     }
-    else if EQ("pushnum") {
-      lua_pushnumber(L1, (lua_Number)getnum);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushnum") {
+      lua_pushnumber(L1, (lua_ਸੰਖਿਆ)getnum);
     }
-    else if EQ("pushstatus") {
-      lua_pushstring(L1, statcodes[status]);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushstatus") {
+      lua_pushstring(L1, statcodes[ਸਥਿਤੀ]);
     }
-    else if EQ("pushstring") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushstring") {
       lua_pushstring(L1, getstring);
     }
-    else if EQ("pushupvalueindex") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushupvalueindex") {
       lua_pushinteger(L1, lua_upvalueindex(getnum));
     }
-    else if EQ("pushvalue") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushvalue") {
       lua_pushvalue(L1, getindex);
     }
-    else if EQ("pushfstringI") {
-      lua_pushfstring(L1, lua_tostring(L, -2), (int)lua_tointeger(L, -1));
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushfstringI") {
+      lua_pushfstring(L1, lua_tostring(L, -2), (ਪੂਰਨ)lua_tointeger(L, -1));
     }
-    else if EQ("pushfstringS") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushfstringS") {
       lua_pushfstring(L1, lua_tostring(L, -2), lua_tostring(L, -1));
     }
-    else if EQ("pushfstringP") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("pushfstringP") {
       lua_pushfstring(L1, lua_tostring(L, -2), lua_topointer(L, -1));
     }
-    else if EQ("rawget") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawget") {
+      ਪੂਰਨ t = getindex;
       lua_rawget(L1, t);
     }
-    else if EQ("rawgeti") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawgeti") {
+      ਪੂਰਨ t = getindex;
       lua_rawgeti(L1, t, getnum);
     }
-    else if EQ("rawgetp") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawgetp") {
+      ਪੂਰਨ t = getindex;
       lua_rawgetp(L1, t, cast_voidp(cast_sizet(getnum)));
     }
-    else if EQ("rawset") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawset") {
+      ਪੂਰਨ t = getindex;
       lua_rawset(L1, t);
     }
-    else if EQ("rawseti") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawseti") {
+      ਪੂਰਨ t = getindex;
       lua_rawseti(L1, t, getnum);
     }
-    else if EQ("rawsetp") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rawsetp") {
+      ਪੂਰਨ t = getindex;
       lua_rawsetp(L1, t, cast_voidp(cast_sizet(getnum)));
     }
-    else if EQ("remove") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("remove") {
       lua_remove(L1, getnum);
     }
-    else if EQ("replace") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("replace") {
       lua_replace(L1, getindex);
     }
-    else if EQ("resume") {
-      int i = getindex;
-      int nres;
-      status = lua_resume(lua_tothread(L1, i), L, getnum, &nres);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("resume") {
+      ਪੂਰਨ i = getindex;
+      ਪੂਰਨ nres;
+      ਸਥਿਤੀ = lua_resume(lua_tothread(L1, i), L, getnum, &nres);
     }
-    else if EQ("traceback") {
-      const char *msg = getstring;
-      int level = getnum;
-      luaL_traceback(L1, L1, msg, level);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("traceback") {
+      ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ = getstring;
+      ਪੂਰਨ level = getnum;
+      luaL_traceback(L1, L1, ਸੁਨੇਹਾ, level);
     }
-    else if EQ("threadstatus") {
-      lua_pushstring(L1, statcodes[lua_status(L1)]);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("threadstatus") {
+      lua_pushstring(L1, statcodes[lua_ਸਥਿਤੀ(L1)]);
     }
-    else if EQ("alloccount") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("alloccount") {
       l_memcontrol.countlimit = cast_uint(getnum);
     }
-    else if EQ("return") {
-      int n = getnum;
-      if (L1 != L) {
-        int i;
-        for (i = 0; i < n; i++) {
-          int idx = -(n - i);
-          switch (lua_type(L1, idx)) {
-            case LUA_TBOOLEAN:
+    ਨਹੀਂਤਾਂ ਜੇ EQ("return") {
+      ਪੂਰਨ n = getnum;
+      ਜੇ (L1 != L) {
+        ਪੂਰਨ i;
+        ਲਈ (i = 0; i < n; i++) {
+          ਪੂਰਨ idx = -(n - i);
+          ਚੋਣ (lua_type(L1, idx)) {
+            ਹਾਲਤ LUA_TBOOLEAN:
               lua_pushboolean(L, lua_toboolean(L1, idx));
-              break;
-            default:
+              ਰੋਕੋ;
+            ਮੂਲ:
               lua_pushstring(L, lua_tostring(L1, idx));
-              break;
+              ਰੋਕੋ;
           }
         }
       }
-      return n;
+      ਵਾਪਸ n;
     }
-    else if EQ("rotate") {
-      int i = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("rotate") {
+      ਪੂਰਨ i = getindex;
       lua_rotate(L1, i, getnum);
     }
-    else if EQ("setfield") {
-      int t = getindex;
-      const char *s = getstring;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("setfield") {
+      ਪੂਰਨ t = getindex;
+      ਅਚਲ ਅੱਖਰ *s = getstring;
       lua_setfield(L1, t, s);
     }
-    else if EQ("seti") {
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("seti") {
+      ਪੂਰਨ t = getindex;
       lua_seti(L1, t, getnum);
     }
-    else if EQ("setglobal") {
-      const char *s = getstring;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("setglobal") {
+      ਅਚਲ ਅੱਖਰ *s = getstring;
       lua_setglobal(L1, s);
     }
-    else if EQ("sethook") {
-      int mask = getnum;
-      int count = getnum;
-      const char *s = getstring;
-      sethookaux(L1, mask, count, s);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("sethook") {
+      ਪੂਰਨ ਨਕਾਬ_2 = getnum;
+      ਪੂਰਨ ਗਿਣਤੀ_2 = getnum;
+      ਅਚਲ ਅੱਖਰ *s = getstring;
+      sethookaux(L1, ਨਕਾਬ_2, ਗਿਣਤੀ_2, s);
     }
-    else if EQ("setmetatable") {
-      int idx = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("setmetatable") {
+      ਪੂਰਨ idx = getindex;
       lua_setmetatable(L1, idx);
     }
-    else if EQ("settable") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("settable") {
       lua_settable(L1, getindex);
     }
-    else if EQ("settop") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("settop") {
       lua_settop(L1, getnum);
     }
-    else if EQ("testudata") {
-      int i = getindex;
-      lua_pushboolean(L1, luaL_testudata(L1, i, getstring) != NULL);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("testudata") {
+      ਪੂਰਨ i = getindex;
+      lua_pushboolean(L1, luaL_testudata(L1, i, getstring) != ਨਿਰਾ);
     }
-    else if EQ("error") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("error") {
       lua_error(L1);
     }
-    else if EQ("abort") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("abort") {
       abort();
     }
-    else if EQ("throw") {
-#if defined(__cplusplus)
-static struct X { int x; } x;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("throw") {
+#ਜੇ defined(__cplusplus)
+ਸਥਿਰ ਬਣਤਰ X { ਪੂਰਨ x; } x;
       throw x;
-#else
+#ਨਹੀਂਤਾਂ
       luaL_error(L1, "C++");
-#endif
-      break;
+#ਜੇ_ਅੰਤ
+      ਰੋਕੋ;
     }
-    else if EQ("tobool") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("tobool") {
       lua_pushboolean(L1, lua_toboolean(L1, getindex));
     }
-    else if EQ("tocfunction") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("tocfunction") {
       lua_pushcfunction(L1, lua_tocfunction(L1, getindex));
     }
-    else if EQ("tointeger") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("tointeger") {
       lua_pushinteger(L1, lua_tointeger(L1, getindex));
     }
-    else if EQ("tonumber") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("tonumber") {
       lua_pushnumber(L1, lua_tonumber(L1, getindex));
     }
-    else if EQ("topointer") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("topointer") {
       lua_pushlightuserdata(L1, cast_voidp(lua_topointer(L1, getindex)));
     }
-    else if EQ("touserdata") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("touserdata") {
       lua_pushlightuserdata(L1, lua_touserdata(L1, getindex));
     }
-    else if EQ("tostring") {
-      const char *s = lua_tostring(L1, getindex);
-      const char *s1 = lua_pushstring(L1, s);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("tostring") {
+      ਅਚਲ ਅੱਖਰ *s = lua_tostring(L1, getindex);
+      ਅਚਲ ਅੱਖਰ *s1 = lua_pushstring(L1, s);
       cast_void(s1);  /* to avoid warnings */
-      lua_longassert((s == NULL && s1 == NULL) || strcmp(s, s1) == 0);
+      lua_longassert((s == ਨਿਰਾ && s1 == ਨਿਰਾ) || strcmp(s, s1) == 0);
     }
-    else if EQ("Ltolstring") {
-      luaL_tolstring(L1, getindex, NULL);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("Ltolstring") {
+      luaL_tolstring(L1, getindex, ਨਿਰਾ);
     }
-    else if EQ("type") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("type") {
       lua_pushstring(L1, luaL_typename(L1, getnum));
     }
-    else if EQ("xmove") {
-      int f = getindex;
-      int t = getindex;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("xmove") {
+      ਪੂਰਨ f = getindex;
+      ਪੂਰਨ t = getindex;
       lua_State *fs = (f == 0) ? L1 : lua_tothread(L1, f);
       lua_State *ts = (t == 0) ? L1 : lua_tothread(L1, t);
-      int n = getnum;
-      if (n == 0) n = lua_gettop(fs);
+      ਪੂਰਨ n = getnum;
+      ਜੇ (n == 0) n = lua_gettop(fs);
       lua_xmove(fs, ts, n);
     }
-    else if EQ("isyieldable") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("isyieldable") {
       lua_pushboolean(L1, lua_isyieldable(lua_tothread(L1, getindex)));
     }
-    else if EQ("yield") {
-      return lua_yield(L1, getnum);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("yield") {
+      ਵਾਪਸ lua_yield(L1, getnum);
     }
-    else if EQ("yieldk") {
-      int nres = getnum;
-      int i = getindex;
-      return lua_yieldk(L1, nres, i, Cfunck);
+    ਨਹੀਂਤਾਂ ਜੇ EQ("yieldk") {
+      ਪੂਰਨ nres = getnum;
+      ਪੂਰਨ i = getindex;
+      ਵਾਪਸ lua_yieldk(L1, nres, i, Cfunck);
     }
-    else if EQ("toclose") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("toclose") {
       lua_toclose(L1, getnum);
     }
-    else if EQ("closeslot") {
+    ਨਹੀਂਤਾਂ ਜੇ EQ("closeslot") {
       lua_closeslot(L1, getnum);
     }
-    else if EQ("argerror") {
-      int arg = getnum;
+    ਨਹੀਂਤਾਂ ਜੇ EQ("argerror") {
+      ਪੂਰਨ arg = getnum;
       luaL_argerror(L1, arg, getstring);
     }
-    else luaL_error(L, "unknown instruction %s", buff);
+    ਨਹੀਂਤਾਂ luaL_error(L, "unknown instruction %s", buff);
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int testC (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ testC (lua_State *L) {
   lua_State *L1;
-  const char *pc;
-  if (lua_isuserdata(L, 1)) {
+  ਅਚਲ ਅੱਖਰ *pc;
+  ਜੇ (lua_isuserdata(L, 1)) {
     L1 = getstate(L);
     pc = luaL_checkstring(L, 2);
   }
-  else if (lua_isthread(L, 1)) {
+  ਨਹੀਂਤਾਂ ਜੇ (lua_isthread(L, 1)) {
     L1 = lua_tothread(L, 1);
     pc = luaL_checkstring(L, 2);
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     L1 = L;
     pc = luaL_checkstring(L, 1);
   }
-  return runC(L, L1, pc);
+  ਵਾਪਸ ਲੜੀਵਾਰ_C(L, L1, pc);
 }
 
 
-static int Cfunc (lua_State *L) {
-  return runC(L, L, lua_tostring(L, lua_upvalueindex(1)));
+ਸਥਿਰ ਪੂਰਨ Cfunc (lua_State *L) {
+  ਵਾਪਸ ਲੜੀਵਾਰ_C(L, L, lua_tostring(L, lua_upvalueindex(1)));
 }
 
 
-static int Cfunck (lua_State *L, int status, lua_KContext ctx) {
-  lua_pushstring(L, statcodes[status]);
+ਸਥਿਰ ਪੂਰਨ Cfunck (lua_State *L, ਪੂਰਨ ਸਥਿਤੀ, lua_KContext ctx) {
+  lua_pushstring(L, statcodes[ਸਥਿਤੀ]);
   lua_setglobal(L, "status");
   lua_pushinteger(L, cast_Integer(ctx));
   lua_setglobal(L, "ctx");
-  return runC(L, L, lua_tostring(L, cast_int(ctx)));
+  ਵਾਪਸ ਲੜੀਵਾਰ_C(L, L, lua_tostring(L, cast_int(ctx)));
 }
 
 
-static int makeCfunc (lua_State *L) {
+ਸਥਿਰ ਪੂਰਨ makeCfunc (lua_State *L) {
   luaL_checkstring(L, 1);
   lua_pushcclosure(L, Cfunc, lua_gettop(L));
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
@@ -2072,31 +2072,31 @@ static int makeCfunc (lua_State *L) {
 /*
 ** C hook that runs the C script stored in registry.C_HOOK[L]
 */
-static void Chook (lua_State *L, lua_Debug *ar) {
-  const char *scpt;
-  const char *const events [] = {"call", "ret", "line", "count", "tailcall"};
+ਸਥਿਰ ਖਾਲੀ Chook (lua_State *L, lua_Debug *ar) {
+  ਅਚਲ ਅੱਖਰ *scpt;
+  ਅਚਲ ਅੱਖਰ *ਅਚਲ events [] = {"call", "ret", "line", "count", "tailcall"};
   lua_getfield(L, LUA_REGISTRYINDEX, "C_HOOK");
   lua_pushlightuserdata(L, L);
   lua_gettable(L, -2);  /* get C_HOOK[L] (script saved by sethookaux) */
   scpt = lua_tostring(L, -1);  /* not very religious (string will be popped) */
-  lua_pop(L, 2);  /* remove C_HOOK and script */
+  lua_ਕੱਢੋ(L, 2);  /* remove C_HOOK and script */
   lua_pushstring(L, events[ar->event]);  /* may be used by script */
   lua_pushinteger(L, ar->currentline);  /* may be used by script */
-  runC(L, L, scpt);  /* run script from C_HOOK[L] */
+  ਲੜੀਵਾਰ_C(L, L, scpt);  /* run script from C_HOOK[L] */
 }
 
 
 /*
 ** sets 'registry.C_HOOK[L] = scpt' and sets 'Chook' as a hook
 */
-static void sethookaux (lua_State *L, int mask, int count, const char *scpt) {
-  if (*scpt == '\0') {  /* no script? */
-    lua_sethook(L, NULL, 0, 0);  /* turn off hooks */
-    return;
+ਸਥਿਰ ਖਾਲੀ sethookaux (lua_State *L, ਪੂਰਨ ਨਕਾਬ_2, ਪੂਰਨ ਗਿਣਤੀ_2, ਅਚਲ ਅੱਖਰ *scpt) {
+  ਜੇ (*scpt == '\0') {  /* no script? */
+    lua_sethook(L, ਨਿਰਾ, 0, 0);  /* turn off hooks */
+    ਵਾਪਸ;
   }
   lua_getfield(L, LUA_REGISTRYINDEX, "C_HOOK");  /* get C_HOOK table */
-  if (!lua_istable(L, -1)) {  /* no hook table? */
-    lua_pop(L, 1);  /* remove previous value */
+  ਜੇ (!lua_istable(L, -1)) {  /* no hook table? */
+    lua_ਕੱਢੋ(L, 1);  /* remove previous value */
     lua_newtable(L);  /* create new C_HOOK table */
     lua_pushvalue(L, -1);
     lua_setfield(L, LUA_REGISTRYINDEX, "C_HOOK");  /* register it */
@@ -2104,68 +2104,68 @@ static void sethookaux (lua_State *L, int mask, int count, const char *scpt) {
   lua_pushlightuserdata(L, L);
   lua_pushstring(L, scpt);
   lua_settable(L, -3);  /* C_HOOK[L] = script */
-  lua_sethook(L, Chook, mask, count);
+  lua_sethook(L, Chook, ਨਕਾਬ_2, ਗਿਣਤੀ_2);
 }
 
 
-static int sethook (lua_State *L) {
-  if (lua_isnoneornil(L, 1))
-    lua_sethook(L, NULL, 0, 0);  /* turn off hooks */
-  else {
-    const char *scpt = luaL_checkstring(L, 1);
-    const char *smask = luaL_checkstring(L, 2);
-    int count = cast_int(luaL_optinteger(L, 3, 0));
-    int mask = 0;
-    if (strchr(smask, 'c')) mask |= LUA_MASKCALL;
-    if (strchr(smask, 'r')) mask |= LUA_MASKRET;
-    if (strchr(smask, 'l')) mask |= LUA_MASKLINE;
-    if (count > 0) mask |= LUA_MASKCOUNT;
-    sethookaux(L, mask, count, scpt);
+ਸਥਿਰ ਪੂਰਨ sethook (lua_State *L) {
+  ਜੇ (lua_isnoneornil(L, 1))
+    lua_sethook(L, ਨਿਰਾ, 0, 0);  /* turn off hooks */
+  ਨਹੀਂਤਾਂ {
+    ਅਚਲ ਅੱਖਰ *scpt = luaL_checkstring(L, 1);
+    ਅਚਲ ਅੱਖਰ *smask = luaL_checkstring(L, 2);
+    ਪੂਰਨ ਗਿਣਤੀ_2 = cast_int(luaL_optinteger(L, 3, 0));
+    ਪੂਰਨ ਨਕਾਬ_2 = 0;
+    ਜੇ (strchr(smask, 'c')) ਨਕਾਬ_2 |= LUA_MASKCALL;
+    ਜੇ (strchr(smask, 'r')) ਨਕਾਬ_2 |= LUA_MASKRET;
+    ਜੇ (strchr(smask, 'l')) ਨਕਾਬ_2 |= LUA_MASKLINE;
+    ਜੇ (ਗਿਣਤੀ_2 > 0) ਨਕਾਬ_2 |= LUA_MASKCOUNT;
+    sethookaux(L, ਨਕਾਬ_2, ਗਿਣਤੀ_2, scpt);
   }
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
-static int coresume (lua_State *L) {
-  int status, nres;
+ਸਥਿਰ ਪੂਰਨ coresume (lua_State *L) {
+  ਪੂਰਨ ਸਥਿਤੀ, nres;
   lua_State *co = lua_tothread(L, 1);
   luaL_argcheck(L, co, 1, "coroutine expected");
-  status = lua_resume(co, L, 0, &nres);
-  if (status != LUA_OK && status != LUA_YIELD) {
+  ਸਥਿਤੀ = lua_resume(co, L, 0, &nres);
+  ਜੇ (ਸਥਿਤੀ != LUA_OK && ਸਥਿਤੀ != LUA_YIELD) {
     lua_pushboolean(L, 0);
-    lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    lua_ਪਾਓ(L, -2);
+    ਵਾਪਸ 2;  /* return false + error message */
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     lua_pushboolean(L, 1);
-    return 1;
+    ਵਾਪਸ 1;
   }
 }
 
-#if !defined(LUA_USE_POSIX)
+#ਜੇ !defined(LUA_USE_POSIX)
 
-#define nonblock	NULL
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ nonblock	ਨਿਰਾ
 
-#else
+#ਨਹੀਂਤਾਂ
 
-#include <unistd.h>
-#include <fcntl.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <unistd.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <fcntl.h>
 
-static int nonblock (lua_State *L) {
-  FILE *f = cast(luaL_Stream*, luaL_checkudata(L, 1, LUA_FILEHANDLE))->f;
-  int fd = fileno(f);
-  int flags = fcntl(fd, F_GETFL, 0);
+ਸਥਿਰ ਪੂਰਨ nonblock (lua_State *L) {
+  FILE *f = cast(lua_L_ਧਾਰਾ*, luaL_checkudata(L, 1, LUA_FILEHANDLE))->f;
+  ਪੂਰਨ fd = fileno(f);
+  ਪੂਰਨ flags = fcntl(fd, F_GETFL, 0);
   flags |= O_NONBLOCK;
   fcntl(fd, F_SETFL, flags);
-  return 0;
+  ਵਾਪਸ 0;
 }
-#endif
+#ਜੇ_ਅੰਤ
 
 /* }====================================================== */
 
 
 
-static const struct luaL_Reg tests_funcs[] = {
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ luaL_Reg tests_funcs[] = {
   {"checkmemory", lua_checkmemory},
   {"closestate", closestate},
   {"d2s", d2s},
@@ -2195,7 +2195,7 @@ static const struct luaL_Reg tests_funcs[] = {
   {"pushuserdata", pushuserdata},
   {"gcquery", gc_query},
   {"querystr", string_query},
-  {"querytab", table_query},
+  {"querytab", ਸਾਰਣੀ_query},
   {"codeparam", test_codeparam},
   {"applyparam", test_applyparam},
   {"ref", tref},
@@ -2209,7 +2209,7 @@ static const struct luaL_Reg tests_funcs[] = {
   {"testC", testC},
   {"makeCfunc", makeCfunc},
   {"totalmem", mem_query},
-  {"alloccount", alloc_count},
+  {"alloccount", alloc_ਗਿਣਤੀ},
   {"allocfailnext", alloc_failnext},
   {"trick", settrick},
   {"udataval", udataval},
@@ -2218,18 +2218,18 @@ static const struct luaL_Reg tests_funcs[] = {
   {"externKstr", externKstr},
   {"externstr", externstr},
   {"nonblock", nonblock},
-  {NULL, NULL}
+  {ਨਿਰਾ, ਨਿਰਾ}
 };
 
 
-static void checkfinalmem (void) {
+ਸਥਿਰ ਖਾਲੀ checkfinalmem (ਖਾਲੀ) {
   lua_assert(l_memcontrol.numblocks == 0);
-  lua_assert(l_memcontrol.total == 0);
+  lua_assert(l_memcontrol.ਕੁੱਲ == 0);
 }
 
 
-int luaB_opentests (lua_State *L) {
-  void *ud;
+ਪੂਰਨ luaB_opentests (lua_State *L) {
+  ਖਾਲੀ *ud;
   lua_Alloc f = lua_getallocf(L, &ud);
   lua_atpanic(L, &tpanic);
   lua_setwarnf(L, &warnf, L);
@@ -2240,8 +2240,8 @@ int luaB_opentests (lua_State *L) {
   lua_assert(f == debug_realloc && ud == cast_voidp(&l_memcontrol));
   lua_setallocf(L, f, ud);  /* exercise this function */
   luaL_newlib(L, tests_funcs);
-  return 1;
+  ਵਾਪਸ 1;
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 

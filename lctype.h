@@ -4,10 +4,10 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lctype_h
-#define lctype_h
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ lctype_h
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lctype_h
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
 
 /*
@@ -16,50 +16,50 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#ਜੇ !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#ਜੇ 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
-#define LUA_USE_CTYPE	0
-#else
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_CTYPE	0
+#ਨਹੀਂਤਾਂ
 /* must use standard C ctype */
-#define LUA_USE_CTYPE	1
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_CTYPE	1
+#ਜੇ_ਅੰਤ
 
-#endif
-
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
-
-#include "llimits.h"
+#ਜੇ_ਅੰਤ
 
 
-#define ALPHABIT	0
-#define DIGITBIT	1
-#define PRINTBIT	2
-#define SPACEBIT	3
-#define XDIGITBIT	4
+#ਜੇ !LUA_USE_CTYPE	/* { */
+
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+
+#ਅਨ੍ਤਰ੍ਭਾਵ "llimits.h"
 
 
-#define MASK(B)		(1 << (B))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ALPHABIT	0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ DIGITBIT	1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PRINTBIT	2
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ SPACEBIT	3
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ XDIGITBIT	4
+
+
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ਨਕਾਬ(B)		(1 << (B))
 
 
 /*
 ** add 1 to char to allow index -1 (EOZ)
 */
-#define testprop(c,p)	(luai_ctype_[(c)+1] & (p))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ testprop(c,p)	(luai_ctype_[(c)+1] & (p))
 
 /*
 ** 'lalpha' (Lua alphabetic) and 'lalnum' (Lua alphanumeric) both include '_'
 */
-#define lislalpha(c)	testprop(c, MASK(ALPHABIT))
-#define lislalnum(c)	testprop(c, (MASK(ALPHABIT) | MASK(DIGITBIT)))
-#define lisdigit(c)	testprop(c, MASK(DIGITBIT))
-#define lisspace(c)	testprop(c, MASK(SPACEBIT))
-#define lisprint(c)	testprop(c, MASK(PRINTBIT))
-#define lisxdigit(c)	testprop(c, MASK(XDIGITBIT))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lislalpha(c)	testprop(c, ਨਕਾਬ(ALPHABIT))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lislalnum(c)	testprop(c, (ਨਕਾਬ(ALPHABIT) | ਨਕਾਬ(DIGITBIT)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisdigit(c)	testprop(c, ਨਕਾਬ(DIGITBIT))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisspace(c)	testprop(c, ਨਕਾਬ(SPACEBIT))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisprint(c)	testprop(c, ਨਕਾਬ(PRINTBIT))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisxdigit(c)	testprop(c, ਨਕਾਬ(XDIGITBIT))
 
 
 /*
@@ -68,34 +68,34 @@
 ** the character either is an upper-case letter or is unchanged by
 ** the transformation, which holds for lower-case letters and '.'.)
 */
-#define ltolower(c)  \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ltolower(c)  \
   check_exp(('A' <= (c) && (c) <= 'Z') || (c) == ((c) | ('A' ^ 'a')),  \
             (c) | ('A' ^ 'a'))
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(ਅਚਲ lu_byte luai_ctype_[UCHAR_MAX + 2];)
 
 
-#else			/* }{ */
+#ਨਹੀਂਤਾਂ			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ctype.h>
 
 
-#define lislalpha(c)	(isalpha(c) || (c) == '_')
-#define lislalnum(c)	(isalnum(c) || (c) == '_')
-#define lisdigit(c)	(isdigit(c))
-#define lisspace(c)	(isspace(c))
-#define lisprint(c)	(isprint(c))
-#define lisxdigit(c)	(isxdigit(c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lislalpha(c)	(ਅੱਖਰ_ਹੈ(c) || (c) == '_')
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lislalnum(c)	(ਅੱਖਰ_ਜਾਂ_ਅੰਕ(c) || (c) == '_')
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisdigit(c)	(ਅੰਕ_ਹੈ(c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisspace(c)	(ਖਾਲੀ_ਥਾਂ_ਹੈ(c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisprint(c)	(isprint(c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lisxdigit(c)	(isxdigit(c))
 
-#define ltolower(c)	(tolower(c))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ ltolower(c)	(tolower(c))
 
-#endif			/* } */
+#ਜੇ_ਅੰਤ			/* } */
 
-#endif
+#ਜੇ_ਅੰਤ
 

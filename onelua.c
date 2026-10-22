@@ -16,13 +16,13 @@
 */
 
 /* default is to build the full interpreter */
-#ifndef MAKE_LIB
-#ifndef MAKE_LUAC
-#ifndef MAKE_LUA
-#define MAKE_LUA
-#endif
-#endif
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MAKE_LIB
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MAKE_LUAC
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MAKE_LUA
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAKE_LUA
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
+#ਜੇ_ਅੰਤ
 
 
 /*
@@ -30,107 +30,107 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
-#define LUA_USE_LINUX
-#define LUA_USE_MACOSX
-#define LUA_USE_POSIX
-#endif
+#ਜੇ 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_LINUX
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_MACOSX
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_POSIX
+#ਜੇ_ਅੰਤ
 
 
 /*
 ** Other specific features
 */
-#if 0
-#define LUA_32BITS
-#define LUA_USE_C89
-#endif
+#ਜੇ 0
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_32_ਬਿੱਟ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_USE_C89
+#ਜੇ_ਅੰਤ
 
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <assert.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <ctype.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <errno.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <float.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <locale.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <setjmp.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <signal.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stddef.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <time.h>
 
 /* setup for luaconf.h */
-#define LUA_CORE
-#define LUA_LIB
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_LIB
 
-#include "luaconf.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "luaconf.h"
 
 /* do not export internal symbols */
-#undef LUAI_FUNC
-#undef LUAI_DDEC
-#undef LUAI_DDEF
-#define LUAI_FUNC	static
-#define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ LUAI_FUNC
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ LUAI_DDEC
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ LUAI_DDEF
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUAI_FUNC	ਸਥਿਰ
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUAI_DDEC(def)	/*ਖਾਲੀ_ਥਾਵਾਂ*/
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUAI_DDEF	ਸਥਿਰ
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lzio.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lctype.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopcodes.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lundump.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldump.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstate.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lgc.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "llex.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lcode.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lparser.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lfunc.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lobject.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltm.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltable.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lvm.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lauxlib.c"
 
 /* standard library  -- not used by luac */
-#ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
-#endif
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ MAKE_LUAC
+#ਅਨ੍ਤਰ੍ਭਾਵ "lbaselib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lcorolib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldblib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "liolib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmathlib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "loadlib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "loslib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstrlib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltablib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lutf8lib.c"
+#ਅਨ੍ਤਰ੍ਭਾਵ "linit.c"
+#ਜੇ_ਅੰਤ
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
-#endif
+#ਜੇ defined(LUA_DEBUG)
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltests.c"
+#ਜੇ_ਅੰਤ
 
 /* lua */
-#ifdef MAKE_LUA
-#include "lua.c"
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ MAKE_LUA
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.c"
+#ਜੇ_ਅੰਤ
 
 /* luac */
-#ifdef MAKE_LUAC
-#include "luac.c"
-#endif
+#ਜੇ_ਪਰਿਭਾਸ਼ਿਤ MAKE_LUAC
+#ਅਨ੍ਤਰ੍ਭਾਵ "luac.c"
+#ਜੇ_ਅੰਤ

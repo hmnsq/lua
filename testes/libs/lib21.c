@@ -1,10 +1,10 @@
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
 
-int luaopen_lib2 (lua_State *L);
+ਪੂਰਨ luaopen_lib2 (lua_State *L);
 
-LUAMOD_API int luaopen_lib21 (lua_State *L) {
-  return luaopen_lib2(L);
+LUAMOD_API ਪੂਰਨ luaopen_lib21 (lua_State *L) {
+  ਵਾਪਸ luaopen_lib2(L);
 }
 
 

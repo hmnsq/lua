@@ -4,49 +4,49 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lcode_c
-#define LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lcode_c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
 
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <float.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
-#include "lcode.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "llex.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lparser.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lvm.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lcode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lgc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "llex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopcodes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lparser.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lvm.h"
 
 
 /* (note that expressions VJMP also have jumps.) */
-#define hasjumps(e)	((e)->t != (e)->f)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ hasjumps(e)	((e)->t != (e)->f)
 
 
-static int codesJ (FuncState *fs, OpCode o, int sj, int k);
+ਸਥਿਰ ਪੂਰਨ codesJ (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ sj, ਪੂਰਨ k);
 
 
 
 /* semantic error */
-l_noret luaK_semerror (LexState *ls, const char *fmt, ...) {
-  const char *msg;
+l_noret luaK_semerror (LexState *ls, ਅਚਲ ਅੱਖਰ *fmt, ...) {
+  ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ;
   va_list argp;
-  pushvfstring(ls->L, argp, fmt, msg);
+  pushvfstring(ls->L, argp, fmt, ਸੁਨੇਹਾ);
   ls->t.token = 0;  /* remove "near <token>" from final message */
   ls->linenumber = ls->lastline;  /* back to line of last used token */
-  luaX_syntaxerror(ls, msg);
+  luaX_syntaxerror(ls, ਸੁਨੇਹਾ);
 }
 
 
@@ -54,17 +54,17 @@ l_noret luaK_semerror (LexState *ls, const char *fmt, ...) {
 ** If expression is a numeric constant, fills 'v' with its value
 ** and returns 1. Otherwise, returns 0.
 */
-static int tonumeral (const expdesc *e, TValue *v) {
-  if (hasjumps(e))
-    return 0;  /* not a numeral */
-  switch (e->k) {
-    case VKINT:
-      if (v) setivalue(v, e->u.ival);
-      return 1;
-    case VKFLT:
-      if (v) setfltvalue(v, e->u.nval);
-      return 1;
-    default: return 0;
+ਸਥਿਰ ਪੂਰਨ tonumeral (ਅਚਲ expdesc *e, TValue *v) {
+  ਜੇ (hasjumps(e))
+    ਵਾਪਸ 0;  /* not a numeral */
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VKINT:
+      ਜੇ (v) setivalue(v, e->u.ival);
+      ਵਾਪਸ 1;
+    ਹਾਲਤ VKFLT:
+      ਜੇ (v) setfltvalue(v, e->u.nval);
+      ਵਾਪਸ 1;
+    ਮੂਲ: ਵਾਪਸ 0;
   }
 }
 
@@ -72,9 +72,9 @@ static int tonumeral (const expdesc *e, TValue *v) {
 /*
 ** Get the constant value from a constant expression
 */
-static TValue *const2val (FuncState *fs, const expdesc *e) {
+ਸਥਿਰ TValue *const2val (FuncState *fs, ਅਚਲ expdesc *e) {
   lua_assert(e->k == VCONST);
-  return &fs->ls->dyd->actvar.arr[e->u.info].k;
+  ਵਾਪਸ &fs->ls->dyd->actvar.arr[e->u.info].k;
 }
 
 
@@ -82,28 +82,28 @@ static TValue *const2val (FuncState *fs, const expdesc *e) {
 ** If expression is a constant, fills 'v' with its value
 ** and returns 1. Otherwise, returns 0.
 */
-int luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v) {
-  if (hasjumps(e))
-    return 0;  /* not a constant */
-  switch (e->k) {
-    case VFALSE:
+ਪੂਰਨ luaK_exp2const (FuncState *fs, ਅਚਲ expdesc *e, TValue *v) {
+  ਜੇ (hasjumps(e))
+    ਵਾਪਸ 0;  /* not a constant */
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VFALSE:
       setbfvalue(v);
-      return 1;
-    case VTRUE:
+      ਵਾਪਸ 1;
+    ਹਾਲਤ VTRUE:
       setbtvalue(v);
-      return 1;
-    case VNIL:
+      ਵਾਪਸ 1;
+    ਹਾਲਤ VNIL:
       setnilvalue(v);
-      return 1;
-    case VKSTR: {
+      ਵਾਪਸ 1;
+    ਹਾਲਤ VKSTR: {
       setsvalue(fs->ls->L, v, e->u.strval);
-      return 1;
+      ਵਾਪਸ 1;
     }
-    case VCONST: {
+    ਹਾਲਤ VCONST: {
       setobj(fs->ls->L, v, const2val(fs, e));
-      return 1;
+      ਵਾਪਸ 1;
     }
-    default: return tonumeral(e, v);
+    ਮੂਲ: ਵਾਪਸ tonumeral(e, v);
   }
 }
 
@@ -114,12 +114,12 @@ int luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v) {
 ** previous one, return an invalid instruction (to avoid wrong
 ** optimizations).
 */
-static Instruction *previousinstruction (FuncState *fs) {
-  static const Instruction invalidinstruction = ~(Instruction)0;
-  if (fs->pc > fs->lasttarget)
-    return &fs->f->code[fs->pc - 1];  /* previous instruction */
-  else
-    return cast(Instruction*, &invalidinstruction);
+ਸਥਿਰ Instruction *previousinstruction (FuncState *fs) {
+  ਸਥਿਰ ਅਚਲ Instruction invalidinstruction = ~(Instruction)0;
+  ਜੇ (fs->pc > fs->lasttarget)
+    ਵਾਪਸ &fs->f->ਕੋਡ[fs->pc - 1];  /* previous instruction */
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ cast(Instruction*, &invalidinstruction);
 }
 
 
@@ -129,22 +129,22 @@ static Instruction *previousinstruction (FuncState *fs) {
 ** range of previous instruction instead of emitting a new one. (For
 ** instance, 'local a; local b' will generate a single opcode.)
 */
-void luaK_nil (FuncState *fs, int from, int n) {
-  int l = from + n - 1;  /* last register to set nil */
-  Instruction *previous = previousinstruction(fs);
-  if (GET_OPCODE(*previous) == OP_LOADNIL) {  /* previous is LOADNIL? */
-    int pfrom = GETARG_A(*previous);  /* get previous range */
-    int pl = pfrom + GETARG_B(*previous);
-    if ((pfrom <= from && from <= pl + 1) ||
+ਖਾਲੀ luaK_nil (FuncState *fs, ਪੂਰਨ from, ਪੂਰਨ n) {
+  ਪੂਰਨ l = from + n - 1;  /* last register to set nil */
+  Instruction *ਪਿਛਲਾ = previousinstruction(fs);
+  ਜੇ (GET_OPCODE(*ਪਿਛਲਾ) == OP_LOADNIL) {  /* previous is LOADNIL? */
+    ਪੂਰਨ pfrom = GETARG_A(*ਪਿਛਲਾ);  /* get previous range */
+    ਪੂਰਨ pl = pfrom + GETARG_B(*ਪਿਛਲਾ);
+    ਜੇ ((pfrom <= from && from <= pl + 1) ||
         (from <= pfrom && pfrom <= l + 1)) {  /* can connect both? */
-      if (pfrom < from) from = pfrom;  /* from = min(from, pfrom) */
-      if (pl > l) l = pl;  /* l = max(l, pl) */
-      SETARG_A(*previous, from);
-      SETARG_B(*previous, l - from);
-      return;
+      ਜੇ (pfrom < from) from = pfrom;  /* from = min(from, pfrom) */
+      ਜੇ (pl > l) l = pl;  /* l = max(l, pl) */
+      SETARG_A(*ਪਿਛਲਾ, from);
+      SETARG_B(*ਪਿਛਲਾ, l - from);
+      ਵਾਪਸ;
     }  /* else go through */
   }
-  luaK_codeABC(fs, OP_LOADNIL, from, n - 1, 0);  /* else no optimization */
+  lua_K_ਕੋਡ_ABC(fs, OP_LOADNIL, from, n - 1, 0);  /* else no optimization */
 }
 
 
@@ -152,12 +152,12 @@ void luaK_nil (FuncState *fs, int from, int n) {
 ** Gets the destination address of a jump instruction. Used to traverse
 ** a list of jumps.
 */
-static int getjump (FuncState *fs, int pc) {
-  int offset = GETARG_sJ(fs->f->code[pc]);
-  if (offset == NO_JUMP)  /* point to itself represents end of list */
-    return NO_JUMP;  /* end of list */
-  else
-    return (pc+1)+offset;  /* turn offset into absolute position */
+ਸਥਿਰ ਪੂਰਨ getjump (FuncState *fs, ਪੂਰਨ pc) {
+  ਪੂਰਨ ਵਿੱਥ = GETARG_sJ(fs->f->ਕੋਡ[pc]);
+  ਜੇ (ਵਿੱਥ == NO_JUMP)  /* point to itself represents end of list */
+    ਵਾਪਸ NO_JUMP;  /* end of list */
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ (pc+1)+ਵਿੱਥ;  /* turn offset into absolute position */
 }
 
 
@@ -165,29 +165,29 @@ static int getjump (FuncState *fs, int pc) {
 ** Fix jump instruction at position 'pc' to jump to 'dest'.
 ** (Jump addresses are relative in Lua)
 */
-static void fixjump (FuncState *fs, int pc, int dest) {
-  Instruction *jmp = &fs->f->code[pc];
-  int offset = dest - (pc + 1);
+ਸਥਿਰ ਖਾਲੀ fixjump (FuncState *fs, ਪੂਰਨ pc, ਪੂਰਨ dest) {
+  Instruction *jmp = &fs->f->ਕੋਡ[pc];
+  ਪੂਰਨ ਵਿੱਥ = dest - (pc + 1);
   lua_assert(dest != NO_JUMP);
-  if (!(-OFFSET_sJ <= offset && offset <= MAXARG_sJ - OFFSET_sJ))
+  ਜੇ (!(-ਵਿੱਥ_s_J <= ਵਿੱਥ && ਵਿੱਥ <= MAXARG_sJ - ਵਿੱਥ_s_J))
     luaX_syntaxerror(fs->ls, "control structure too long");
   lua_assert(GET_OPCODE(*jmp) == OP_JMP);
-  SETARG_sJ(*jmp, offset);
+  SETARG_sJ(*jmp, ਵਿੱਥ);
 }
 
 
 /*
 ** Concatenate jump-list 'l2' into jump-list 'l1'
 */
-void luaK_concat (FuncState *fs, int *l1, int l2) {
-  if (l2 == NO_JUMP) return;  /* nothing to concatenate? */
-  else if (*l1 == NO_JUMP)  /* no original list? */
+ਖਾਲੀ luaK_concat (FuncState *fs, ਪੂਰਨ *l1, ਪੂਰਨ l2) {
+  ਜੇ (l2 == NO_JUMP) ਵਾਪਸ;  /* nothing to concatenate? */
+  ਨਹੀਂਤਾਂ ਜੇ (*l1 == NO_JUMP)  /* no original list? */
     *l1 = l2;  /* 'l1' points to 'l2' */
-  else {
-    int list = *l1;
-    int next;
-    while ((next = getjump(fs, list)) != NO_JUMP)  /* find last element */
-      list = next;
+  ਨਹੀਂਤਾਂ {
+    ਪੂਰਨ list = *l1;
+    ਪੂਰਨ ਅਗਲਾ;
+    ਜਦੋਂ ((ਅਗਲਾ = getjump(fs, list)) != NO_JUMP)  /* find last element */
+      list = ਅਗਲਾ;
     fixjump(fs, list, l2);  /* last element links to 'l2' */
   }
 }
@@ -197,23 +197,23 @@ void luaK_concat (FuncState *fs, int *l1, int l2) {
 ** Create a jump instruction and return its position, so its destination
 ** can be fixed later (with 'fixjump').
 */
-int luaK_jump (FuncState *fs) {
-  return codesJ(fs, OP_JMP, NO_JUMP, 0);
+ਪੂਰਨ luaK_jump (FuncState *fs) {
+  ਵਾਪਸ codesJ(fs, OP_JMP, NO_JUMP, 0);
 }
 
 
 /*
 ** Code a 'return' instruction
 */
-void luaK_ret (FuncState *fs, int first, int nret) {
-  OpCode op;
-  switch (nret) {
-    case 0: op = OP_RETURN0; break;
-    case 1: op = OP_RETURN1; break;
-    default: op = OP_RETURN; break;
+ਖਾਲੀ luaK_ret (FuncState *fs, ਪੂਰਨ ਪਹਿਲਾ, ਪੂਰਨ nret) {
+  Op_ਕੋਡ op;
+  ਚੋਣ (nret) {
+    ਹਾਲਤ 0: op = OP_RETURN0; ਰੋਕੋ;
+    ਹਾਲਤ 1: op = OP_RETURN1; ਰੋਕੋ;
+    ਮੂਲ: op = OP_RETURN; ਰੋਕੋ;
   }
   luaY_checklimit(fs, nret + 1, MAXARG_B, "returns");
-  luaK_codeABC(fs, op, first, nret + 1, 0);
+  lua_K_ਕੋਡ_ABC(fs, op, ਪਹਿਲਾ, nret + 1, 0);
 }
 
 
@@ -221,9 +221,9 @@ void luaK_ret (FuncState *fs, int first, int nret) {
 ** Code a "conditional jump", that is, a test or comparison opcode
 ** followed by a jump. Return jump position.
 */
-static int condjump (FuncState *fs, OpCode op, int A, int B, int C, int k) {
-  luaK_codeABCk(fs, op, A, B, C, k);
-  return luaK_jump(fs);
+ਸਥਿਰ ਪੂਰਨ condjump (FuncState *fs, Op_ਕੋਡ op, ਪੂਰਨ A, ਪੂਰਨ B, ਪੂਰਨ C, ਪੂਰਨ k) {
+  lua_K_ਕੋਡ_ABCk(fs, op, A, B, C, k);
+  ਵਾਪਸ luaK_jump(fs);
 }
 
 
@@ -231,9 +231,9 @@ static int condjump (FuncState *fs, OpCode op, int A, int B, int C, int k) {
 ** returns current 'pc' and marks it as a jump target (to avoid wrong
 ** optimizations with consecutive instructions not in the same basic block).
 */
-int luaK_getlabel (FuncState *fs) {
+ਪੂਰਨ luaK_getlabel (FuncState *fs) {
   fs->lasttarget = fs->pc;
-  return fs->pc;
+  ਵਾਪਸ fs->pc;
 }
 
 
@@ -242,12 +242,12 @@ int luaK_getlabel (FuncState *fs) {
 ** jump (that is, its condition), or the jump itself if it is
 ** unconditional.
 */
-static Instruction *getjumpcontrol (FuncState *fs, int pc) {
-  Instruction *pi = &fs->f->code[pc];
-  if (pc >= 1 && testTMode(GET_OPCODE(*(pi-1))))
-    return pi-1;
-  else
-    return pi;
+ਸਥਿਰ Instruction *getjumpcontrol (FuncState *fs, ਪੂਰਨ pc) {
+  Instruction *pi = &fs->f->ਕੋਡ[pc];
+  ਜੇ (pc >= 1 && testTMode(GET_OPCODE(*(pi-1))))
+    ਵਾਪਸ pi-1;
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ pi;
 }
 
 
@@ -258,26 +258,26 @@ static Instruction *getjumpcontrol (FuncState *fs, int pc) {
 ** register. Otherwise, change instruction to a simple 'TEST' (produces
 ** no register value)
 */
-static int patchtestreg (FuncState *fs, int node, int reg) {
-  Instruction *i = getjumpcontrol(fs, node);
-  if (GET_OPCODE(*i) != OP_TESTSET)
-    return 0;  /* cannot patch other instructions */
-  if (reg != NO_REG && reg != GETARG_B(*i))
+ਸਥਿਰ ਪੂਰਨ patchtestreg (FuncState *fs, ਪੂਰਨ ਗੰਢ, ਪੂਰਨ reg) {
+  Instruction *i = getjumpcontrol(fs, ਗੰਢ);
+  ਜੇ (GET_OPCODE(*i) != OP_TESTSET)
+    ਵਾਪਸ 0;  /* cannot patch other instructions */
+  ਜੇ (reg != NO_REG && reg != GETARG_B(*i))
     SETARG_A(*i, reg);
-  else {
+  ਨਹੀਂਤਾਂ {
      /* no register to put value or register already has the value;
         change instruction to simple test */
     *i = CREATE_ABCk(OP_TEST, GETARG_B(*i), 0, 0, GETARG_k(*i));
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
 /*
 ** Traverse a list of tests ensuring no one produces a value
 */
-static void removevalues (FuncState *fs, int list) {
-  for (; list != NO_JUMP; list = getjump(fs, list))
+ਸਥਿਰ ਖਾਲੀ removevalues (FuncState *fs, ਪੂਰਨ list) {
+  ਲਈ (; list != NO_JUMP; list = getjump(fs, list))
       patchtestreg(fs, list, NO_REG);
 }
 
@@ -287,15 +287,15 @@ static void removevalues (FuncState *fs, int list) {
 ** registers: tests producing values jump to 'vtarget' (and put their
 ** values in 'reg'), other tests jump to 'dtarget'.
 */
-static void patchlistaux (FuncState *fs, int list, int vtarget, int reg,
-                          int dtarget) {
-  while (list != NO_JUMP) {
-    int next = getjump(fs, list);
-    if (patchtestreg(fs, list, reg))
+ਸਥਿਰ ਖਾਲੀ patchlistaux (FuncState *fs, ਪੂਰਨ list, ਪੂਰਨ vtarget, ਪੂਰਨ reg,
+                          ਪੂਰਨ dtarget) {
+  ਜਦੋਂ (list != NO_JUMP) {
+    ਪੂਰਨ ਅਗਲਾ = getjump(fs, list);
+    ਜੇ (patchtestreg(fs, list, reg))
       fixjump(fs, list, vtarget);
-    else
+    ਨਹੀਂਤਾਂ
       fixjump(fs, list, dtarget);  /* jump to default target */
-    list = next;
+    list = ਅਗਲਾ;
   }
 }
 
@@ -305,20 +305,20 @@ static void patchlistaux (FuncState *fs, int list, int vtarget, int reg,
 ** (The assert means that we cannot fix a jump to a forward address
 ** because we only know addresses once code is generated.)
 */
-void luaK_patchlist (FuncState *fs, int list, int target) {
-  lua_assert(target <= fs->pc);
-  patchlistaux(fs, list, target, NO_REG, target);
+ਖਾਲੀ luaK_patchlist (FuncState *fs, ਪੂਰਨ list, ਪੂਰਨ ਨਿਸ਼ਾਨਾ) {
+  lua_assert(ਨਿਸ਼ਾਨਾ <= fs->pc);
+  patchlistaux(fs, list, ਨਿਸ਼ਾਨਾ, NO_REG, ਨਿਸ਼ਾਨਾ);
 }
 
 
-void luaK_patchtohere (FuncState *fs, int list) {
-  int hr = luaK_getlabel(fs);  /* mark "here" as a jump target */
+ਖਾਲੀ luaK_patchtohere (FuncState *fs, ਪੂਰਨ list) {
+  ਪੂਰਨ hr = luaK_getlabel(fs);  /* mark "here" as a jump target */
   luaK_patchlist(fs, list, hr);
 }
 
 
 /* limit for difference between lines in relative line info. */
-#define LIMLINEDIFF	0x80
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LIMLINEDIFF	0x80
 
 
 /*
@@ -328,21 +328,21 @@ void luaK_patchtohere (FuncState *fs, int list) {
 ** in 'lineinfo' signals the existence of this absolute information.)
 ** Otherwise, store the difference from last line in 'lineinfo'.
 */
-static void savelineinfo (FuncState *fs, Proto *f, int line) {
-  int linedif = line - fs->previousline;
-  int pc = fs->pc - 1;  /* last instruction coded */
-  if (abs(linedif) >= LIMLINEDIFF || fs->iwthabs++ >= MAXIWTHABS) {
+ਸਥਿਰ ਖਾਲੀ savelineinfo (FuncState *fs, Proto *f, ਪੂਰਨ ਸਤਰ) {
+  ਪੂਰਨ linedif = ਸਤਰ - fs->previousline;
+  ਪੂਰਨ pc = fs->pc - 1;  /* last instruction coded */
+  ਜੇ (ਨਿਰਪੇਖ(linedif) >= LIMLINEDIFF || fs->iwthabs++ >= MAXIWTHABS) {
     luaM_growvector(fs->ls->L, f->abslineinfo, fs->nabslineinfo,
-                    f->sizeabslineinfo, AbsLineInfo, INT_MAX, "lines");
+                    f->sizeabslineinfo, Abs_ਸਤਰ_Info, ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ, "lines");
     f->abslineinfo[fs->nabslineinfo].pc = pc;
-    f->abslineinfo[fs->nabslineinfo++].line = line;
+    f->abslineinfo[fs->nabslineinfo++].ਸਤਰ = ਸਤਰ;
     linedif = ABSLINEINFO;  /* signal that there is absolute information */
     fs->iwthabs = 1;  /* restart counter */
   }
   luaM_growvector(fs->ls->L, f->lineinfo, pc, f->sizelineinfo, ls_byte,
-                  INT_MAX, "opcodes");
+                  ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ, "opcodes");
   f->lineinfo[pc] = cast(ls_byte, linedif);
-  fs->previousline = line;  /* last line saved */
+  fs->previousline = ਸਤਰ;  /* last line saved */
 }
 
 
@@ -352,14 +352,14 @@ static void savelineinfo (FuncState *fs, Proto *f, int line) {
 ** above its max to force the new (replacing) instruction to have
 ** absolute line info, too.
 */
-static void removelastlineinfo (FuncState *fs) {
+ਸਥਿਰ ਖਾਲੀ removelastlineinfo (FuncState *fs) {
   Proto *f = fs->f;
-  int pc = fs->pc - 1;  /* last instruction coded */
-  if (f->lineinfo[pc] != ABSLINEINFO) {  /* relative line info? */
+  ਪੂਰਨ pc = fs->pc - 1;  /* last instruction coded */
+  ਜੇ (f->lineinfo[pc] != ABSLINEINFO) {  /* relative line info? */
     fs->previousline -= f->lineinfo[pc];  /* correct last line saved */
     fs->iwthabs--;  /* undo previous increment */
   }
-  else {  /* absolute line information */
+  ਨਹੀਂਤਾਂ {  /* absolute line information */
     lua_assert(f->abslineinfo[fs->nabslineinfo - 1].pc == pc);
     fs->nabslineinfo--;  /* remove it */
     fs->iwthabs = MAXIWTHABS + 1;  /* force next line info to be absolute */
@@ -371,7 +371,7 @@ static void removelastlineinfo (FuncState *fs) {
 ** Remove the last instruction created, correcting line information
 ** accordingly.
 */
-static void removelastinstruction (FuncState *fs) {
+ਸਥਿਰ ਖਾਲੀ removelastinstruction (FuncState *fs) {
   removelastlineinfo(fs);
   fs->pc--;
 }
@@ -381,14 +381,14 @@ static void removelastinstruction (FuncState *fs) {
 ** Emit instruction 'i', checking for array sizes and saving also its
 ** line information. Return 'i' position.
 */
-int luaK_code (FuncState *fs, Instruction i) {
+ਪੂਰਨ lua_K_ਕੋਡ (FuncState *fs, Instruction i) {
   Proto *f = fs->f;
   /* put new instruction in code array */
-  luaM_growvector(fs->ls->L, f->code, fs->pc, f->sizecode, Instruction,
-                  INT_MAX, "opcodes");
-  f->code[fs->pc++] = i;
+  luaM_growvector(fs->ls->L, f->ਕੋਡ, fs->pc, f->sizecode, Instruction,
+                  ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ, "opcodes");
+  f->ਕੋਡ[fs->pc++] = i;
   savelineinfo(fs, f, fs->ls->lastline);
-  return fs->pc - 1;  /* index of new instruction */
+  ਵਾਪਸ fs->pc - 1;  /* index of new instruction */
 }
 
 
@@ -396,60 +396,60 @@ int luaK_code (FuncState *fs, Instruction i) {
 ** Format and emit an 'iABC' instruction. (Assertions check consistency
 ** of parameters versus opcode.)
 */
-int luaK_codeABCk (FuncState *fs, OpCode o, int A, int B, int C, int k) {
-  lua_assert(getOpMode(o) == iABC);
+ਪੂਰਨ lua_K_ਕੋਡ_ABCk (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ A, ਪੂਰਨ B, ਪੂਰਨ C, ਪੂਰਨ k) {
+  lua_assert(get_Op_ਬਹੁਲਕ(o) == iABC);
   lua_assert(A <= MAXARG_A && B <= MAXARG_B &&
              C <= MAXARG_C && (k & ~1) == 0);
-  return luaK_code(fs, CREATE_ABCk(o, A, B, C, k));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_ABCk(o, A, B, C, k));
 }
 
 
-int luaK_codevABCk (FuncState *fs, OpCode o, int A, int B, int C, int k) {
-  lua_assert(getOpMode(o) == ivABC);
+ਪੂਰਨ luaK_codevABCk (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ A, ਪੂਰਨ B, ਪੂਰਨ C, ਪੂਰਨ k) {
+  lua_assert(get_Op_ਬਹੁਲਕ(o) == ivABC);
   lua_assert(A <= MAXARG_A && B <= MAXARG_vB &&
              C <= MAXARG_vC && (k & ~1) == 0);
-  return luaK_code(fs, CREATE_vABCk(o, A, B, C, k));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_vABCk(o, A, B, C, k));
 }
 
 
 /*
 ** Format and emit an 'iABx' instruction.
 */
-int luaK_codeABx (FuncState *fs, OpCode o, int A, int Bc) {
-  lua_assert(getOpMode(o) == iABx);
+ਪੂਰਨ lua_K_ਕੋਡ_ABx (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ A, ਪੂਰਨ Bc) {
+  lua_assert(get_Op_ਬਹੁਲਕ(o) == iABx);
   lua_assert(A <= MAXARG_A && Bc <= MAXARG_Bx);
-  return luaK_code(fs, CREATE_ABx(o, A, Bc));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_ABx(o, A, Bc));
 }
 
 
 /*
 ** Format and emit an 'iAsBx' instruction.
 */
-static int codeAsBx (FuncState *fs, OpCode o, int A, int Bc) {
-  int b = Bc + OFFSET_sBx;
-  lua_assert(getOpMode(o) == iAsBx);
+ਸਥਿਰ ਪੂਰਨ ਕੋਡ_As_Bx (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ A, ਪੂਰਨ Bc) {
+  ਪੂਰਨ b = Bc + ਵਿੱਥ_s_Bx;
+  lua_assert(get_Op_ਬਹੁਲਕ(o) == iAsBx);
   lua_assert(A <= MAXARG_A && b <= MAXARG_Bx);
-  return luaK_code(fs, CREATE_ABx(o, A, b));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_ABx(o, A, b));
 }
 
 
 /*
 ** Format and emit an 'isJ' instruction.
 */
-static int codesJ (FuncState *fs, OpCode o, int sj, int k) {
-  int j = sj + OFFSET_sJ;
-  lua_assert(getOpMode(o) == isJ);
+ਸਥਿਰ ਪੂਰਨ codesJ (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ sj, ਪੂਰਨ k) {
+  ਪੂਰਨ j = sj + ਵਿੱਥ_s_J;
+  lua_assert(get_Op_ਬਹੁਲਕ(o) == isJ);
   lua_assert(j <= MAXARG_sJ && (k & ~1) == 0);
-  return luaK_code(fs, CREATE_sJ(o, j, k));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_sJ(o, j, k));
 }
 
 
 /*
 ** Emit an "extra argument" instruction (format 'iAx')
 */
-static int codeextraarg (FuncState *fs, int A) {
+ਸਥਿਰ ਪੂਰਨ codeextraarg (FuncState *fs, ਪੂਰਨ A) {
   lua_assert(A <= MAXARG_Ax);
-  return luaK_code(fs, CREATE_Ax(OP_EXTRAARG, A));
+  ਵਾਪਸ lua_K_ਕੋਡ(fs, CREATE_Ax(OP_EXTRAARG, A));
 }
 
 
@@ -458,13 +458,13 @@ static int codeextraarg (FuncState *fs, int A) {
 ** (if constant index 'k' fits in 18 bits) or an 'OP_LOADKX'
 ** instruction with "extra argument".
 */
-static int luaK_codek (FuncState *fs, int reg, int k) {
-  if (k <= MAXARG_Bx)
-    return luaK_codeABx(fs, OP_LOADK, reg, k);
-  else {
-    int p = luaK_codeABx(fs, OP_LOADKX, reg, 0);
+ਸਥਿਰ ਪੂਰਨ luaK_codek (FuncState *fs, ਪੂਰਨ reg, ਪੂਰਨ k) {
+  ਜੇ (k <= MAXARG_Bx)
+    ਵਾਪਸ lua_K_ਕੋਡ_ABx(fs, OP_LOADK, reg, k);
+  ਨਹੀਂਤਾਂ {
+    ਪੂਰਨ p = lua_K_ਕੋਡ_ABx(fs, OP_LOADKX, reg, 0);
     codeextraarg(fs, k);
-    return p;
+    ਵਾਪਸ p;
   }
 }
 
@@ -473,9 +473,9 @@ static int luaK_codek (FuncState *fs, int reg, int k) {
 ** Check register-stack level, keeping track of its maximum size
 ** in field 'maxstacksize'
 */
-void luaK_checkstack (FuncState *fs, int n) {
-  int newstack = fs->freereg + n;
-  if (newstack > fs->f->maxstacksize) {
+ਖਾਲੀ luaK_checkstack (FuncState *fs, ਪੂਰਨ n) {
+  ਪੂਰਨ newstack = fs->freereg + n;
+  ਜੇ (newstack > fs->f->maxstacksize) {
     luaY_checklimit(fs, newstack, MAX_FSTACK, "registers");
     fs->f->maxstacksize = cast_byte(newstack);
   }
@@ -485,7 +485,7 @@ void luaK_checkstack (FuncState *fs, int n) {
 /*
 ** Reserve 'n' registers in register stack
 */
-void luaK_reserveregs (FuncState *fs, int n) {
+ਖਾਲੀ luaK_reserveregs (FuncState *fs, ਪੂਰਨ n) {
   luaK_checkstack(fs, n);
   fs->freereg =  cast_byte(fs->freereg + n);
 }
@@ -496,8 +496,8 @@ void luaK_reserveregs (FuncState *fs, int n) {
 ** a local variable.
 )
 */
-static void freereg (FuncState *fs, int reg) {
-  if (reg >= luaY_nvarstack(fs)) {
+ਸਥਿਰ ਖਾਲੀ freereg (FuncState *fs, ਪੂਰਨ reg) {
+  ਜੇ (reg >= luaY_nvarstack(fs)) {
     fs->freereg--;
     lua_assert(reg == fs->freereg);
   }
@@ -507,12 +507,12 @@ static void freereg (FuncState *fs, int reg) {
 /*
 ** Free two registers in proper order
 */
-static void freeregs (FuncState *fs, int r1, int r2) {
-  if (r1 > r2) {
+ਸਥਿਰ ਖਾਲੀ freeregs (FuncState *fs, ਪੂਰਨ r1, ਪੂਰਨ r2) {
+  ਜੇ (r1 > r2) {
     freereg(fs, r1);
     freereg(fs, r2);
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     freereg(fs, r2);
     freereg(fs, r1);
   }
@@ -522,8 +522,8 @@ static void freeregs (FuncState *fs, int r1, int r2) {
 /*
 ** Free register used by expression 'e' (if any)
 */
-static void freeexp (FuncState *fs, expdesc *e) {
-  if (e->k == VNONRELOC)
+ਸਥਿਰ ਖਾਲੀ freeexp (FuncState *fs, expdesc *e) {
+  ਜੇ (e->k == VNONRELOC)
     freereg(fs, e->u.info);
 }
 
@@ -532,9 +532,9 @@ static void freeexp (FuncState *fs, expdesc *e) {
 ** Free registers used by expressions 'e1' and 'e2' (if any) in proper
 ** order.
 */
-static void freeexps (FuncState *fs, expdesc *e1, expdesc *e2) {
-  int r1 = (e1->k == VNONRELOC) ? e1->u.info : -1;
-  int r2 = (e2->k == VNONRELOC) ? e2->u.info : -1;
+ਸਥਿਰ ਖਾਲੀ freeexps (FuncState *fs, expdesc *e1, expdesc *e2) {
+  ਪੂਰਨ r1 = (e1->k == VNONRELOC) ? e1->u.info : -1;
+  ਪੂਰਨ r2 = (e2->k == VNONRELOC) ? e2->u.info : -1;
   freeregs(fs, r1, r2);
 }
 
@@ -542,17 +542,17 @@ static void freeexps (FuncState *fs, expdesc *e1, expdesc *e2) {
 /*
 ** Add constant 'v' to prototype's list of constants (field 'k').
 */
-static int addk (FuncState *fs, Proto *f, TValue *v) {
+ਸਥਿਰ ਪੂਰਨ addk (FuncState *fs, Proto *f, TValue *v) {
   lua_State *L = fs->ls->L;
-  int oldsize = f->sizek;
-  int k = fs->nk;
+  ਪੂਰਨ oldsize = f->sizek;
+  ਪੂਰਨ k = fs->nk;
   luaM_growvector(L, f->k, k, f->sizek, TValue, MAXARG_Ax, "constants");
-  while (oldsize < f->sizek)
+  ਜਦੋਂ (oldsize < f->sizek)
     setnilvalue(&f->k[oldsize++]);
   setobj(L, &f->k[k], v);
   fs->nk++;
   luaC_barrier(L, f, v);
-  return k;
+  ਵਾਪਸ k;
 }
 
 
@@ -562,23 +562,23 @@ static int addk (FuncState *fs, Proto *f, TValue *v) {
 ** as keys (nil cannot be a key, integer keys can collapse with float
 ** keys), the caller must provide a useful 'key' for indexing the cache.
 */
-static int k2proto (FuncState *fs, TValue *key, TValue *v) {
+ਸਥਿਰ ਪੂਰਨ k2proto (FuncState *fs, TValue *ਕੁੰਜੀ, TValue *v) {
   TValue val;
   Proto *f = fs->f;
-  int tag = luaH_get(fs->kcache, key, &val);  /* query scanner table */
-  if (!tagisempty(tag)) {  /* is there an index there? */
-    int k = cast_int(ivalue(&val));
+  ਪੂਰਨ ਟੈਗ = luaH_get(fs->kcache, ਕੁੰਜੀ, &val);  /* query scanner table */
+  ਜੇ (!tagisempty(ਟੈਗ)) {  /* is there an index there? */
+    ਪੂਰਨ k = cast_int(ivalue(&val));
     /* collisions can happen only for float keys */
-    lua_assert(ttisfloat(key) || luaV_rawequalobj(&f->k[k], v));
-    return k;  /* reuse index */
+    lua_assert(ttisfloat(ਕੁੰਜੀ) || luaV_rawequalobj(&f->k[k], v));
+    ਵਾਪਸ k;  /* reuse index */
   }
-  else {  /* constant not found; create a new entry */
-    int k = addk(fs, f, v);
+  ਨਹੀਂਤਾਂ {  /* constant not found; create a new entry */
+    ਪੂਰਨ k = addk(fs, f, v);
     /* cache it for reuse; numerical value does not need GC barrier;
        table is not a metatable, so it does not need to invalidate cache */
     setivalue(&val, k);
-    luaH_set(fs->ls->L, fs->kcache, key, &val);
-    return k;
+    lua_H_ਸੈੱਟ(fs->ls->L, fs->kcache, ਕੁੰਜੀ, &val);
+    ਵਾਪਸ k;
   }
 }
 
@@ -586,20 +586,20 @@ static int k2proto (FuncState *fs, TValue *key, TValue *v) {
 /*
 ** Add a string to list of constants and return its index.
 */
-static int stringK (FuncState *fs, TString *s) {
+ਸਥਿਰ ਪੂਰਨ stringK (FuncState *fs, TString *s) {
   TValue o;
   setsvalue(fs->ls->L, &o, s);
-  return k2proto(fs, &o, &o);  /* use string itself as key */
+  ਵਾਪਸ k2proto(fs, &o, &o);  /* use string itself as key */
 }
 
 
 /*
 ** Add an integer to list of constants and return its index.
 */
-static int luaK_intK (FuncState *fs, lua_Integer n) {
+ਸਥਿਰ ਪੂਰਨ luaK_intK (FuncState *fs, lua_Integer n) {
   TValue o;
   setivalue(&o, n);
-  return k2proto(fs, &o, &o);  /* use integer itself as key */
+  ਵਾਪਸ k2proto(fs, &o, &o);  /* use integer itself as key */
 }
 
 /*
@@ -614,27 +614,27 @@ static int luaK_intK (FuncState *fs, lua_Integer n) {
 ** cases, just generate a new entry. At worst, this only wastes an entry
 ** with a duplicate.
 */
-static int luaK_numberK (FuncState *fs, lua_Number r) {
+ਸਥਿਰ ਪੂਰਨ lua_K_ਸੰਖਿਆ_K (FuncState *fs, lua_ਸੰਖਿਆ r) {
   TValue o, kv;
   setfltvalue(&o, r);  /* value as a TValue */
-  if (r == 0) {  /* handle zero as a special case */
+  ਜੇ (r == 0) {  /* handle zero as a special case */
     setpvalue(&kv, fs);  /* use FuncState as index */
-    return k2proto(fs, &kv, &o);  /* cannot collide */
+    ਵਾਪਸ k2proto(fs, &kv, &o);  /* cannot collide */
   }
-  else {
-    const int nbm = l_floatatt(MANT_DIG);
-    const lua_Number q = l_mathop(ldexp)(l_mathop(1.0), -nbm + 1);
-    const lua_Number k =  r * (1 + q);  /* key */
+  ਨਹੀਂਤਾਂ {
+    ਅਚਲ ਪੂਰਨ nbm = l_floatatt(MANT_DIG);
+    ਅਚਲ lua_ਸੰਖਿਆ q = l_mathop(ldexp)(l_mathop(1.0), -nbm + 1);
+    ਅਚਲ lua_ਸੰਖਿਆ k =  r * (1 + q);  /*ਕੁੰਜੀ*/
     lua_Integer ik;
     setfltvalue(&kv, k);  /* key as a TValue */
-    if (!luaV_flttointeger(k, &ik, F2Ieq)) {  /* not an integer value? */
-      int n = k2proto(fs, &kv, &o);  /* use key */
-      if (luaV_rawequalobj(&fs->f->k[n], &o))  /* correct value? */
-        return n;
+    ਜੇ (!luaV_flttointeger(k, &ik, F2Ieq)) {  /* not an integer value? */
+      ਪੂਰਨ n = k2proto(fs, &kv, &o);  /* use key */
+      ਜੇ (luaV_rawequalobj(&fs->f->k[n], &o))  /* correct value? */
+        ਵਾਪਸ n;
     }
     /* else, either key is still an integer or there was a collision;
        anyway, do not try to reuse constant; instead, create a new one */
-    return addk(fs, fs->f, &o);
+    ਵਾਪਸ addk(fs, fs->f, &o);
   }
 }
 
@@ -642,32 +642,32 @@ static int luaK_numberK (FuncState *fs, lua_Number r) {
 /*
 ** Add a false to list of constants and return its index.
 */
-static int boolF (FuncState *fs) {
+ਸਥਿਰ ਪੂਰਨ boolF (FuncState *fs) {
   TValue o;
   setbfvalue(&o);
-  return k2proto(fs, &o, &o);  /* use boolean itself as key */
+  ਵਾਪਸ k2proto(fs, &o, &o);  /* use boolean itself as key */
 }
 
 
 /*
 ** Add a true to list of constants and return its index.
 */
-static int boolT (FuncState *fs) {
+ਸਥਿਰ ਪੂਰਨ boolT (FuncState *fs) {
   TValue o;
   setbtvalue(&o);
-  return k2proto(fs, &o, &o);  /* use boolean itself as key */
+  ਵਾਪਸ k2proto(fs, &o, &o);  /* use boolean itself as key */
 }
 
 
 /*
 ** Add nil to list of constants and return its index.
 */
-static int nilK (FuncState *fs) {
+ਸਥਿਰ ਪੂਰਨ nilK (FuncState *fs) {
   lua_State *L = fs->ls->L;
   TValue k;
   /* cannot use nil as key; instead use table itself */
   sethvalue(L, &k, fs->kcache);
-  return k2proto(fs, &k, &G(L)->nilvalue);
+  ਵਾਪਸ k2proto(fs, &k, &G(L)->nilvalue);
 }
 
 
@@ -676,33 +676,33 @@ static int nilK (FuncState *fs) {
 ** (0 <= int2sC(i) && int2sC(i) <= MAXARG_C) but without risk of
 ** overflows in the hidden addition inside 'int2sC'.
 */
-static int fitsC (lua_Integer i) {
-  return (l_castS2U(i) + OFFSET_sC <= cast_uint(MAXARG_C));
+ਸਥਿਰ ਪੂਰਨ ਸਮਾਉਂਦਾ_C (lua_Integer i) {
+  ਵਾਪਸ (l_castS2U(i) + ਵਿੱਥ_s_C <= cast_uint(MAXARG_C));
 }
 
 
 /*
 ** Check whether 'i' can be stored in an 'sBx' operand.
 */
-static int fitsBx (lua_Integer i) {
-  return (-OFFSET_sBx <= i && i <= MAXARG_Bx - OFFSET_sBx);
+ਸਥਿਰ ਪੂਰਨ ਸਮਾਉਂਦਾ_Bx (lua_Integer i) {
+  ਵਾਪਸ (-ਵਿੱਥ_s_Bx <= i && i <= MAXARG_Bx - ਵਿੱਥ_s_Bx);
 }
 
 
-void luaK_int (FuncState *fs, int reg, lua_Integer i) {
-  if (fitsBx(i))
-    codeAsBx(fs, OP_LOADI, reg, cast_int(i));
-  else
+ਖਾਲੀ luaK_int (FuncState *fs, ਪੂਰਨ reg, lua_Integer i) {
+  ਜੇ (ਸਮਾਉਂਦਾ_Bx(i))
+    ਕੋਡ_As_Bx(fs, OP_LOADI, reg, cast_int(i));
+  ਨਹੀਂਤਾਂ
     luaK_codek(fs, reg, luaK_intK(fs, i));
 }
 
 
-static void luaK_float (FuncState *fs, int reg, lua_Number f) {
+ਸਥਿਰ ਖਾਲੀ luaK_float (FuncState *fs, ਪੂਰਨ reg, lua_ਸੰਖਿਆ f) {
   lua_Integer fi;
-  if (luaV_flttointeger(f, &fi, F2Ieq) && fitsBx(fi))
-    codeAsBx(fs, OP_LOADF, reg, cast_int(fi));
-  else
-    luaK_codek(fs, reg, luaK_numberK(fs, f));
+  ਜੇ (luaV_flttointeger(f, &fi, F2Ieq) && ਸਮਾਉਂਦਾ_Bx(fi))
+    ਕੋਡ_As_Bx(fs, OP_LOADF, reg, cast_int(fi));
+  ਨਹੀਂਤਾਂ
+    luaK_codek(fs, reg, lua_K_ਸੰਖਿਆ_K(fs, f));
 }
 
 
@@ -712,12 +712,12 @@ static void luaK_float (FuncState *fs, int reg, lua_Number f) {
 ** in the list of constants. If its value cannot be encoded in Bx, a 0
 ** will use '?' for the name.
 */
-void luaK_codecheckglobal (FuncState *fs, expdesc *var, int k, int line) {
+ਖਾਲੀ luaK_codecheckglobal (FuncState *fs, expdesc *var, ਪੂਰਨ k, ਪੂਰਨ ਸਤਰ) {
   luaK_exp2anyreg(fs, var);
-  luaK_fixline(fs, line);
+  luaK_fixline(fs, ਸਤਰ);
   k = (k >= MAXARG_Bx) ? 0 : k + 1;
-  luaK_codeABx(fs, OP_ERRNNIL, var->u.info, k);
-  luaK_fixline(fs, line);
+  lua_K_ਕੋਡ_ABx(fs, OP_ERRNNIL, var->u.info, k);
+  luaK_fixline(fs, ਸਤਰ);
   freeexp(fs, var);
 }
 
@@ -725,27 +725,27 @@ void luaK_codecheckglobal (FuncState *fs, expdesc *var, int k, int line) {
 /*
 ** Convert a constant in 'v' into an expression description 'e'
 */
-static void const2exp (TValue *v, expdesc *e) {
-  switch (ttypetag(v)) {
-    case LUA_VNUMINT:
+ਸਥਿਰ ਖਾਲੀ const2exp (TValue *v, expdesc *e) {
+  ਚੋਣ (ttypetag(v)) {
+    ਹਾਲਤ LUA_VNUMINT:
       e->k = VKINT; e->u.ival = ivalue(v);
-      break;
-    case LUA_VNUMFLT:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VNUMFLT:
       e->k = VKFLT; e->u.nval = fltvalue(v);
-      break;
-    case LUA_VFALSE:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VFALSE:
       e->k = VFALSE;
-      break;
-    case LUA_VTRUE:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VTRUE:
       e->k = VTRUE;
-      break;
-    case LUA_VNIL:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VNIL:
       e->k = VNIL;
-      break;
-    case LUA_VSHRSTR:  case LUA_VLNGSTR:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VSHRSTR:  ਹਾਲਤ LUA_VLNGSTR:
       e->k = VKSTR; e->u.strval = tsvalue(v);
-      break;
-    default: lua_assert(0);
+      ਰੋਕੋ;
+    ਮੂਲ: lua_assert(0);
   }
 }
 
@@ -754,12 +754,12 @@ static void const2exp (TValue *v, expdesc *e) {
 ** Fix an expression to return the number of results 'nresults'.
 ** 'e' must be a multi-ret expression (function call or vararg).
 */
-void luaK_setreturns (FuncState *fs, expdesc *e, int nresults) {
+ਖਾਲੀ luaK_setreturns (FuncState *fs, expdesc *e, ਪੂਰਨ nresults) {
   Instruction *pc = &getinstruction(fs, e);
   luaY_checklimit(fs, nresults + 1, MAXARG_C, "multiple results");
-  if (e->k == VCALL)  /* expression is an open function call? */
+  ਜੇ (e->k == VCALL)  /* expression is an open function call? */
     SETARG_C(*pc, nresults + 1);
-  else {
+  ਨਹੀਂਤਾਂ {
     lua_assert(e->k == VVARARG);
     SETARG_C(*pc, nresults + 1);
     SETARG_A(*pc, fs->freereg);
@@ -771,11 +771,11 @@ void luaK_setreturns (FuncState *fs, expdesc *e, int nresults) {
 /*
 ** Convert a VKSTR to a VK
 */
-static int str2K (FuncState *fs, expdesc *e) {
+ਸਥਿਰ ਪੂਰਨ str2K (FuncState *fs, expdesc *e) {
   lua_assert(e->k == VKSTR);
   e->u.info = stringK(fs, e->u.strval);
   e->k = VK;
-  return e->u.info;
+  ਵਾਪਸ e->u.info;
 }
 
 
@@ -789,14 +789,14 @@ static int str2K (FuncState *fs, expdesc *e) {
 ** (Calls are created returning one result, so that does not need
 ** to be fixed.)
 */
-void luaK_setoneret (FuncState *fs, expdesc *e) {
-  if (e->k == VCALL) {  /* expression is an open function call? */
+ਖਾਲੀ luaK_setoneret (FuncState *fs, expdesc *e) {
+  ਜੇ (e->k == VCALL) {  /* expression is an open function call? */
     /* already returns 1 value */
     lua_assert(GETARG_C(getinstruction(fs, e)) == 2);
     e->k = VNONRELOC;  /* result has fixed position */
     e->u.info = GETARG_A(getinstruction(fs, e));
   }
-  else if (e->k == VVARARG) {
+  ਨਹੀਂਤਾਂ ਜੇ (e->k == VVARARG) {
     SETARG_C(getinstruction(fs, e), 2);
     e->k = VRELOC;  /* can relocate its simple result */
   }
@@ -805,7 +805,7 @@ void luaK_setoneret (FuncState *fs, expdesc *e) {
 /*
 ** Change a vararg parameter into a regular local variable
 */
-void luaK_vapar2local (FuncState *fs, expdesc *var) {
+ਖਾਲੀ luaK_vapar2local (FuncState *fs, expdesc *var) {
   needvatab(fs->f);  /* function will need a vararg table */
   /* now a vararg parameter is equivalent to a regular local variable */
   var->k = VLOCAL;
@@ -816,60 +816,60 @@ void luaK_vapar2local (FuncState *fs, expdesc *var) {
 ** Ensure that expression 'e' is not a variable (nor a <const>).
 ** (Expression still may have jump lists.)
 */
-void luaK_dischargevars (FuncState *fs, expdesc *e) {
-  switch (e->k) {
-    case VCONST: {
+ਖਾਲੀ luaK_dischargevars (FuncState *fs, expdesc *e) {
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VCONST: {
       const2exp(const2val(fs, e), e);
-      break;
+      ਰੋਕੋ;
     }
-    case VVARGVAR: {
+    ਹਾਲਤ VVARGVAR: {
       luaK_vapar2local(fs, e);  /* turn it into a local variable */
     }  /* FALLTHROUGH */
-    case VLOCAL: {  /* already in a register */
-      int temp = e->u.var.ridx;
-      e->u.info = temp;  /* (avoid a direct assignment; values overlap) */
+    ਹਾਲਤ VLOCAL: {  /* already in a register */
+      ਪੂਰਨ ਆਰਜ਼ੀ = e->u.var.ridx;
+      e->u.info = ਆਰਜ਼ੀ;  /* (avoid a direct assignment; values overlap) */
       e->k = VNONRELOC;  /* becomes a non-relocatable value */
-      break;
+      ਰੋਕੋ;
     }
-    case VUPVAL: {  /* move value to some (pending) register */
-      e->u.info = luaK_codeABC(fs, OP_GETUPVAL, 0, e->u.info, 0);
+    ਹਾਲਤ VUPVAL: {  /* move value to some (pending) register */
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETUPVAL, 0, e->u.info, 0);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VINDEXUP: {
-      e->u.info = luaK_codeABC(fs, OP_GETTABUP, 0, e->u.ind.t, e->u.ind.idx);
+    ਹਾਲਤ VINDEXUP: {
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETTABUP, 0, e->u.ind.t, e->u.ind.idx);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VINDEXI: {
+    ਹਾਲਤ VINDEXI: {
       freereg(fs, e->u.ind.t);
-      e->u.info = luaK_codeABC(fs, OP_GETI, 0, e->u.ind.t, e->u.ind.idx);
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETI, 0, e->u.ind.t, e->u.ind.idx);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VINDEXSTR: {
+    ਹਾਲਤ VINDEXSTR: {
       freereg(fs, e->u.ind.t);
-      e->u.info = luaK_codeABC(fs, OP_GETFIELD, 0, e->u.ind.t, e->u.ind.idx);
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETFIELD, 0, e->u.ind.t, e->u.ind.idx);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VINDEXED: {
+    ਹਾਲਤ VINDEXED: {
       freeregs(fs, e->u.ind.t, e->u.ind.idx);
-      e->u.info = luaK_codeABC(fs, OP_GETTABLE, 0, e->u.ind.t, e->u.ind.idx);
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETTABLE, 0, e->u.ind.t, e->u.ind.idx);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VVARGIND: {
+    ਹਾਲਤ VVARGIND: {
       freeregs(fs, e->u.ind.t, e->u.ind.idx);
-      e->u.info = luaK_codeABC(fs, OP_GETVARG, 0, e->u.ind.t, e->u.ind.idx);
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_GETVARG, 0, e->u.ind.t, e->u.ind.idx);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    case VVARARG: case VCALL: {
+    ਹਾਲਤ VVARARG: ਹਾਲਤ VCALL: {
       luaK_setoneret(fs, e);
-      break;
+      ਰੋਕੋ;
     }
-    default: break;  /* there is one value available (somewhere) */
+    ਮੂਲ: ਰੋਕੋ;  /* there is one value available (somewhere) */
   }
 }
 
@@ -879,49 +879,49 @@ void luaK_dischargevars (FuncState *fs, expdesc *e) {
 ** non-relocatable expression.
 ** (Expression still may have jump lists.)
 */
-static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
+ਸਥਿਰ ਖਾਲੀ discharge2reg (FuncState *fs, expdesc *e, ਪੂਰਨ reg) {
   luaK_dischargevars(fs, e);
-  switch (e->k) {
-    case VNIL: {
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VNIL: {
       luaK_nil(fs, reg, 1);
-      break;
+      ਰੋਕੋ;
     }
-    case VFALSE: {
-      luaK_codeABC(fs, OP_LOADFALSE, reg, 0, 0);
-      break;
+    ਹਾਲਤ VFALSE: {
+      lua_K_ਕੋਡ_ABC(fs, OP_LOADFALSE, reg, 0, 0);
+      ਰੋਕੋ;
     }
-    case VTRUE: {
-      luaK_codeABC(fs, OP_LOADTRUE, reg, 0, 0);
-      break;
+    ਹਾਲਤ VTRUE: {
+      lua_K_ਕੋਡ_ABC(fs, OP_LOADTRUE, reg, 0, 0);
+      ਰੋਕੋ;
     }
-    case VKSTR: {
+    ਹਾਲਤ VKSTR: {
       str2K(fs, e);
     }  /* FALLTHROUGH */
-    case VK: {
+    ਹਾਲਤ VK: {
       luaK_codek(fs, reg, e->u.info);
-      break;
+      ਰੋਕੋ;
     }
-    case VKFLT: {
+    ਹਾਲਤ VKFLT: {
       luaK_float(fs, reg, e->u.nval);
-      break;
+      ਰੋਕੋ;
     }
-    case VKINT: {
+    ਹਾਲਤ VKINT: {
       luaK_int(fs, reg, e->u.ival);
-      break;
+      ਰੋਕੋ;
     }
-    case VRELOC: {
+    ਹਾਲਤ VRELOC: {
       Instruction *pc = &getinstruction(fs, e);
       SETARG_A(*pc, reg);  /* instruction will put result in 'reg' */
-      break;
+      ਰੋਕੋ;
     }
-    case VNONRELOC: {
-      if (reg != e->u.info)
-        luaK_codeABC(fs, OP_MOVE, reg, e->u.info, 0);
-      break;
+    ਹਾਲਤ VNONRELOC: {
+      ਜੇ (reg != e->u.info)
+        lua_K_ਕੋਡ_ABC(fs, OP_MOVE, reg, e->u.info, 0);
+      ਰੋਕੋ;
     }
-    default: {
+    ਮੂਲ: {
       lua_assert(e->k == VJMP);
-      return;  /* nothing to do... */
+      ਵਾਪਸ;  /* nothing to do... */
     }
   }
   e->u.info = reg;
@@ -934,17 +934,17 @@ static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
 ** non-relocatable expression.
 ** (Expression still may have jump lists.)
 */
-static void discharge2anyreg (FuncState *fs, expdesc *e) {
-  if (e->k != VNONRELOC) {  /* no fixed register yet? */
+ਸਥਿਰ ਖਾਲੀ discharge2anyreg (FuncState *fs, expdesc *e) {
+  ਜੇ (e->k != VNONRELOC) {  /* no fixed register yet? */
     luaK_reserveregs(fs, 1);  /* get a register */
     discharge2reg(fs, e, fs->freereg-1);  /* put value there */
   }
 }
 
 
-static int code_loadbool (FuncState *fs, int A, OpCode op) {
+ਸਥਿਰ ਪੂਰਨ ਕੋਡ_loadbool (FuncState *fs, ਪੂਰਨ A, Op_ਕੋਡ op) {
   luaK_getlabel(fs);  /* those instructions may be jump targets */
-  return luaK_codeABC(fs, op, A, 0, 0);
+  ਵਾਪਸ lua_K_ਕੋਡ_ABC(fs, op, A, 0, 0);
 }
 
 
@@ -952,12 +952,12 @@ static int code_loadbool (FuncState *fs, int A, OpCode op) {
 ** check whether list has any jump that do not produce a value
 ** or produce an inverted value
 */
-static int need_value (FuncState *fs, int list) {
-  for (; list != NO_JUMP; list = getjump(fs, list)) {
+ਸਥਿਰ ਪੂਰਨ need_ਮੁੱਲ (FuncState *fs, ਪੂਰਨ list) {
+  ਲਈ (; list != NO_JUMP; list = getjump(fs, list)) {
     Instruction i = *getjumpcontrol(fs, list);
-    if (GET_OPCODE(i) != OP_TESTSET) return 1;
+    ਜੇ (GET_OPCODE(i) != OP_TESTSET) ਵਾਪਸ 1;
   }
-  return 0;  /* not found */
+  ਵਾਪਸ 0;  /* not found */
 }
 
 
@@ -968,18 +968,18 @@ static int need_value (FuncState *fs, int list) {
 ** its final position or to "load" instructions (for those tests
 ** that do not produce values).
 */
-static void exp2reg (FuncState *fs, expdesc *e, int reg) {
+ਸਥਿਰ ਖਾਲੀ exp2reg (FuncState *fs, expdesc *e, ਪੂਰਨ reg) {
   discharge2reg(fs, e, reg);
-  if (e->k == VJMP)  /* expression itself is a test? */
+  ਜੇ (e->k == VJMP)  /* expression itself is a test? */
     luaK_concat(fs, &e->t, e->u.info);  /* put this jump in 't' list */
-  if (hasjumps(e)) {
-    int final;  /* position after whole expression */
-    int p_f = NO_JUMP;  /* position of an eventual LOAD false */
-    int p_t = NO_JUMP;  /* position of an eventual LOAD true */
-    if (need_value(fs, e->t) || need_value(fs, e->f)) {
-      int fj = (e->k == VJMP) ? NO_JUMP : luaK_jump(fs);
-      p_f = code_loadbool(fs, reg, OP_LFALSESKIP);  /* skip next inst. */
-      p_t = code_loadbool(fs, reg, OP_LOADTRUE);
+  ਜੇ (hasjumps(e)) {
+    ਪੂਰਨ final;  /* position after whole expression */
+    ਪੂਰਨ p_f = NO_JUMP;  /* position of an eventual LOAD false */
+    ਪੂਰਨ p_t = NO_JUMP;  /* position of an eventual LOAD true */
+    ਜੇ (need_ਮੁੱਲ(fs, e->t) || need_ਮੁੱਲ(fs, e->f)) {
+      ਪੂਰਨ fj = (e->k == VJMP) ? NO_JUMP : luaK_jump(fs);
+      p_f = ਕੋਡ_loadbool(fs, reg, OP_LFALSESKIP);  /* skip next inst. */
+      p_t = ਕੋਡ_loadbool(fs, reg, OP_LOADTRUE);
       /* jump around these booleans if 'e' is not a test */
       luaK_patchtohere(fs, fj);
     }
@@ -996,7 +996,7 @@ static void exp2reg (FuncState *fs, expdesc *e, int reg) {
 /*
 ** Ensures final expression result is in next available register.
 */
-void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
+ਖਾਲੀ luaK_exp2nextreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   freeexp(fs, e);
   luaK_reserveregs(fs, 1);
@@ -1008,21 +1008,21 @@ void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
 ** Ensures final expression result is in some (any) register
 ** and return that register.
 */
-int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
+ਪੂਰਨ luaK_exp2anyreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
-  if (e->k == VNONRELOC) {  /* expression already has a register? */
-    if (!hasjumps(e))  /* no jumps? */
-      return e->u.info;  /* result is already in a register */
-    if (e->u.info >= luaY_nvarstack(fs)) {  /* reg. is not a local? */
+  ਜੇ (e->k == VNONRELOC) {  /* expression already has a register? */
+    ਜੇ (!hasjumps(e))  /* no jumps? */
+      ਵਾਪਸ e->u.info;  /* result is already in a register */
+    ਜੇ (e->u.info >= luaY_nvarstack(fs)) {  /* reg. is not a local? */
       exp2reg(fs, e, e->u.info);  /* put final result in it */
-      return e->u.info;
+      ਵਾਪਸ e->u.info;
     }
     /* else expression has jumps and cannot change its register
        to hold the jump values, because it is a local variable.
        Go through to the default case. */
   }
   luaK_exp2nextreg(fs, e);  /* default: use next available register */
-  return e->u.info;
+  ਵਾਪਸ e->u.info;
 }
 
 
@@ -1030,8 +1030,8 @@ int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
 ** Ensures final expression result is either in a register,
 ** in an upvalue, or it is the vararg parameter.
 */
-void luaK_exp2anyregup (FuncState *fs, expdesc *e) {
-  if ((e->k != VUPVAL && e->k != VVARGVAR) || hasjumps(e))
+ਖਾਲੀ luaK_exp2anyregup (FuncState *fs, expdesc *e) {
+  ਜੇ ((e->k != VUPVAL && e->k != VVARGVAR) || hasjumps(e))
     luaK_exp2anyreg(fs, e);
 }
 
@@ -1040,10 +1040,10 @@ void luaK_exp2anyregup (FuncState *fs, expdesc *e) {
 ** Ensures final expression result is either in a register
 ** or it is a constant.
 */
-void luaK_exp2val (FuncState *fs, expdesc *e) {
-  if (e->k == VJMP || hasjumps(e))
+ਖਾਲੀ luaK_exp2val (FuncState *fs, expdesc *e) {
+  ਜੇ (e->k == VJMP || hasjumps(e))
     luaK_exp2anyreg(fs, e);
-  else
+  ਨਹੀਂਤਾਂ
     luaK_dischargevars(fs, e);
 }
 
@@ -1052,27 +1052,27 @@ void luaK_exp2val (FuncState *fs, expdesc *e) {
 ** Try to make 'e' a K expression with an index in the range of R/K
 ** indices. Return true iff succeeded.
 */
-static int luaK_exp2K (FuncState *fs, expdesc *e) {
-  if (!hasjumps(e)) {
-    int info;
-    switch (e->k) {  /* move constants to 'k' */
-      case VTRUE: info = boolT(fs); break;
-      case VFALSE: info = boolF(fs); break;
-      case VNIL: info = nilK(fs); break;
-      case VKINT: info = luaK_intK(fs, e->u.ival); break;
-      case VKFLT: info = luaK_numberK(fs, e->u.nval); break;
-      case VKSTR: info = stringK(fs, e->u.strval); break;
-      case VK: info = e->u.info; break;
-      default: return 0;  /* not a constant */
+ਸਥਿਰ ਪੂਰਨ luaK_exp2K (FuncState *fs, expdesc *e) {
+  ਜੇ (!hasjumps(e)) {
+    ਪੂਰਨ info;
+    ਚੋਣ (e->k) {  /* move constants to 'k' */
+      ਹਾਲਤ VTRUE: info = boolT(fs); ਰੋਕੋ;
+      ਹਾਲਤ VFALSE: info = boolF(fs); ਰੋਕੋ;
+      ਹਾਲਤ VNIL: info = nilK(fs); ਰੋਕੋ;
+      ਹਾਲਤ VKINT: info = luaK_intK(fs, e->u.ival); ਰੋਕੋ;
+      ਹਾਲਤ VKFLT: info = lua_K_ਸੰਖਿਆ_K(fs, e->u.nval); ਰੋਕੋ;
+      ਹਾਲਤ VKSTR: info = stringK(fs, e->u.strval); ਰੋਕੋ;
+      ਹਾਲਤ VK: info = e->u.info; ਰੋਕੋ;
+      ਮੂਲ: ਵਾਪਸ 0;  /* not a constant */
     }
-    if (info <= MAXINDEXRK) {  /* does constant fit in 'argC'? */
+    ਜੇ (info <= MAXINDEXRK) {  /* does constant fit in 'argC'? */
       e->k = VK;  /* make expression a 'K' expression */
       e->u.info = info;
-      return 1;
+      ਵਾਪਸ 1;
     }
   }
   /* else, expression doesn't fit; leave it unchanged */
-  return 0;
+  ਵਾਪਸ 0;
 }
 
 
@@ -1082,59 +1082,59 @@ static int luaK_exp2K (FuncState *fs, expdesc *e) {
 ** in the range of R/K indices).
 ** Returns 1 iff expression is K.
 */
-static int exp2RK (FuncState *fs, expdesc *e) {
-  if (luaK_exp2K(fs, e))
-    return 1;
-  else {  /* not a constant in the right range: put it in a register */
+ਸਥਿਰ ਪੂਰਨ exp2RK (FuncState *fs, expdesc *e) {
+  ਜੇ (luaK_exp2K(fs, e))
+    ਵਾਪਸ 1;
+  ਨਹੀਂਤਾਂ {  /* not a constant in the right range: put it in a register */
     luaK_exp2anyreg(fs, e);
-    return 0;
+    ਵਾਪਸ 0;
   }
 }
 
 
-static void codeABRK (FuncState *fs, OpCode o, int A, int B,
+ਸਥਿਰ ਖਾਲੀ ਕੋਡ_ABRK (FuncState *fs, Op_ਕੋਡ o, ਪੂਰਨ A, ਪੂਰਨ B,
                       expdesc *ec) {
-  int k = exp2RK(fs, ec);
-  luaK_codeABCk(fs, o, A, B, ec->u.info, k);
+  ਪੂਰਨ k = exp2RK(fs, ec);
+  lua_K_ਕੋਡ_ABCk(fs, o, A, B, ec->u.info, k);
 }
 
 
 /*
 ** Generate code to store result of expression 'ex' into variable 'var'.
 */
-void luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
-  switch (var->k) {
-    case VLOCAL: {
+ਖਾਲੀ luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
+  ਚੋਣ (var->k) {
+    ਹਾਲਤ VLOCAL: {
       freeexp(fs, ex);
       exp2reg(fs, ex, var->u.var.ridx);  /* compute 'ex' into proper place */
-      return;
+      ਵਾਪਸ;
     }
-    case VUPVAL: {
-      int e = luaK_exp2anyreg(fs, ex);
-      luaK_codeABC(fs, OP_SETUPVAL, e, var->u.info, 0);
-      break;
+    ਹਾਲਤ VUPVAL: {
+      ਪੂਰਨ e = luaK_exp2anyreg(fs, ex);
+      lua_K_ਕੋਡ_ABC(fs, OP_SETUPVAL, e, var->u.info, 0);
+      ਰੋਕੋ;
     }
-    case VINDEXUP: {
-      codeABRK(fs, OP_SETTABUP, var->u.ind.t, var->u.ind.idx, ex);
-      break;
+    ਹਾਲਤ VINDEXUP: {
+      ਕੋਡ_ABRK(fs, OP_SETTABUP, var->u.ind.t, var->u.ind.idx, ex);
+      ਰੋਕੋ;
     }
-    case VINDEXI: {
-      codeABRK(fs, OP_SETI, var->u.ind.t, var->u.ind.idx, ex);
-      break;
+    ਹਾਲਤ VINDEXI: {
+      ਕੋਡ_ABRK(fs, OP_SETI, var->u.ind.t, var->u.ind.idx, ex);
+      ਰੋਕੋ;
     }
-    case VINDEXSTR: {
-      codeABRK(fs, OP_SETFIELD, var->u.ind.t, var->u.ind.idx, ex);
-      break;
+    ਹਾਲਤ VINDEXSTR: {
+      ਕੋਡ_ABRK(fs, OP_SETFIELD, var->u.ind.t, var->u.ind.idx, ex);
+      ਰੋਕੋ;
     }
-    case VVARGIND: {
+    ਹਾਲਤ VVARGIND: {
       needvatab(fs->f);  /* function will need a vararg table */
       /* now, assignment is to a regular table */
     }  /* FALLTHROUGH */
-    case VINDEXED: {
-      codeABRK(fs, OP_SETTABLE, var->u.ind.t, var->u.ind.idx, ex);
-      break;
+    ਹਾਲਤ VINDEXED: {
+      ਕੋਡ_ABRK(fs, OP_SETTABLE, var->u.ind.t, var->u.ind.idx, ex);
+      ਰੋਕੋ;
     }
-    default: lua_assert(0);  /* invalid var kind to store */
+    ਮੂਲ: lua_assert(0);  /* invalid var kind to store */
   }
   freeexp(fs, ex);
 }
@@ -1143,7 +1143,7 @@ void luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
 /*
 ** Negate condition 'e' (where 'e' is a comparison).
 */
-static void negatecondition (FuncState *fs, expdesc *e) {
+ਸਥਿਰ ਖਾਲੀ negatecondition (FuncState *fs, expdesc *e) {
   Instruction *pc = getjumpcontrol(fs, e->u.info);
   lua_assert(testTMode(GET_OPCODE(*pc)) && GET_OPCODE(*pc) != OP_TESTSET &&
                                            GET_OPCODE(*pc) != OP_TEST);
@@ -1157,40 +1157,40 @@ static void negatecondition (FuncState *fs, expdesc *e) {
 ** Optimize when 'e' is 'not' something, inverting the condition
 ** and removing the 'not'.
 */
-static int jumponcond (FuncState *fs, expdesc *e, int cond) {
-  if (e->k == VRELOC) {
+ਸਥਿਰ ਪੂਰਨ jumponcond (FuncState *fs, expdesc *e, ਪੂਰਨ cond) {
+  ਜੇ (e->k == VRELOC) {
     Instruction ie = getinstruction(fs, e);
-    if (GET_OPCODE(ie) == OP_NOT) {
+    ਜੇ (GET_OPCODE(ie) == OP_NOT) {
       removelastinstruction(fs);  /* remove previous OP_NOT */
-      return condjump(fs, OP_TEST, GETARG_B(ie), 0, 0, !cond);
+      ਵਾਪਸ condjump(fs, OP_TEST, GETARG_B(ie), 0, 0, !cond);
     }
     /* else go through */
   }
   discharge2anyreg(fs, e);
   freeexp(fs, e);
-  return condjump(fs, OP_TESTSET, NO_REG, e->u.info, 0, cond);
+  ਵਾਪਸ condjump(fs, OP_TESTSET, NO_REG, e->u.info, 0, cond);
 }
 
 
 /*
 ** Emit code to go through if 'e' is true, jump otherwise.
 */
-void luaK_goiftrue (FuncState *fs, expdesc *e) {
-  int pc;  /* pc of new jump */
+ਖਾਲੀ luaK_goiftrue (FuncState *fs, expdesc *e) {
+  ਪੂਰਨ pc;  /* pc of new jump */
   luaK_dischargevars(fs, e);
-  switch (e->k) {
-    case VJMP: {  /* condition? */
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VJMP: {  /* condition? */
       negatecondition(fs, e);  /* jump when it is false */
       pc = e->u.info;  /* save jump position */
-      break;
+      ਰੋਕੋ;
     }
-    case VK: case VKFLT: case VKINT: case VKSTR: case VTRUE: {
+    ਹਾਲਤ VK: ਹਾਲਤ VKFLT: ਹਾਲਤ VKINT: ਹਾਲਤ VKSTR: ਹਾਲਤ VTRUE: {
       pc = NO_JUMP;  /* always true; do nothing */
-      break;
+      ਰੋਕੋ;
     }
-    default: {
+    ਮੂਲ: {
       pc = jumponcond(fs, e, 0);  /* jump when false */
-      break;
+      ਰੋਕੋ;
     }
   }
   luaK_concat(fs, &e->f, pc);  /* insert new jump in false list */
@@ -1202,21 +1202,21 @@ void luaK_goiftrue (FuncState *fs, expdesc *e) {
 /*
 ** Emit code to go through if 'e' is false, jump otherwise.
 */
-static void luaK_goiffalse (FuncState *fs, expdesc *e) {
-  int pc;  /* pc of new jump */
+ਸਥਿਰ ਖਾਲੀ luaK_goiffalse (FuncState *fs, expdesc *e) {
+  ਪੂਰਨ pc;  /* pc of new jump */
   luaK_dischargevars(fs, e);
-  switch (e->k) {
-    case VJMP: {
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VJMP: {
       pc = e->u.info;  /* already jump if true */
-      break;
+      ਰੋਕੋ;
     }
-    case VNIL: case VFALSE: {
+    ਹਾਲਤ VNIL: ਹਾਲਤ VFALSE: {
       pc = NO_JUMP;  /* always false; do nothing */
-      break;
+      ਰੋਕੋ;
     }
-    default: {
+    ਮੂਲ: {
       pc = jumponcond(fs, e, 1);  /* jump if true */
-      break;
+      ਰੋਕੋ;
     }
   }
   luaK_concat(fs, &e->t, pc);  /* insert new jump in 't' list */
@@ -1228,32 +1228,32 @@ static void luaK_goiffalse (FuncState *fs, expdesc *e) {
 /*
 ** Code 'not e', doing constant folding.
 */
-static void codenot (FuncState *fs, expdesc *e) {
-  switch (e->k) {
-    case VNIL: case VFALSE: {
+ਸਥਿਰ ਖਾਲੀ codenot (FuncState *fs, expdesc *e) {
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VNIL: ਹਾਲਤ VFALSE: {
       e->k = VTRUE;  /* true == not nil == not false */
-      break;
+      ਰੋਕੋ;
     }
-    case VK: case VKFLT: case VKINT: case VKSTR: case VTRUE: {
+    ਹਾਲਤ VK: ਹਾਲਤ VKFLT: ਹਾਲਤ VKINT: ਹਾਲਤ VKSTR: ਹਾਲਤ VTRUE: {
       e->k = VFALSE;  /* false == not "x" == not 0.5 == not 1 == not true */
-      break;
+      ਰੋਕੋ;
     }
-    case VJMP: {
+    ਹਾਲਤ VJMP: {
       negatecondition(fs, e);
-      break;
+      ਰੋਕੋ;
     }
-    case VRELOC:
-    case VNONRELOC: {
+    ਹਾਲਤ VRELOC:
+    ਹਾਲਤ VNONRELOC: {
       discharge2anyreg(fs, e);
       freeexp(fs, e);
-      e->u.info = luaK_codeABC(fs, OP_NOT, 0, e->u.info, 0);
+      e->u.info = lua_K_ਕੋਡ_ABC(fs, OP_NOT, 0, e->u.info, 0);
       e->k = VRELOC;
-      break;
+      ਰੋਕੋ;
     }
-    default: lua_assert(0);  /* cannot happen */
+    ਮੂਲ: lua_assert(0);  /* cannot happen */
   }
   /* interchange true and false lists */
-  { int temp = e->f; e->f = e->t; e->t = temp; }
+  { ਪੂਰਨ ਆਰਜ਼ੀ = e->f; e->f = e->t; e->t = ਆਰਜ਼ੀ; }
   removevalues(fs, e->f);  /* values are useless when negated */
   removevalues(fs, e->t);
 }
@@ -1262,16 +1262,16 @@ static void codenot (FuncState *fs, expdesc *e) {
 /*
 ** Check whether expression 'e' is a short literal string
 */
-static int isKstr (FuncState *fs, expdesc *e) {
-  return (e->k == VK && !hasjumps(e) && e->u.info <= MAXINDEXRK &&
+ਸਥਿਰ ਪੂਰਨ isKstr (FuncState *fs, expdesc *e) {
+  ਵਾਪਸ (e->k == VK && !hasjumps(e) && e->u.info <= MAXINDEXRK &&
           ttisshrstring(&fs->f->k[e->u.info]));
 }
 
 /*
 ** Check whether expression 'e' is a literal integer.
 */
-static int isKint (expdesc *e) {
-  return (e->k == VKINT && !hasjumps(e));
+ਸਥਿਰ ਪੂਰਨ isKint (expdesc *e) {
+  ਵਾਪਸ (e->k == VKINT && !hasjumps(e));
 }
 
 
@@ -1279,8 +1279,8 @@ static int isKint (expdesc *e) {
 ** Check whether expression 'e' is a literal integer in
 ** proper range to fit in register C
 */
-static int isCint (expdesc *e) {
-  return isKint(e) && (l_castS2U(e->u.ival) <= l_castS2U(MAXARG_C));
+ਸਥਿਰ ਪੂਰਨ isCint (expdesc *e) {
+  ਵਾਪਸ isKint(e) && (l_castS2U(e->u.ival) <= l_castS2U(MAXARG_C));
 }
 
 
@@ -1288,8 +1288,8 @@ static int isCint (expdesc *e) {
 ** Check whether expression 'e' is a literal integer in
 ** proper range to fit in register sC
 */
-static int isSCint (expdesc *e) {
-  return isKint(e) && fitsC(e->u.ival);
+ਸਥਿਰ ਪੂਰਨ isSCint (expdesc *e) {
+  ਵਾਪਸ isKint(e) && ਸਮਾਉਂਦਾ_C(e->u.ival);
 }
 
 
@@ -1297,20 +1297,20 @@ static int isSCint (expdesc *e) {
 ** Check whether expression 'e' is a literal integer or float in
 ** proper range to fit in a register (sB or sC).
 */
-static int isSCnumber (expdesc *e, int *pi, int *isfloat) {
+ਸਥਿਰ ਪੂਰਨ isSCnumber (expdesc *e, ਪੂਰਨ *pi, ਪੂਰਨ *isfloat) {
   lua_Integer i;
-  if (e->k == VKINT)
+  ਜੇ (e->k == VKINT)
     i = e->u.ival;
-  else if (e->k == VKFLT && luaV_flttointeger(e->u.nval, &i, F2Ieq))
+  ਨਹੀਂਤਾਂ ਜੇ (e->k == VKFLT && luaV_flttointeger(e->u.nval, &i, F2Ieq))
     *isfloat = 1;
-  else
-    return 0;  /* not a number */
-  if (!hasjumps(e) && fitsC(i)) {
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ 0;  /* not a number */
+  ਜੇ (!hasjumps(e) && ਸਮਾਉਂਦਾ_C(i)) {
     *pi = int2sC(cast_int(i));
-    return 1;
+    ਵਾਪਸ 1;
   }
-  else
-    return 0;
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ 0;
 }
 
 
@@ -1318,31 +1318,31 @@ static int isSCnumber (expdesc *e, int *pi, int *isfloat) {
 ** Emit SELF instruction or equivalent: the code will convert
 ** expression 'e' into 'e.key(e,'.
 */
-void luaK_self (FuncState *fs, expdesc *e, expdesc *key) {
-  int ereg, base;
+ਖਾਲੀ luaK_self (FuncState *fs, expdesc *e, expdesc *ਕੁੰਜੀ) {
+  ਪੂਰਨ ereg, ਅਧਾਰ;
   luaK_exp2anyreg(fs, e);
   ereg = e->u.info;  /* register where 'e' (the receiver) was placed */
   freeexp(fs, e);
-  base = e->u.info = fs->freereg;  /* base register for op_self */
+  ਅਧਾਰ = e->u.info = fs->freereg;  /* base register for op_self */
   e->k = VNONRELOC;  /* self expression has a fixed register */
   luaK_reserveregs(fs, 2);  /* method and 'self' produced by op_self */
-  lua_assert(key->k == VKSTR);
+  lua_assert(ਕੁੰਜੀ->k == VKSTR);
   /* is method name a short string in a valid K index? */
-  if (strisshr(key->u.strval) && luaK_exp2K(fs, key)) {
+  ਜੇ (strisshr(ਕੁੰਜੀ->u.strval) && luaK_exp2K(fs, ਕੁੰਜੀ)) {
     /* can use 'self' opcode */
-    luaK_codeABCk(fs, OP_SELF, base, ereg, key->u.info, 0);
+    lua_K_ਕੋਡ_ABCk(fs, OP_SELF, ਅਧਾਰ, ereg, ਕੁੰਜੀ->u.info, 0);
   }
-  else {  /* cannot use 'self' opcode; use move+gettable */
-    luaK_exp2anyreg(fs, key);  /* put method name in a register */
-    luaK_codeABC(fs, OP_MOVE, base + 1, ereg, 0);  /* copy self to base+1 */
-    luaK_codeABC(fs, OP_GETTABLE, base, ereg, key->u.info);  /* get method */
+  ਨਹੀਂਤਾਂ {  /* cannot use 'self' opcode; use move+gettable */
+    luaK_exp2anyreg(fs, ਕੁੰਜੀ);  /* put method name in a register */
+    lua_K_ਕੋਡ_ABC(fs, OP_MOVE, ਅਧਾਰ + 1, ereg, 0);  /* copy self to base+1 */
+    lua_K_ਕੋਡ_ABC(fs, OP_GETTABLE, ਅਧਾਰ, ereg, ਕੁੰਜੀ->u.info);  /* get method */
   }
-  freeexp(fs, key);
+  freeexp(fs, ਕੁੰਜੀ);
 }
 
 
 /* auxiliary function to define indexing expressions */
-static void fillidxk (expdesc *t, int idx, expkind k) {
+ਸਥਿਰ ਖਾਲੀ fillidxk (expdesc *t, ਪੂਰਨ idx, expkind k) {
   t->u.ind.idx = cast_byte(idx);
   t->k = k;
 }
@@ -1354,38 +1354,38 @@ static void fillidxk (expdesc *t, int idx, expkind k) {
 ** Keys can be literal strings in the constant table or arbitrary
 ** values in registers.
 */
-void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k) {
-  int keystr = -1;
-  if (k->k == VKSTR)
+ਖਾਲੀ lua_K_ਸੂਚਕਾਂਕਿਤ (FuncState *fs, expdesc *t, expdesc *k) {
+  ਪੂਰਨ keystr = -1;
+  ਜੇ (k->k == VKSTR)
     keystr = str2K(fs, k);
   lua_assert(!hasjumps(t) &&
              (t->k == VLOCAL || t->k == VVARGVAR ||
               t->k == VNONRELOC || t->k == VUPVAL));
-  if (t->k == VUPVAL && !isKstr(fs, k))  /* upvalue indexed by non 'Kstr'? */
+  ਜੇ (t->k == VUPVAL && !isKstr(fs, k))  /* upvalue indexed by non 'Kstr'? */
     luaK_exp2anyreg(fs, t);  /* put it in a register */
-  if (t->k == VUPVAL) {
-    lu_byte temp = cast_byte(t->u.info);  /* upvalue index */
-    t->u.ind.t = temp;  /* (avoid a direct assignment; values overlap) */
+  ਜੇ (t->k == VUPVAL) {
+    lu_byte ਆਰਜ਼ੀ = cast_byte(t->u.info);  /* upvalue index */
+    t->u.ind.t = ਆਰਜ਼ੀ;  /* (avoid a direct assignment; values overlap) */
     lua_assert(isKstr(fs, k));
     fillidxk(t, k->u.info, VINDEXUP);  /* literal short string */
   }
-  else if (t->k == VVARGVAR) {  /* indexing the vararg parameter? */
-    int kreg = luaK_exp2anyreg(fs, k);  /* put key in some register */
+  ਨਹੀਂਤਾਂ ਜੇ (t->k == VVARGVAR) {  /* indexing the vararg parameter? */
+    ਪੂਰਨ kreg = luaK_exp2anyreg(fs, k);  /* put key in some register */
     lu_byte vreg = cast_byte(t->u.var.ridx);  /* register with vararg param. */
     lua_assert(vreg == fs->f->numparams);
     t->u.ind.t = vreg;  /* (avoid a direct assignment; values may overlap?) */
     fillidxk(t, kreg, VVARGIND);  /* 't' represents 'vararg[k]' */
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     /* register index of the table */
-    lu_byte temp = cast_byte((t->k == VLOCAL) ? t->u.var.ridx: t->u.info);
-    t->u.ind.t = temp;  /* (avoid a direct assignment; values may overlap?) */
-    if (isKstr(fs, k))
+    lu_byte ਆਰਜ਼ੀ = cast_byte((t->k == VLOCAL) ? t->u.var.ridx: t->u.info);
+    t->u.ind.t = ਆਰਜ਼ੀ;  /* (avoid a direct assignment; values may overlap?) */
+    ਜੇ (isKstr(fs, k))
       fillidxk(t, k->u.info, VINDEXSTR);  /* literal short string */
-    else if (isCint(k))  /* int. constant in proper range? */
+    ਨਹੀਂਤਾਂ ਜੇ (isCint(k))  /* int. constant in proper range? */
       fillidxk(t, cast_int(k->u.ival), VINDEXI);
-    else
-      fillidxk(t, luaK_exp2anyreg(fs, k), VINDEXED);  /* register */
+    ਨਹੀਂਤਾਂ
+      fillidxk(t, luaK_exp2anyreg(fs, k), VINDEXED);  /*ਰਜਿਸਟਰ*/
   }
   t->u.ind.keystr = keystr;  /* string index in 'k' */
   t->u.ind.ro = 0;  /* by default, not read-only */
@@ -1397,17 +1397,17 @@ void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k) {
 ** Bitwise operations need operands convertible to integers; division
 ** operations cannot have 0 as divisor.
 */
-static int validop (int op, TValue *v1, TValue *v2) {
-  switch (op) {
-    case LUA_OPBAND: case LUA_OPBOR: case LUA_OPBXOR:
-    case LUA_OPSHL: case LUA_OPSHR: case LUA_OPBNOT: {  /* conversion errors */
+ਸਥਿਰ ਪੂਰਨ validop (ਪੂਰਨ op, TValue *v1, TValue *v2) {
+  ਚੋਣ (op) {
+    ਹਾਲਤ LUA_OPBAND: ਹਾਲਤ LUA_OPBOR: ਹਾਲਤ LUA_OPBXOR:
+    ਹਾਲਤ LUA_OPSHL: ਹਾਲਤ LUA_OPSHR: ਹਾਲਤ LUA_OPBNOT: {  /* conversion errors */
       lua_Integer i;
-      return (luaV_tointegerns(v1, &i, LUA_FLOORN2I) &&
+      ਵਾਪਸ (luaV_tointegerns(v1, &i, LUA_FLOORN2I) &&
               luaV_tointegerns(v2, &i, LUA_FLOORN2I));
     }
-    case LUA_OPDIV: case LUA_OPIDIV: case LUA_OPMOD:  /* division by 0 */
-      return (nvalue(v2) != 0);
-    default: return 1;  /* everything else is valid */
+    ਹਾਲਤ LUA_OPDIV: ਹਾਲਤ LUA_OPIDIV: ਹਾਲਤ LUA_OPMOD:  /* division by 0 */
+      ਵਾਪਸ (nvalue(v2) != 0);
+    ਮੂਲ: ਵਾਪਸ 1;  /* everything else is valid */
   }
 }
 
@@ -1416,43 +1416,43 @@ static int validop (int op, TValue *v1, TValue *v2) {
 ** Try to "constant-fold" an operation; return 1 iff successful.
 ** (In this case, 'e1' has the final result.)
 */
-static int constfolding (FuncState *fs, int op, expdesc *e1,
-                                        const expdesc *e2) {
+ਸਥਿਰ ਪੂਰਨ constfolding (FuncState *fs, ਪੂਰਨ op, expdesc *e1,
+                                        ਅਚਲ expdesc *e2) {
   TValue v1, v2, res;
-  if (!tonumeral(e1, &v1) || !tonumeral(e2, &v2) || !validop(op, &v1, &v2))
-    return 0;  /* non-numeric operands or not safe to fold */
+  ਜੇ (!tonumeral(e1, &v1) || !tonumeral(e2, &v2) || !validop(op, &v1, &v2))
+    ਵਾਪਸ 0;  /* non-numeric operands or not safe to fold */
   luaO_rawarith(fs->ls->L, op, &v1, &v2, &res);  /* does operation */
-  if (ttisinteger(&res)) {
+  ਜੇ (ttisinteger(&res)) {
     e1->k = VKINT;
     e1->u.ival = ivalue(&res);
   }
-  else {  /* folds neither NaN nor 0.0 (to avoid problems with -0.0) */
-    lua_Number n = fltvalue(&res);
-    if (luai_numisnan(n) || n == 0)
-      return 0;
+  ਨਹੀਂਤਾਂ {  /* folds neither NaN nor 0.0 (to avoid problems with -0.0) */
+    lua_ਸੰਖਿਆ n = fltvalue(&res);
+    ਜੇ (luai_numisnan(n) || n == 0)
+      ਵਾਪਸ 0;
     e1->k = VKFLT;
     e1->u.nval = n;
   }
-  return 1;
+  ਵਾਪਸ 1;
 }
 
 
 /*
 ** Convert a BinOpr to an OpCode  (ORDER OPR - ORDER OP)
 */
-l_sinline OpCode binopr2op (BinOpr opr, BinOpr baser, OpCode base) {
+l_sinline Op_ਕੋਡ binopr2op (BinOpr opr, BinOpr baser, Op_ਕੋਡ ਅਧਾਰ) {
   lua_assert(baser <= opr &&
-            ((baser == OPR_ADD && opr <= OPR_SHR) ||
+            ((baser == OPR_ਜੋੜੋ && opr <= OPR_SHR) ||
              (baser == OPR_LT && opr <= OPR_LE)));
-  return cast(OpCode, (cast_int(opr) - cast_int(baser)) + cast_int(base));
+  ਵਾਪਸ cast(Op_ਕੋਡ, (cast_int(opr) - cast_int(baser)) + cast_int(ਅਧਾਰ));
 }
 
 
 /*
 ** Convert a UnOpr to an OpCode  (ORDER OPR - ORDER OP)
 */
-l_sinline OpCode unopr2op (UnOpr opr) {
-  return cast(OpCode, (cast_int(opr) - cast_int(OPR_MINUS)) +
+l_sinline Op_ਕੋਡ unopr2op (UnOpr opr) {
+  ਵਾਪਸ cast(Op_ਕੋਡ, (cast_int(opr) - cast_int(OPR_MINUS)) +
                                        cast_int(OP_UNM));
 }
 
@@ -1461,8 +1461,8 @@ l_sinline OpCode unopr2op (UnOpr opr) {
 ** Convert a BinOpr to a tag method  (ORDER OPR - ORDER TM)
 */
 l_sinline TMS binopr2TM (BinOpr opr) {
-  lua_assert(OPR_ADD <= opr && opr <= OPR_SHR);
-  return cast(TMS, (cast_int(opr) - cast_int(OPR_ADD)) + cast_int(TM_ADD));
+  lua_assert(OPR_ਜੋੜੋ <= opr && opr <= OPR_SHR);
+  ਵਾਪਸ cast(TMS, (cast_int(opr) - cast_int(OPR_ਜੋੜੋ)) + cast_int(TM_ਜੋੜੋ));
 }
 
 
@@ -1471,12 +1471,12 @@ l_sinline TMS binopr2TM (BinOpr opr) {
 ** (everything but 'not').
 ** Expression to produce final result will be encoded in 'e'.
 */
-static void codeunexpval (FuncState *fs, OpCode op, expdesc *e, int line) {
-  int r = luaK_exp2anyreg(fs, e);  /* opcodes operate only on registers */
+ਸਥਿਰ ਖਾਲੀ codeunexpval (FuncState *fs, Op_ਕੋਡ op, expdesc *e, ਪੂਰਨ ਸਤਰ) {
+  ਪੂਰਨ r = luaK_exp2anyreg(fs, e);  /* opcodes operate only on registers */
   freeexp(fs, e);
-  e->u.info = luaK_codeABC(fs, op, 0, r, 0);  /* generate opcode */
+  e->u.info = lua_K_ਕੋਡ_ABC(fs, op, 0, r, 0);  /* generate opcode */
   e->k = VRELOC;  /* all those operations are relocatable */
-  luaK_fixline(fs, line);
+  luaK_fixline(fs, ਸਤਰ);
 }
 
 
@@ -1486,17 +1486,17 @@ static void codeunexpval (FuncState *fs, OpCode op, expdesc *e, int line) {
 ** operators).
 ** Expression to produce final result will be encoded in 'e1'.
 */
-static void finishbinexpval (FuncState *fs, expdesc *e1, expdesc *e2,
-                             OpCode op, int v2, int flip, int line,
-                             OpCode mmop, TMS event) {
-  int v1 = luaK_exp2anyreg(fs, e1);
-  int pc = luaK_codeABCk(fs, op, 0, v1, v2, 0);
+ਸਥਿਰ ਖਾਲੀ finishbinexpval (FuncState *fs, expdesc *e1, expdesc *e2,
+                             Op_ਕੋਡ op, ਪੂਰਨ v2, ਪੂਰਨ flip, ਪੂਰਨ ਸਤਰ,
+                             Op_ਕੋਡ mmop, TMS event) {
+  ਪੂਰਨ v1 = luaK_exp2anyreg(fs, e1);
+  ਪੂਰਨ pc = lua_K_ਕੋਡ_ABCk(fs, op, 0, v1, v2, 0);
   freeexps(fs, e1, e2);
   e1->u.info = pc;
   e1->k = VRELOC;  /* all those operations are relocatable */
-  luaK_fixline(fs, line);
-  luaK_codeABCk(fs, mmop, v1, v2, cast_int(event), flip);  /* metamethod */
-  luaK_fixline(fs, line);
+  luaK_fixline(fs, ਸਤਰ);
+  lua_K_ਕੋਡ_ABCk(fs, mmop, v1, v2, cast_int(event), flip);  /* metamethod */
+  luaK_fixline(fs, ਸਤਰ);
 }
 
 
@@ -1504,39 +1504,39 @@ static void finishbinexpval (FuncState *fs, expdesc *e1, expdesc *e2,
 ** Emit code for binary expressions that "produce values" over
 ** two registers.
 */
-static void codebinexpval (FuncState *fs, BinOpr opr,
-                           expdesc *e1, expdesc *e2, int line) {
-  OpCode op = binopr2op(opr, OPR_ADD, OP_ADD);
-  int v2 = luaK_exp2anyreg(fs, e2);  /* make sure 'e2' is in a register */
+ਸਥਿਰ ਖਾਲੀ codebinexpval (FuncState *fs, BinOpr opr,
+                           expdesc *e1, expdesc *e2, ਪੂਰਨ ਸਤਰ) {
+  Op_ਕੋਡ op = binopr2op(opr, OPR_ਜੋੜੋ, OP_ਜੋੜੋ);
+  ਪੂਰਨ v2 = luaK_exp2anyreg(fs, e2);  /* make sure 'e2' is in a register */
   /* 'e1' must be already in a register or it is a constant */
   lua_assert((VNIL <= e1->k && e1->k <= VKSTR) ||
              e1->k == VNONRELOC || e1->k == VRELOC);
-  lua_assert(OP_ADD <= op && op <= OP_SHR);
-  finishbinexpval(fs, e1, e2, op, v2, 0, line, OP_MMBIN, binopr2TM(opr));
+  lua_assert(OP_ਜੋੜੋ <= op && op <= OP_SHR);
+  finishbinexpval(fs, e1, e2, op, v2, 0, ਸਤਰ, OP_MMBIN, binopr2TM(opr));
 }
 
 
 /*
 ** Code binary operators with immediate operands.
 */
-static void codebini (FuncState *fs, OpCode op,
-                       expdesc *e1, expdesc *e2, int flip, int line,
+ਸਥਿਰ ਖਾਲੀ codebini (FuncState *fs, Op_ਕੋਡ op,
+                       expdesc *e1, expdesc *e2, ਪੂਰਨ flip, ਪੂਰਨ ਸਤਰ,
                        TMS event) {
-  int v2 = int2sC(cast_int(e2->u.ival));  /* immediate operand */
+  ਪੂਰਨ v2 = int2sC(cast_int(e2->u.ival));  /* immediate operand */
   lua_assert(e2->k == VKINT);
-  finishbinexpval(fs, e1, e2, op, v2, flip, line, OP_MMBINI, event);
+  finishbinexpval(fs, e1, e2, op, v2, flip, ਸਤਰ, OP_MMBINI, event);
 }
 
 
 /*
 ** Code binary operators with K operand.
 */
-static void codebinK (FuncState *fs, BinOpr opr,
-                      expdesc *e1, expdesc *e2, int flip, int line) {
+ਸਥਿਰ ਖਾਲੀ codebinK (FuncState *fs, BinOpr opr,
+                      expdesc *e1, expdesc *e2, ਪੂਰਨ flip, ਪੂਰਨ ਸਤਰ) {
   TMS event = binopr2TM(opr);
-  int v2 = e2->u.info;  /* K index */
-  OpCode op = binopr2op(opr, OPR_ADD, OP_ADDK);
-  finishbinexpval(fs, e1, e2, op, v2, flip, line, OP_MMBINK, event);
+  ਪੂਰਨ v2 = e2->u.info;  /* K index */
+  Op_ਕੋਡ op = binopr2op(opr, OPR_ਜੋੜੋ, OP_ADDK);
+  finishbinexpval(fs, e1, e2, op, v2, flip, ਸਤਰ, OP_MMBINK, event);
 }
 
 
@@ -1545,40 +1545,40 @@ static void codebinK (FuncState *fs, BinOpr opr,
 ** As a special case, avoid the optimization for (exp - 0), because
 ** (-0.0 - 0) is -0.0, while (-0.0 + 0) is +0.0.
 */
-static int finishbinexpneg (FuncState *fs, expdesc *e1, expdesc *e2,
-                            OpCode op, int line, TMS event) {
-  if (!isKint(e2))
-    return 0;  /* not an integer constant */
-  else {
+ਸਥਿਰ ਪੂਰਨ finishbinexpneg (FuncState *fs, expdesc *e1, expdesc *e2,
+                            Op_ਕੋਡ op, ਪੂਰਨ ਸਤਰ, TMS event) {
+  ਜੇ (!isKint(e2))
+    ਵਾਪਸ 0;  /* not an integer constant */
+  ਨਹੀਂਤਾਂ {
     lua_Integer i2 = e2->u.ival;
-    if (!(fitsC(i2) && fitsC(-i2)))
-      return 0;  /* not in the proper range */
-    if (event == TM_SUB && i2 == 0)
-      return 0;  /* do not optimize (exp - 0) */
-    else {  /* operating a small integer constant */
-      int v2 = cast_int(i2);
-      finishbinexpval(fs, e1, e2, op, int2sC(-v2), 0, line, OP_MMBINI, event);
+    ਜੇ (!(ਸਮਾਉਂਦਾ_C(i2) && ਸਮਾਉਂਦਾ_C(-i2)))
+      ਵਾਪਸ 0;  /* not in the proper range */
+    ਜੇ (event == TM_SUB && i2 == 0)
+      ਵਾਪਸ 0;  /* do not optimize (exp - 0) */
+    ਨਹੀਂਤਾਂ {  /* operating a small integer constant */
+      ਪੂਰਨ v2 = cast_int(i2);
+      finishbinexpval(fs, e1, e2, op, int2sC(-v2), 0, ਸਤਰ, OP_MMBINI, event);
       /* correct metamethod argument */
-      SETARG_B(fs->f->code[fs->pc - 1], int2sC(v2));
-      return 1;  /* successfully coded */
+      SETARG_B(fs->f->ਕੋਡ[fs->pc - 1], int2sC(v2));
+      ਵਾਪਸ 1;  /* successfully coded */
     }
   }
 }
 
 
-static void swapexps (expdesc *e1, expdesc *e2) {
-  expdesc temp = *e1; *e1 = *e2; *e2 = temp;  /* swap 'e1' and 'e2' */
+ਸਥਿਰ ਖਾਲੀ swapexps (expdesc *e1, expdesc *e2) {
+  expdesc ਆਰਜ਼ੀ = *e1; *e1 = *e2; *e2 = ਆਰਜ਼ੀ;  /* swap 'e1' and 'e2' */
 }
 
 
 /*
 ** Code binary operators with no constant operand.
 */
-static void codebinNoK (FuncState *fs, BinOpr opr,
-                        expdesc *e1, expdesc *e2, int flip, int line) {
-  if (flip)
+ਸਥਿਰ ਖਾਲੀ codebinNoK (FuncState *fs, BinOpr opr,
+                        expdesc *e1, expdesc *e2, ਪੂਰਨ flip, ਪੂਰਨ ਸਤਰ) {
+  ਜੇ (flip)
     swapexps(e1, e2);  /* back to original order */
-  codebinexpval(fs, opr, e1, e2, line);  /* use standard operators */
+  codebinexpval(fs, opr, e1, e2, ਸਤਰ);  /* use standard operators */
 }
 
 
@@ -1586,12 +1586,12 @@ static void codebinNoK (FuncState *fs, BinOpr opr,
 ** Code arithmetic operators ('+', '-', ...). If second operand is a
 ** constant in the proper range, use variant opcodes with K operands.
 */
-static void codearith (FuncState *fs, BinOpr opr,
-                       expdesc *e1, expdesc *e2, int flip, int line) {
-  if (tonumeral(e2, NULL) && luaK_exp2K(fs, e2))  /* K operand? */
-    codebinK(fs, opr, e1, e2, flip, line);
-  else  /* 'e2' is neither an immediate nor a K operand */
-    codebinNoK(fs, opr, e1, e2, flip, line);
+ਸਥਿਰ ਖਾਲੀ codearith (FuncState *fs, BinOpr opr,
+                       expdesc *e1, expdesc *e2, ਪੂਰਨ flip, ਪੂਰਨ ਸਤਰ) {
+  ਜੇ (tonumeral(e2, ਨਿਰਾ) && luaK_exp2K(fs, e2))  /* K operand? */
+    codebinK(fs, opr, e1, e2, flip, ਸਤਰ);
+  ਨਹੀਂਤਾਂ  /* 'e2' is neither an immediate nor a K operand */
+    codebinNoK(fs, opr, e1, e2, flip, ਸਤਰ);
 }
 
 
@@ -1600,17 +1600,17 @@ static void codearith (FuncState *fs, BinOpr opr,
 ** numeric constant, change order of operands to try to use an
 ** immediate or K operator.
 */
-static void codecommutative (FuncState *fs, BinOpr op,
-                             expdesc *e1, expdesc *e2, int line) {
-  int flip = 0;
-  if (tonumeral(e1, NULL)) {  /* is first operand a numeric constant? */
+ਸਥਿਰ ਖਾਲੀ codecommutative (FuncState *fs, BinOpr op,
+                             expdesc *e1, expdesc *e2, ਪੂਰਨ ਸਤਰ) {
+  ਪੂਰਨ flip = 0;
+  ਜੇ (tonumeral(e1, ਨਿਰਾ)) {  /* is first operand a numeric constant? */
     swapexps(e1, e2);  /* change order */
     flip = 1;
   }
-  if (op == OPR_ADD && isSCint(e2))  /* immediate operand? */
-    codebini(fs, OP_ADDI, e1, e2, flip, line, TM_ADD);
-  else
-    codearith(fs, op, e1, e2, flip, line);
+  ਜੇ (op == OPR_ਜੋੜੋ && isSCint(e2))  /* immediate operand? */
+    codebini(fs, OP_ADDI, e1, e2, flip, ਸਤਰ, TM_ਜੋੜੋ);
+  ਨਹੀਂਤਾਂ
+    codearith(fs, op, e1, e2, flip, ਸਤਰ);
 }
 
 
@@ -1618,17 +1618,17 @@ static void codecommutative (FuncState *fs, BinOpr op,
 ** Code bitwise operations; they are all commutative, so the function
 ** tries to put an integer constant as the 2nd operand (a K operand).
 */
-static void codebitwise (FuncState *fs, BinOpr opr,
-                         expdesc *e1, expdesc *e2, int line) {
-  int flip = 0;
-  if (e1->k == VKINT) {
+ਸਥਿਰ ਖਾਲੀ codebitwise (FuncState *fs, BinOpr opr,
+                         expdesc *e1, expdesc *e2, ਪੂਰਨ ਸਤਰ) {
+  ਪੂਰਨ flip = 0;
+  ਜੇ (e1->k == VKINT) {
     swapexps(e1, e2);  /* 'e2' will be the constant operand */
     flip = 1;
   }
-  if (e2->k == VKINT && luaK_exp2K(fs, e2))  /* K operand? */
-    codebinK(fs, opr, e1, e2, flip, line);
-  else  /* no constants */
-    codebinNoK(fs, opr, e1, e2, flip, line);
+  ਜੇ (e2->k == VKINT && luaK_exp2K(fs, e2))  /* K operand? */
+    codebinK(fs, opr, e1, e2, flip, ਸਤਰ);
+  ਨਹੀਂਤਾਂ  /* no constants */
+    codebinNoK(fs, opr, e1, e2, flip, ਸਤਰ);
 }
 
 
@@ -1636,24 +1636,24 @@ static void codebitwise (FuncState *fs, BinOpr opr,
 ** Emit code for order comparisons. When using an immediate operand,
 ** 'isfloat' tells whether the original value was a float.
 */
-static void codeorder (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
-  int r1, r2;
-  int im;
-  int isfloat = 0;
-  OpCode op;
-  if (isSCnumber(e2, &im, &isfloat)) {
+ਸਥਿਰ ਖਾਲੀ codeorder (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
+  ਪੂਰਨ r1, r2;
+  ਪੂਰਨ im;
+  ਪੂਰਨ isfloat = 0;
+  Op_ਕੋਡ op;
+  ਜੇ (isSCnumber(e2, &im, &isfloat)) {
     /* use immediate operand */
     r1 = luaK_exp2anyreg(fs, e1);
     r2 = im;
     op = binopr2op(opr, OPR_LT, OP_LTI);
   }
-  else if (isSCnumber(e1, &im, &isfloat)) {
+  ਨਹੀਂਤਾਂ ਜੇ (isSCnumber(e1, &im, &isfloat)) {
     /* transform (A < B) to (B > A) and (A <= B) to (B >= A) */
     r1 = luaK_exp2anyreg(fs, e2);
     r2 = im;
     op = binopr2op(opr, OPR_LT, OP_GTI);
   }
-  else {  /* regular case, compare two registers */
+  ਨਹੀਂਤਾਂ {  /* regular case, compare two registers */
     r1 = luaK_exp2anyreg(fs, e1);
     r2 = luaK_exp2anyreg(fs, e2);
     op = binopr2op(opr, OPR_LT, OP_LT);
@@ -1668,25 +1668,25 @@ static void codeorder (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
 ** Emit code for equality comparisons ('==', '~=').
 ** 'e1' was already put as RK by 'luaK_infix'.
 */
-static void codeeq (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
-  int r1, r2;
-  int im;
-  int isfloat = 0;  /* not needed here, but kept for symmetry */
-  OpCode op;
-  if (e1->k != VNONRELOC) {
+ਸਥਿਰ ਖਾਲੀ codeeq (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
+  ਪੂਰਨ r1, r2;
+  ਪੂਰਨ im;
+  ਪੂਰਨ isfloat = 0;  /* not needed here, but kept for symmetry */
+  Op_ਕੋਡ op;
+  ਜੇ (e1->k != VNONRELOC) {
     lua_assert(e1->k == VK || e1->k == VKINT || e1->k == VKFLT);
     swapexps(e1, e2);
   }
   r1 = luaK_exp2anyreg(fs, e1);  /* 1st expression must be in register */
-  if (isSCnumber(e2, &im, &isfloat)) {
+  ਜੇ (isSCnumber(e2, &im, &isfloat)) {
     op = OP_EQI;
     r2 = im;  /* immediate operand */
   }
-  else if (exp2RK(fs, e2)) {  /* 2nd expression is constant? */
+  ਨਹੀਂਤਾਂ ਜੇ (exp2RK(fs, e2)) {  /* 2nd expression is constant? */
     op = OP_EQK;
     r2 = e2->u.info;  /* constant index */
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     op = OP_EQ;  /* will compare two registers */
     r2 = luaK_exp2anyreg(fs, e2);
   }
@@ -1699,19 +1699,19 @@ static void codeeq (FuncState *fs, BinOpr opr, expdesc *e1, expdesc *e2) {
 /*
 ** Apply prefix operation 'op' to expression 'e'.
 */
-void luaK_prefix (FuncState *fs, UnOpr opr, expdesc *e, int line) {
-  static const expdesc ef = {VKINT, {0}, NO_JUMP, NO_JUMP};
+ਖਾਲੀ lua_K_ਅਗੇਤਰ (FuncState *fs, UnOpr opr, expdesc *e, ਪੂਰਨ ਸਤਰ) {
+  ਸਥਿਰ ਅਚਲ expdesc ef = {VKINT, {0}, NO_JUMP, NO_JUMP};
   luaK_dischargevars(fs, e);
-  switch (opr) {
-    case OPR_MINUS: case OPR_BNOT:  /* use 'ef' as fake 2nd operand */
-      if (constfolding(fs, cast_int(opr + LUA_OPUNM), e, &ef))
-        break;
+  ਚੋਣ (opr) {
+    ਹਾਲਤ OPR_MINUS: ਹਾਲਤ OPR_BNOT:  /* use 'ef' as fake 2nd operand */
+      ਜੇ (constfolding(fs, cast_int(opr + LUA_OPUNM), e, &ef))
+        ਰੋਕੋ;
       /* else */ /* FALLTHROUGH */
-    case OPR_LEN:
-      codeunexpval(fs, unopr2op(opr), e, line);
-      break;
-    case OPR_NOT: codenot(fs, e); break;
-    default: lua_assert(0);
+    ਹਾਲਤ OPR_LEN:
+      codeunexpval(fs, unopr2op(opr), e, ਸਤਰ);
+      ਰੋਕੋ;
+    ਹਾਲਤ OPR_NOT: codenot(fs, e); ਰੋਕੋ;
+    ਮੂਲ: lua_assert(0);
   }
 }
 
@@ -1720,47 +1720,47 @@ void luaK_prefix (FuncState *fs, UnOpr opr, expdesc *e, int line) {
 ** Process 1st operand 'v' of binary operation 'op' before reading
 ** 2nd operand.
 */
-void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
+ਖਾਲੀ luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
   luaK_dischargevars(fs, v);
-  switch (op) {
-    case OPR_AND: {
+  ਚੋਣ (op) {
+    ਹਾਲਤ OPR_AND: {
       luaK_goiftrue(fs, v);  /* go ahead only if 'v' is true */
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_OR: {
+    ਹਾਲਤ OPR_OR: {
       luaK_goiffalse(fs, v);  /* go ahead only if 'v' is false */
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_CONCAT: {
+    ਹਾਲਤ OPR_CONCAT: {
       luaK_exp2nextreg(fs, v);  /* operand must be on the stack */
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_ADD: case OPR_SUB:
-    case OPR_MUL: case OPR_DIV: case OPR_IDIV:
-    case OPR_MOD: case OPR_POW:
-    case OPR_BAND: case OPR_BOR: case OPR_BXOR:
-    case OPR_SHL: case OPR_SHR: {
-      if (!tonumeral(v, NULL))
+    ਹਾਲਤ OPR_ਜੋੜੋ: ਹਾਲਤ OPR_SUB:
+    ਹਾਲਤ OPR_MUL: ਹਾਲਤ OPR_DIV: ਹਾਲਤ OPR_IDIV:
+    ਹਾਲਤ OPR_MOD: ਹਾਲਤ OPR_POW:
+    ਹਾਲਤ OPR_BAND: ਹਾਲਤ OPR_BOR: ਹਾਲਤ OPR_BXOR:
+    ਹਾਲਤ OPR_SHL: ਹਾਲਤ OPR_SHR: {
+      ਜੇ (!tonumeral(v, ਨਿਰਾ))
         luaK_exp2anyreg(fs, v);
       /* else keep numeral, which may be folded or used as an immediate
-         operand */
-      break;
+ਸੰਕਾਰਜ*/
+      ਰੋਕੋ;
     }
-    case OPR_EQ: case OPR_NE: {
-      if (!tonumeral(v, NULL))
+    ਹਾਲਤ OPR_EQ: ਹਾਲਤ OPR_NE: {
+      ਜੇ (!tonumeral(v, ਨਿਰਾ))
         exp2RK(fs, v);
       /* else keep numeral, which may be an immediate operand */
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_LT: case OPR_LE:
-    case OPR_GT: case OPR_GE: {
-      int dummy, dummy2;
-      if (!isSCnumber(v, &dummy, &dummy2))
+    ਹਾਲਤ OPR_LT: ਹਾਲਤ OPR_LE:
+    ਹਾਲਤ OPR_GT: ਹਾਲਤ OPR_GE: {
+      ਪੂਰਨ dummy, dummy2;
+      ਜੇ (!isSCnumber(v, &dummy, &dummy2))
         luaK_exp2anyreg(fs, v);
       /* else keep numeral, which may be an immediate operand */
-      break;
+      ਰੋਕੋ;
     }
-    default: lua_assert(0);
+    ਮੂਲ: lua_assert(0);
   }
 }
 
@@ -1769,19 +1769,19 @@ void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
 ** For '(e1 .. e2.1 .. e2.2)' (which is '(e1 .. (e2.1 .. e2.2))',
 ** because concatenation is right associative), merge both CONCATs.
 */
-static void codeconcat (FuncState *fs, expdesc *e1, expdesc *e2, int line) {
+ਸਥਿਰ ਖਾਲੀ codeconcat (FuncState *fs, expdesc *e1, expdesc *e2, ਪੂਰਨ ਸਤਰ) {
   Instruction *ie2 = previousinstruction(fs);
-  if (GET_OPCODE(*ie2) == OP_CONCAT) {  /* is 'e2' a concatenation? */
-    int n = GETARG_B(*ie2);  /* # of elements concatenated in 'e2' */
+  ਜੇ (GET_OPCODE(*ie2) == OP_CONCAT) {  /* is 'e2' a concatenation? */
+    ਪੂਰਨ n = GETARG_B(*ie2);  /* # of elements concatenated in 'e2' */
     lua_assert(e1->u.info + 1 == GETARG_A(*ie2));
     freeexp(fs, e2);
     SETARG_A(*ie2, e1->u.info);  /* correct first element ('e1') */
     SETARG_B(*ie2, n + 1);  /* will concatenate one more element */
   }
-  else {  /* 'e2' is not a concatenation */
-    luaK_codeABC(fs, OP_CONCAT, e1->u.info, 2, 0);  /* new concat opcode */
+  ਨਹੀਂਤਾਂ {  /* 'e2' is not a concatenation */
+    lua_K_ਕੋਡ_ABC(fs, OP_CONCAT, e1->u.info, 2, 0);  /* new concat opcode */
     freeexp(fs, e2);
-    luaK_fixline(fs, line);
+    luaK_fixline(fs, ਸਤਰ);
   }
 }
 
@@ -1789,79 +1789,79 @@ static void codeconcat (FuncState *fs, expdesc *e1, expdesc *e2, int line) {
 /*
 ** Finalize code for binary operation, after reading 2nd operand.
 */
-void luaK_posfix (FuncState *fs, BinOpr opr,
-                  expdesc *e1, expdesc *e2, int line) {
+ਖਾਲੀ luaK_posfix (FuncState *fs, BinOpr opr,
+                  expdesc *e1, expdesc *e2, ਪੂਰਨ ਸਤਰ) {
   luaK_dischargevars(fs, e2);
-  if (foldbinop(opr) && constfolding(fs, cast_int(opr + LUA_OPADD), e1, e2))
-    return;  /* done by folding */
-  switch (opr) {
-    case OPR_AND: {
+  ਜੇ (foldbinop(opr) && constfolding(fs, cast_int(opr + LUA_OPADD), e1, e2))
+    ਵਾਪਸ;  /* done by folding */
+  ਚੋਣ (opr) {
+    ਹਾਲਤ OPR_AND: {
       lua_assert(e1->t == NO_JUMP);  /* list closed by 'luaK_infix' */
       luaK_concat(fs, &e2->f, e1->f);
       *e1 = *e2;
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_OR: {
+    ਹਾਲਤ OPR_OR: {
       lua_assert(e1->f == NO_JUMP);  /* list closed by 'luaK_infix' */
       luaK_concat(fs, &e2->t, e1->t);
       *e1 = *e2;
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_CONCAT: {  /* e1 .. e2 */
+    ਹਾਲਤ OPR_CONCAT: {  /* e1 .. e2 */
       luaK_exp2nextreg(fs, e2);
-      codeconcat(fs, e1, e2, line);
-      break;
+      codeconcat(fs, e1, e2, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_ADD: case OPR_MUL: {
-      codecommutative(fs, opr, e1, e2, line);
-      break;
+    ਹਾਲਤ OPR_ਜੋੜੋ: ਹਾਲਤ OPR_MUL: {
+      codecommutative(fs, opr, e1, e2, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_SUB: {
-      if (finishbinexpneg(fs, e1, e2, OP_ADDI, line, TM_SUB))
-        break; /* coded as (r1 + -I) */
+    ਹਾਲਤ OPR_SUB: {
+      ਜੇ (finishbinexpneg(fs, e1, e2, OP_ADDI, ਸਤਰ, TM_SUB))
+        ਰੋਕੋ; /* coded as (r1 + -I) */
       /* ELSE */
     }  /* FALLTHROUGH */
-    case OPR_DIV: case OPR_IDIV: case OPR_MOD: case OPR_POW: {
-      codearith(fs, opr, e1, e2, 0, line);
-      break;
+    ਹਾਲਤ OPR_DIV: ਹਾਲਤ OPR_IDIV: ਹਾਲਤ OPR_MOD: ਹਾਲਤ OPR_POW: {
+      codearith(fs, opr, e1, e2, 0, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_BAND: case OPR_BOR: case OPR_BXOR: {
-      codebitwise(fs, opr, e1, e2, line);
-      break;
+    ਹਾਲਤ OPR_BAND: ਹਾਲਤ OPR_BOR: ਹਾਲਤ OPR_BXOR: {
+      codebitwise(fs, opr, e1, e2, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_SHL: {
-      if (isSCint(e1)) {
+    ਹਾਲਤ OPR_SHL: {
+      ਜੇ (isSCint(e1)) {
         swapexps(e1, e2);
-        codebini(fs, OP_SHLI, e1, e2, 1, line, TM_SHL);  /* I << r2 */
+        codebini(fs, OP_SHLI, e1, e2, 1, ਸਤਰ, TM_SHL);  /* I << r2 */
       }
-      else if (finishbinexpneg(fs, e1, e2, OP_SHRI, line, TM_SHL)) {
+      ਨਹੀਂਤਾਂ ਜੇ (finishbinexpneg(fs, e1, e2, OP_SHRI, ਸਤਰ, TM_SHL)) {
         /* coded as (r1 >> -I) */;
       }
-      else  /* regular case (two registers) */
-       codebinexpval(fs, opr, e1, e2, line);
-      break;
+      ਨਹੀਂਤਾਂ  /* regular case (two registers) */
+       codebinexpval(fs, opr, e1, e2, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_SHR: {
-      if (isSCint(e2))
-        codebini(fs, OP_SHRI, e1, e2, 0, line, TM_SHR);  /* r1 >> I */
-      else  /* regular case (two registers) */
-        codebinexpval(fs, opr, e1, e2, line);
-      break;
+    ਹਾਲਤ OPR_SHR: {
+      ਜੇ (isSCint(e2))
+        codebini(fs, OP_SHRI, e1, e2, 0, ਸਤਰ, TM_SHR);  /* r1 >> I */
+      ਨਹੀਂਤਾਂ  /* regular case (two registers) */
+        codebinexpval(fs, opr, e1, e2, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case OPR_EQ: case OPR_NE: {
+    ਹਾਲਤ OPR_EQ: ਹਾਲਤ OPR_NE: {
       codeeq(fs, opr, e1, e2);
-      break;
+      ਰੋਕੋ;
     }
-    case OPR_GT: case OPR_GE: {
+    ਹਾਲਤ OPR_GT: ਹਾਲਤ OPR_GE: {
       /* '(a > b)' <=> '(b < a)';  '(a >= b)' <=> '(b <= a)' */
       swapexps(e1, e2);
       opr = cast(BinOpr, (opr - OPR_GT) + OPR_LT);
     }  /* FALLTHROUGH */
-    case OPR_LT: case OPR_LE: {
+    ਹਾਲਤ OPR_LT: ਹਾਲਤ OPR_LE: {
       codeorder(fs, opr, e1, e2);
-      break;
+      ਰੋਕੋ;
     }
-    default: lua_assert(0);
+    ਮੂਲ: lua_assert(0);
   }
 }
 
@@ -1870,17 +1870,17 @@ void luaK_posfix (FuncState *fs, BinOpr opr,
 ** Change line information associated with current position, by removing
 ** previous info and adding it again with new line.
 */
-void luaK_fixline (FuncState *fs, int line) {
+ਖਾਲੀ luaK_fixline (FuncState *fs, ਪੂਰਨ ਸਤਰ) {
   removelastlineinfo(fs);
-  savelineinfo(fs, fs->f, line);
+  savelineinfo(fs, fs->f, ਸਤਰ);
 }
 
 
-void luaK_settablesize (FuncState *fs, int pc, int ra, int asize, int hsize) {
-  Instruction *inst = &fs->f->code[pc];
-  int extra = asize / (MAXARG_vC + 1);  /* higher bits of array size */
-  int rc = asize % (MAXARG_vC + 1);  /* lower bits of array size */
-  int k = (extra > 0);  /* true iff needs extra argument */
+ਖਾਲੀ luaK_settablesize (FuncState *fs, ਪੂਰਨ pc, ਪੂਰਨ ra, ਪੂਰਨ asize, ਪੂਰਨ hsize) {
+  Instruction *inst = &fs->f->ਕੋਡ[pc];
+  ਪੂਰਨ extra = asize / (MAXARG_vC + 1);  /* higher bits of array size */
+  ਪੂਰਨ rc = asize % (MAXARG_vC + 1);  /* lower bits of array size */
+  ਪੂਰਨ k = (extra > 0);  /* true iff needs extra argument */
   hsize = (hsize != 0) ? luaO_ceillog2(cast_uint(hsize)) + 1 : 0;
   *inst = CREATE_vABCk(OP_NEWTABLE, ra, hsize, rc, k);
   *(inst + 1) = CREATE_Ax(OP_EXTRAARG, extra);
@@ -1894,35 +1894,35 @@ void luaK_settablesize (FuncState *fs, int pc, int ra, int asize, int hsize) {
 ** 'tostore' is number of values (in registers 'base + 1',...) to add to
 ** table (or LUA_MULTRET to add up to stack top).
 */
-void luaK_setlist (FuncState *fs, int base, int nelems, int tostore) {
+ਖਾਲੀ luaK_setlist (FuncState *fs, ਪੂਰਨ ਅਧਾਰ, ਪੂਰਨ nelems, ਪੂਰਨ tostore) {
   lua_assert(tostore != 0);
-  if (tostore == LUA_MULTRET)
+  ਜੇ (tostore == LUA_MULTRET)
     tostore = 0;
-  if (nelems <= MAXARG_vC)
-    luaK_codevABCk(fs, OP_SETLIST, base, tostore, nelems, 0);
-  else {
-    int extra = nelems / (MAXARG_vC + 1);
+  ਜੇ (nelems <= MAXARG_vC)
+    luaK_codevABCk(fs, OP_SETLIST, ਅਧਾਰ, tostore, nelems, 0);
+  ਨਹੀਂਤਾਂ {
+    ਪੂਰਨ extra = nelems / (MAXARG_vC + 1);
     nelems %= (MAXARG_vC + 1);
-    luaK_codevABCk(fs, OP_SETLIST, base, tostore, nelems, 1);
+    luaK_codevABCk(fs, OP_SETLIST, ਅਧਾਰ, tostore, nelems, 1);
     codeextraarg(fs, extra);
   }
-  fs->freereg = cast_byte(base + 1);  /* free registers with list values */
+  fs->freereg = cast_byte(ਅਧਾਰ + 1);  /* free registers with list values */
 }
 
 
 /*
 ** return the final target of a jump (skipping jumps to jumps)
 */
-static int finaltarget (Instruction *code, int i) {
-  int count;
-  for (count = 0; count < 100; count++) {  /* avoid infinite loops */
-    Instruction pc = code[i];
-    if (GET_OPCODE(pc) != OP_JMP)
-      break;
-    else
+ਸਥਿਰ ਪੂਰਨ finaltarget (Instruction *ਕੋਡ, ਪੂਰਨ i) {
+  ਪੂਰਨ ਗਿਣਤੀ_2;
+  ਲਈ (ਗਿਣਤੀ_2 = 0; ਗਿਣਤੀ_2 < 100; ਗਿਣਤੀ_2++) {  /* avoid infinite loops */
+    Instruction pc = ਕੋਡ[i];
+    ਜੇ (GET_OPCODE(pc) != OP_JMP)
+      ਰੋਕੋ;
+    ਨਹੀਂਤਾਂ
       i += GETARG_sJ(pc) + 1;
   }
-  return i;
+  ਵਾਪਸ i;
 }
 
 
@@ -1930,45 +1930,45 @@ static int finaltarget (Instruction *code, int i) {
 ** Do a final pass over the code of a function, doing small peephole
 ** optimizations and adjustments.
 */
-#include "lopnames.h"
-void luaK_finish (FuncState *fs) {
-  int i;
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopnames.h"
+ਖਾਲੀ lua_K_ਅੰਤ (FuncState *fs) {
+  ਪੂਰਨ i;
   Proto *p = fs->f;
-  if (p->flag & PF_VATAB)  /* will it use a vararg table? */
+  ਜੇ (p->flag & PF_VATAB)  /* will it use a vararg table? */
     p->flag &= cast_byte(~PF_VAHID);  /* then it will not use hidden args. */
-  for (i = 0; i < fs->pc; i++) {
-    Instruction *pc = &p->code[i];
+  ਲਈ (i = 0; i < fs->pc; i++) {
+    Instruction *pc = &p->ਕੋਡ[i];
     lua_assert(i == 0 || luaP_isOT(*(pc - 1)) == luaP_isIT(*pc));
-    switch (GET_OPCODE(*pc)) {
-      case OP_RETURN0: case OP_RETURN1: {
-        if (!(fs->needclose || (p->flag & PF_VAHID)))
-          break;  /* no extra work */
+    ਚੋਣ (GET_OPCODE(*pc)) {
+      ਹਾਲਤ OP_RETURN0: ਹਾਲਤ OP_RETURN1: {
+        ਜੇ (!(fs->needclose || (p->flag & PF_VAHID)))
+          ਰੋਕੋ;  /* no extra work */
         /* else use OP_RETURN to do the extra work */
-        SET_OPCODE(*pc, OP_RETURN);
+        ਸੈੱਟ_OPCODE(*pc, OP_RETURN);
       }  /* FALLTHROUGH */
-      case OP_RETURN: case OP_TAILCALL: {
-        if (fs->needclose)
+      ਹਾਲਤ OP_RETURN: ਹਾਲਤ OP_TAILCALL: {
+        ਜੇ (fs->needclose)
           SETARG_k(*pc, 1);  /* signal that it needs to close */
-        if (p->flag & PF_VAHID)  /* does it use hidden arguments? */
+        ਜੇ (p->flag & PF_VAHID)  /* does it use hidden arguments? */
           SETARG_C(*pc, p->numparams + 1);  /* signal that */
-        break;
+        ਰੋਕੋ;
       }
-      case OP_GETVARG: {
-        if (p->flag & PF_VATAB)  /* function has a vararg table? */
-          SET_OPCODE(*pc, OP_GETTABLE);  /* must get vararg there */
-        break;
+      ਹਾਲਤ OP_GETVARG: {
+        ਜੇ (p->flag & PF_VATAB)  /* function has a vararg table? */
+          ਸੈੱਟ_OPCODE(*pc, OP_GETTABLE);  /* must get vararg there */
+        ਰੋਕੋ;
       }
-      case OP_VARARG: {
-        if (p->flag & PF_VATAB)  /* function has a vararg table? */
+      ਹਾਲਤ OP_VARARG: {
+        ਜੇ (p->flag & PF_VATAB)  /* function has a vararg table? */
           SETARG_k(*pc, 1);  /* must get vararg there */
-        break;
+        ਰੋਕੋ;
       }
-      case OP_JMP: {  /* to optimize jumps to jumps */
-        int target = finaltarget(p->code, i);
-        fixjump(fs, i, target);  /* jump directly to final target */
-        break;
+      ਹਾਲਤ OP_JMP: {  /* to optimize jumps to jumps */
+        ਪੂਰਨ ਨਿਸ਼ਾਨਾ = finaltarget(p->ਕੋਡ, i);
+        fixjump(fs, i, ਨਿਸ਼ਾਨਾ);  /* jump directly to final target */
+        ਰੋਕੋ;
       }
-      default: break;
+      ਮੂਲ: ਰੋਕੋ;
     }
   }
 }

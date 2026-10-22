@@ -4,26 +4,26 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lgc_c
-#define LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lgc_c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lfunc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lgc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstate.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltm.h"
 
 
 /*
@@ -31,70 +31,70 @@
 ** (Large enough to dissipate fixed overheads but small enough
 ** to allow small steps for the collector.)
 */
-#define GCSWEEPMAX	20
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ GCSWEEPMAX	20
 
 
 /*
 ** Cost (in work units) of running one finalizer.
 */
-#define CWUFIN	10
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ CWUFIN	10
 
 
 /* mask with all color bits */
-#define maskcolors	(bitmask(BLACKBIT) | WHITEBITS)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ maskcolors	(bitmask(BLACKBIT) | WHITEBITS)
 
 /* mask with all GC bits */
-#define maskgcbits      (maskcolors | AGEBITS)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ maskgcbits      (maskcolors | AGEBITS)
 
 
 /* macro to erase all color bits then set only the current white bit */
-#define makewhite(g,x)	\
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ makewhite(g,x)	\
   (x->marked = cast_byte((x->marked & ~maskcolors) | luaC_white(g)))
 
 /* make an object gray (neither white nor black) */
-#define set2gray(x)	resetbits(x->marked, maskcolors)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ set2gray(x)	resetbits(x->marked, maskcolors)
 
 
 /* make an object black (coming from any color) */
-#define set2black(x)  \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ set2black(x)  \
   (x->marked = cast_byte((x->marked & ~WHITEBITS) | bitmask(BLACKBIT)))
 
 
-#define valiswhite(x)   (iscollectable(x) && iswhite(gcvalue(x)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ valiswhite(x)   (iscollectable(x) && iswhite(gcvalue(x)))
 
-#define keyiswhite(n)   (keyiscollectable(n) && iswhite(gckey(n)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ keyiswhite(n)   (keyiscollectable(n) && iswhite(gckey(n)))
 
 
 /*
 ** Protected access to objects in values
 */
-#define gcvalueN(o)     (iscollectable(o) ? gcvalue(o) : NULL)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ gcvalueN(o)     (iscollectable(o) ? gcvalue(o) : ਨਿਰਾ)
 
 
 /*
 ** Access to collectable objects in array part of tables
 */
-#define gcvalarr(t,i)  \
-	((*getArrTag(t,i) & BIT_ISCOLLECTABLE) ? getArrVal(t,i)->gc : NULL)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ gcvalarr(t,i)  \
+	((*get_Arr_ਟੈਗ(t,i) & ਦੋਆਧਾਰੀ_ਅੰਕ_ISCOLLECTABLE) ? getArrVal(t,i)->gc : ਨਿਰਾ)
 
 
-#define markvalue(g,o) { checkliveness(mainthread(g),o); \
-  if (valiswhite(o)) reallymarkobject(g,gcvalue(o)); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ markvalue(g,o) { checkliveness(mainthread(g),o); \
+  ਜੇ (valiswhite(o)) reallymarkobject(g,gcvalue(o)); }
 
-#define markkey(g, n)	{ if keyiswhite(n) reallymarkobject(g,gckey(n)); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ markkey(g, n)	{ ਜੇ keyiswhite(n) reallymarkobject(g,gckey(n)); }
 
-#define markobject(g,t)	{ if (iswhite(t)) reallymarkobject(g, obj2gco(t)); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ markobject(g,t)	{ ਜੇ (iswhite(t)) reallymarkobject(g, obj2gco(t)); }
 
 /*
 ** mark an object that can be NULL (either because it is really optional,
 ** or it was stripped as debug info, or inside an uncompleted structure)
 */
-#define markobjectN(g,t)	{ if (t) markobject(g,t); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ markobjectN(g,t)	{ ਜੇ (t) markobject(g,t); }
 
 
-static void reallymarkobject (global_State *g, GCObject *o);
-static void atomic (lua_State *L);
-static void entersweep (lua_State *L);
+ਸਥਿਰ ਖਾਲੀ reallymarkobject (global_State *g, GCObject *o);
+ਸਥਿਰ ਖਾਲੀ atomic (lua_State *L);
+ਸਥਿਰ ਖਾਲੀ entersweep (lua_State *L);
 
 
 /*
@@ -107,72 +107,72 @@ static void entersweep (lua_State *L);
 /*
 ** one after last element in a hash array
 */
-#define gnodelast(h)	gnode(h, cast_sizet(sizenode(h)))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ gnodelast(h)	gnode(h, cast_sizet(sizenode(h)))
 
 
-static l_mem objsize (GCObject *o) {
+ਸਥਿਰ l_mem objsize (GCObject *o) {
   lu_mem res;
-  switch (o->tt) {
-    case LUA_VTABLE: {
-      res = luaH_size(gco2t(o));
-      break;
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VTABLE: {
+      res = lua_H_ਮਾਪ(gco2t(o));
+      ਰੋਕੋ;
     }
-    case LUA_VLCL: {
+    ਹਾਲਤ LUA_VLCL: {
       LClosure *cl = gco2lcl(o);
-      res = sizeLclosure(cl->nupvalues);
-      break;
+      res = ਮਾਪ_Lclosure(cl->nupvalues);
+      ਰੋਕੋ;
     }
-    case LUA_VCCL: {
+    ਹਾਲਤ LUA_VCCL: {
       CClosure *cl = gco2ccl(o);
-      res = sizeCclosure(cl->nupvalues);
-      break;
+      res = ਮਾਪ_Cclosure(cl->nupvalues);
+      ਰੋਕੋ;
     }
-    case LUA_VUSERDATA: {
+    ਹਾਲਤ LUA_VUSERDATA: {
       Udata *u = gco2u(o);
       res = sizeudata(u->nuvalue, u->len);
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VPROTO: {
+    ਹਾਲਤ LUA_VPROTO: {
       res = luaF_protosize(gco2p(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VTHREAD: {
+    ਹਾਲਤ LUA_VTHREAD: {
       res = luaE_threadsize(gco2th(o));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VSHRSTR: {
+    ਹਾਲਤ LUA_VSHRSTR: {
       TString *ts = gco2ts(o);
       res = sizestrshr(cast_uint(ts->shrlen));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VLNGSTR: {
+    ਹਾਲਤ LUA_VLNGSTR: {
       TString *ts = gco2ts(o);
       res = luaS_sizelngstr(ts->u.lnglen, ts->shrlen);
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VUPVAL: {
-      res = sizeof(UpVal);
-      break;
+    ਹਾਲਤ LUA_VUPVAL: {
+      res = ਆਕਾਰ(ਉੱਪਰ_Val);
+      ਰੋਕੋ;
     }
-    default: res = 0; lua_assert(0);
+    ਮੂਲ: res = 0; lua_assert(0);
   }
-  return cast(l_mem, res);
+  ਵਾਪਸ cast(l_mem, res);
 }
 
 
-static GCObject **getgclist (GCObject *o) {
-  switch (o->tt) {
-    case LUA_VTABLE: return &gco2t(o)->gclist;
-    case LUA_VLCL: return &gco2lcl(o)->gclist;
-    case LUA_VCCL: return &gco2ccl(o)->gclist;
-    case LUA_VTHREAD: return &gco2th(o)->gclist;
-    case LUA_VPROTO: return &gco2p(o)->gclist;
-    case LUA_VUSERDATA: {
+ਸਥਿਰ GCObject **getgclist (GCObject *o) {
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VTABLE: ਵਾਪਸ &gco2t(o)->gclist;
+    ਹਾਲਤ LUA_VLCL: ਵਾਪਸ &gco2lcl(o)->gclist;
+    ਹਾਲਤ LUA_VCCL: ਵਾਪਸ &gco2ccl(o)->gclist;
+    ਹਾਲਤ LUA_VTHREAD: ਵਾਪਸ &gco2th(o)->gclist;
+    ਹਾਲਤ LUA_VPROTO: ਵਾਪਸ &gco2p(o)->gclist;
+    ਹਾਲਤ LUA_VUSERDATA: {
       Udata *u = gco2u(o);
       lua_assert(u->nuvalue > 0);
-      return &u->gclist;
+      ਵਾਪਸ &u->gclist;
     }
-    default: lua_assert(0); return 0;
+    ਮੂਲ: lua_assert(0); ਵਾਪਸ 0;
   }
 }
 
@@ -181,9 +181,9 @@ static GCObject **getgclist (GCObject *o) {
 ** Link a collectable object 'o' with a known type into the list 'p'.
 ** (Must be a macro to access the 'gclist' field in different types.)
 */
-#define linkgclist(o,p)	linkgclist_(obj2gco(o), &(o)->gclist, &(p))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ linkgclist(o,p)	linkgclist_(obj2gco(o), &(o)->gclist, &(p))
 
-static void linkgclist_ (GCObject *o, GCObject **pnext, GCObject **list) {
+ਸਥਿਰ ਖਾਲੀ linkgclist_ (GCObject *o, GCObject **pnext, GCObject **list) {
   lua_assert(!isgray(o));  /* cannot be in a gray list */
   *pnext = *list;
   *list = o;
@@ -194,7 +194,7 @@ static void linkgclist_ (GCObject *o, GCObject **pnext, GCObject **list) {
 /*
 ** Link a generic collectable object 'o' into the list 'p'.
 */
-#define linkobjgclist(o,p) linkgclist_(obj2gco(o), getgclist(o), &(p))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ linkobjgclist(o,p) linkgclist_(obj2gco(o), getgclist(o), &(p))
 
 
 
@@ -206,9 +206,9 @@ static void linkgclist_ (GCObject *o, GCObject **pnext, GCObject **list) {
 ** its associated empty value is enough to signal that the entry is
 ** logically empty.
 */
-static void clearkey (Node *n) {
+ਸਥਿਰ ਖਾਲੀ clearkey (ਗੰਢ_2 *n) {
   lua_assert(isempty(gval(n)));
-  if (keyiscollectable(n))
+  ਜੇ (keyiscollectable(n))
     setdeadkey(n);  /* unused key; remove it */
 }
 
@@ -220,13 +220,13 @@ static void clearkey (Node *n) {
 ** other objects: if really collected, cannot keep them; for objects
 ** being finalized, keep them in keys, but not in values
 */
-static int iscleared (global_State *g, const GCObject *o) {
-  if (o == NULL) return 0;  /* non-collectable value */
-  else if (novariant(o->tt) == LUA_TSTRING) {
+ਸਥਿਰ ਪੂਰਨ iscleared (global_State *g, ਅਚਲ GCObject *o) {
+  ਜੇ (o == ਨਿਰਾ) ਵਾਪਸ 0;  /* non-collectable value */
+  ਨਹੀਂਤਾਂ ਜੇ (novariant(o->tt) == LUA_TSTRING) {
     markobject(g, o);  /* strings are 'values', so are never weak */
-    return 0;
+    ਵਾਪਸ 0;
   }
-  else return iswhite(o);
+  ਨਹੀਂਤਾਂ ਵਾਪਸ iswhite(o);
 }
 
 
@@ -243,19 +243,19 @@ static int iscleared (global_State *g, const GCObject *o) {
 ** be done is generational mode, as its sweep does not distinguish
 ** white from dead.)
 */
-void luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v) {
+ਖਾਲੀ luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v) {
   global_State *g = G(L);
   lua_assert(isblack(o) && iswhite(v) && !isdead(g, v) && !isdead(g, o));
-  if (keepinvariant(g)) {  /* must keep invariant? */
+  ਜੇ (keepinvariant(g)) {  /* must keep invariant? */
     reallymarkobject(g, v);  /* restore invariant */
-    if (isold(o)) {
+    ਜੇ (isold(o)) {
       lua_assert(!isold(v));  /* white object could not be old */
       setage(v, G_OLD0);  /* restore generational invariant */
     }
   }
-  else {  /* sweep phase */
+  ਨਹੀਂਤਾਂ {  /* sweep phase */
     lua_assert(issweepphase(g));
-    if (g->gckind != KGC_GENMINOR)  /* incremental mode? */
+    ਜੇ (g->gckind != KGC_GENMINOR)  /* incremental mode? */
       makewhite(g, o);  /* mark 'o' as white to avoid other barriers */
   }
 }
@@ -265,27 +265,27 @@ void luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v) {
 ** barrier that moves collector backward, that is, mark the black object
 ** pointing to a white object as gray again.
 */
-void luaC_barrierback_ (lua_State *L, GCObject *o) {
+ਖਾਲੀ luaC_barrierback_ (lua_State *L, GCObject *o) {
   global_State *g = G(L);
   lua_assert(isblack(o) && !isdead(g, o));
   lua_assert((g->gckind != KGC_GENMINOR)
           || (isold(o) && getage(o) != G_TOUCHED1));
-  if (getage(o) == G_TOUCHED2)  /* already in gray list? */
+  ਜੇ (getage(o) == G_TOUCHED2)  /* already in gray list? */
     set2gray(o);  /* make it gray to become touched1 */
-  else  /* link it in 'grayagain' and paint it gray */
+  ਨਹੀਂਤਾਂ  /* link it in 'grayagain' and paint it gray */
     linkobjgclist(o, g->grayagain);
-  if (isold(o))  /* generational mode? */
+  ਜੇ (isold(o))  /* generational mode? */
     setage(o, G_TOUCHED1);  /* touched in current cycle */
 }
 
 
-void luaC_fix (lua_State *L, GCObject *o) {
+ਖਾਲੀ luaC_fix (lua_State *L, GCObject *o) {
   global_State *g = G(L);
   lua_assert(g->allgc == o);  /* object must be 1st in 'allgc' list! */
   set2gray(o);  /* they will be gray forever */
   setage(o, G_OLD);  /* and old forever */
-  g->allgc = o->next;  /* remove object from 'allgc' list */
-  o->next = g->fixedgc;  /* link it to 'fixedgc' list */
+  g->allgc = o->ਅਗਲਾ;  /* remove object from 'allgc' list */
+  o->ਅਗਲਾ = g->fixedgc;  /* link it to 'fixedgc' list */
   g->fixedgc = o;
 }
 
@@ -294,15 +294,15 @@ void luaC_fix (lua_State *L, GCObject *o) {
 ** create a new collectable object (with given type, size, and offset)
 ** and link it to 'allgc' list.
 */
-GCObject *luaC_newobjdt (lua_State *L, lu_byte tt, size_t sz, size_t offset) {
+GCObject *luaC_newobjdt (lua_State *L, lu_byte tt, size_t sz, size_t ਵਿੱਥ) {
   global_State *g = G(L);
-  char *p = cast_charp(luaM_newobject(L, novariant(tt), sz));
-  GCObject *o = cast(GCObject *, p + offset);
+  ਅੱਖਰ *p = cast_charp(luaM_newobject(L, novariant(tt), sz));
+  GCObject *o = cast(GCObject *, p + ਵਿੱਥ);
   o->marked = luaC_white(g);
   o->tt = tt;
-  o->next = g->allgc;
+  o->ਅਗਲਾ = g->allgc;
   g->allgc = o;
-  return o;
+  ਵਾਪਸ o;
 }
 
 
@@ -310,7 +310,7 @@ GCObject *luaC_newobjdt (lua_State *L, lu_byte tt, size_t sz, size_t offset) {
 ** create a new collectable object with no offset.
 */
 GCObject *luaC_newobj (lua_State *L, lu_byte tt, size_t sz) {
-  return luaC_newobjdt(L, tt, sz, 0);
+  ਵਾਪਸ luaC_newobjdt(L, tt, sz, 0);
 }
 
 /* }====================================================== */
@@ -336,38 +336,38 @@ GCObject *luaC_newobj (lua_State *L, lu_byte tt, size_t sz) {
 ** for at most two levels: An upvalue cannot refer to another upvalue
 ** (only closures can), and a userdata's metatable must be a table.
 */
-static void reallymarkobject (global_State *g, GCObject *o) {
+ਸਥਿਰ ਖਾਲੀ reallymarkobject (global_State *g, GCObject *o) {
   g->GCmarked += objsize(o);
-  switch (o->tt) {
-    case LUA_VSHRSTR:
-    case LUA_VLNGSTR: {
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VSHRSTR:
+    ਹਾਲਤ LUA_VLNGSTR: {
       set2black(o);  /* nothing to visit */
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VUPVAL: {
-      UpVal *uv = gco2upv(o);
-      if (upisopen(uv))
+    ਹਾਲਤ LUA_VUPVAL: {
+      ਉੱਪਰ_Val *uv = gco2upv(o);
+      ਜੇ (upisopen(uv))
         set2gray(uv);  /* open upvalues are kept gray */
-      else
+      ਨਹੀਂਤਾਂ
         set2black(uv);  /* closed upvalues are visited here */
       markvalue(g, uv->v.p);  /* mark its content */
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VUSERDATA: {
+    ਹਾਲਤ LUA_VUSERDATA: {
       Udata *u = gco2u(o);
-      if (u->nuvalue == 0) {  /* no user values? */
+      ਜੇ (u->nuvalue == 0) {  /* no user values? */
         markobjectN(g, u->metatable);  /* mark its metatable */
         set2black(u);  /* nothing else to mark */
-        break;
+        ਰੋਕੋ;
       }
       /* else... */
     }  /* FALLTHROUGH */
-    case LUA_VLCL: case LUA_VCCL: case LUA_VTABLE:
-    case LUA_VTHREAD: case LUA_VPROTO: {
-      linkobjgclist(o, g->gray);  /* to be visited later */
-      break;
+    ਹਾਲਤ LUA_VLCL: ਹਾਲਤ LUA_VCCL: ਹਾਲਤ LUA_VTABLE:
+    ਹਾਲਤ LUA_VTHREAD: ਹਾਲਤ LUA_VPROTO: {
+      linkobjgclist(o, g->ਸਲੇਟੀ);  /* to be visited later */
+      ਰੋਕੋ;
     }
-    default: lua_assert(0); break;
+    ਮੂਲ: lua_assert(0); ਰੋਕੋ;
   }
 }
 
@@ -375,9 +375,9 @@ static void reallymarkobject (global_State *g, GCObject *o) {
 /*
 ** mark metamethods for basic types
 */
-static void markmt (global_State *g) {
-  int i;
-  for (i=0; i < LUA_NUMTYPES; i++)
+ਸਥਿਰ ਖਾਲੀ markmt (global_State *g) {
+  ਪੂਰਨ i;
+  ਲਈ (i=0; i < LUA_NUMTYPES; i++)
     markobjectN(g, g->mt[i]);
 }
 
@@ -385,9 +385,9 @@ static void markmt (global_State *g) {
 /*
 ** mark all objects in list of being-finalized
 */
-static void markbeingfnz (global_State *g) {
+ਸਥਿਰ ਖਾਲੀ markbeingfnz (global_State *g) {
   GCObject *o;
-  for (o = g->tobefnz; o != NULL; o = o->next)
+  ਲਈ (o = g->tobefnz; o != ਨਿਰਾ; o = o->ਅਗਲਾ)
     markobject(g, o);
 }
 
@@ -403,20 +403,20 @@ static void markbeingfnz (global_State *g) {
 ** upvalues, as they have nothing to be checked. (If the thread gets an
 ** upvalue later, it will be linked in the list again.)
 */
-static void remarkupvals (global_State *g) {
+ਸਥਿਰ ਖਾਲੀ remarkupvals (global_State *g) {
   lua_State *thread;
   lua_State **p = &g->twups;
-  while ((thread = *p) != NULL) {
-    if (!iswhite(thread) && thread->openupval != NULL)
+  ਜਦੋਂ ((thread = *p) != ਨਿਰਾ) {
+    ਜੇ (!iswhite(thread) && thread->openupval != ਨਿਰਾ)
       p = &thread->twups;  /* keep marked thread with upvalues in the list */
-    else {  /* thread is not marked or without upvalues */
-      UpVal *uv;
-      lua_assert(!isold(thread) || thread->openupval == NULL);
+    ਨਹੀਂਤਾਂ {  /* thread is not marked or without upvalues */
+      ਉੱਪਰ_Val *uv;
+      lua_assert(!isold(thread) || thread->openupval == ਨਿਰਾ);
       *p = thread->twups;  /* remove thread from the list */
       thread->twups = thread;  /* mark that it is out of list */
-      for (uv = thread->openupval; uv != NULL; uv = uv->u.open.next) {
+      ਲਈ (uv = thread->openupval; uv != ਨਿਰਾ; uv = uv->u.open.ਅਗਲਾ) {
         lua_assert(getage(uv) <= getage(thread));
-        if (!iswhite(uv)) {  /* upvalue already visited? */
+        ਜੇ (!iswhite(uv)) {  /* upvalue already visited? */
           lua_assert(upisopen(uv) && isgray(uv));
           markvalue(g, uv->v.p);  /* mark its value */
         }
@@ -426,9 +426,9 @@ static void remarkupvals (global_State *g) {
 }
 
 
-static void cleargraylists (global_State *g) {
-  g->gray = g->grayagain = NULL;
-  g->weak = g->allweak = g->ephemeron = NULL;
+ਸਥਿਰ ਖਾਲੀ cleargraylists (global_State *g) {
+  g->ਸਲੇਟੀ = g->grayagain = ਨਿਰਾ;
+  g->weak = g->allweak = g->ephemeron = ਨਿਰਾ;
 }
 
 
@@ -437,7 +437,7 @@ static void cleargraylists (global_State *g) {
 ** 'GCmarked' is initialized to count the total number of live bytes
 ** during a cycle.
 */
-static void restartcollection (global_State *g) {
+ਸਥਿਰ ਖਾਲੀ restartcollection (global_State *g) {
   cleargraylists(g);
   g->GCmarked = 0;
   markobject(g, mainthread(g));
@@ -467,12 +467,12 @@ static void restartcollection (global_State *g) {
 ** This function is a no-op in incremental mode, as objects cannot be
 ** marked as touched in that mode.
 */
-static void genlink (global_State *g, GCObject *o) {
+ਸਥਿਰ ਖਾਲੀ genlink (global_State *g, GCObject *o) {
   lua_assert(isblack(o));
-  if (getage(o) == G_TOUCHED1) {  /* touched in this cycle? */
+  ਜੇ (getage(o) == G_TOUCHED1) {  /* touched in this cycle? */
     linkobjgclist(o, g->grayagain);  /* link it back in 'grayagain' */
   }  /* everything else do not need to be linked back */
-  else if (getage(o) == G_TOUCHED2)
+  ਨਹੀਂਤਾਂ ਜੇ (getage(o) == G_TOUCHED2)
     setage(o, G_OLD);  /* advance age */
 }
 
@@ -484,26 +484,26 @@ static void genlink (global_State *g, GCObject *o) {
 ** put it in 'weak' list, to be cleared; otherwise, call 'genlink'
 ** to check table age in generational mode.
 */
-static void traverseweakvalue (global_State *g, Table *h) {
-  Node *n, *limit = gnodelast(h);
+ਸਥਿਰ ਖਾਲੀ traverseweakvalue (global_State *g, ਸਾਰਣੀ *h) {
+  ਗੰਢ_2 *n, *ਹੱਦਬੰਦੀ = gnodelast(h);
   /* if there is array part, assume it may have white values (it is not
      worth traversing it now just to check) */
-  int hasclears = (h->asize > 0);
-  for (n = gnode(h, 0); n < limit; n++) {  /* traverse hash part */
-    if (isempty(gval(n)))  /* entry is empty? */
+  ਪੂਰਨ hasclears = (h->asize > 0);
+  ਲਈ (n = gnode(h, 0); n < ਹੱਦਬੰਦੀ; n++) {  /* traverse hash part */
+    ਜੇ (isempty(gval(n)))  /* entry is empty? */
       clearkey(n);  /* clear its key */
-    else {
+    ਨਹੀਂਤਾਂ {
       lua_assert(!keyisnil(n));
       markkey(g, n);
-      if (!hasclears && iscleared(g, gcvalueN(gval(n))))  /* a white value? */
+      ਜੇ (!hasclears && iscleared(g, gcvalueN(gval(n))))  /* a white value? */
         hasclears = 1;  /* table will have to be cleared */
     }
   }
-  if (g->gcstate == GCSpropagate)
+  ਜੇ (g->gcstate == GCSpropagate)
     linkgclist(h, g->grayagain);  /* must retraverse it in atomic phase */
-  else if (hasclears)
+  ਨਹੀਂਤਾਂ ਜੇ (hasclears)
       linkgclist(h, g->weak);  /* has to be cleared later */
-  else
+  ਨਹੀਂਤਾਂ
     genlink(g, obj2gco(h));
 }
 
@@ -511,18 +511,18 @@ static void traverseweakvalue (global_State *g, Table *h) {
 /*
 ** Traverse the array part of a table.
 */
-static int traversearray (global_State *g, Table *h) {
-  unsigned asize = h->asize;
-  int marked = 0;  /* true if some object is marked in this traversal */
-  unsigned i;
-  for (i = 0; i < asize; i++) {
+ਸਥਿਰ ਪੂਰਨ traversearray (global_State *g, ਸਾਰਣੀ *h) {
+  ਬਿਨਾਨਿਸ਼ਾਨੀ asize = h->asize;
+  ਪੂਰਨ marked = 0;  /* true if some object is marked in this traversal */
+  ਬਿਨਾਨਿਸ਼ਾਨੀ i;
+  ਲਈ (i = 0; i < asize; i++) {
     GCObject *o = gcvalarr(h, i);
-    if (o != NULL && iswhite(o)) {
+    ਜੇ (o != ਨਿਰਾ && iswhite(o)) {
       marked = 1;
       reallymarkobject(g, o);
     }
   }
-  return marked;
+  ਵਾਪਸ marked;
 }
 
 
@@ -538,48 +538,48 @@ static int traversearray (global_State *g, Table *h) {
 ** must be kept in some gray list for post-processing; this is done
 ** by 'genlink'.
 */
-static int traverseephemeron (global_State *g, Table *h, int inv) {
-  int hasclears = 0;  /* true if table has white keys */
-  int hasww = 0;  /* true if table has entry "white-key -> white-value" */
-  unsigned int i;
-  unsigned int nsize = sizenode(h);
-  int marked = traversearray(g, h);  /* traverse array part */
+ਸਥਿਰ ਪੂਰਨ traverseephemeron (global_State *g, ਸਾਰਣੀ *h, ਪੂਰਨ inv) {
+  ਪੂਰਨ hasclears = 0;  /* true if table has white keys */
+  ਪੂਰਨ hasww = 0;  /* true if table has entry "white-key -> white-value" */
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ i;
+  ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ nsize = sizenode(h);
+  ਪੂਰਨ marked = traversearray(g, h);  /* traverse array part */
   /* traverse hash part; if 'inv', traverse descending
      (see 'convergeephemerons') */
-  for (i = 0; i < nsize; i++) {
-    Node *n = inv ? gnode(h, nsize - 1 - i) : gnode(h, i);
-    if (isempty(gval(n)))  /* entry is empty? */
+  ਲਈ (i = 0; i < nsize; i++) {
+    ਗੰਢ_2 *n = inv ? gnode(h, nsize - 1 - i) : gnode(h, i);
+    ਜੇ (isempty(gval(n)))  /* entry is empty? */
       clearkey(n);  /* clear its key */
-    else if (iscleared(g, gckeyN(n))) {  /* key is not marked (yet)? */
+    ਨਹੀਂਤਾਂ ਜੇ (iscleared(g, gckeyN(n))) {  /* key is not marked (yet)? */
       hasclears = 1;  /* table must be cleared */
-      if (valiswhite(gval(n)))  /* value not marked yet? */
+      ਜੇ (valiswhite(gval(n)))  /* value not marked yet? */
         hasww = 1;  /* white-white entry */
     }
-    else if (valiswhite(gval(n))) {  /* value not marked yet? */
+    ਨਹੀਂਤਾਂ ਜੇ (valiswhite(gval(n))) {  /* value not marked yet? */
       marked = 1;
       reallymarkobject(g, gcvalue(gval(n)));  /* mark it now */
     }
   }
   /* link table into proper list */
-  if (g->gcstate == GCSpropagate)
+  ਜੇ (g->gcstate == GCSpropagate)
     linkgclist(h, g->grayagain);  /* must retraverse it in atomic phase */
-  else if (hasww)  /* table has white->white entries? */
+  ਨਹੀਂਤਾਂ ਜੇ (hasww)  /* table has white->white entries? */
     linkgclist(h, g->ephemeron);  /* have to propagate again */
-  else if (hasclears)  /* table has white keys? */
+  ਨਹੀਂਤਾਂ ਜੇ (hasclears)  /* table has white keys? */
     linkgclist(h, g->allweak);  /* may have to clean white keys */
-  else
+  ਨਹੀਂਤਾਂ
     genlink(g, obj2gco(h));  /* check whether collector still needs to see it */
-  return marked;
+  ਵਾਪਸ marked;
 }
 
 
-static void traversestrongtable (global_State *g, Table *h) {
-  Node *n, *limit = gnodelast(h);
+ਸਥਿਰ ਖਾਲੀ traversestrongtable (global_State *g, ਸਾਰਣੀ *h) {
+  ਗੰਢ_2 *n, *ਹੱਦਬੰਦੀ = gnodelast(h);
   traversearray(g, h);
-  for (n = gnode(h, 0); n < limit; n++) {  /* traverse hash part */
-    if (isempty(gval(n)))  /* entry is empty? */
+  ਲਈ (n = gnode(h, 0); n < ਹੱਦਬੰਦੀ; n++) {  /* traverse hash part */
+    ਜੇ (isempty(gval(n)))  /* entry is empty? */
       clearkey(n);  /* clear its key */
-    else {
+    ਨਹੀਂਤਾਂ {
       lua_assert(!keyisnil(n));
       markkey(g, n);
       markvalue(g, gval(n));
@@ -592,49 +592,49 @@ static void traversestrongtable (global_State *g, Table *h) {
 /*
 ** (result & 1) iff weak values; (result & 2) iff weak keys.
 */
-static int getmode (global_State *g, Table *h) {
-  const TValue *mode = gfasttm(g, h->metatable, TM_MODE);
-  if (mode == NULL || !ttisstring(mode))
-    return 0;  /* ignore non-string modes */
-  else {
-    const char *smode = getstr(tsvalue(mode));
-    const char *weakkey = strchr(smode, 'k');
-    const char *weakvalue = strchr(smode, 'v');
-    return ((weakkey != NULL) << 1) | (weakvalue != NULL);
+ਸਥਿਰ ਪੂਰਨ getmode (global_State *g, ਸਾਰਣੀ *h) {
+  ਅਚਲ TValue *ਬਹੁਲਕ = gfasttm(g, h->metatable, TM_ਬਹੁਲਕ);
+  ਜੇ (ਬਹੁਲਕ == ਨਿਰਾ || !ttisstring(ਬਹੁਲਕ))
+    ਵਾਪਸ 0;  /* ignore non-string modes */
+  ਨਹੀਂਤਾਂ {
+    ਅਚਲ ਅੱਖਰ *smode = getstr(tsvalue(ਬਹੁਲਕ));
+    ਅਚਲ ਅੱਖਰ *weakkey = strchr(smode, 'k');
+    ਅਚਲ ਅੱਖਰ *weakvalue = strchr(smode, 'v');
+    ਵਾਪਸ ((weakkey != ਨਿਰਾ) << 1) | (weakvalue != ਨਿਰਾ);
   }
 }
 
 
-static l_mem traversetable (global_State *g, Table *h) {
+ਸਥਿਰ l_mem traversetable (global_State *g, ਸਾਰਣੀ *h) {
   markobjectN(g, h->metatable);
-  switch (getmode(g, h)) {
-    case 0:  /* not weak */
+  ਚੋਣ (getmode(g, h)) {
+    ਹਾਲਤ 0:  /* not weak */
       traversestrongtable(g, h);
-      break;
-    case 1:  /* weak values */
+      ਰੋਕੋ;
+    ਹਾਲਤ 1:  /* weak values */
       traverseweakvalue(g, h);
-      break;
-    case 2:  /* weak keys */
+      ਰੋਕੋ;
+    ਹਾਲਤ 2:  /* weak keys */
       traverseephemeron(g, h, 0);
-      break;
-    case 3:  /* all weak; nothing to traverse */
-      if (g->gcstate == GCSpropagate)
+      ਰੋਕੋ;
+    ਹਾਲਤ 3:  /* all weak; nothing to traverse */
+      ਜੇ (g->gcstate == GCSpropagate)
         linkgclist(h, g->grayagain);  /* must visit again its metatable */
-      else
+      ਨਹੀਂਤਾਂ
         linkgclist(h, g->allweak);  /* must clear collected entries */
-      break;
+      ਰੋਕੋ;
   }
-  return cast(l_mem, 1 + 2*sizenode(h) + h->asize);
+  ਵਾਪਸ cast(l_mem, 1 + 2*sizenode(h) + h->asize);
 }
 
 
-static l_mem traverseudata (global_State *g, Udata *u) {
-  int i;
+ਸਥਿਰ l_mem traverseudata (global_State *g, Udata *u) {
+  ਪੂਰਨ i;
   markobjectN(g, u->metatable);  /* mark its metatable */
-  for (i = 0; i < u->nuvalue; i++)
+  ਲਈ (i = 0; i < u->nuvalue; i++)
     markvalue(g, &u->uv[i].uv);
   genlink(g, obj2gco(u));
-  return 1 + u->nuvalue;
+  ਵਾਪਸ 1 + u->nuvalue;
 }
 
 
@@ -643,40 +643,40 @@ static l_mem traverseudata (global_State *g, Udata *u) {
 ** arrays can be larger than needed; the extra slots are filled with
 ** NULL, so the use of 'markobjectN')
 */
-static l_mem traverseproto (global_State *g, Proto *f) {
-  int i;
-  markobjectN(g, f->source);
-  for (i = 0; i < f->sizek; i++)  /* mark literals */
+ਸਥਿਰ l_mem traverseproto (global_State *g, Proto *f) {
+  ਪੂਰਨ i;
+  markobjectN(g, f->ਸਰੋਤ);
+  ਲਈ (i = 0; i < f->sizek; i++)  /* mark literals */
     markvalue(g, &f->k[i]);
-  for (i = 0; i < f->sizeupvalues; i++)  /* mark upvalue names */
+  ਲਈ (i = 0; i < f->sizeupvalues; i++)  /* mark upvalue names */
     markobjectN(g, f->upvalues[i].name);
-  for (i = 0; i < f->sizep; i++)  /* mark nested protos */
+  ਲਈ (i = 0; i < f->sizep; i++)  /* mark nested protos */
     markobjectN(g, f->p[i]);
-  for (i = 0; i < f->sizelocvars; i++)  /* mark local-variable names */
+  ਲਈ (i = 0; i < f->sizelocvars; i++)  /* mark local-variable names */
     markobjectN(g, f->locvars[i].varname);
-  return 1 + f->sizek + f->sizeupvalues + f->sizep + f->sizelocvars;
+  ਵਾਪਸ 1 + f->sizek + f->sizeupvalues + f->sizep + f->sizelocvars;
 }
 
 
-static l_mem traverseCclosure (global_State *g, CClosure *cl) {
-  int i;
-  for (i = 0; i < cl->nupvalues; i++)  /* mark its upvalues */
+ਸਥਿਰ l_mem traverseCclosure (global_State *g, CClosure *cl) {
+  ਪੂਰਨ i;
+  ਲਈ (i = 0; i < cl->nupvalues; i++)  /* mark its upvalues */
     markvalue(g, &cl->upvalue[i]);
-  return 1 + cl->nupvalues;
+  ਵਾਪਸ 1 + cl->nupvalues;
 }
 
 /*
 ** Traverse a Lua closure, marking its prototype and its upvalues.
 ** (Both can be NULL while closure is being created.)
 */
-static l_mem traverseLclosure (global_State *g, LClosure *cl) {
-  int i;
+ਸਥਿਰ l_mem traverseLclosure (global_State *g, LClosure *cl) {
+  ਪੂਰਨ i;
   markobjectN(g, cl->p);  /* mark its prototype */
-  for (i = 0; i < cl->nupvalues; i++) {  /* visit its upvalues */
-    UpVal *uv = cl->upvals[i];
+  ਲਈ (i = 0; i < cl->nupvalues; i++) {  /* visit its upvalues */
+    ਉੱਪਰ_Val *uv = cl->upvals[i];
     markobjectN(g, uv);  /* mark upvalue */
   }
-  return 1 + cl->nupvalues;
+  ਵਾਪਸ 1 + cl->nupvalues;
 }
 
 
@@ -692,31 +692,31 @@ static l_mem traverseLclosure (global_State *g, LClosure *cl) {
 ** (which can only happen in generational mode) or if the traverse is in
 ** the propagate phase (which can only happen in incremental mode).
 */
-static l_mem traversethread (global_State *g, lua_State *th) {
-  UpVal *uv;
-  StkId o = th->stack.p;
-  if (isold(th) || g->gcstate == GCSpropagate)
+ਸਥਿਰ l_mem traversethread (global_State *g, lua_State *th) {
+  ਉੱਪਰ_Val *uv;
+  StkId o = th->ਢੇਰ.p;
+  ਜੇ (isold(th) || g->gcstate == GCSpropagate)
     linkgclist(th, g->grayagain);  /* insert into 'grayagain' list */
-  if (o == NULL)
-    return 0;  /* stack not completely built yet */
+  ਜੇ (o == ਨਿਰਾ)
+    ਵਾਪਸ 0;  /* stack not completely built yet */
   lua_assert(g->gcstate == GCSatomic ||
-             th->openupval == NULL || isintwups(th));
-  for (; o < th->top.p; o++)  /* mark live elements in the stack */
+             th->openupval == ਨਿਰਾ || isintwups(th));
+  ਲਈ (; o < th->ਸਿਖਰ.p; o++)  /* mark live elements in the stack */
     markvalue(g, s2v(o));
-  for (uv = th->openupval; uv != NULL; uv = uv->u.open.next)
+  ਲਈ (uv = th->openupval; uv != ਨਿਰਾ; uv = uv->u.open.ਅਗਲਾ)
     markobject(g, uv);  /* open upvalues cannot be collected */
-  if (g->gcstate == GCSatomic) {  /* final traversal? */
-    if (!g->gcemergency)
+  ਜੇ (g->gcstate == GCSatomic) {  /* final traversal? */
+    ਜੇ (!g->gcemergency)
       luaD_shrinkstack(th); /* do not change stack in emergency cycle */
-    for (o = th->top.p; o < th->stack_last.p + EXTRA_STACK; o++)
+    ਲਈ (o = th->ਸਿਖਰ.p; o < th->ਢੇਰ_ਆਖਰੀ.p + EXTRA_ਢੇਰ; o++)
       setnilvalue2s(o);  /* clear dead stack slice */
     /* 'remarkupvals' may have removed thread from 'twups' list */
-    if (!isintwups(th) && th->openupval != NULL) {
+    ਜੇ (!isintwups(th) && th->openupval != ਨਿਰਾ) {
       th->twups = g->twups;  /* link it back to the list */
       g->twups = th;
     }
   }
-  return 1 + (th->top.p - th->stack.p);
+  ਵਾਪਸ 1 + (th->ਸਿਖਰ.p - th->ਢੇਰ.p);
 }
 
 
@@ -724,24 +724,24 @@ static l_mem traversethread (global_State *g, lua_State *th) {
 ** traverse one gray object, turning it to black. Return an estimate
 ** of the number of slots traversed.
 */
-static l_mem propagatemark (global_State *g) {
-  GCObject *o = g->gray;
+ਸਥਿਰ l_mem propagatemark (global_State *g) {
+  GCObject *o = g->ਸਲੇਟੀ;
   nw2black(o);
-  g->gray = *getgclist(o);  /* remove from 'gray' list */
-  switch (o->tt) {
-    case LUA_VTABLE: return traversetable(g, gco2t(o));
-    case LUA_VUSERDATA: return traverseudata(g, gco2u(o));
-    case LUA_VLCL: return traverseLclosure(g, gco2lcl(o));
-    case LUA_VCCL: return traverseCclosure(g, gco2ccl(o));
-    case LUA_VPROTO: return traverseproto(g, gco2p(o));
-    case LUA_VTHREAD: return traversethread(g, gco2th(o));
-    default: lua_assert(0); return 0;
+  g->ਸਲੇਟੀ = *getgclist(o);  /* remove from 'gray' list */
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VTABLE: ਵਾਪਸ traversetable(g, gco2t(o));
+    ਹਾਲਤ LUA_VUSERDATA: ਵਾਪਸ traverseudata(g, gco2u(o));
+    ਹਾਲਤ LUA_VLCL: ਵਾਪਸ traverseLclosure(g, gco2lcl(o));
+    ਹਾਲਤ LUA_VCCL: ਵਾਪਸ traverseCclosure(g, gco2ccl(o));
+    ਹਾਲਤ LUA_VPROTO: ਵਾਪਸ traverseproto(g, gco2p(o));
+    ਹਾਲਤ LUA_VTHREAD: ਵਾਪਸ traversethread(g, gco2th(o));
+    ਮੂਲ: lua_assert(0); ਵਾਪਸ 0;
   }
 }
 
 
-static void propagateall (global_State *g) {
-  while (g->gray)
+ਸਥਿਰ ਖਾਲੀ propagateall (global_State *g) {
+  ਜਦੋਂ (g->ਸਲੇਟੀ)
     propagatemark(g);
 }
 
@@ -752,25 +752,25 @@ static void propagateall (global_State *g) {
 ** inverts the direction of the traversals, trying to speed up
 ** convergence on chains in the same table.
 */
-static void convergeephemerons (global_State *g) {
-  int changed;
-  int dir = 0;
-  do {
+ਸਥਿਰ ਖਾਲੀ convergeephemerons (global_State *g) {
+  ਪੂਰਨ ਬਦਲਿਆ;
+  ਪੂਰਨ dir = 0;
+  ਕਰੋ {
     GCObject *w;
-    GCObject *next = g->ephemeron;  /* get ephemeron list */
-    g->ephemeron = NULL;  /* tables may return to this list when traversed */
-    changed = 0;
-    while ((w = next) != NULL) {  /* for each ephemeron table */
-      Table *h = gco2t(w);
-      next = h->gclist;  /* list is rebuilt during loop */
+    GCObject *ਅਗਲਾ = g->ephemeron;  /* get ephemeron list */
+    g->ephemeron = ਨਿਰਾ;  /* tables may return to this list when traversed */
+    ਬਦਲਿਆ = 0;
+    ਜਦੋਂ ((w = ਅਗਲਾ) != ਨਿਰਾ) {  /* for each ephemeron table */
+      ਸਾਰਣੀ *h = gco2t(w);
+      ਅਗਲਾ = h->gclist;  /* list is rebuilt during loop */
       nw2black(h);  /* out of the list (for now) */
-      if (traverseephemeron(g, h, dir)) {  /* marked some value? */
+      ਜੇ (traverseephemeron(g, h, dir)) {  /* marked some value? */
         propagateall(g);  /* propagate changes */
-        changed = 1;  /* will have to revisit all ephemeron tables */
+        ਬਦਲਿਆ = 1;  /* will have to revisit all ephemeron tables */
       }
     }
     dir = !dir;  /* invert direction next time */
-  } while (changed);  /* repeat until no more changes */
+  } ਜਦੋਂ (ਬਦਲਿਆ);  /* repeat until no more changes */
 }
 
 /* }====================================================== */
@@ -786,15 +786,15 @@ static void convergeephemerons (global_State *g) {
 /*
 ** clear entries with unmarked keys from all weaktables in list 'l'
 */
-static void clearbykeys (global_State *g, GCObject *l) {
-  for (; l; l = gco2t(l)->gclist) {
-    Table *h = gco2t(l);
-    Node *limit = gnodelast(h);
-    Node *n;
-    for (n = gnode(h, 0); n < limit; n++) {
-      if (iscleared(g, gckeyN(n)))  /* unmarked key? */
+ਸਥਿਰ ਖਾਲੀ clearbykeys (global_State *g, GCObject *l) {
+  ਲਈ (; l; l = gco2t(l)->gclist) {
+    ਸਾਰਣੀ *h = gco2t(l);
+    ਗੰਢ_2 *ਹੱਦਬੰਦੀ = gnodelast(h);
+    ਗੰਢ_2 *n;
+    ਲਈ (n = gnode(h, 0); n < ਹੱਦਬੰਦੀ; n++) {
+      ਜੇ (iscleared(g, gckeyN(n)))  /* unmarked key? */
         setempty(gval(n));  /* remove entry */
-      if (isempty(gval(n)))  /* is entry empty? */
+      ਜੇ (isempty(gval(n)))  /* is entry empty? */
         clearkey(n);  /* clear its key */
     }
   }
@@ -805,78 +805,78 @@ static void clearbykeys (global_State *g, GCObject *l) {
 ** clear entries with unmarked values from all weaktables in list 'l' up
 ** to element 'f'
 */
-static void clearbyvalues (global_State *g, GCObject *l, GCObject *f) {
-  for (; l != f; l = gco2t(l)->gclist) {
-    Table *h = gco2t(l);
-    Node *n, *limit = gnodelast(h);
-    unsigned int i;
-    unsigned int asize = h->asize;
-    for (i = 0; i < asize; i++) {
+ਸਥਿਰ ਖਾਲੀ clearbyvalues (global_State *g, GCObject *l, GCObject *f) {
+  ਲਈ (; l != f; l = gco2t(l)->gclist) {
+    ਸਾਰਣੀ *h = gco2t(l);
+    ਗੰਢ_2 *n, *ਹੱਦਬੰਦੀ = gnodelast(h);
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ i;
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ asize = h->asize;
+    ਲਈ (i = 0; i < asize; i++) {
       GCObject *o = gcvalarr(h, i);
-      if (iscleared(g, o))  /* value was collected? */
-        *getArrTag(h, i) = LUA_VEMPTY;  /* remove entry */
+      ਜੇ (iscleared(g, o))  /* value was collected? */
+        *get_Arr_ਟੈਗ(h, i) = LUA_VEMPTY;  /* remove entry */
     }
-    for (n = gnode(h, 0); n < limit; n++) {
-      if (iscleared(g, gcvalueN(gval(n))))  /* unmarked value? */
+    ਲਈ (n = gnode(h, 0); n < ਹੱਦਬੰਦੀ; n++) {
+      ਜੇ (iscleared(g, gcvalueN(gval(n))))  /* unmarked value? */
         setempty(gval(n));  /* remove entry */
-      if (isempty(gval(n)))  /* is entry empty? */
+      ਜੇ (isempty(gval(n)))  /* is entry empty? */
         clearkey(n);  /* clear its key */
     }
   }
 }
 
 
-static void freeupval (lua_State *L, UpVal *uv) {
-  if (upisopen(uv))
+ਸਥਿਰ ਖਾਲੀ freeupval (lua_State *L, ਉੱਪਰ_Val *uv) {
+  ਜੇ (upisopen(uv))
     luaF_unlinkupval(uv);
   luaM_free(L, uv);
 }
 
 
-static void freeobj (lua_State *L, GCObject *o) {
-  assert_code(l_mem newmem = gettotalbytes(G(L)) - objsize(o));
-  switch (o->tt) {
-    case LUA_VPROTO:
+ਸਥਿਰ ਖਾਲੀ freeobj (lua_State *L, GCObject *o) {
+  assert_ਕੋਡ(l_mem newmem = gettotalbytes(G(L)) - objsize(o));
+  ਚੋਣ (o->tt) {
+    ਹਾਲਤ LUA_VPROTO:
       luaF_freeproto(L, gco2p(o));
-      break;
-    case LUA_VUPVAL:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VUPVAL:
       freeupval(L, gco2upv(o));
-      break;
-    case LUA_VLCL: {
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VLCL: {
       LClosure *cl = gco2lcl(o);
-      luaM_freemem(L, cl, sizeLclosure(cl->nupvalues));
-      break;
+      luaM_freemem(L, cl, ਮਾਪ_Lclosure(cl->nupvalues));
+      ਰੋਕੋ;
     }
-    case LUA_VCCL: {
+    ਹਾਲਤ LUA_VCCL: {
       CClosure *cl = gco2ccl(o);
-      luaM_freemem(L, cl, sizeCclosure(cl->nupvalues));
-      break;
+      luaM_freemem(L, cl, ਮਾਪ_Cclosure(cl->nupvalues));
+      ਰੋਕੋ;
     }
-    case LUA_VTABLE:
+    ਹਾਲਤ LUA_VTABLE:
       luaH_free(L, gco2t(o));
-      break;
-    case LUA_VTHREAD:
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VTHREAD:
       luaE_freethread(L, gco2th(o));
-      break;
-    case LUA_VUSERDATA: {
+      ਰੋਕੋ;
+    ਹਾਲਤ LUA_VUSERDATA: {
       Udata *u = gco2u(o);
       luaM_freemem(L, o, sizeudata(u->nuvalue, u->len));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VSHRSTR: {
+    ਹਾਲਤ LUA_VSHRSTR: {
       TString *ts = gco2ts(o);
       luaS_remove(L, ts);  /* remove it from hash table */
       luaM_freemem(L, ts, sizestrshr(cast_uint(ts->shrlen)));
-      break;
+      ਰੋਕੋ;
     }
-    case LUA_VLNGSTR: {
+    ਹਾਲਤ LUA_VLNGSTR: {
       TString *ts = gco2ts(o);
-      if (ts->shrlen == LSTRMEM)  /* must free external string? */
+      ਜੇ (ts->shrlen == LSTRMEM)  /* must free external string? */
         (*ts->falloc)(ts->ud, ts->contents, ts->u.lnglen + 1, 0);
       luaM_freemem(L, ts, luaS_sizelngstr(ts->u.lnglen, ts->shrlen));
-      break;
+      ਰੋਕੋ;
     }
-    default: lua_assert(0);
+    ਮੂਲ: lua_assert(0);
   }
   lua_assert(gettotalbytes(G(L)) == newmem);
 }
@@ -889,35 +889,35 @@ static void freeobj (lua_State *L, GCObject *o) {
 ** for next collection cycle. Return where to continue the traversal or
 ** NULL if list is finished.
 */
-static GCObject **sweeplist (lua_State *L, GCObject **p, l_mem countin) {
+ਸਥਿਰ GCObject **sweeplist (lua_State *L, GCObject **p, l_mem countin) {
   global_State *g = G(L);
-  int ow = otherwhite(g);
-  int white = luaC_white(g);  /* current white */
-  while (*p != NULL && countin-- > 0) {
+  ਪੂਰਨ ow = otherwhite(g);
+  ਪੂਰਨ white = luaC_white(g);  /* current white */
+  ਜਦੋਂ (*p != ਨਿਰਾ && countin-- > 0) {
     GCObject *curr = *p;
-    int marked = curr->marked;
-    if (isdeadm(ow, marked)) {  /* is 'curr' dead? */
-      *p = curr->next;  /* remove 'curr' from list */
+    ਪੂਰਨ marked = curr->marked;
+    ਜੇ (isdeadm(ow, marked)) {  /* is 'curr' dead? */
+      *p = curr->ਅਗਲਾ;  /* remove 'curr' from list */
       freeobj(L, curr);  /* erase 'curr' */
     }
-    else {  /* change mark to 'white' and age to 'new' */
+    ਨਹੀਂਤਾਂ {  /* change mark to 'white' and age to 'new' */
       curr->marked = cast_byte((marked & ~maskgcbits) | white | G_NEW);
-      p = &curr->next;  /* go to next element */
+      p = &curr->ਅਗਲਾ;  /* go to next element */
     }
   }
-  return (*p == NULL) ? NULL : p;
+  ਵਾਪਸ (*p == ਨਿਰਾ) ? ਨਿਰਾ : p;
 }
 
 
 /*
 ** sweep a list until a live object (or end of list)
 */
-static GCObject **sweeptolive (lua_State *L, GCObject **p) {
+ਸਥਿਰ GCObject **sweeptolive (lua_State *L, GCObject **p) {
   GCObject **old = p;
-  do {
+  ਕਰੋ {
     p = sweeplist(L, p, 1);
-  } while (p == old);
-  return p;
+  } ਜਦੋਂ (p == old);
+  ਵਾਪਸ p;
 }
 
 /* }====================================================== */
@@ -932,10 +932,10 @@ static GCObject **sweeptolive (lua_State *L, GCObject **p) {
 /*
 ** If possible, shrink string table.
 */
-static void checkSizes (lua_State *L, global_State *g) {
-  if (!g->gcemergency) {
-    if (g->strt.nuse < g->strt.size / 4)  /* string table too big? */
-      luaS_resize(L, g->strt.size / 2);
+ਸਥਿਰ ਖਾਲੀ checkSizes (lua_State *L, global_State *g) {
+  ਜੇ (!g->gcemergency) {
+    ਜੇ (g->strt.nuse < g->strt.ਮਾਪ / 4)  /* string table too big? */
+      luaS_resize(L, g->strt.ਮਾਪ / 2);
   }
 }
 
@@ -944,50 +944,50 @@ static void checkSizes (lua_State *L, global_State *g) {
 ** Get the next udata to be finalized from the 'tobefnz' list, and
 ** link it back into the 'allgc' list.
 */
-static GCObject *udata2finalize (global_State *g) {
+ਸਥਿਰ GCObject *udata2finalize (global_State *g) {
   GCObject *o = g->tobefnz;  /* get first element */
   lua_assert(tofinalize(o));
-  g->tobefnz = o->next;  /* remove it from 'tobefnz' list */
-  o->next = g->allgc;  /* return it to 'allgc' list */
+  g->tobefnz = o->ਅਗਲਾ;  /* remove it from 'tobefnz' list */
+  o->ਅਗਲਾ = g->allgc;  /* return it to 'allgc' list */
   g->allgc = o;
   resetbit(o->marked, FINALIZEDBIT);  /* object is "normal" again */
-  if (issweepphase(g))
+  ਜੇ (issweepphase(g))
     makewhite(g, o);  /* "sweep" object */
-  else if (getage(o) == G_OLD1)
+  ਨਹੀਂਤਾਂ ਜੇ (getage(o) == G_OLD1)
     g->firstold1 = o;  /* it is the first OLD1 object in the list */
-  return o;
+  ਵਾਪਸ o;
 }
 
 
-static void dothecall (lua_State *L, void *ud) {
-  UNUSED(ud);
-  luaD_callnoyield(L, L->top.p - 2, 0);
+ਸਥਿਰ ਖਾਲੀ dothecall (lua_State *L, ਖਾਲੀ *ud) {
+  ਅਣਵਰਤਿਆ(ud);
+  luaD_callnoyield(L, L->ਸਿਖਰ.p - 2, 0);
 }
 
 
-static void GCTM (lua_State *L) {
+ਸਥਿਰ ਖਾਲੀ GCTM (lua_State *L) {
   global_State *g = G(L);
-  const TValue *tm;
+  ਅਚਲ TValue *tm;
   TValue v;
   lua_assert(!g->gcemergency);
   setgcovalue(L, &v, udata2finalize(g));
   tm = luaT_gettmbyobj(L, &v, TM_GC);
-  if (!notm(tm)) {  /* is there a finalizer? */
-    TStatus status;
+  ਜੇ (!notm(tm)) {  /* is there a finalizer? */
+    TStatus ਸਥਿਤੀ;
     lu_byte oldah = L->allowhook;
     lu_byte oldgcstp  = g->gcstp;
     g->gcstp |= GCSTPGC;  /* avoid GC steps */
     L->allowhook = 0;  /* stop debug hooks during GC metamethod */
-    setobj2s(L, L->top.p++, tm);  /* push finalizer... */
-    setobj2s(L, L->top.p++, &v);  /* ... and its argument */
+    setobj2s(L, L->ਸਿਖਰ.p++, tm);  /* push finalizer... */
+    setobj2s(L, L->ਸਿਖਰ.p++, &v);  /* ... and its argument */
     L->ci->callstatus |= CIST_FIN;  /* will run a finalizer */
-    status = luaD_pcall(L, dothecall, NULL, savestack(L, L->top.p - 2), 0);
+    ਸਥਿਤੀ = luaD_pcall(L, dothecall, ਨਿਰਾ, savestack(L, L->ਸਿਖਰ.p - 2), 0);
     L->ci->callstatus &= ~CIST_FIN;  /* not running a finalizer anymore */
     L->allowhook = oldah;  /* restore hooks */
     g->gcstp = oldgcstp;  /* restore state */
-    if (l_unlikely(status != LUA_OK)) {  /* error while running __gc? */
+    ਜੇ (l_unlikely(ਸਥਿਤੀ != LUA_OK)) {  /* error while running __gc? */
       luaE_warnerror(L, "__gc");
-      L->top.p--;  /* pops error object */
+      L->ਸਿਖਰ.p--;  /* pops error object */
     }
   }
 }
@@ -996,9 +996,9 @@ static void GCTM (lua_State *L) {
 /*
 ** call all pending finalizers
 */
-static void callallpendingfinalizers (lua_State *L) {
+ਸਥਿਰ ਖਾਲੀ callallpendingfinalizers (lua_State *L) {
   global_State *g = G(L);
-  while (g->tobefnz)
+  ਜਦੋਂ (g->tobefnz)
     GCTM(L);
 }
 
@@ -1006,10 +1006,10 @@ static void callallpendingfinalizers (lua_State *L) {
 /*
 ** find last 'next' field in list 'p' list (to add elements in its end)
 */
-static GCObject **findlast (GCObject **p) {
-  while (*p != NULL)
-    p = &(*p)->next;
-  return p;
+ਸਥਿਰ GCObject **findlast (GCObject **p) {
+  ਜਦੋਂ (*p != ਨਿਰਾ)
+    p = &(*p)->ਅਗਲਾ;
+  ਵਾਪਸ p;
 }
 
 
@@ -1020,21 +1020,21 @@ static GCObject **findlast (GCObject **p) {
 ** don't need to be traversed. In incremental mode, 'finobjold1' is NULL,
 ** so the whole list is traversed.)
 */
-static void separatetobefnz (global_State *g, int all) {
+ਸਥਿਰ ਖਾਲੀ separatetobefnz (global_State *g, ਪੂਰਨ all) {
   GCObject *curr;
   GCObject **p = &g->finobj;
   GCObject **lastnext = findlast(&g->tobefnz);
-  while ((curr = *p) != g->finobjold1) {  /* traverse all finalizable objects */
+  ਜਦੋਂ ((curr = *p) != g->finobjold1) {  /* traverse all finalizable objects */
     lua_assert(tofinalize(curr));
-    if (!(iswhite(curr) || all))  /* not being collected? */
-      p = &curr->next;  /* don't bother with it */
-    else {
-      if (curr == g->finobjsur)  /* removing 'finobjsur'? */
-        g->finobjsur = curr->next;  /* correct it */
-      *p = curr->next;  /* remove 'curr' from 'finobj' list */
-      curr->next = *lastnext;  /* link at the end of 'tobefnz' list */
+    ਜੇ (!(iswhite(curr) || all))  /* not being collected? */
+      p = &curr->ਅਗਲਾ;  /* don't bother with it */
+    ਨਹੀਂਤਾਂ {
+      ਜੇ (curr == g->finobjsur)  /* removing 'finobjsur'? */
+        g->finobjsur = curr->ਅਗਲਾ;  /* correct it */
+      *p = curr->ਅਗਲਾ;  /* remove 'curr' from 'finobj' list */
+      curr->ਅਗਲਾ = *lastnext;  /* link at the end of 'tobefnz' list */
       *lastnext = curr;
-      lastnext = &curr->next;
+      lastnext = &curr->ਅਗਲਾ;
     }
   }
 }
@@ -1043,9 +1043,9 @@ static void separatetobefnz (global_State *g, int all) {
 /*
 ** If pointer 'p' points to 'o', move it to the next element.
 */
-static void checkpointer (GCObject **p, GCObject *o) {
-  if (o == *p)
-    *p = o->next;
+ਸਥਿਰ ਖਾਲੀ checkpointer (GCObject **p, GCObject *o) {
+  ਜੇ (o == *p)
+    *p = o->ਅਗਲਾ;
 }
 
 
@@ -1053,7 +1053,7 @@ static void checkpointer (GCObject **p, GCObject *o) {
 ** Correct pointers to objects inside 'allgc' list when
 ** object 'o' is being removed from the list.
 */
-static void correctpointers (global_State *g, GCObject *o) {
+ਸਥਿਰ ਖਾਲੀ correctpointers (global_State *g, GCObject *o) {
   checkpointer(&g->survival, o);
   checkpointer(&g->old1, o);
   checkpointer(&g->reallyold, o);
@@ -1065,25 +1065,25 @@ static void correctpointers (global_State *g, GCObject *o) {
 ** if object 'o' has a finalizer, remove it from 'allgc' list (must
 ** search the list to find it) and link it in 'finobj' list.
 */
-void luaC_checkfinalizer (lua_State *L, GCObject *o, Table *mt) {
+ਖਾਲੀ luaC_checkfinalizer (lua_State *L, GCObject *o, ਸਾਰਣੀ *mt) {
   global_State *g = G(L);
-  if (tofinalize(o) ||                 /* obj. is already marked... */
-      gfasttm(g, mt, TM_GC) == NULL ||    /* or has no finalizer... */
+  ਜੇ (tofinalize(o) ||                 /* obj. is already marked... */
+      gfasttm(g, mt, TM_GC) == ਨਿਰਾ ||    /* or has no finalizer... */
       (g->gcstp & GCSTPCLS))                   /* or closing state? */
-    return;  /* nothing to be done */
-  else {  /* move 'o' to 'finobj' list */
+    ਵਾਪਸ;  /* nothing to be done */
+  ਨਹੀਂਤਾਂ {  /* move 'o' to 'finobj' list */
     GCObject **p;
-    if (issweepphase(g)) {
+    ਜੇ (issweepphase(g)) {
       makewhite(g, o);  /* "sweep" object 'o' */
-      if (g->sweepgc == &o->next)  /* should not remove 'sweepgc' object */
+      ਜੇ (g->sweepgc == &o->ਅਗਲਾ)  /* should not remove 'sweepgc' object */
         g->sweepgc = sweeptolive(L, g->sweepgc);  /* change 'sweepgc' */
     }
-    else
+    ਨਹੀਂਤਾਂ
       correctpointers(g, o);
     /* search for pointer pointing to 'o' */
-    for (p = &g->allgc; *p != o; p = &(*p)->next) { /* empty */ }
-    *p = o->next;  /* remove 'o' from 'allgc' list */
-    o->next = g->finobj;  /* link it in 'finobj' list */
+    ਲਈ (p = &g->allgc; *p != o; p = &(*p)->ਅਗਲਾ) { /*ਖਾਲੀ_ਥਾਵਾਂ*/ }
+    *p = o->ਅਗਲਾ;  /* remove 'o' from 'allgc' list */
+    o->ਅਗਲਾ = g->finobj;  /* link it in 'finobj' list */
     g->finobj = o;
     l_setbit(o->marked, FINALIZEDBIT);  /* mark it as such */
   }
@@ -1119,10 +1119,10 @@ void luaC_checkfinalizer (lua_State *L, GCObject *o, Table *mt) {
 ** cycle will start when number of bytes in use hits the threshold of
 ** approximately (marked * pause / 100).
 */
-static void setpause (global_State *g) {
-  l_mem threshold = applygcparam(g, PAUSE, g->GCmarked);
-  l_mem debt = threshold - gettotalbytes(g);
-  if (debt < 0) debt = 0;
+ਸਥਿਰ ਖਾਲੀ setpause (global_State *g) {
+  l_mem ਹੱਦ = applygcparam(g, PAUSE, g->GCmarked);
+  l_mem debt = ਹੱਦ - gettotalbytes(g);
+  ਜੇ (debt < 0) debt = 0;
   luaE_setdebt(g, debt);
 }
 
@@ -1133,26 +1133,26 @@ static void setpause (global_State *g) {
 ** are now old---must be in a gray list. Everything else is not in a
 ** gray list. Open upvalues are also kept gray.
 */
-static void sweep2old (lua_State *L, GCObject **p) {
+ਸਥਿਰ ਖਾਲੀ sweep2old (lua_State *L, GCObject **p) {
   GCObject *curr;
   global_State *g = G(L);
-  while ((curr = *p) != NULL) {
-    if (iswhite(curr)) {  /* is 'curr' dead? */
+  ਜਦੋਂ ((curr = *p) != ਨਿਰਾ) {
+    ਜੇ (iswhite(curr)) {  /* is 'curr' dead? */
       lua_assert(isdead(g, curr));
-      *p = curr->next;  /* remove 'curr' from list */
+      *p = curr->ਅਗਲਾ;  /* remove 'curr' from list */
       freeobj(L, curr);  /* erase 'curr' */
     }
-    else {  /* all surviving objects become old */
+    ਨਹੀਂਤਾਂ {  /* all surviving objects become old */
       setage(curr, G_OLD);
-      if (curr->tt == LUA_VTHREAD) {  /* threads must be watched */
+      ਜੇ (curr->tt == LUA_VTHREAD) {  /* threads must be watched */
         lua_State *th = gco2th(curr);
         linkgclist(th, g->grayagain);  /* insert into 'grayagain' list */
       }
-      else if (curr->tt == LUA_VUPVAL && upisopen(gco2upv(curr)))
+      ਨਹੀਂਤਾਂ ਜੇ (curr->tt == LUA_VUPVAL && upisopen(gco2upv(curr)))
         set2gray(curr);  /* open upvalues are always gray */
-      else  /* everything else is black */
+      ਨਹੀਂਤਾਂ  /* everything else is black */
         nw2black(curr);
-      p = &curr->next;  /* go to next element */
+      p = &curr->ਅਗਲਾ;  /* go to next element */
     }
   }
 }
@@ -1169,10 +1169,10 @@ static void sweep2old (lua_State *L, GCObject **p) {
 ** here.  They will all be advanced in 'correctgraylist'. That function
 ** will also remove objects turned white here from any gray list.
 */
-static GCObject **sweepgen (lua_State *L, global_State *g, GCObject **p,
-                            GCObject *limit, GCObject **pfirstold1,
+ਸਥਿਰ GCObject **sweepgen (lua_State *L, global_State *g, GCObject **p,
+                            GCObject *ਹੱਦਬੰਦੀ, GCObject **pfirstold1,
                             l_mem *paddedold) {
-  static const lu_byte nextage[] = {
+  ਸਥਿਰ ਅਚਲ lu_byte nextage[] = {
     G_SURVIVAL,  /* from G_NEW */
     G_OLD1,      /* from G_SURVIVAL */
     G_OLD1,      /* from G_OLD0 */
@@ -1182,34 +1182,34 @@ static GCObject **sweepgen (lua_State *L, global_State *g, GCObject **p,
     G_TOUCHED2   /* from G_TOUCHED2 (do not change) */
   };
   l_mem addedold = 0;
-  int white = luaC_white(g);
+  ਪੂਰਨ white = luaC_white(g);
   GCObject *curr;
-  while ((curr = *p) != limit) {
-    if (iswhite(curr)) {  /* is 'curr' dead? */
+  ਜਦੋਂ ((curr = *p) != ਹੱਦਬੰਦੀ) {
+    ਜੇ (iswhite(curr)) {  /* is 'curr' dead? */
       lua_assert(!isold(curr) && isdead(g, curr));
-      *p = curr->next;  /* remove 'curr' from list */
+      *p = curr->ਅਗਲਾ;  /* remove 'curr' from list */
       freeobj(L, curr);  /* erase 'curr' */
     }
-    else {  /* correct mark and age */
-      int age = getage(curr);
-      if (age == G_NEW) {  /* new objects go back to white */
-        int marked = curr->marked & ~maskgcbits;  /* erase GC bits */
+    ਨਹੀਂਤਾਂ {  /* correct mark and age */
+      ਪੂਰਨ age = getage(curr);
+      ਜੇ (age == G_NEW) {  /* new objects go back to white */
+        ਪੂਰਨ marked = curr->marked & ~maskgcbits;  /* erase GC bits */
         curr->marked = cast_byte(marked | G_SURVIVAL | white);
       }
-      else {  /* all other objects will be old, and so keep their color */
+      ਨਹੀਂਤਾਂ {  /* all other objects will be old, and so keep their color */
         lua_assert(age != G_OLD1);  /* advanced in 'markold' */
         setage(curr, nextage[age]);
-        if (getage(curr) == G_OLD1) {
+        ਜੇ (getage(curr) == G_OLD1) {
           addedold += objsize(curr);  /* bytes becoming old */
-          if (*pfirstold1 == NULL)
+          ਜੇ (*pfirstold1 == ਨਿਰਾ)
             *pfirstold1 = curr;  /* first OLD1 object in the list */
         }
       }
-      p = &curr->next;  /* go to next element */
+      p = &curr->ਅਗਲਾ;  /* go to next element */
     }
   }
   *paddedold += addedold;
-  return p;
+  ਵਾਪਸ p;
 }
 
 
@@ -1224,46 +1224,46 @@ static GCObject **sweepgen (lua_State *L, global_State *g, GCObject **p,
 ** anything else become regular old, are marked black, and are removed
 ** from the list.
 */
-static GCObject **correctgraylist (GCObject **p) {
+ਸਥਿਰ GCObject **correctgraylist (GCObject **p) {
   GCObject *curr;
-  while ((curr = *p) != NULL) {
-    GCObject **next = getgclist(curr);
-    if (iswhite(curr))
-      goto remove;  /* remove all white objects */
-    else if (getage(curr) == G_TOUCHED1) {  /* touched in this cycle? */
+  ਜਦੋਂ ((curr = *p) != ਨਿਰਾ) {
+    GCObject **ਅਗਲਾ = getgclist(curr);
+    ਜੇ (iswhite(curr))
+      ਜਾਓ remove;  /* remove all white objects */
+    ਨਹੀਂਤਾਂ ਜੇ (getage(curr) == G_TOUCHED1) {  /* touched in this cycle? */
       lua_assert(isgray(curr));
       nw2black(curr);  /* make it black, for next barrier */
       setage(curr, G_TOUCHED2);
-      goto remain;  /* keep it in the list and go to next element */
+      ਜਾਓ remain;  /* keep it in the list and go to next element */
     }
-    else if (curr->tt == LUA_VTHREAD) {
+    ਨਹੀਂਤਾਂ ਜੇ (curr->tt == LUA_VTHREAD) {
       lua_assert(isgray(curr));
-      goto remain;  /* keep non-white threads on the list */
+      ਜਾਓ remain;  /* keep non-white threads on the list */
     }
-    else {  /* everything else is removed */
+    ਨਹੀਂਤਾਂ {  /* everything else is removed */
       lua_assert(isold(curr));  /* young objects should be white here */
-      if (getage(curr) == G_TOUCHED2)  /* advance from TOUCHED2... */
+      ਜੇ (getage(curr) == G_TOUCHED2)  /* advance from TOUCHED2... */
         setage(curr, G_OLD);  /* ... to OLD */
       nw2black(curr);  /* make object black (to be removed) */
-      goto remove;
+      ਜਾਓ remove;
     }
-    remove: *p = *next; continue;
-    remain: p = next; continue;
+    remove: *p = *ਅਗਲਾ; ਜਾਰੀ;
+    remain: p = ਅਗਲਾ; ਜਾਰੀ;
   }
-  return p;
+  ਵਾਪਸ p;
 }
 
 
 /*
 ** Correct all gray lists, coalescing them into 'grayagain'.
 */
-static void correctgraylists (global_State *g) {
+ਸਥਿਰ ਖਾਲੀ correctgraylists (global_State *g) {
   GCObject **list = correctgraylist(&g->grayagain);
-  *list = g->weak; g->weak = NULL;
+  *list = g->weak; g->weak = ਨਿਰਾ;
   list = correctgraylist(list);
-  *list = g->allweak; g->allweak = NULL;
+  *list = g->allweak; g->allweak = ਨਿਰਾ;
   list = correctgraylist(list);
-  *list = g->ephemeron; g->ephemeron = NULL;
+  *list = g->ephemeron; g->ephemeron = ਨਿਰਾ;
   correctgraylist(list);
 }
 
@@ -1273,13 +1273,13 @@ static void correctgraylists (global_State *g) {
 ** Gray objects are already in some gray list, and so will be visited in
 ** the atomic step.
 */
-static void markold (global_State *g, GCObject *from, GCObject *to) {
+ਸਥਿਰ ਖਾਲੀ markold (global_State *g, GCObject *from, GCObject *ਮੰਜ਼ਿਲ) {
   GCObject *p;
-  for (p = from; p != to; p = p->next) {
-    if (getage(p) == G_OLD1) {
+  ਲਈ (p = from; p != ਮੰਜ਼ਿਲ; p = p->ਅਗਲਾ) {
+    ਜੇ (getage(p) == G_OLD1) {
       lua_assert(!iswhite(p));
       setage(p, G_OLD);  /* now they are old */
-      if (isblack(p))
+      ਜੇ (isblack(p))
         reallymarkobject(g, p);
     }
   }
@@ -1289,11 +1289,11 @@ static void markold (global_State *g, GCObject *from, GCObject *to) {
 /*
 ** Finish a young-generation collection.
 */
-static void finishgencycle (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ finishgencycle (lua_State *L, global_State *g) {
   correctgraylists(g);
   checkSizes(L, g);
   g->gcstate = GCSpropagate;  /* skip restart */
-  if (g->tobefnz != NULL && !g->gcemergency && luaD_checkminstack(L))
+  ਜੇ (g->tobefnz != ਨਿਰਾ && !g->gcemergency && luaD_checkminstack(L))
     callallpendingfinalizers(L);
 }
 
@@ -1303,11 +1303,11 @@ static void finishgencycle (lua_State *L, global_State *g) {
 ** the "sweep all" state to clear all objects, which are mostly black
 ** in generational mode.
 */
-static void minor2inc (lua_State *L, global_State *g, lu_byte kind) {
+ਸਥਿਰ ਖਾਲੀ minor2inc (lua_State *L, global_State *g, lu_byte ਕਿਸਮ) {
   g->GCmajorminor = g->GCmarked;  /* number of live bytes */
-  g->gckind = kind;
-  g->reallyold = g->old1 = g->survival = NULL;
-  g->finobjrold = g->finobjold1 = g->finobjsur = NULL;
+  g->gckind = ਕਿਸਮ;
+  g->reallyold = g->old1 = g->survival = ਨਿਰਾ;
+  g->finobjrold = g->finobjold1 = g->finobjsur = ਨਿਰਾ;
   entersweep(L);  /* continue as an incremental cycle */
   /* set a debt equal to the step size */
   luaE_setdebt(g, applygcparam(g, STEPSIZE, 100));
@@ -1320,11 +1320,11 @@ static void minor2inc (lua_State *L, global_State *g, lu_byte kind) {
 ** 'minormajor'% of the number of lived bytes after the last major
 ** collection. (This number is kept in 'GCmajorminor'.)
 */
-static int checkminormajor (global_State *g) {
-  l_mem limit = applygcparam(g, MINORMAJOR, g->GCmajorminor);
-  if (limit == 0)
-    return 0;  /* special case: 'minormajor' 0 stops major collections */
-  return (g->GCmarked >= limit);
+ਸਥਿਰ ਪੂਰਨ checkminormajor (global_State *g) {
+  l_mem ਹੱਦਬੰਦੀ = applygcparam(g, MINORMAJOR, g->GCmajorminor);
+  ਜੇ (ਹੱਦਬੰਦੀ == 0)
+    ਵਾਪਸ 0;  /* special case: 'minormajor' 0 stops major collections */
+  ਵਾਪਸ (g->GCmarked >= ਹੱਦਬੰਦੀ);
 }
 
 /*
@@ -1332,18 +1332,18 @@ static int checkminormajor (global_State *g) {
 ** atomic step. Then, check whether to continue in minor mode. If so,
 ** sweep all lists and advance pointers. Finally, finish the collection.
 */
-static void youngcollection (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ youngcollection (lua_State *L, global_State *g) {
   l_mem addedold1 = 0;
   l_mem marked = g->GCmarked;  /* preserve 'g->GCmarked' */
   GCObject **psurvival;  /* to point to first non-dead survival object */
   GCObject *dummy;  /* dummy out parameter to 'sweepgen' */
   lua_assert(g->gcstate == GCSpropagate);
-  if (g->firstold1) {  /* are there regular OLD1 objects? */
+  ਜੇ (g->firstold1) {  /* are there regular OLD1 objects? */
     markold(g, g->firstold1, g->reallyold);  /* mark them */
-    g->firstold1 = NULL;  /* no more OLD1 objects (for now) */
+    g->firstold1 = ਨਿਰਾ;  /* no more OLD1 objects (for now) */
   }
   markold(g, g->finobj, g->finobjrold);
-  markold(g, g->tobefnz, NULL);
+  markold(g, g->tobefnz, ਨਿਰਾ);
 
   atomic(L);  /* will lose 'g->marked' */
 
@@ -1357,7 +1357,7 @@ static void youngcollection (lua_State *L, global_State *g) {
   g->survival = g->allgc;  /* all news are survivals */
 
   /* repeat for 'finobj' lists */
-  dummy = NULL;  /* no 'firstold1' optimization for 'finobj' lists */
+  dummy = ਨਿਰਾ;  /* no 'firstold1' optimization for 'finobj' lists */
   psurvival = sweepgen(L, g, &g->finobj, g->finobjsur, &dummy, &addedold1);
   /* sweep 'survival' */
   sweepgen(L, g, psurvival, g->finobjold1, &dummy, &addedold1);
@@ -1365,17 +1365,17 @@ static void youngcollection (lua_State *L, global_State *g) {
   g->finobjold1 = *psurvival;  /* 'survival' survivals are old now */
   g->finobjsur = g->finobj;  /* all news are survivals */
 
-  sweepgen(L, g, &g->tobefnz, NULL, &dummy, &addedold1);
+  sweepgen(L, g, &g->tobefnz, ਨਿਰਾ, &dummy, &addedold1);
 
   /* keep total number of added old1 bytes */
   g->GCmarked = marked + addedold1;
 
   /* decide whether to shift to major mode */
-  if (checkminormajor(g)) {
+  ਜੇ (checkminormajor(g)) {
     minor2inc(L, g, KGC_GENMAJOR);  /* go to major mode */
     g->GCmarked = 0;  /* avoid pause in first major cycle (see 'setpause') */
   }
-  else
+  ਨਹੀਂਤਾਂ
     finishgencycle(L, g);  /* still in minor mode; finish it */
 }
 
@@ -1386,14 +1386,14 @@ static void youngcollection (lua_State *L, global_State *g) {
 ** surviving objects to old. Threads go back to 'grayagain'; everything
 ** else is turned black (not in any gray list).
 */
-static void atomic2gen (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ atomic2gen (lua_State *L, global_State *g) {
   cleargraylists(g);
   /* sweep all elements making them old */
   g->gcstate = GCSswpallgc;
   sweep2old(L, &g->allgc);
   /* everything alive now is old */
   g->reallyold = g->old1 = g->survival = g->allgc;
-  g->firstold1 = NULL;  /* there are no OLD1 objects anywhere */
+  g->firstold1 = ਨਿਰਾ;  /* there are no OLD1 objects anywhere */
 
   /* repeat for 'finobj' lists */
   sweep2old(L, &g->finobj);
@@ -1414,7 +1414,7 @@ static void atomic2gen (lua_State *L, global_State *g) {
 ** the base, GCmajorminor, which is the number of bytes being used
 ** after the last major collection.
 */
-static void setminordebt (global_State *g) {
+ਸਥਿਰ ਖਾਲੀ setminordebt (global_State *g) {
   luaE_setdebt(g, applygcparam(g, MINORMUL, g->GCmajorminor));
 }
 
@@ -1425,7 +1425,7 @@ static void setminordebt (global_State *g) {
 ** are cleared. Then, turn all objects into old and finishes the
 ** collection.
 */
-static void entergen (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ entergen (lua_State *L, global_State *g) {
   luaC_runtilstate(L, GCSpause, 1);  /* prepare to start a new cycle */
   luaC_runtilstate(L, GCSpropagate, 1);  /* start new cycle */
   atomic(L);  /* propagates all and then do the atomic stuff */
@@ -1437,14 +1437,14 @@ static void entergen (lua_State *L, global_State *g) {
 /*
 ** Change collector mode to 'newmode'.
 */
-void luaC_changemode (lua_State *L, int newmode) {
+ਖਾਲੀ luaC_changemode (lua_State *L, ਪੂਰਨ newmode) {
   global_State *g = G(L);
-  if (g->gckind == KGC_GENMAJOR)  /* doing major collections? */
+  ਜੇ (g->gckind == KGC_GENMAJOR)  /* doing major collections? */
     g->gckind = KGC_INC;  /* already incremental but in name */
-  if (newmode != g->gckind) {  /* does it need to change? */
-    if (newmode == KGC_INC)  /* entering incremental mode? */
+  ਜੇ (newmode != g->gckind) {  /* does it need to change? */
+    ਜੇ (newmode == KGC_INC)  /* entering incremental mode? */
       minor2inc(L, g, KGC_INC);  /* entering incremental mode */
-    else {
+    ਨਹੀਂਤਾਂ {
       lua_assert(newmode == KGC_GENMINOR);
       entergen(L, g);
     }
@@ -1455,7 +1455,7 @@ void luaC_changemode (lua_State *L, int newmode) {
 /*
 ** Does a full collection in generational mode.
 */
-static void fullgen (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ fullgen (lua_State *L, global_State *g) {
   minor2inc(L, g, KGC_INC);
   entergen(L, g);
 }
@@ -1468,21 +1468,21 @@ static void fullgen (lua_State *L, global_State *g) {
 ** is greater than 'majorminor'% of the number of bytes added
 ** since the last collection ('addedbytes').
 */
-static int checkmajorminor (lua_State *L, global_State *g) {
-  if (g->gckind == KGC_GENMAJOR) {  /* generational mode? */
+ਸਥਿਰ ਪੂਰਨ checkmajorminor (lua_State *L, global_State *g) {
+  ਜੇ (g->gckind == KGC_GENMAJOR) {  /* generational mode? */
     l_mem numbytes = gettotalbytes(g);
     l_mem addedbytes = numbytes - g->GCmajorminor;
-    l_mem limit = (addedbytes < 0) ? 0
+    l_mem ਹੱਦਬੰਦੀ = (addedbytes < 0) ? 0
                                    : applygcparam(g, MAJORMINOR, addedbytes);
     l_mem tobecollected = numbytes - g->GCmarked;
-    if (tobecollected > limit) {
+    ਜੇ (tobecollected > ਹੱਦਬੰਦੀ) {
       atomic2gen(L, g);  /* return to generational mode */
       setminordebt(g);
-      return 1;  /* exit incremental collection */
+      ਵਾਪਸ 1;  /* exit incremental collection */
     }
   }
   g->GCmajorminor = g->GCmarked;  /* prepare for next collection */
-  return 0;  /* stay doing incremental collections */
+  ਵਾਪਸ 0;  /* stay doing incremental collections */
 }
 
 /* }====================================================== */
@@ -1502,10 +1502,10 @@ static int checkmajorminor (lua_State *L, global_State *g) {
 ** not need to skip objects created between "now" and the start of the
 ** real sweep.
 */
-static void entersweep (lua_State *L) {
+ਸਥਿਰ ਖਾਲੀ entersweep (lua_State *L) {
   global_State *g = G(L);
   g->gcstate = GCSswpallgc;
-  lua_assert(g->sweepgc == NULL);
+  lua_assert(g->sweepgc == ਨਿਰਾ);
   g->sweepgc = sweeptolive(L, &g->allgc);
 }
 
@@ -1514,11 +1514,11 @@ static void entersweep (lua_State *L) {
 ** Delete all objects in list 'p' until (but not including) object
 ** 'limit'.
 */
-static void deletelist (lua_State *L, GCObject *p, GCObject *limit) {
-  while (p != limit) {
-    GCObject *next = p->next;
+ਸਥਿਰ ਖਾਲੀ deletelist (lua_State *L, GCObject *p, GCObject *ਹੱਦਬੰਦੀ) {
+  ਜਦੋਂ (p != ਹੱਦਬੰਦੀ) {
+    GCObject *ਅਗਲਾ = p->ਅਗਲਾ;
     freeobj(L, p);
-    p = next;
+    p = ਅਗਲਾ;
   }
 }
 
@@ -1527,26 +1527,26 @@ static void deletelist (lua_State *L, GCObject *p, GCObject *limit) {
 ** Call all finalizers of the objects in the given Lua state, and
 ** then free all objects, except for the main thread.
 */
-void luaC_freeallobjects (lua_State *L) {
+ਖਾਲੀ luaC_freeallobjects (lua_State *L) {
   global_State *g = G(L);
   g->gcstp = GCSTPCLS;  /* no extra finalizers after here */
   luaC_changemode(L, KGC_INC);
   separatetobefnz(g, 1);  /* separate all objects with finalizers */
-  lua_assert(g->finobj == NULL);
+  lua_assert(g->finobj == ਨਿਰਾ);
   callallpendingfinalizers(L);
   deletelist(L, g->allgc, obj2gco(mainthread(g)));
-  lua_assert(g->finobj == NULL);  /* no new finalizers */
-  deletelist(L, g->fixedgc, NULL);  /* collect fixed objects */
+  lua_assert(g->finobj == ਨਿਰਾ);  /* no new finalizers */
+  deletelist(L, g->fixedgc, ਨਿਰਾ);  /* collect fixed objects */
   lua_assert(g->strt.nuse == 0);
 }
 
 
-static void atomic (lua_State *L) {
+ਸਥਿਰ ਖਾਲੀ atomic (lua_State *L) {
   global_State *g = G(L);
   GCObject *origweak, *origall;
   GCObject *grayagain = g->grayagain;  /* save original list */
-  g->grayagain = NULL;
-  lua_assert(g->ephemeron == NULL && g->weak == NULL);
+  g->grayagain = ਨਿਰਾ;
+  lua_assert(g->ephemeron == ਨਿਰਾ && g->weak == ਨਿਰਾ);
   lua_assert(!iswhite(mainthread(g)));
   g->gcstate = GCSatomic;
   markobject(g, L);  /* mark running thread */
@@ -1557,13 +1557,13 @@ static void atomic (lua_State *L) {
   /* remark occasional upvalues of (maybe) dead threads */
   remarkupvals(g);
   propagateall(g);  /* propagate changes */
-  g->gray = grayagain;
+  g->ਸਲੇਟੀ = grayagain;
   propagateall(g);  /* traverse 'grayagain' list */
   convergeephemerons(g);
   /* at this point, all strongly accessible objects are marked. */
   /* Clear values from weak tables, before checking finalizers */
-  clearbyvalues(g, g->weak, NULL);
-  clearbyvalues(g, g->allweak, NULL);
+  clearbyvalues(g, g->weak, ਨਿਰਾ);
+  clearbyvalues(g, g->allweak, ਨਿਰਾ);
   origweak = g->weak; origall = g->allweak;
   separatetobefnz(g, 0);  /* separate objects to be finalized */
   markbeingfnz(g);  /* mark objects that will be finalized */
@@ -1578,7 +1578,7 @@ static void atomic (lua_State *L) {
   clearbyvalues(g, g->allweak, origall);
   luaS_clearcache(g);
   g->currentwhite = cast_byte(otherwhite(g));  /* flip current white */
-  lua_assert(g->gray == NULL);
+  lua_assert(g->ਸਲੇਟੀ == ਨਿਰਾ);
 }
 
 
@@ -1586,11 +1586,11 @@ static void atomic (lua_State *L) {
 ** Do a sweep step. The normal case (not fast) sweeps at most GCSWEEPMAX
 ** elements. The fast case sweeps the whole list.
 */
-static void sweepstep (lua_State *L, global_State *g,
-                       lu_byte nextstate, GCObject **nextlist, int fast) {
-  if (g->sweepgc)
+ਸਥਿਰ ਖਾਲੀ sweepstep (lua_State *L, global_State *g,
+                       lu_byte nextstate, GCObject **nextlist, ਪੂਰਨ fast) {
+  ਜੇ (g->sweepgc)
     g->sweepgc = sweeplist(L, g->sweepgc, fast ? MAX_LMEM : GCSWEEPMAX);
-  else {  /* enter next state */
+  ਨਹੀਂਤਾਂ {  /* enter next state */
     g->gcstate = nextstate;
     g->sweepgc = nextlist;
   }
@@ -1610,80 +1610,80 @@ static void sweepstep (lua_State *L, global_State *g,
 ** weak tables.
 */
 
-#define step2pause	-3  /* finished collection; entered pause state */
-#define atomicstep	-2  /* atomic step */
-#define step2minor	-1  /* moved to minor collections */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ step2pause	-3  /* finished collection; entered pause state */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ atomicstep	-2  /* atomic step */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ step2minor	-1  /* moved to minor collections */
 
 
-static l_mem singlestep (lua_State *L, int fast) {
+ਸਥਿਰ l_mem singlestep (lua_State *L, ਪੂਰਨ fast) {
   global_State *g = G(L);
   l_mem stepresult;
   lua_assert(!g->gcstopem);  /* collector is not reentrant */
   g->gcstopem = 1;  /* no emergency collections while collecting */
-  switch (g->gcstate) {
-    case GCSpause: {
+  ਚੋਣ (g->gcstate) {
+    ਹਾਲਤ GCSpause: {
       restartcollection(g);
       g->gcstate = GCSpropagate;
       stepresult = 1;
-      break;
+      ਰੋਕੋ;
     }
-    case GCSpropagate: {
-      if (fast || g->gray == NULL) {
+    ਹਾਲਤ GCSpropagate: {
+      ਜੇ (fast || g->ਸਲੇਟੀ == ਨਿਰਾ) {
         g->gcstate = GCSenteratomic;  /* finish propagate phase */
         stepresult = 1;
       }
-      else
+      ਨਹੀਂਤਾਂ
         stepresult = propagatemark(g);  /* traverse one gray object */
-      break;
+      ਰੋਕੋ;
     }
-    case GCSenteratomic: {
+    ਹਾਲਤ GCSenteratomic: {
       atomic(L);
-      if (checkmajorminor(L, g))
+      ਜੇ (checkmajorminor(L, g))
         stepresult = step2minor;
-      else {
+      ਨਹੀਂਤਾਂ {
         entersweep(L);
         stepresult = atomicstep;
       }
-      break;
+      ਰੋਕੋ;
     }
-    case GCSswpallgc: {  /* sweep "regular" objects */
+    ਹਾਲਤ GCSswpallgc: {  /* sweep "regular" objects */
       sweepstep(L, g, GCSswpfinobj, &g->finobj, fast);
       stepresult = GCSWEEPMAX;
-      break;
+      ਰੋਕੋ;
     }
-    case GCSswpfinobj: {  /* sweep objects with finalizers */
+    ਹਾਲਤ GCSswpfinobj: {  /* sweep objects with finalizers */
       sweepstep(L, g, GCSswptobefnz, &g->tobefnz, fast);
       stepresult = GCSWEEPMAX;
-      break;
+      ਰੋਕੋ;
     }
-    case GCSswptobefnz: {  /* sweep objects to be finalized */
-      sweepstep(L, g, GCSswpend, NULL, fast);
+    ਹਾਲਤ GCSswptobefnz: {  /* sweep objects to be finalized */
+      sweepstep(L, g, GCSswpend, ਨਿਰਾ, fast);
       stepresult = GCSWEEPMAX;
-      break;
+      ਰੋਕੋ;
     }
-    case GCSswpend: {  /* finish sweeps */
+    ਹਾਲਤ GCSswpend: {  /* finish sweeps */
       checkSizes(L, g);
       g->gcstate = GCScallfin;
       stepresult = GCSWEEPMAX;
-      break;
+      ਰੋਕੋ;
     }
-    case GCScallfin: {  /* call finalizers */
-      if (g->tobefnz && !g->gcemergency && luaD_checkminstack(L)) {
+    ਹਾਲਤ GCScallfin: {  /* call finalizers */
+      ਜੇ (g->tobefnz && !g->gcemergency && luaD_checkminstack(L)) {
         g->gcstopem = 0;  /* ok collections during finalizers */
         GCTM(L);  /* call one finalizer */
         stepresult = CWUFIN;
       }
-      else {  /* no more finalizers or emergency mode or not enough stack
+      ਨਹੀਂਤਾਂ {  /* no more finalizers or emergency mode or not enough stack
                  to run finalizers */
         g->gcstate = GCSpause;  /* finish collection */
         stepresult = step2pause;
       }
-      break;
+      ਰੋਕੋ;
     }
-    default: lua_assert(0); return 0;
+    ਮੂਲ: lua_assert(0); ਵਾਪਸ 0;
   }
   g->gcstopem = 0;
-  return stepresult;
+  ਵਾਪਸ stepresult;
 }
 
 
@@ -1692,10 +1692,10 @@ static l_mem singlestep (lua_State *L, int fast) {
 ** (The option 'fast' is only for testing; in normal code, 'fast'
 ** here is always true.)
 */
-void luaC_runtilstate (lua_State *L, int state, int fast) {
+ਖਾਲੀ luaC_runtilstate (lua_State *L, ਪੂਰਨ state, ਪੂਰਨ fast) {
   global_State *g = G(L);
   lua_assert(g->gckind == KGC_INC);
-  while (state != g->gcstate)
+  ਜਦੋਂ (state != g->gcstate)
     singlestep(L, fast);
 }
 
@@ -1708,53 +1708,53 @@ void luaC_runtilstate (lua_State *L, int state, int fast) {
 ** finishing a cycle (pause state). Finally, it sets the debt that
 ** controls when next step will be performed.
 */
-static void incstep (lua_State *L, global_State *g) {
+ਸਥਿਰ ਖਾਲੀ incstep (lua_State *L, global_State *g) {
   l_mem stepsize = applygcparam(g, STEPSIZE, 100);
-  l_mem work2do = applygcparam(g, STEPMUL, stepsize / cast_int(sizeof(void*)));
+  l_mem work2do = applygcparam(g, STEPMUL, stepsize / cast_int(ਆਕਾਰ(ਖਾਲੀ*)));
   l_mem stres;
-  int fast = (work2do == 0);  /* special case: do a full collection */
-  do {  /* repeat until enough work */
+  ਪੂਰਨ fast = (work2do == 0);  /* special case: do a full collection */
+  ਕਰੋ {  /* repeat until enough work */
     stres = singlestep(L, fast);  /* perform one single step */
-    if (stres == step2minor)  /* returned to minor collections? */
-      return;  /* nothing else to be done here */
-    else if (stres == step2pause || (stres == atomicstep && !fast))
-      break;  /* end of cycle or atomic */
-    else
+    ਜੇ (stres == step2minor)  /* returned to minor collections? */
+      ਵਾਪਸ;  /* nothing else to be done here */
+    ਨਹੀਂਤਾਂ ਜੇ (stres == step2pause || (stres == atomicstep && !fast))
+      ਰੋਕੋ;  /* end of cycle or atomic */
+    ਨਹੀਂਤਾਂ
       work2do -= stres;
-  } while (fast || work2do > 0);
-  if (g->gcstate == GCSpause)
+  } ਜਦੋਂ (fast || work2do > 0);
+  ਜੇ (g->gcstate == GCSpause)
     setpause(g);  /* pause until next cycle */
-  else
+  ਨਹੀਂਤਾਂ
     luaE_setdebt(g, stepsize);
 }
 
 
-#if !defined(luai_tracegc)
-#define luai_tracegc(L,f)		((void)0)
-#endif
+#ਜੇ !defined(luai_tracegc)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ luai_tracegc(L,f)		((ਖਾਲੀ)0)
+#ਜੇ_ਅੰਤ
 
 /*
 ** Performs a basic GC step if collector is running. (If collector was
 ** stopped by the user, set a reasonable debt to avoid it being called
 ** at every single check.)
 */
-void luaC_step (lua_State *L) {
+ਖਾਲੀ lua_C_ਕਦਮ (lua_State *L) {
   global_State *g = G(L);
   lua_assert(!g->gcemergency);
-  if (!gcrunning(g)) {  /* not running? */
-    if (g->gcstp & GCSTPUSR)  /* stopped by the user? */
+  ਜੇ (!gcrunning(g)) {  /* not running? */
+    ਜੇ (g->gcstp & GCSTPUSR)  /* stopped by the user? */
       luaE_setdebt(g, 20000);
   }
-  else {
+  ਨਹੀਂਤਾਂ {
     luai_tracegc(L, 1);  /* for internal debugging */
-    switch (g->gckind) {
-      case KGC_INC: case KGC_GENMAJOR:
+    ਚੋਣ (g->gckind) {
+      ਹਾਲਤ KGC_INC: ਹਾਲਤ KGC_GENMAJOR:
         incstep(L, g);
-        break;
-      case KGC_GENMINOR:
+        ਰੋਕੋ;
+      ਹਾਲਤ KGC_GENMINOR:
         youngcollection(L, g);
         setminordebt(g);
-        break;
+        ਰੋਕੋ;
     }
     luai_tracegc(L, 0);  /* for internal debugging */
   }
@@ -1768,8 +1768,8 @@ void luaC_step (lua_State *L) {
 ** to sweep all objects to turn them back to white (as white has not
 ** changed, nothing will be collected).
 */
-static void fullinc (lua_State *L, global_State *g) {
-  if (keepinvariant(g))  /* black objects? */
+ਸਥਿਰ ਖਾਲੀ fullinc (lua_State *L, global_State *g) {
+  ਜੇ (keepinvariant(g))  /* black objects? */
     entersweep(L); /* sweep everything to turn them back to white */
   /* finish any pending sweep phase to start a new cycle */
   luaC_runtilstate(L, GCSpause, 1);
@@ -1784,18 +1784,18 @@ static void fullinc (lua_State *L, global_State *g) {
 ** some operations which could change the interpreter state in some
 ** unexpected ways (running finalizers and shrinking some structures).
 */
-void luaC_fullgc (lua_State *L, int isemergency) {
+ਖਾਲੀ luaC_fullgc (lua_State *L, ਪੂਰਨ isemergency) {
   global_State *g = G(L);
   lua_assert(!g->gcemergency);
   g->gcemergency = cast_byte(isemergency);  /* set flag */
-  switch (g->gckind) {
-    case KGC_GENMINOR: fullgen(L, g); break;
-    case KGC_INC: fullinc(L, g); break;
-    case KGC_GENMAJOR:
+  ਚੋਣ (g->gckind) {
+    ਹਾਲਤ KGC_GENMINOR: fullgen(L, g); ਰੋਕੋ;
+    ਹਾਲਤ KGC_INC: fullinc(L, g); ਰੋਕੋ;
+    ਹਾਲਤ KGC_GENMAJOR:
       g->gckind = KGC_INC;
       fullinc(L, g);
       g->gckind = KGC_GENMAJOR;
-      break;
+      ਰੋਕੋ;
   }
   g->gcemergency = 0;
 }

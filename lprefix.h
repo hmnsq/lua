@@ -4,42 +4,42 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lprefix_h
-#define lprefix_h
+#ਜੇ_ਅਪਰਿਭਾਸ਼ਿਤ lprefix_h
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lprefix_h
 
 
 /*
 ** Allows POSIX/XSI stuff
 */
-#if !defined(LUA_USE_C89)	/* { */
+#ਜੇ !defined(LUA_USE_C89)	/* { */
 
-#if !defined(_XOPEN_SOURCE)
-#define _XOPEN_SOURCE           600
-#elif _XOPEN_SOURCE == 0
-#undef _XOPEN_SOURCE  /* use -D_XOPEN_SOURCE=0 to undefine it */
-#endif
+#ਜੇ !defined(XOPEN_ਸਰੋਤ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ XOPEN_ਸਰੋਤ           600
+#ਜਾਂਜੇ XOPEN_ਸਰੋਤ == 0
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ XOPEN_ਸਰੋਤ  /* use -D_XOPEN_SOURCE=0 to undefine it */
+#ਜੇ_ਅੰਤ
 
 /*
 ** Allows manipulation of large files in gcc and some other compilers
 */
-#if !defined(LUA_32BITS) && !defined(_FILE_OFFSET_BITS)
-#define _LARGEFILE_SOURCE       1
-#define _FILE_OFFSET_BITS       64
-#endif
+#ਜੇ !defined(LUA_32_ਬਿੱਟ) && !defined(FILE_ਵਿੱਥ_ਬਿੱਟ)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LARGEFILE_ਸਰੋਤ       1
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ FILE_ਵਿੱਥ_ਬਿੱਟ       64
+#ਜੇ_ਅੰਤ
 
-#endif				/* } */
+#ਜੇ_ਅੰਤ				/* } */
 
 
 /*
 ** Windows stuff
 */
-#if defined(_WIN32)	/* { */
+#ਜੇ defined(_WIN32)	/* { */
 
-#if !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS  /* avoid warnings about ISO C functions */
-#endif
+#ਜੇ !defined(_CRT_SECURE_NO_WARNINGS)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ _CRT_SECURE_NO_WARNINGS  /* avoid warnings about ISO C functions */
+#ਜੇ_ਅੰਤ
 
-#endif			/* } */
+#ਜੇ_ਅੰਤ			/* } */
 
-#endif
+#ਜੇ_ਅੰਤ
 

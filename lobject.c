@@ -4,38 +4,38 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lobject_c
-#define LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lobject_c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
 
-#include <float.h>
-#include <locale.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <float.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <locale.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <math.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdarg.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdio.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <stdlib.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "lvm.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lctype.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstate.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lvm.h"
 
 
 /*
 ** Computes ceil(log2(x)), which is the smallest integer n such that
 ** x <= (1 << n).
 */
-lu_byte luaO_ceillog2 (unsigned int x) {
-  static const lu_byte log_2[256] = {  /* log_2[i - 1] = ceil(log2(i)) */
+lu_byte luaO_ceillog2 (ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ x) {
+  ਸਥਿਰ ਅਚਲ lu_byte log_2[256] = {  /* log_2[i - 1] = ceil(log2(i)) */
     0,1,2,2,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
@@ -45,10 +45,10 @@ lu_byte luaO_ceillog2 (unsigned int x) {
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
   };
-  int l = 0;
+  ਪੂਰਨ l = 0;
   x--;
-  while (x >= 256) { l += 8; x >>= 8; }
-  return cast_byte(l + log_2[x]);
+  ਜਦੋਂ (x >= 256) { l += 8; x >>= 8; }
+  ਵਾਪਸ cast_byte(l + log_2[x]);
 }
 
 /*
@@ -59,19 +59,19 @@ lu_byte luaO_ceillog2 (unsigned int x) {
 ** to signal that. So, the real value is (1xxxx) * 2^(eeee - 7 - 1) if
 ** eeee != 0, and (xxxx) * 2^-7 otherwise (subnormal numbers).
 */
-lu_byte luaO_codeparam (unsigned int p) {
-  if (p >= (cast(lu_mem, 0x1F) << (0xF - 7 - 1)) * 100u)  /* overflow? */
-    return 0xFF;  /* return maximum value */
-  else {
+lu_byte luaO_codeparam (ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ p) {
+  ਜੇ (p >= (cast(lu_mem, 0x1F) << (0xF - 7 - 1)) * 100u)  /* overflow? */
+    ਵਾਪਸ 0xFF;  /* return maximum value */
+  ਨਹੀਂਤਾਂ {
     p = (cast(l_uint32, p) * 128 + 99) / 100;  /* round up the division */
-    if (p < 0x10) {  /* subnormal number? */
+    ਜੇ (p < 0x10) {  /* subnormal number? */
       /* exponent bits are already zero; nothing else to do */
-      return cast_byte(p);
+      ਵਾਪਸ cast_byte(p);
     }
-    else {  /* p >= 0x10 implies ceil(log2(p + 1)) >= 5 */
+    ਨਹੀਂਤਾਂ {  /* p >= 0x10 implies ceil(log2(p + 1)) >= 5 */
       /* preserve 5 bits in 'p' */
-      unsigned log = luaO_ceillog2(p + 1) - 5u;
-      return cast_byte(((p >> log) - 0x10) | ((log + 1) << 4));
+      ਬਿਨਾਨਿਸ਼ਾਨੀ ਲਘੂਗਣਕ = luaO_ceillog2(p + 1) - 5u;
+      ਵਾਪਸ cast_byte(((p >> ਲਘੂਗਣਕ) - 0x10) | ((ਲਘੂਗਣਕ + 1) << 4));
     }
   }
 }
@@ -87,125 +87,125 @@ lu_byte luaO_codeparam (unsigned int p) {
 ** overflow, so we check which order is best.
 */
 l_mem luaO_applyparam (lu_byte p, l_mem x) {
-  int m = p & 0xF;  /* mantissa */
-  int e = (p >> 4);  /* exponent */
+  ਪੂਰਨ m = p & 0xF;  /* mantissa */
+  ਪੂਰਨ e = (p >> 4);  /* exponent */
   lua_assert(x >= 0);
-  if (e > 0) {  /* normalized? */
+  ਜੇ (e > 0) {  /* normalized? */
     e--;  /* correct exponent */
     m += 0x10;  /* correct mantissa; maximum value is 0x1F */
   }
   e -= 7;  /* correct excess-7 */
-  if (e >= 0) {
-    if (x < (MAX_LMEM / 0x1F) >> e)  /* no overflow? */
-      return (x * m) << e;  /* order doesn't matter here */
-    else  /* real overflow */
-      return MAX_LMEM;
+  ਜੇ (e >= 0) {
+    ਜੇ (x < (MAX_LMEM / 0x1F) >> e)  /* no overflow? */
+      ਵਾਪਸ (x * m) << e;  /* order doesn't matter here */
+    ਨਹੀਂਤਾਂ  /* real overflow */
+      ਵਾਪਸ MAX_LMEM;
   }
-  else {  /* negative exponent */
+  ਨਹੀਂਤਾਂ {  /* negative exponent */
     e = -e;
-    if (x < MAX_LMEM / 0x1F)  /* multiplication cannot overflow? */
-      return (x * m) >> e;  /* multiplying first gives more precision */
-    else if ((x >> e) <  MAX_LMEM / 0x1F)  /* cannot overflow after shift? */
-      return (x >> e) * m;
-    else  /* real overflow */
-      return MAX_LMEM;
+    ਜੇ (x < MAX_LMEM / 0x1F)  /* multiplication cannot overflow? */
+      ਵਾਪਸ (x * m) >> e;  /* multiplying first gives more precision */
+    ਨਹੀਂਤਾਂ ਜੇ ((x >> e) <  MAX_LMEM / 0x1F)  /* cannot overflow after shift? */
+      ਵਾਪਸ (x >> e) * m;
+    ਨਹੀਂਤਾਂ  /* real overflow */
+      ਵਾਪਸ MAX_LMEM;
   }
 }
 
 
-static lua_Integer intarith (lua_State *L, int op, lua_Integer v1,
+ਸਥਿਰ lua_Integer intarith (lua_State *L, ਪੂਰਨ op, lua_Integer v1,
                                                    lua_Integer v2) {
-  switch (op) {
-    case LUA_OPADD: return intop(+, v1, v2);
-    case LUA_OPSUB:return intop(-, v1, v2);
-    case LUA_OPMUL:return intop(*, v1, v2);
-    case LUA_OPMOD: return luaV_mod(L, v1, v2);
-    case LUA_OPIDIV: return luaV_idiv(L, v1, v2);
-    case LUA_OPBAND: return intop(&, v1, v2);
-    case LUA_OPBOR: return intop(|, v1, v2);
-    case LUA_OPBXOR: return intop(^, v1, v2);
-    case LUA_OPSHL: return luaV_shiftl(v1, v2);
-    case LUA_OPSHR: return luaV_shiftr(v1, v2);
-    case LUA_OPUNM: return intop(-, 0, v1);
-    case LUA_OPBNOT: return intop(^, ~l_castS2U(0), v1);
-    default: lua_assert(0); return 0;
+  ਚੋਣ (op) {
+    ਹਾਲਤ LUA_OPADD: ਵਾਪਸ intop(+, v1, v2);
+    ਹਾਲਤ LUA_OPSUB:ਵਾਪਸ intop(-, v1, v2);
+    ਹਾਲਤ LUA_OPMUL:ਵਾਪਸ intop(*, v1, v2);
+    ਹਾਲਤ LUA_OPMOD: ਵਾਪਸ luaV_mod(L, v1, v2);
+    ਹਾਲਤ LUA_OPIDIV: ਵਾਪਸ luaV_idiv(L, v1, v2);
+    ਹਾਲਤ LUA_OPBAND: ਵਾਪਸ intop(&, v1, v2);
+    ਹਾਲਤ LUA_OPBOR: ਵਾਪਸ intop(|, v1, v2);
+    ਹਾਲਤ LUA_OPBXOR: ਵਾਪਸ intop(^, v1, v2);
+    ਹਾਲਤ LUA_OPSHL: ਵਾਪਸ luaV_shiftl(v1, v2);
+    ਹਾਲਤ LUA_OPSHR: ਵਾਪਸ luaV_shiftr(v1, v2);
+    ਹਾਲਤ LUA_OPUNM: ਵਾਪਸ intop(-, 0, v1);
+    ਹਾਲਤ LUA_OPBNOT: ਵਾਪਸ intop(^, ~l_castS2U(0), v1);
+    ਮੂਲ: lua_assert(0); ਵਾਪਸ 0;
   }
 }
 
 
-static lua_Number numarith (lua_State *L, int op, lua_Number v1,
-                                                  lua_Number v2) {
-  switch (op) {
-    case LUA_OPADD: return luai_numadd(L, v1, v2);
-    case LUA_OPSUB: return luai_numsub(L, v1, v2);
-    case LUA_OPMUL: return luai_nummul(L, v1, v2);
-    case LUA_OPDIV: return luai_numdiv(L, v1, v2);
-    case LUA_OPPOW: return luai_numpow(L, v1, v2);
-    case LUA_OPIDIV: return luai_numidiv(L, v1, v2);
-    case LUA_OPUNM: return luai_numunm(L, v1);
-    case LUA_OPMOD: return luaV_modf(L, v1, v2);
-    default: lua_assert(0); return 0;
+ਸਥਿਰ lua_ਸੰਖਿਆ numarith (lua_State *L, ਪੂਰਨ op, lua_ਸੰਖਿਆ v1,
+                                                  lua_ਸੰਖਿਆ v2) {
+  ਚੋਣ (op) {
+    ਹਾਲਤ LUA_OPADD: ਵਾਪਸ luai_numadd(L, v1, v2);
+    ਹਾਲਤ LUA_OPSUB: ਵਾਪਸ luai_numsub(L, v1, v2);
+    ਹਾਲਤ LUA_OPMUL: ਵਾਪਸ luai_nummul(L, v1, v2);
+    ਹਾਲਤ LUA_OPDIV: ਵਾਪਸ luai_numdiv(L, v1, v2);
+    ਹਾਲਤ LUA_OPPOW: ਵਾਪਸ luai_numpow(L, v1, v2);
+    ਹਾਲਤ LUA_OPIDIV: ਵਾਪਸ luai_numidiv(L, v1, v2);
+    ਹਾਲਤ LUA_OPUNM: ਵਾਪਸ luai_numunm(L, v1);
+    ਹਾਲਤ LUA_OPMOD: ਵਾਪਸ luaV_modf(L, v1, v2);
+    ਮੂਲ: lua_assert(0); ਵਾਪਸ 0;
   }
 }
 
 
-int luaO_rawarith (lua_State *L, int op, const TValue *p1, const TValue *p2,
+ਪੂਰਨ luaO_rawarith (lua_State *L, ਪੂਰਨ op, ਅਚਲ TValue *p1, ਅਚਲ TValue *p2,
                    TValue *res) {
-  switch (op) {
-    case LUA_OPBAND: case LUA_OPBOR: case LUA_OPBXOR:
-    case LUA_OPSHL: case LUA_OPSHR:
-    case LUA_OPBNOT: {  /* operate only on integers */
+  ਚੋਣ (op) {
+    ਹਾਲਤ LUA_OPBAND: ਹਾਲਤ LUA_OPBOR: ਹਾਲਤ LUA_OPBXOR:
+    ਹਾਲਤ LUA_OPSHL: ਹਾਲਤ LUA_OPSHR:
+    ਹਾਲਤ LUA_OPBNOT: {  /* operate only on integers */
       lua_Integer i1; lua_Integer i2;
-      if (tointegerns(p1, &i1) && tointegerns(p2, &i2)) {
+      ਜੇ (tointegerns(p1, &i1) && tointegerns(p2, &i2)) {
         setivalue(res, intarith(L, op, i1, i2));
-        return 1;
+        ਵਾਪਸ 1;
       }
-      else return 0;  /* fail */
+      ਨਹੀਂਤਾਂ ਵਾਪਸ 0;  /* fail */
     }
-    case LUA_OPDIV: case LUA_OPPOW: {  /* operate only on floats */
-      lua_Number n1; lua_Number n2;
-      if (tonumberns(p1, n1) && tonumberns(p2, n2)) {
+    ਹਾਲਤ LUA_OPDIV: ਹਾਲਤ LUA_OPPOW: {  /* operate only on floats */
+      lua_ਸੰਖਿਆ n1; lua_ਸੰਖਿਆ n2;
+      ਜੇ (tonumberns(p1, n1) && tonumberns(p2, n2)) {
         setfltvalue(res, numarith(L, op, n1, n2));
-        return 1;
+        ਵਾਪਸ 1;
       }
-      else return 0;  /* fail */
+      ਨਹੀਂਤਾਂ ਵਾਪਸ 0;  /* fail */
     }
-    default: {  /* other operations */
-      lua_Number n1; lua_Number n2;
-      if (ttisinteger(p1) && ttisinteger(p2)) {
+    ਮੂਲ: {  /* other operations */
+      lua_ਸੰਖਿਆ n1; lua_ਸੰਖਿਆ n2;
+      ਜੇ (ttisinteger(p1) && ttisinteger(p2)) {
         setivalue(res, intarith(L, op, ivalue(p1), ivalue(p2)));
-        return 1;
+        ਵਾਪਸ 1;
       }
-      else if (tonumberns(p1, n1) && tonumberns(p2, n2)) {
+      ਨਹੀਂਤਾਂ ਜੇ (tonumberns(p1, n1) && tonumberns(p2, n2)) {
         setfltvalue(res, numarith(L, op, n1, n2));
-        return 1;
+        ਵਾਪਸ 1;
       }
-      else return 0;  /* fail */
+      ਨਹੀਂਤਾਂ ਵਾਪਸ 0;  /* fail */
     }
   }
 }
 
 
-void luaO_arith (lua_State *L, int op, const TValue *p1, const TValue *p2,
+ਖਾਲੀ luaO_arith (lua_State *L, ਪੂਰਨ op, ਅਚਲ TValue *p1, ਅਚਲ TValue *p2,
                  StkId res) {
-  if (!luaO_rawarith(L, op, p1, p2, s2v(res))) {
+  ਜੇ (!luaO_rawarith(L, op, p1, p2, s2v(res))) {
     /* could not perform raw operation; try metamethod */
-    luaT_trybinTM(L, p1, p2, res, cast(TMS, (op - LUA_OPADD) + TM_ADD));
+    luaT_trybinTM(L, p1, p2, res, cast(TMS, (op - LUA_OPADD) + TM_ਜੋੜੋ));
   }
 }
 
 
-lu_byte luaO_hexavalue (int c) {
+lu_byte luaO_hexavalue (ਪੂਰਨ c) {
   lua_assert(lisxdigit(c));
-  if (lisdigit(c)) return cast_byte(c - '0');
-  else return cast_byte((ltolower(c) - 'a') + 10);
+  ਜੇ (lisdigit(c)) ਵਾਪਸ cast_byte(c - '0');
+  ਨਹੀਂਤਾਂ ਵਾਪਸ cast_byte((ltolower(c) - 'a') + 10);
 }
 
 
-static int isneg (const char **s) {
-  if (**s == '-') { (*s)++; return 1; }
-  else if (**s == '+') (*s)++;
-  return 0;
+ਸਥਿਰ ਪੂਰਨ isneg (ਅਚਲ ਅੱਖਰ **s) {
+  ਜੇ (**s == '-') { (*s)++; ਵਾਪਸ 1; }
+  ਨਹੀਂਤਾਂ ਜੇ (**s == '+') (*s)++;
+  ਵਾਪਸ 0;
 }
 
 
@@ -216,86 +216,86 @@ static int isneg (const char **s) {
 ** ===================================================================
 */
 
-#if !defined(lua_strx2number)
+#ਜੇ !defined(lua_strx2number)
 
 /* maximum number of significant digits to read (to avoid overflows
    even with single floats) */
-#define MAXSIGDIG	30
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAXSIGDIG	30
 
 /*
 ** convert a hexadecimal numeric string to a number, following
 ** C99 specification for 'strtod'
 */
-static lua_Number lua_strx2number (const char *s, char **endptr) {
-  int dot = lua_getlocaledecpoint();
-  lua_Number r = l_mathop(0.0);  /* result (accumulator) */
-  int sigdig = 0;  /* number of significant digits */
-  int nosigdig = 0;  /* number of non-significant digits */
-  int e = 0;  /* exponent correction */
-  int neg;  /* 1 if number is negative */
-  int hasdot = 0;  /* true after seen a dot */
+ਸਥਿਰ lua_ਸੰਖਿਆ lua_strx2number (ਅਚਲ ਅੱਖਰ *s, ਅੱਖਰ **endptr) {
+  ਪੂਰਨ dot = lua_getlocaledecpoint();
+  lua_ਸੰਖਿਆ r = l_mathop(0.0);  /* result (accumulator) */
+  ਪੂਰਨ sigdig = 0;  /* number of significant digits */
+  ਪੂਰਨ nosigdig = 0;  /* number of non-significant digits */
+  ਪੂਰਨ e = 0;  /* exponent correction */
+  ਪੂਰਨ neg;  /* 1 if number is negative */
+  ਪੂਰਨ hasdot = 0;  /* true after seen a dot */
   *endptr = cast_charp(s);  /* nothing is valid yet */
-  while (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
+  ਜਦੋਂ (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
   neg = isneg(&s);  /* check sign */
-  if (!(*s == '0' && (*(s + 1) == 'x' || *(s + 1) == 'X')))  /* check '0x' */
-    return l_mathop(0.0);  /* invalid format (no '0x') */
-  for (s += 2; ; s++) {  /* skip '0x' and read numeral */
-    if (*s == dot) {
-      if (hasdot) break;  /* second dot? stop loop */
-      else hasdot = 1;
+  ਜੇ (!(*s == '0' && (*(s + 1) == 'x' || *(s + 1) == 'X')))  /* check '0x' */
+    ਵਾਪਸ l_mathop(0.0);  /* invalid format (no '0x') */
+  ਲਈ (s += 2; ; s++) {  /* skip '0x' and read numeral */
+    ਜੇ (*s == dot) {
+      ਜੇ (hasdot) ਰੋਕੋ;  /* second dot? stop loop */
+      ਨਹੀਂਤਾਂ hasdot = 1;
     }
-    else if (lisxdigit(cast_uchar(*s))) {
-      if (sigdig == 0 && *s == '0')  /* non-significant digit (zero)? */
+    ਨਹੀਂਤਾਂ ਜੇ (lisxdigit(cast_uchar(*s))) {
+      ਜੇ (sigdig == 0 && *s == '0')  /* non-significant digit (zero)? */
         nosigdig++;
-      else if (++sigdig <= MAXSIGDIG)  /* can read it without overflow? */
+      ਨਹੀਂਤਾਂ ਜੇ (++sigdig <= MAXSIGDIG)  /* can read it without overflow? */
           r = (r * l_mathop(16.0)) + luaO_hexavalue(*s);
-      else e++;  /* too many digits; ignore, but still count for exponent */
-      if (hasdot) e--;  /* decimal digit? correct exponent */
+      ਨਹੀਂਤਾਂ e++;  /* too many digits; ignore, but still count for exponent */
+      ਜੇ (hasdot) e--;  /* decimal digit? correct exponent */
     }
-    else break;  /* neither a dot nor a digit */
+    ਨਹੀਂਤਾਂ ਰੋਕੋ;  /* neither a dot nor a digit */
   }
-  if (nosigdig + sigdig == 0)  /* no digits? */
-    return l_mathop(0.0);  /* invalid format */
+  ਜੇ (nosigdig + sigdig == 0)  /* no digits? */
+    ਵਾਪਸ l_mathop(0.0);  /* invalid format */
   *endptr = cast_charp(s);  /* valid up to here */
   e *= 4;  /* each digit multiplies/divides value by 2^4 */
-  if (*s == 'p' || *s == 'P') {  /* exponent part? */
-    int exp1 = 0;  /* exponent value */
-    int neg1;  /* exponent sign */
+  ਜੇ (*s == 'p' || *s == 'P') {  /* exponent part? */
+    ਪੂਰਨ exp1 = 0;  /* exponent value */
+    ਪੂਰਨ neg1;  /* exponent sign */
     s++;  /* skip 'p' */
     neg1 = isneg(&s);  /* sign */
-    if (!lisdigit(cast_uchar(*s)))
-      return l_mathop(0.0);  /* invalid; must have at least one digit */
-    while (lisdigit(cast_uchar(*s)))  /* read exponent */
+    ਜੇ (!lisdigit(cast_uchar(*s)))
+      ਵਾਪਸ l_mathop(0.0);  /* invalid; must have at least one digit */
+    ਜਦੋਂ (lisdigit(cast_uchar(*s)))  /* read exponent */
       exp1 = exp1 * 10 + *(s++) - '0';
-    if (neg1) exp1 = -exp1;
+    ਜੇ (neg1) exp1 = -exp1;
     e += exp1;
     *endptr = cast_charp(s);  /* valid up to here */
   }
-  if (neg) r = -r;
-  return l_mathop(ldexp)(r, e);
+  ਜੇ (neg) r = -r;
+  ਵਾਪਸ l_mathop(ldexp)(r, e);
 }
 
-#endif
+#ਜੇ_ਅੰਤ
 /* }====================================================== */
 
 
 /* maximum length of a numeral to be converted to a number */
-#if !defined (L_MAXLENNUM)
-#define L_MAXLENNUM	200
-#endif
+#ਜੇ !defined (L_MAXLENNUM)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ L_MAXLENNUM	200
+#ਜੇ_ਅੰਤ
 
 /*
 ** Convert string 's' to a Lua number (put in 'result'). Return NULL on
 ** fail or the address of the ending '\0' on success. ('mode' == 'x')
 ** means a hexadecimal numeral.
 */
-static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
-  char *endptr;
-  *result = (mode == 'x') ? lua_strx2number(s, &endptr)  /* try to convert */
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *l_str2dloc (ਅਚਲ ਅੱਖਰ *s, lua_ਸੰਖਿਆ *ਨਤੀਜਾ, ਪੂਰਨ ਬਹੁਲਕ) {
+  ਅੱਖਰ *endptr;
+  *ਨਤੀਜਾ = (ਬਹੁਲਕ == 'x') ? lua_strx2number(s, &endptr)  /* try to convert */
                           : lua_str2number(s, &endptr);
-  if (endptr == s) return NULL;  /* nothing recognized? */
-  while (lisspace(cast_uchar(*endptr))) endptr++;  /* skip trailing spaces */
-  return (*endptr == '\0') ? endptr : NULL;  /* OK iff no trailing chars */
+  ਜੇ (endptr == s) ਵਾਪਸ ਨਿਰਾ;  /* nothing recognized? */
+  ਜਦੋਂ (lisspace(cast_uchar(*endptr))) endptr++;  /* skip trailing spaces */
+  ਵਾਪਸ (*endptr == '\0') ? endptr : ਨਿਰਾ;  /* OK iff no trailing chars */
 }
 
 
@@ -312,93 +312,93 @@ static const char *l_str2dloc (const char *s, lua_Number *result, int mode) {
 ** - 'x' means a hexadecimal numeral
 ** - '.' just optimizes the search for the common case (no special chars)
 */
-static const char *l_str2d (const char *s, lua_Number *result) {
-  const char *endptr;
-  const char *pmode = strpbrk(s, ".xXnN");  /* look for special chars */
-  int mode = pmode ? ltolower(cast_uchar(*pmode)) : 0;
-  if (mode == 'n')  /* reject 'inf' and 'nan' */
-    return NULL;
-  endptr = l_str2dloc(s, result, mode);  /* try to convert */
-  if (endptr == NULL) {  /* failed? may be a different locale */
-    char buff[L_MAXLENNUM + 1];
-    const char *pdot = strchr(s, '.');
-    if (pdot == NULL || strlen(s) > L_MAXLENNUM)
-      return NULL;  /* string too long or no dot; fail */
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *l_str2d (ਅਚਲ ਅੱਖਰ *s, lua_ਸੰਖਿਆ *ਨਤੀਜਾ) {
+  ਅਚਲ ਅੱਖਰ *endptr;
+  ਅਚਲ ਅੱਖਰ *pmode = strpbrk(s, ".xXnN");  /* look for special chars */
+  ਪੂਰਨ ਬਹੁਲਕ = pmode ? ltolower(cast_uchar(*pmode)) : 0;
+  ਜੇ (ਬਹੁਲਕ == 'n')  /* reject 'inf' and 'nan' */
+    ਵਾਪਸ ਨਿਰਾ;
+  endptr = l_str2dloc(s, ਨਤੀਜਾ, ਬਹੁਲਕ);  /* try to convert */
+  ਜੇ (endptr == ਨਿਰਾ) {  /* failed? may be a different locale */
+    ਅੱਖਰ buff[L_MAXLENNUM + 1];
+    ਅਚਲ ਅੱਖਰ *pdot = strchr(s, '.');
+    ਜੇ (pdot == ਨਿਰਾ || ਲੜੀ_ਲੰਬਾਈ(s) > L_MAXLENNUM)
+      ਵਾਪਸ ਨਿਰਾ;  /* string too long or no dot; fail */
     strcpy(buff, s);  /* copy string to buffer */
     buff[pdot - s] = lua_getlocaledecpoint();  /* correct decimal point */
-    endptr = l_str2dloc(buff, result, mode);  /* try again */
-    if (endptr != NULL)
+    endptr = l_str2dloc(buff, ਨਤੀਜਾ, ਬਹੁਲਕ);  /* try again */
+    ਜੇ (endptr != ਨਿਰਾ)
       endptr = s + (endptr - buff);  /* make relative to 's' */
   }
-  return endptr;
+  ਵਾਪਸ endptr;
 }
 
 
-#define MAXBY10		cast(lua_Unsigned, LUA_MAXINTEGER / 10)
-#define MAXLASTD	cast_int(LUA_MAXINTEGER % 10)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAXBY10		cast(lua_Unsigned, LUA_MAXINTEGER / 10)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAXLASTD	cast_int(LUA_MAXINTEGER % 10)
 
-static const char *l_str2int (const char *s, lua_Integer *result) {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *l_str2int (ਅਚਲ ਅੱਖਰ *s, lua_Integer *ਨਤੀਜਾ) {
   lua_Unsigned a = 0;
-  int empty = 1;
-  int neg;
-  while (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
+  ਪੂਰਨ ਖਾਲੀ_ਥਾਵਾਂ = 1;
+  ਪੂਰਨ neg;
+  ਜਦੋਂ (lisspace(cast_uchar(*s))) s++;  /* skip initial spaces */
   neg = isneg(&s);
-  if (s[0] == '0' &&
+  ਜੇ (s[0] == '0' &&
       (s[1] == 'x' || s[1] == 'X')) {  /* hex? */
     s += 2;  /* skip '0x' */
-    for (; lisxdigit(cast_uchar(*s)); s++) {
+    ਲਈ (; lisxdigit(cast_uchar(*s)); s++) {
       a = a * 16 + luaO_hexavalue(*s);
-      empty = 0;
+      ਖਾਲੀ_ਥਾਵਾਂ = 0;
     }
   }
-  else {  /* decimal */
-    for (; lisdigit(cast_uchar(*s)); s++) {
-      int d = *s - '0';
-      if (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* overflow? */
-        return NULL;  /* do not accept it (as integer) */
+  ਨਹੀਂਤਾਂ {  /* decimal */
+    ਲਈ (; lisdigit(cast_uchar(*s)); s++) {
+      ਪੂਰਨ d = *s - '0';
+      ਜੇ (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* overflow? */
+        ਵਾਪਸ ਨਿਰਾ;  /* do not accept it (as integer) */
       a = a * 10 + cast_uint(d);
-      empty = 0;
+      ਖਾਲੀ_ਥਾਵਾਂ = 0;
     }
   }
-  while (lisspace(cast_uchar(*s))) s++;  /* skip trailing spaces */
-  if (empty || *s != '\0') return NULL;  /* something wrong in the numeral */
-  else {
-    *result = l_castU2S((neg) ? 0u - a : a);
-    return s;
+  ਜਦੋਂ (lisspace(cast_uchar(*s))) s++;  /* skip trailing spaces */
+  ਜੇ (ਖਾਲੀ_ਥਾਵਾਂ || *s != '\0') ਵਾਪਸ ਨਿਰਾ;  /* something wrong in the numeral */
+  ਨਹੀਂਤਾਂ {
+    *ਨਤੀਜਾ = l_castU2S((neg) ? 0u - a : a);
+    ਵਾਪਸ s;
   }
 }
 
 
-size_t luaO_str2num (const char *s, TValue *o) {
-  lua_Integer i; lua_Number n;
-  const char *e;
-  if ((e = l_str2int(s, &i)) != NULL) {  /* try as an integer */
+size_t luaO_str2num (ਅਚਲ ਅੱਖਰ *s, TValue *o) {
+  lua_Integer i; lua_ਸੰਖਿਆ n;
+  ਅਚਲ ਅੱਖਰ *e;
+  ਜੇ ((e = l_str2int(s, &i)) != ਨਿਰਾ) {  /* try as an integer */
     setivalue(o, i);
   }
-  else if ((e = l_str2d(s, &n)) != NULL) {  /* else try as a float */
+  ਨਹੀਂਤਾਂ ਜੇ ((e = l_str2d(s, &n)) != ਨਿਰਾ) {  /* else try as a float */
     setfltvalue(o, n);
   }
-  else
-    return 0;  /* conversion failed */
-  return ct_diff2sz(e - s) + 1;  /* success; return string size */
+  ਨਹੀਂਤਾਂ
+    ਵਾਪਸ 0;  /* conversion failed */
+  ਵਾਪਸ ct_diff2sz(e - s) + 1;  /* success; return string size */
 }
 
 
-int luaO_utf8esc (char *buff, l_uint32 x) {
-  int n = 1;  /* number of bytes put in buffer (backwards) */
+ਪੂਰਨ luaO_utf8esc (ਅੱਖਰ *buff, l_uint32 x) {
+  ਪੂਰਨ n = 1;  /* number of bytes put in buffer (backwards) */
   lua_assert(x <= 0x7FFFFFFFu);
-  if (x < 0x80)  /* ASCII? */
+  ਜੇ (x < 0x80)  /* ASCII? */
     buff[UTF8BUFFSZ - 1] = cast_char(x);
-  else {  /* need continuation bytes */
-    unsigned int mfb = 0x3f;  /* maximum that fits in first byte */
-    do {  /* add continuation bytes */
+  ਨਹੀਂਤਾਂ {  /* need continuation bytes */
+    ਬਿਨਾਨਿਸ਼ਾਨੀ ਪੂਰਨ mfb = 0x3f;  /* maximum that fits in first byte */
+    ਕਰੋ {  /* add continuation bytes */
       buff[UTF8BUFFSZ - (n++)] = cast_char(0x80 | (x & 0x3f));
       x >>= 6;  /* remove added bits */
       mfb >>= 1;  /* now there is one less bit available in first byte */
-    } while (x > mfb);  /* still needs continuation byte? */
+    } ਜਦੋਂ (x > mfb);  /* still needs continuation byte? */
     buff[UTF8BUFFSZ - n] = cast_char((~mfb << 1) | x);  /* add first byte */
   }
-  return n;
+  ਵਾਪਸ n;
 }
 
 
@@ -411,9 +411,9 @@ int luaO_utf8esc (char *buff, l_uint32 x) {
 ** digits, the final '\0', plus the significant digits, which are
 ** approximately the *_DIG attribute.
 */
-#if LUA_N2SBUFFSZ < (20 + l_floatatt(DIG))
-#error "invalid value for LUA_N2SBUFFSZ"
-#endif
+#ਜੇ LUA_N2SBUFFSZ < (20 + l_floatatt(DIG))
+#ਗਲਤੀ "invalid value for LUA_N2SBUFFSZ"
+#ਜੇ_ਅੰਤ
 
 
 /*
@@ -425,46 +425,46 @@ int luaO_utf8esc (char *buff, l_uint32 x) {
 ** like an integer (without a decimal point or an exponent), add ".0" to
 ** its end.
 */
-static int tostringbuffFloat (lua_Number n, char *buff) {
+ਸਥਿਰ ਪੂਰਨ tostringbuffFloat (lua_ਸੰਖਿਆ n, ਅੱਖਰ *buff) {
   /* first conversion */
-  int len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT,
+  ਪੂਰਨ len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_ਸੰਖਿਆ_FMT,
                             (LUAI_UACNUMBER)n);
-  lua_Number check = lua_str2number(buff, NULL);  /* read it back */
-  if (check != n) {  /* not enough precision? */
+  lua_ਸੰਖਿਆ check = lua_str2number(buff, ਨਿਰਾ);  /* read it back */
+  ਜੇ (check != n) {  /* not enough precision? */
     /* convert again with more precision */
-    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_NUMBER_FMT_N,
+    len = l_sprintf(buff, LUA_N2SBUFFSZ, LUA_ਸੰਖਿਆ_FMT_N,
                           (LUAI_UACNUMBER)n);
   }
   /* looks like an integer? */
-  if (buff[strspn(buff, "-0123456789")] == '\0') {
+  ਜੇ (buff[strspn(buff, "-0123456789")] == '\0') {
     buff[len++] = lua_getlocaledecpoint();
     buff[len++] = '0';  /* adds '.0' to result */
   }
-  return len;
+  ਵਾਪਸ len;
 }
 
 
 /*
 ** Convert a number object to a string, adding it to a buffer.
 */
-unsigned luaO_tostringbuff (const TValue *obj, char *buff) {
-  int len;
+ਬਿਨਾਨਿਸ਼ਾਨੀ luaO_tostringbuff (ਅਚਲ TValue *obj, ਅੱਖਰ *buff) {
+  ਪੂਰਨ len;
   lua_assert(ttisnumber(obj));
-  if (ttisinteger(obj))
+  ਜੇ (ttisinteger(obj))
     len = lua_integer2str(buff, LUA_N2SBUFFSZ, ivalue(obj));
-  else
+  ਨਹੀਂਤਾਂ
     len = tostringbuffFloat(fltvalue(obj), buff);
   lua_assert(len < LUA_N2SBUFFSZ);
-  return cast_uint(len);
+  ਵਾਪਸ cast_uint(len);
 }
 
 
 /*
 ** Convert a number object to a Lua string, replacing the value at 'obj'
 */
-void luaO_tostring (lua_State *L, TValue *obj) {
-  char buff[LUA_N2SBUFFSZ];
-  unsigned len = luaO_tostringbuff(obj, buff);
+ਖਾਲੀ luaO_tostring (lua_State *L, TValue *obj) {
+  ਅੱਖਰ buff[LUA_N2SBUFFSZ];
+  ਬਿਨਾਨਿਸ਼ਾਨੀ len = luaO_tostringbuff(obj, buff);
   setsvalue(L, obj, luaS_newlstr(L, buff, len));
 }
 
@@ -482,26 +482,26 @@ void luaO_tostring (lua_State *L, TValue *obj) {
 ** (LUA_IDSIZE + LUA_N2SBUFFSZ) + a minimal space for basic messages,
 ** so that 'luaG_addinfo' can work directly on the static buffer.
 */
-#define BUFVFS		cast_uint(LUA_IDSIZE + LUA_N2SBUFFSZ + 95)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ BUFVFS		cast_uint(LUA_IDSIZE + LUA_N2SBUFFSZ + 95)
 
 /*
 ** Buffer used by 'luaO_pushvfstring'. 'err' signals an error while
 ** building result (memory error [1] or buffer overflow [2]).
 */
-typedef struct BuffFS {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ BuffFS {
   lua_State *L;
-  char *b;
+  ਅੱਖਰ *b;
   size_t buffsize;
   size_t blen;  /* length of string in 'buff' */
-  int err;
-  char space[BUFVFS];  /* initial buffer */
+  ਪੂਰਨ err;
+  ਅੱਖਰ space[BUFVFS];  /* initial buffer */
 } BuffFS;
 
 
-static void initbuff (lua_State *L, BuffFS *buff) {
+ਸਥਿਰ ਖਾਲੀ initbuff (lua_State *L, BuffFS *buff) {
   buff->L = L;
   buff->b = buff->space;
-  buff->buffsize = sizeof(buff->space);
+  buff->buffsize = ਆਕਾਰ(buff->space);
   buff->blen = 0;
   buff->err = 0;
 }
@@ -511,71 +511,71 @@ static void initbuff (lua_State *L, BuffFS *buff) {
 ** Push final result from 'luaO_pushvfstring'. This function may raise
 ** errors explicitly or through memory errors, so it must run protected.
 */
-static void pushbuff (lua_State *L, void *ud) {
+ਸਥਿਰ ਖਾਲੀ pushbuff (lua_State *L, ਖਾਲੀ *ud) {
   BuffFS *buff = cast(BuffFS*, ud);
-  switch (buff->err) {
-    case 1:  /* memory error */
+  ਚੋਣ (buff->err) {
+    ਹਾਲਤ 1:  /* memory error */
       luaD_throw(L, LUA_ERRMEM);
-      break;
-    case 2:  /* length overflow: Add "..." at the end of result */
-      if (buff->buffsize - buff->blen < 3)
+      ਰੋਕੋ;
+    ਹਾਲਤ 2:  /* length overflow: Add "..." at the end of result */
+      ਜੇ (buff->buffsize - buff->blen < 3)
         strcpy(buff->b + buff->blen - 3, "...");  /* 'blen' must be > 3 */
-      else {  /* there is enough space left for the "..." */
+      ਨਹੀਂਤਾਂ {  /* there is enough space left for the "..." */
         strcpy(buff->b + buff->blen, "...");
         buff->blen += 3;
       }
       /* FALLTHROUGH */
-    default: {  /* no errors, but it can raise one creating the new string */
+    ਮੂਲ: {  /* no errors, but it can raise one creating the new string */
       TString *ts = luaS_newlstr(L, buff->b, buff->blen);
-      setsvalue2s(L, L->top.p, ts);
-      L->top.p++;
+      setsvalue2s(L, L->ਸਿਖਰ.p, ts);
+      L->ਸਿਖਰ.p++;
     }
   }
 }
 
 
-static const char *clearbuff (BuffFS *buff) {
+ਸਥਿਰ ਅਚਲ ਅੱਖਰ *clearbuff (BuffFS *buff) {
   lua_State *L = buff->L;
-  const char *res;
-  if (luaD_rawrunprotected(L, pushbuff, buff) != LUA_OK)  /* errors? */
-    res = NULL;  /* error message is on the top of the stack */
-  else
-    res = getstr(tsvalue(s2v(L->top.p - 1)));
-  if (buff->b != buff->space)  /* using dynamic buffer? */
+  ਅਚਲ ਅੱਖਰ *res;
+  ਜੇ (luaD_rawrunprotected(L, pushbuff, buff) != LUA_OK)  /* errors? */
+    res = ਨਿਰਾ;  /* error message is on the top of the stack */
+  ਨਹੀਂਤਾਂ
+    res = getstr(tsvalue(s2v(L->ਸਿਖਰ.p - 1)));
+  ਜੇ (buff->b != buff->space)  /* using dynamic buffer? */
     luaM_freearray(L, buff->b, buff->buffsize);  /* free it */
-  return res;
+  ਵਾਪਸ res;
 }
 
 
-static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
-  size_t left = buff->buffsize - buff->blen;  /* space left in the buffer */
-  if (buff->err)  /* do nothing else after an error */
-    return;
-  if (slen > left) {  /* new string doesn't fit into current buffer? */
-    if (slen > ((MAX_SIZE/2) - buff->blen)) {  /* overflow? */
-      memcpy(buff->b + buff->blen, str, left);  /* copy what it can */
+ਸਥਿਰ ਖਾਲੀ addstr2buff (BuffFS *buff, ਅਚਲ ਅੱਖਰ *str, size_t slen) {
+  size_t ਖੱਬਾ = buff->buffsize - buff->blen;  /* space left in the buffer */
+  ਜੇ (buff->err)  /* do nothing else after an error */
+    ਵਾਪਸ;
+  ਜੇ (slen > ਖੱਬਾ) {  /* new string doesn't fit into current buffer? */
+    ਜੇ (slen > ((MAX_ਮਾਪ/2) - buff->blen)) {  /* overflow? */
+      ਸਮ੍ਰਿਤੀ_ਨਕਲ(buff->b + buff->blen, str, ਖੱਬਾ);  /* copy what it can */
       buff->blen = buff->buffsize;
       buff->err = 2;  /* doesn't add anything else */
-      return;
+      ਵਾਪਸ;
     }
-    else {
+    ਨਹੀਂਤਾਂ {
       size_t newsize = buff->buffsize + slen;  /* limited to MAX_SIZE/2 */
-      char *newb =
+      ਅੱਖਰ *newb =
         (buff->b == buff->space)  /* still using static space? */
-        ? luaM_reallocvector(buff->L, NULL, 0, newsize, char)
+        ? luaM_reallocvector(buff->L, ਨਿਰਾ, 0, newsize, ਅੱਖਰ)
         : luaM_reallocvector(buff->L, buff->b, buff->buffsize, newsize,
-                                                               char);
-      if (newb == NULL) {  /* allocation error? */
+                                                               ਅੱਖਰ);
+      ਜੇ (newb == ਨਿਰਾ) {  /* allocation error? */
         buff->err = 1;  /* signal a memory error */
-        return;
+        ਵਾਪਸ;
       }
-      if (buff->b == buff->space)  /* new buffer (not reallocated)? */
-        memcpy(newb, buff->b, buff->blen);  /* copy previous content */
+      ਜੇ (buff->b == buff->space)  /* new buffer (not reallocated)? */
+        ਸਮ੍ਰਿਤੀ_ਨਕਲ(newb, buff->b, buff->blen);  /* copy previous content */
       buff->b = newb;  /* set new (larger) buffer... */
       buff->buffsize = newsize;  /* ...and its new size */
     }
   }
-  memcpy(buff->b + buff->blen, str, slen);  /* copy new content */
+  ਸਮ੍ਰਿਤੀ_ਨਕਲ(buff->b + buff->blen, str, slen);  /* copy new content */
   buff->blen += slen;
 }
 
@@ -583,9 +583,9 @@ static void addstr2buff (BuffFS *buff, const char *str, size_t slen) {
 /*
 ** Add a numeral to the buffer.
 */
-static void addnum2buff (BuffFS *buff, TValue *num) {
-  char numbuff[LUA_N2SBUFFSZ];
-  unsigned len = luaO_tostringbuff(num, numbuff);
+ਸਥਿਰ ਖਾਲੀ addnum2buff (BuffFS *buff, TValue *ਅੰਕ) {
+  ਅੱਖਰ numbuff[LUA_N2SBUFFSZ];
+  ਬਿਨਾਨਿਸ਼ਾਨੀ len = luaO_tostringbuff(ਅੰਕ, numbuff);
   addstr2buff(buff, numbuff, len);
 }
 
@@ -594,126 +594,126 @@ static void addnum2buff (BuffFS *buff, TValue *num) {
 ** this function handles only '%d', '%c', '%f', '%p', '%s', and '%%'
    conventional formats, plus Lua-specific '%I' and '%U'
 */
-const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
+ਅਚਲ ਅੱਖਰ *luaO_pushvfstring (lua_State *L, ਅਚਲ ਅੱਖਰ *fmt, va_list argp) {
   BuffFS buff;  /* holds last part of the result */
-  const char *e;  /* points to next '%' */
+  ਅਚਲ ਅੱਖਰ *e;  /* points to next '%' */
   initbuff(L, &buff);
-  while ((e = strchr(fmt, '%')) != NULL) {
+  ਜਦੋਂ ((e = strchr(fmt, '%')) != ਨਿਰਾ) {
     addstr2buff(&buff, fmt, ct_diff2sz(e - fmt));  /* add 'fmt' up to '%' */
-    switch (*(e + 1)) {  /* conversion specifier */
-      case 's': {  /* zero-terminated string */
-        const char *s = va_arg(argp, char *);
-        if (s == NULL) s = "(null)";
-        addstr2buff(&buff, s, strlen(s));
-        break;
+    ਚੋਣ (*(e + 1)) {  /* conversion specifier */
+      ਹਾਲਤ 's': {  /* zero-terminated string */
+        ਅਚਲ ਅੱਖਰ *s = va_arg(argp, ਅੱਖਰ *);
+        ਜੇ (s == ਨਿਰਾ) s = "(null)";
+        addstr2buff(&buff, s, ਲੜੀ_ਲੰਬਾਈ(s));
+        ਰੋਕੋ;
       }
-      case 'c': {  /* an 'int' as a character */
-        char c = cast_char(va_arg(argp, int));
-        addstr2buff(&buff, &c, sizeof(char));
-        break;
+      ਹਾਲਤ 'c': {  /* an 'int' as a character */
+        ਅੱਖਰ c = cast_char(va_arg(argp, ਪੂਰਨ));
+        addstr2buff(&buff, &c, ਆਕਾਰ(ਅੱਖਰ));
+        ਰੋਕੋ;
       }
-      case 'd': {  /* an 'int' */
-        TValue num;
-        setivalue(&num, va_arg(argp, int));
-        addnum2buff(&buff, &num);
-        break;
+      ਹਾਲਤ 'd': {  /* an 'int' */
+        TValue ਅੰਕ;
+        setivalue(&ਅੰਕ, va_arg(argp, ਪੂਰਨ));
+        addnum2buff(&buff, &ਅੰਕ);
+        ਰੋਕੋ;
       }
-      case 'I': {  /* a 'lua_Integer' */
-        TValue num;
-        setivalue(&num, cast_Integer(va_arg(argp, l_uacInt)));
-        addnum2buff(&buff, &num);
-        break;
+      ਹਾਲਤ 'I': {  /* a 'lua_Integer' */
+        TValue ਅੰਕ;
+        setivalue(&ਅੰਕ, cast_Integer(va_arg(argp, l_uacInt)));
+        addnum2buff(&buff, &ਅੰਕ);
+        ਰੋਕੋ;
       }
-      case 'f': {  /* a 'lua_Number' */
-        TValue num;
-        setfltvalue(&num, cast_num(va_arg(argp, l_uacNumber)));
-        addnum2buff(&buff, &num);
-        break;
+      ਹਾਲਤ 'f': {  /* a 'lua_Number' */
+        TValue ਅੰਕ;
+        setfltvalue(&ਅੰਕ, cast_ਅੰਕ(va_arg(argp, l_uac_ਸੰਖਿਆ)));
+        addnum2buff(&buff, &ਅੰਕ);
+        ਰੋਕੋ;
       }
-      case 'p': {  /* a pointer */
-        char bf[LUA_N2SBUFFSZ];  /* enough space for '%p' */
-        void *p = va_arg(argp, void *);
-        int len = lua_pointer2str(bf, LUA_N2SBUFFSZ, p);
+      ਹਾਲਤ 'p': {  /* a pointer */
+        ਅੱਖਰ bf[LUA_N2SBUFFSZ];  /* enough space for '%p' */
+        ਖਾਲੀ *p = va_arg(argp, ਖਾਲੀ *);
+        ਪੂਰਨ len = lua_pointer2str(bf, LUA_N2SBUFFSZ, p);
         addstr2buff(&buff, bf, cast_uint(len));
-        break;
+        ਰੋਕੋ;
       }
-      case 'U': {  /* an 'unsigned long' as a UTF-8 sequence */
-        char bf[UTF8BUFFSZ];
-        unsigned long arg = va_arg(argp, unsigned long);
-        int len = luaO_utf8esc(bf, cast(l_uint32, arg));
+      ਹਾਲਤ 'U': {  /* an 'unsigned long' as a UTF-8 sequence */
+        ਅੱਖਰ bf[UTF8BUFFSZ];
+        ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ arg = va_arg(argp, ਬਿਨਾਨਿਸ਼ਾਨੀ ਲੰਮਾ);
+        ਪੂਰਨ len = luaO_utf8esc(bf, cast(l_uint32, arg));
         addstr2buff(&buff, bf + UTF8BUFFSZ - len, cast_uint(len));
-        break;
+        ਰੋਕੋ;
       }
-      case '%': {
+      ਹਾਲਤ '%': {
         addstr2buff(&buff, "%", 1);
-        break;
+        ਰੋਕੋ;
       }
-      default: {
+      ਮੂਲ: {
         addstr2buff(&buff, e, 2);  /* keep unknown format in the result */
-        break;
+        ਰੋਕੋ;
       }
     }
     fmt = e + 2;  /* skip '%' and the specifier */
   }
-  addstr2buff(&buff, fmt, strlen(fmt));  /* rest of 'fmt' */
-  return clearbuff(&buff);  /* empty buffer into a new string */
+  addstr2buff(&buff, fmt, ਲੜੀ_ਲੰਬਾਈ(fmt));  /* rest of 'fmt' */
+  ਵਾਪਸ clearbuff(&buff);  /* empty buffer into a new string */
 }
 
 
-const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
-  const char *msg;
+ਅਚਲ ਅੱਖਰ *luaO_pushfstring (lua_State *L, ਅਚਲ ਅੱਖਰ *fmt, ...) {
+  ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ;
   va_list argp;
   va_start(argp, fmt);
-  msg = luaO_pushvfstring(L, fmt, argp);
+  ਸੁਨੇਹਾ = luaO_pushvfstring(L, fmt, argp);
   va_end(argp);
-  if (msg == NULL)  /* error? */
+  ਜੇ (ਸੁਨੇਹਾ == ਨਿਰਾ)  /* error? */
     luaD_throw(L, LUA_ERRMEM);
-  return msg;
+  ਵਾਪਸ ਸੁਨੇਹਾ;
 }
 
 /* }================================================================== */
 
 
-#define RETS	"..."
-#define PRE	"[string \""
-#define POS	"\"]"
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ RETS	"..."
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ PRE	"[string \""
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ POS	"\"]"
 
-#define addstr(a,b,l)	( memcpy(a,b,(l) * sizeof(char)), a += (l) )
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ addstr(a,b,l)	( ਸਮ੍ਰਿਤੀ_ਨਕਲ(a,b,(l) * ਆਕਾਰ(ਅੱਖਰ)), a += (l) )
 
-void luaO_chunkid (char *out, const char *source, size_t srclen) {
+ਖਾਲੀ luaO_chunkid (ਅੱਖਰ *ਬਾਹਰਲਾ, ਅਚਲ ਅੱਖਰ *ਸਰੋਤ, size_t srclen) {
   size_t bufflen = LUA_IDSIZE;  /* free space in buffer */
-  if (*source == '=') {  /* 'literal' source */
-    if (srclen <= bufflen)  /* small enough? */
-      memcpy(out, source + 1, srclen * sizeof(char));
-    else {  /* truncate it */
-      addstr(out, source + 1, bufflen - 1);
-      *out = '\0';
+  ਜੇ (*ਸਰੋਤ == '=') {  /* 'literal' source */
+    ਜੇ (srclen <= bufflen)  /* small enough? */
+      ਸਮ੍ਰਿਤੀ_ਨਕਲ(ਬਾਹਰਲਾ, ਸਰੋਤ + 1, srclen * ਆਕਾਰ(ਅੱਖਰ));
+    ਨਹੀਂਤਾਂ {  /* truncate it */
+      addstr(ਬਾਹਰਲਾ, ਸਰੋਤ + 1, bufflen - 1);
+      *ਬਾਹਰਲਾ = '\0';
     }
   }
-  else if (*source == '@') {  /* file name */
-    if (srclen <= bufflen)  /* small enough? */
-      memcpy(out, source + 1, srclen * sizeof(char));
-    else {  /* add '...' before rest of name */
-      addstr(out, RETS, LL(RETS));
+  ਨਹੀਂਤਾਂ ਜੇ (*ਸਰੋਤ == '@') {  /* file name */
+    ਜੇ (srclen <= bufflen)  /* small enough? */
+      ਸਮ੍ਰਿਤੀ_ਨਕਲ(ਬਾਹਰਲਾ, ਸਰੋਤ + 1, srclen * ਆਕਾਰ(ਅੱਖਰ));
+    ਨਹੀਂਤਾਂ {  /* add '...' before rest of name */
+      addstr(ਬਾਹਰਲਾ, RETS, LL(RETS));
       bufflen -= LL(RETS);
-      memcpy(out, source + 1 + srclen - bufflen, bufflen * sizeof(char));
+      ਸਮ੍ਰਿਤੀ_ਨਕਲ(ਬਾਹਰਲਾ, ਸਰੋਤ + 1 + srclen - bufflen, bufflen * ਆਕਾਰ(ਅੱਖਰ));
     }
   }
-  else {  /* string; format as [string "source"] */
-    const char *nl = strchr(source, '\n');  /* find first new line (if any) */
-    addstr(out, PRE, LL(PRE));  /* add prefix */
+  ਨਹੀਂਤਾਂ {  /* string; format as [string "source"] */
+    ਅਚਲ ਅੱਖਰ *nl = strchr(ਸਰੋਤ, '\n');  /* find first new line (if any) */
+    addstr(ਬਾਹਰਲਾ, PRE, LL(PRE));  /* add prefix */
     bufflen -= LL(PRE RETS POS) + 1;  /* save space for prefix+suffix+'\0' */
-    if (srclen < bufflen && nl == NULL) {  /* small one-line source? */
-      addstr(out, source, srclen);  /* keep it */
+    ਜੇ (srclen < bufflen && nl == ਨਿਰਾ) {  /* small one-line source? */
+      addstr(ਬਾਹਰਲਾ, ਸਰੋਤ, srclen);  /* keep it */
     }
-    else {
-      if (nl != NULL)
-        srclen = ct_diff2sz(nl - source);  /* stop at first newline */
-      if (srclen > bufflen) srclen = bufflen;
-      addstr(out, source, srclen);
-      addstr(out, RETS, LL(RETS));
+    ਨਹੀਂਤਾਂ {
+      ਜੇ (nl != ਨਿਰਾ)
+        srclen = ct_diff2sz(nl - ਸਰੋਤ);  /* stop at first newline */
+      ਜੇ (srclen > bufflen) srclen = bufflen;
+      addstr(ਬਾਹਰਲਾ, ਸਰੋਤ, srclen);
+      addstr(ਬਾਹਰਲਾ, RETS, LL(RETS));
     }
-    memcpy(out, POS, (LL(POS) + 1) * sizeof(char));
+    ਸਮ੍ਰਿਤੀ_ਨਕਲ(ਬਾਹਰਲਾ, POS, (LL(POS) + 1) * ਆਕਾਰ(ਅੱਖਰ));
   }
 }
 

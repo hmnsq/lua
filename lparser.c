@@ -4,108 +4,108 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lparser_c
-#define LUA_CORE
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ lparser_c
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ LUA_CORE
 
-#include "lprefix.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lprefix.h"
 
 
-#include <limits.h>
-#include <string.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <limits.h>
+#ਅਨ੍ਤਰ੍ਭਾਵ <string.h>
 
-#include "lua.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lua.h"
 
-#include "lcode.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "llex.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lcode.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldebug.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ldo.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lfunc.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "llex.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lmem.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lobject.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lopcodes.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lparser.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstate.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "lstring.h"
+#ਅਨ੍ਤਰ੍ਭਾਵ "ltable.h"
 
 
 
 /* maximum number of variable declarations per function (must be
    smaller than 250, due to the bytecode format) */
-#define MAXVARS		200
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAXVARS		200
 
 
-#define hasmultret(k)		((k) == VCALL || (k) == VVARARG)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ hasmultret(k)		((k) == VCALL || (k) == VVARARG)
 
 
 /* because all strings are unified by the scanner, the parser
    can use pointer equality for string equality */
-#define eqstr(a,b)	((a) == (b))
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ eqstr(a,b)	((a) == (b))
 
 
 /*
 ** nodes for block list (list of active blocks)
 */
-typedef struct BlockCnt {
-  struct BlockCnt *previous;  /* chain */
-  int firstlabel;  /* index of first label in this block */
-  int firstgoto;  /* index of first pending goto in this block */
-  short nactvar;  /* number of active declarations at block entry */
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ਖੰਡ_Cnt {
+  ਬਣਤਰ ਖੰਡ_Cnt *ਪਿਛਲਾ;  /* chain */
+  ਪੂਰਨ firstlabel;  /* index of first label in this block */
+  ਪੂਰਨ firstgoto;  /* index of first pending goto in this block */
+  ਛੋਟਾ nactvar;  /* number of active declarations at block entry */
   lu_byte upval;  /* true if some variable in the block is an upvalue */
   lu_byte isloop;  /* 1 if 'block' is a loop; 2 if it has pending breaks */
   lu_byte insidetbc;  /* true if inside the scope of a to-be-closed var. */
-} BlockCnt;
+} ਖੰਡ_Cnt;
 
 
 
 /*
 ** prototypes for recursive non-terminal functions
 */
-static void statement (LexState *ls);
-static void expr (LexState *ls, expdesc *v);
+ਸਥਿਰ ਖਾਲੀ statement (LexState *ls);
+ਸਥਿਰ ਖਾਲੀ ਵਿਅੰਜਕ (LexState *ls, expdesc *v);
 
 
-static l_noret error_expected (LexState *ls, int token) {
+ਸਥਿਰ l_noret error_expected (LexState *ls, ਪੂਰਨ token) {
   luaX_syntaxerror(ls,
       luaO_pushfstring(ls->L, "%s expected", luaX_token2str(ls, token)));
 }
 
 
-static l_noret errorlimit (FuncState *fs, int limit, const char *what) {
+ਸਥਿਰ l_noret errorlimit (FuncState *fs, ਪੂਰਨ ਹੱਦਬੰਦੀ, ਅਚਲ ਅੱਖਰ *what) {
   lua_State *L = fs->ls->L;
-  const char *msg;
-  int line = fs->f->linedefined;
-  const char *where = (line == 0)
+  ਅਚਲ ਅੱਖਰ *ਸੁਨੇਹਾ;
+  ਪੂਰਨ ਸਤਰ = fs->f->linedefined;
+  ਅਚਲ ਅੱਖਰ *where = (ਸਤਰ == 0)
                       ? "main function"
-                      : luaO_pushfstring(L, "function at line %d", line);
-  msg = luaO_pushfstring(L, "too many %s (limit is %d) in %s",
-                             what, limit, where);
-  luaX_syntaxerror(fs->ls, msg);
+                      : luaO_pushfstring(L, "function at line %d", ਸਤਰ);
+  ਸੁਨੇਹਾ = luaO_pushfstring(L, "too many %s (limit is %d) in %s",
+                             what, ਹੱਦਬੰਦੀ, where);
+  luaX_syntaxerror(fs->ls, ਸੁਨੇਹਾ);
 }
 
 
-void luaY_checklimit (FuncState *fs, int v, int l, const char *what) {
-  if (l_unlikely(v > l)) errorlimit(fs, l, what);
+ਖਾਲੀ luaY_checklimit (FuncState *fs, ਪੂਰਨ v, ਪੂਰਨ l, ਅਚਲ ਅੱਖਰ *what) {
+  ਜੇ (l_unlikely(v > l)) errorlimit(fs, l, what);
 }
 
 
 /*
 ** Test whether next token is 'c'; if so, skip it.
 */
-static int testnext (LexState *ls, int c) {
-  if (ls->t.token == c) {
-    luaX_next(ls);
-    return 1;
+ਸਥਿਰ ਪੂਰਨ testnext (LexState *ls, ਪੂਰਨ c) {
+  ਜੇ (ls->t.token == c) {
+    lua_X_ਅਗਲਾ(ls);
+    ਵਾਪਸ 1;
   }
-  else return 0;
+  ਨਹੀਂਤਾਂ ਵਾਪਸ 0;
 }
 
 
 /*
 ** Check that next token is 'c'.
 */
-static void check (LexState *ls, int c) {
-  if (ls->t.token != c)
+ਸਥਿਰ ਖਾਲੀ check (LexState *ls, ਪੂਰਨ c) {
+  ਜੇ (ls->t.token != c)
     error_expected(ls, c);
 }
 
@@ -113,13 +113,13 @@ static void check (LexState *ls, int c) {
 /*
 ** Check that next token is 'c' and skip it.
 */
-static void checknext (LexState *ls, int c) {
+ਸਥਿਰ ਖਾਲੀ checknext (LexState *ls, ਪੂਰਨ c) {
   check(ls, c);
-  luaX_next(ls);
+  lua_X_ਅਗਲਾ(ls);
 }
 
 
-#define check_condition(ls,c,msg)	{ if (!(c)) luaX_syntaxerror(ls, msg); }
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ check_condition(ls,c,ਸੁਨੇਹਾ)	{ ਜੇ (!(c)) luaX_syntaxerror(ls, ਸੁਨੇਹਾ); }
 
 
 /*
@@ -127,11 +127,11 @@ static void checknext (LexState *ls, int c) {
 ** raise an error that the expected 'what' should match a 'who'
 ** in line 'where' (if that is not the current line).
 */
-static void check_match (LexState *ls, int what, int who, int where) {
-  if (l_unlikely(!testnext(ls, what))) {
-    if (where == ls->linenumber)  /* all in the same line? */
+ਸਥਿਰ ਖਾਲੀ check_ਮੇਲ (LexState *ls, ਪੂਰਨ what, ਪੂਰਨ who, ਪੂਰਨ where) {
+  ਜੇ (l_unlikely(!testnext(ls, what))) {
+    ਜੇ (where == ls->linenumber)  /* all in the same line? */
       error_expected(ls, what);  /* do not need a complex message */
-    else {
+    ਨਹੀਂਤਾਂ {
       luaX_syntaxerror(ls, luaO_pushfstring(ls->L,
              "%s expected (to close %s at line %d)",
               luaX_token2str(ls, what), luaX_token2str(ls, who), where));
@@ -140,30 +140,30 @@ static void check_match (LexState *ls, int what, int who, int where) {
 }
 
 
-static TString *str_checkname (LexState *ls) {
+ਸਥਿਰ TString *str_checkname (LexState *ls) {
   TString *ts;
   check(ls, TK_NAME);
   ts = ls->t.seminfo.ts;
-  luaX_next(ls);
-  return ts;
+  lua_X_ਅਗਲਾ(ls);
+  ਵਾਪਸ ts;
 }
 
 
-static void init_exp (expdesc *e, expkind k, int i) {
+ਸਥਿਰ ਖਾਲੀ init_exp (expdesc *e, expkind k, ਪੂਰਨ i) {
   e->f = e->t = NO_JUMP;
   e->k = k;
   e->u.info = i;
 }
 
 
-static void codestring (expdesc *e, TString *s) {
+ਸਥਿਰ ਖਾਲੀ codestring (expdesc *e, TString *s) {
   e->f = e->t = NO_JUMP;
   e->k = VKSTR;
   e->u.strval = s;
 }
 
 
-static void codename (LexState *ls, expdesc *e) {
+ਸਥਿਰ ਖਾਲੀ codename (LexState *ls, expdesc *e) {
   codestring(e, str_checkname(ls));
 }
 
@@ -172,18 +172,18 @@ static void codename (LexState *ls, expdesc *e) {
 ** Register a new local variable in the active 'Proto' (for debug
 ** information).
 */
-static short registerlocalvar (LexState *ls, FuncState *fs,
+ਸਥਿਰ ਛੋਟਾ registerlocalvar (LexState *ls, FuncState *fs,
                                TString *varname) {
   Proto *f = fs->f;
-  int oldsize = f->sizelocvars;
+  ਪੂਰਨ oldsize = f->sizelocvars;
   luaM_growvector(ls->L, f->locvars, fs->ndebugvars, f->sizelocvars,
                   LocVar, SHRT_MAX, "local variables");
-  while (oldsize < f->sizelocvars)
-    f->locvars[oldsize++].varname = NULL;
+  ਜਦੋਂ (oldsize < f->sizelocvars)
+    f->locvars[oldsize++].varname = ਨਿਰਾ;
   f->locvars[fs->ndebugvars].varname = varname;
   f->locvars[fs->ndebugvars].startpc = fs->pc;
   luaC_objbarrier(ls->L, f, varname);
-  return fs->ndebugvars++;
+  ਵਾਪਸ fs->ndebugvars++;
 }
 
 
@@ -191,30 +191,30 @@ static short registerlocalvar (LexState *ls, FuncState *fs,
 ** Create a new variable with the given 'name' and given 'kind'.
 ** Return its index in the function.
 */
-static int new_varkind (LexState *ls, TString *name, lu_byte kind) {
+ਸਥਿਰ ਪੂਰਨ new_varkind (LexState *ls, TString *name, lu_byte ਕਿਸਮ) {
   lua_State *L = ls->L;
   FuncState *fs = ls->fs;
   Dyndata *dyd = ls->dyd;
   Vardesc *var;
   luaM_growvector(L, dyd->actvar.arr, dyd->actvar.n + 1,
-             dyd->actvar.size, Vardesc, SHRT_MAX, "variable declarations");
+             dyd->actvar.ਮਾਪ, Vardesc, SHRT_MAX, "variable declarations");
   var = &dyd->actvar.arr[dyd->actvar.n++];
-  var->vd.kind = kind;  /* default */
+  var->vd.ਕਿਸਮ = ਕਿਸਮ;  /* default */
   var->vd.name = name;
-  return dyd->actvar.n - 1 - fs->firstlocal;
+  ਵਾਪਸ dyd->actvar.n - 1 - fs->firstlocal;
 }
 
 
 /*
 ** Create a new local variable with the given 'name' and regular kind.
 */
-static int new_localvar (LexState *ls, TString *name) {
-  return new_varkind(ls, name, VDKREG);
+ਸਥਿਰ ਪੂਰਨ new_localvar (LexState *ls, TString *name) {
+  ਵਾਪਸ new_varkind(ls, name, VDKREG);
 }
 
-#define new_localvarliteral(ls,v) \
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ new_localvarliteral(ls,v) \
     new_localvar(ls,  \
-      luaX_newstring(ls, "" v, (sizeof(v)/sizeof(char)) - 1));
+      luaX_newstring(ls, "" v, (ਆਕਾਰ(v)/ਆਕਾਰ(ਅੱਖਰ)) - 1));
 
 
 
@@ -223,8 +223,8 @@ static int new_localvar (LexState *ls, TString *name) {
 ** (Unless noted otherwise, all variables are referred to by their
 ** compiler indices.)
 */
-static Vardesc *getlocalvardesc (FuncState *fs, int vidx) {
-  return &fs->ls->dyd->actvar.arr[fs->firstlocal + vidx];
+ਸਥਿਰ Vardesc *getlocalvardesc (FuncState *fs, ਪੂਰਨ vidx) {
+  ਵਾਪਸ &fs->ls->dyd->actvar.arr[fs->firstlocal + vidx];
 }
 
 
@@ -233,13 +233,13 @@ static Vardesc *getlocalvardesc (FuncState *fs, int vidx) {
 ** register. For that, search for the highest variable below that level
 ** that is in a register and uses its register index ('ridx') plus one.
 */
-static lu_byte reglevel (FuncState *fs, int nvar) {
-  while (nvar-- > 0) {
+ਸਥਿਰ lu_byte reglevel (FuncState *fs, ਪੂਰਨ nvar) {
+  ਜਦੋਂ (nvar-- > 0) {
     Vardesc *vd = getlocalvardesc(fs, nvar);  /* get previous variable */
-    if (varinreg(vd))  /* is in a register? */
-      return cast_byte(vd->vd.ridx + 1);
+    ਜੇ (varinreg(vd))  /* is in a register? */
+      ਵਾਪਸ cast_byte(vd->vd.ridx + 1);
   }
-  return 0;  /* no variables in registers */
+  ਵਾਪਸ 0;  /* no variables in registers */
 }
 
 
@@ -248,21 +248,21 @@ static lu_byte reglevel (FuncState *fs, int nvar) {
 ** function.
 */
 lu_byte luaY_nvarstack (FuncState *fs) {
-  return reglevel(fs, fs->nactvar);
+  ਵਾਪਸ reglevel(fs, fs->nactvar);
 }
 
 
 /*
 ** Get the debug-information entry for current variable 'vidx'.
 */
-static LocVar *localdebuginfo (FuncState *fs, int vidx) {
+ਸਥਿਰ LocVar *localdebuginfo (FuncState *fs, ਪੂਰਨ vidx) {
   Vardesc *vd = getlocalvardesc(fs,  vidx);
-  if (!varinreg(vd))
-    return NULL;  /* no debug info. for constants */
-  else {
-    int idx = vd->vd.pidx;
+  ਜੇ (!varinreg(vd))
+    ਵਾਪਸ ਨਿਰਾ;  /* no debug info. for constants */
+  ਨਹੀਂਤਾਂ {
+    ਪੂਰਨ idx = vd->vd.pidx;
     lua_assert(idx < fs->ndebugvars);
-    return &fs->f->locvars[idx];
+    ਵਾਪਸ &fs->f->locvars[idx];
   }
 }
 
@@ -270,7 +270,7 @@ static LocVar *localdebuginfo (FuncState *fs, int vidx) {
 /*
 ** Create an expression representing variable 'vidx'
 */
-static void init_var (FuncState *fs, expdesc *e, int vidx) {
+ਸਥਿਰ ਖਾਲੀ init_var (FuncState *fs, expdesc *e, ਪੂਰਨ vidx) {
   e->f = e->t = NO_JUMP;
   e->k = VLOCAL;
   e->u.var.vidx = cast_short(vidx);
@@ -283,40 +283,40 @@ static void init_var (FuncState *fs, expdesc *e, int vidx) {
 ** if 'e' is t[exp] where t is the vararg parameter, change it to index
 ** a real table. (Virtual vararg tables cannot be changed.)
 */
-static void check_readonly (LexState *ls, expdesc *e) {
+ਸਥਿਰ ਖਾਲੀ check_readonly (LexState *ls, expdesc *e) {
   FuncState *fs = ls->fs;
-  TString *varname = NULL;  /* to be set if variable is const */
-  switch (e->k) {
-    case VCONST: {
+  TString *varname = ਨਿਰਾ;  /* to be set if variable is const */
+  ਚੋਣ (e->k) {
+    ਹਾਲਤ VCONST: {
       varname = ls->dyd->actvar.arr[e->u.info].vd.name;
-      break;
+      ਰੋਕੋ;
     }
-    case VLOCAL: case VVARGVAR: {
+    ਹਾਲਤ VLOCAL: ਹਾਲਤ VVARGVAR: {
       Vardesc *vardesc = getlocalvardesc(fs, e->u.var.vidx);
-      if (vardesc->vd.kind != VDKREG)  /* not a regular variable? */
+      ਜੇ (vardesc->vd.ਕਿਸਮ != VDKREG)  /* not a regular variable? */
         varname = vardesc->vd.name;
-      break;
+      ਰੋਕੋ;
     }
-    case VUPVAL: {
-      Upvaldesc *up = &fs->f->upvalues[e->u.info];
-      if (up->kind != VDKREG)
-        varname = up->name;
-      break;
+    ਹਾਲਤ VUPVAL: {
+      Upvaldesc *ਉੱਪਰ = &fs->f->upvalues[e->u.info];
+      ਜੇ (ਉੱਪਰ->ਕਿਸਮ != VDKREG)
+        varname = ਉੱਪਰ->name;
+      ਰੋਕੋ;
     }
-    case VVARGIND: {
+    ਹਾਲਤ VVARGIND: {
       needvatab(fs->f);  /* function will need a vararg table */
       e->k = VINDEXED;
     }  /* FALLTHROUGH */
-    case VINDEXUP: case VINDEXSTR: case VINDEXED: {  /* global variable */
-      if (e->u.ind.ro)  /* read-only? */
+    ਹਾਲਤ VINDEXUP: ਹਾਲਤ VINDEXSTR: ਹਾਲਤ VINDEXED: {  /* global variable */
+      ਜੇ (e->u.ind.ro)  /* read-only? */
         varname = tsvalue(&fs->f->k[e->u.ind.keystr]);
-      break;
+      ਰੋਕੋ;
     }
-    default:
+    ਮੂਲ:
       lua_assert(e->k == VINDEXI);  /* this one doesn't need any check */
-      return;  /* integer index cannot be read-only */
+      ਵਾਪਸ;  /* integer index cannot be read-only */
   }
-  if (varname)
+  ਜੇ (varname)
     luaK_semerror(ls, "attempt to assign to const variable '%s'",
                       getstr(varname));
 }
@@ -325,12 +325,12 @@ static void check_readonly (LexState *ls, expdesc *e) {
 /*
 ** Start the scope for the last 'nvars' created variables.
 */
-static void adjustlocalvars (LexState *ls, int nvars) {
+ਸਥਿਰ ਖਾਲੀ adjustlocalvars (LexState *ls, ਪੂਰਨ nvars) {
   FuncState *fs = ls->fs;
-  int reglevel = luaY_nvarstack(fs);
-  int i;
-  for (i = 0; i < nvars; i++) {
-    int vidx = fs->nactvar++;
+  ਪੂਰਨ reglevel = luaY_nvarstack(fs);
+  ਪੂਰਨ i;
+  ਲਈ (i = 0; i < nvars; i++) {
+    ਪੂਰਨ vidx = fs->nactvar++;
     Vardesc *var = getlocalvardesc(fs, vidx);
     var->vd.ridx = cast_byte(reglevel++);
     var->vd.pidx = registerlocalvar(ls, fs, var->vd.name);
@@ -343,11 +343,11 @@ static void adjustlocalvars (LexState *ls, int nvars) {
 ** Close the scope for all variables up to level 'tolevel'.
 ** (debug info.)
 */
-static void removevars (FuncState *fs, int tolevel) {
+ਸਥਿਰ ਖਾਲੀ removevars (FuncState *fs, ਪੂਰਨ tolevel) {
   fs->ls->dyd->actvar.n -= (fs->nactvar - tolevel);
-  while (fs->nactvar > tolevel) {
+  ਜਦੋਂ (fs->nactvar > tolevel) {
     LocVar *var = localdebuginfo(fs, --fs->nactvar);
-    if (var)  /* does it have debug information? */
+    ਜੇ (var)  /* does it have debug information? */
       var->endpc = fs->pc;
   }
 }
@@ -357,46 +357,46 @@ static void removevars (FuncState *fs, int tolevel) {
 ** Search the upvalues of the function 'fs' for one
 ** with the given 'name'.
 */
-static int searchupvalue (FuncState *fs, TString *name) {
-  int i;
-  Upvaldesc *up = fs->f->upvalues;
-  for (i = 0; i < fs->nups; i++) {
-    if (eqstr(up[i].name, name)) return i;
+ਸਥਿਰ ਪੂਰਨ searchupvalue (FuncState *fs, TString *name) {
+  ਪੂਰਨ i;
+  Upvaldesc *ਉੱਪਰ = fs->f->upvalues;
+  ਲਈ (i = 0; i < fs->nups; i++) {
+    ਜੇ (eqstr(ਉੱਪਰ[i].name, name)) ਵਾਪਸ i;
   }
-  return -1;  /* not found */
+  ਵਾਪਸ -1;  /* not found */
 }
 
 
-static Upvaldesc *allocupvalue (FuncState *fs) {
+ਸਥਿਰ Upvaldesc *allocupvalue (FuncState *fs) {
   Proto *f = fs->f;
-  int oldsize = f->sizeupvalues;
+  ਪੂਰਨ oldsize = f->sizeupvalues;
   luaY_checklimit(fs, fs->nups + 1, MAXUPVAL, "upvalues");
   luaM_growvector(fs->ls->L, f->upvalues, fs->nups, f->sizeupvalues,
                   Upvaldesc, MAXUPVAL, "upvalues");
-  while (oldsize < f->sizeupvalues)
-    f->upvalues[oldsize++].name = NULL;
-  return &f->upvalues[fs->nups++];
+  ਜਦੋਂ (oldsize < f->sizeupvalues)
+    f->upvalues[oldsize++].name = ਨਿਰਾ;
+  ਵਾਪਸ &f->upvalues[fs->nups++];
 }
 
 
-static int newupvalue (FuncState *fs, TString *name, expdesc *v) {
-  Upvaldesc *up = allocupvalue(fs);
+ਸਥਿਰ ਪੂਰਨ newupvalue (FuncState *fs, TString *name, expdesc *v) {
+  Upvaldesc *ਉੱਪਰ = allocupvalue(fs);
   FuncState *prev = fs->prev;
-  if (v->k == VLOCAL) {
-    up->instack = 1;
-    up->idx = v->u.var.ridx;
-    up->kind = getlocalvardesc(prev, v->u.var.vidx)->vd.kind;
+  ਜੇ (v->k == VLOCAL) {
+    ਉੱਪਰ->instack = 1;
+    ਉੱਪਰ->idx = v->u.var.ridx;
+    ਉੱਪਰ->ਕਿਸਮ = getlocalvardesc(prev, v->u.var.vidx)->vd.ਕਿਸਮ;
     lua_assert(eqstr(name, getlocalvardesc(prev, v->u.var.vidx)->vd.name));
   }
-  else {
-    up->instack = 0;
-    up->idx = cast_byte(v->u.info);
-    up->kind = prev->f->upvalues[v->u.info].kind;
+  ਨਹੀਂਤਾਂ {
+    ਉੱਪਰ->instack = 0;
+    ਉੱਪਰ->idx = cast_byte(v->u.info);
+    ਉੱਪਰ->ਕਿਸਮ = prev->f->upvalues[v->u.info].ਕਿਸਮ;
     lua_assert(eqstr(name, prev->f->upvalues[v->u.info].name));
   }
-  up->name = name;
+  ਉੱਪਰ->name = name;
   luaC_objbarrier(fs->ls->L, fs->f, name);
-  return fs->nups - 1;
+  ਵਾਪਸ fs->nups - 1;
 }
 
 
@@ -411,36 +411,36 @@ static int newupvalue (FuncState *fs, TString *name, expdesc *v) {
 ** and var->u.info>=0 points to the inner-most (the first one found)
 ** collective declaration, if there is one.
 */
-static int searchvar (FuncState *fs, TString *n, expdesc *var) {
-  int i;
-  for (i = cast_int(fs->nactvar) - 1; i >= 0; i--) {
+ਸਥਿਰ ਪੂਰਨ searchvar (FuncState *fs, TString *n, expdesc *var) {
+  ਪੂਰਨ i;
+  ਲਈ (i = cast_int(fs->nactvar) - 1; i >= 0; i--) {
     Vardesc *vd = getlocalvardesc(fs, i);
-    if (varglobal(vd)) {  /* global declaration? */
-      if (vd->vd.name == NULL) {  /* collective declaration? */
-        if (var->u.info < 0)  /* no previous collective declaration? */
+    ਜੇ (varglobal(vd)) {  /* global declaration? */
+      ਜੇ (vd->vd.name == ਨਿਰਾ) {  /* collective declaration? */
+        ਜੇ (var->u.info < 0)  /* no previous collective declaration? */
           var->u.info = fs->firstlocal + i;  /* this is the first one */
       }
-      else {  /* global name */
-        if (eqstr(n, vd->vd.name)) {  /* found? */
+      ਨਹੀਂਤਾਂ {  /* global name */
+        ਜੇ (eqstr(n, vd->vd.name)) {  /* found? */
           init_exp(var, VGLOBAL, fs->firstlocal + i);
-          return VGLOBAL;
+          ਵਾਪਸ VGLOBAL;
         }
-        else if (var->u.info == -1)  /* active preambular declaration? */
+        ਨਹੀਂਤਾਂ ਜੇ (var->u.info == -1)  /* active preambular declaration? */
           var->u.info = -2;  /* invalidate preambular declaration */
       }
     }
-    else if (eqstr(n, vd->vd.name)) {  /* found? */
-      if (vd->vd.kind == RDKCTC)  /* compile-time constant? */
+    ਨਹੀਂਤਾਂ ਜੇ (eqstr(n, vd->vd.name)) {  /* found? */
+      ਜੇ (vd->vd.ਕਿਸਮ == RDKCTC)  /* compile-time constant? */
         init_exp(var, VCONST, fs->firstlocal + i);
-      else {  /* local variable */
+      ਨਹੀਂਤਾਂ {  /* local variable */
         init_var(fs, var, i);
-        if (vd->vd.kind == RDKVAVAR)  /* vararg parameter? */
+        ਜੇ (vd->vd.ਕਿਸਮ == RDKVAVAR)  /* vararg parameter? */
           var->k = VVARGVAR;
       }
-      return cast_int(var->k);
+      ਵਾਪਸ cast_int(var->k);
     }
   }
-  return -1;  /* not found */
+  ਵਾਪਸ -1;  /* not found */
 }
 
 
@@ -448,10 +448,10 @@ static int searchvar (FuncState *fs, TString *n, expdesc *var) {
 ** Mark block where variable at given level was defined
 ** (to emit close instructions later).
 */
-static void markupval (FuncState *fs, int level) {
-  BlockCnt *bl = fs->bl;
-  while (bl->nactvar > level)
-    bl = bl->previous;
+ਸਥਿਰ ਖਾਲੀ markupval (FuncState *fs, ਪੂਰਨ level) {
+  ਖੰਡ_Cnt *bl = fs->bl;
+  ਜਦੋਂ (bl->nactvar > level)
+    bl = bl->ਪਿਛਲਾ;
   bl->upval = 1;
   fs->needclose = 1;
 }
@@ -460,8 +460,8 @@ static void markupval (FuncState *fs, int level) {
 /*
 ** Mark that current block has a to-be-closed variable.
 */
-static void marktobeclosed (FuncState *fs) {
-  BlockCnt *bl = fs->bl;
+ਸਥਿਰ ਖਾਲੀ marktobeclosed (FuncState *fs) {
+  ਖੰਡ_Cnt *bl = fs->bl;
   bl->upval = 1;
   bl->insidetbc = 1;
   fs->needclose = 1;
@@ -473,43 +473,43 @@ static void marktobeclosed (FuncState *fs) {
 ** this upvalue into all intermediate functions. If it is a global, set
 ** 'var' as 'void' as a flag.
 */
-static void singlevaraux (FuncState *fs, TString *n, expdesc *var, int base) {
-  int v = searchvar(fs, n, var);  /* look up variables at current level */
-  if (v >= 0) {  /* found? */
-    if (!base) {
-      if (var->k == VVARGVAR)  /* vararg parameter? */
+ਸਥਿਰ ਖਾਲੀ singlevaraux (FuncState *fs, TString *n, expdesc *var, ਪੂਰਨ ਅਧਾਰ) {
+  ਪੂਰਨ v = searchvar(fs, n, var);  /* look up variables at current level */
+  ਜੇ (v >= 0) {  /* found? */
+    ਜੇ (!ਅਧਾਰ) {
+      ਜੇ (var->k == VVARGVAR)  /* vararg parameter? */
         luaK_vapar2local(fs, var);  /* change it to a regular local */
-      if (var->k == VLOCAL)
+      ਜੇ (var->k == VLOCAL)
         markupval(fs, var->u.var.vidx);  /* will be used as an upvalue */
     }
     /* else nothing else to be done */
   }
-  else {  /* not found at current level; try upvalues */
-    int idx = searchupvalue(fs, n);  /* try existing upvalues */
-    if (idx < 0) {  /* not found? */
-      if (fs->prev != NULL)  /* more levels? */
+  ਨਹੀਂਤਾਂ {  /* not found at current level; try upvalues */
+    ਪੂਰਨ idx = searchupvalue(fs, n);  /* try existing upvalues */
+    ਜੇ (idx < 0) {  /* not found? */
+      ਜੇ (fs->prev != ਨਿਰਾ)  /* more levels? */
         singlevaraux(fs->prev, n, var, 0);  /* try upper levels */
-      if (var->k == VLOCAL || var->k == VUPVAL)  /* local or upvalue? */
+      ਜੇ (var->k == VLOCAL || var->k == VUPVAL)  /* local or upvalue? */
         idx  = newupvalue(fs, n, var);  /* will be a new upvalue */
-      else  /* it is a global or a constant */
-        return;  /* don't need to do anything at this level */
+      ਨਹੀਂਤਾਂ  /* it is a global or a constant */
+        ਵਾਪਸ;  /* don't need to do anything at this level */
     }
     init_exp(var, VUPVAL, idx);  /* new or old upvalue */
   }
 }
 
 
-static void buildglobal (LexState *ls, TString *varname, expdesc *var) {
+ਸਥਿਰ ਖਾਲੀ buildglobal (LexState *ls, TString *varname, expdesc *var) {
   FuncState *fs = ls->fs;
-  expdesc key;
+  expdesc ਕੁੰਜੀ;
   init_exp(var, VGLOBAL, -1);  /* global by default */
   singlevaraux(fs, ls->envn, var, 1);  /* get environment variable */
-  if (var->k == VGLOBAL)
+  ਜੇ (var->k == VGLOBAL)
     luaK_semerror(ls, "%s is global when accessing variable '%s'",
                       LUA_ENV, getstr(varname));
   luaK_exp2anyregup(fs, var);  /* _ENV could be a constant */
-  codestring(&key, varname);  /* key is variable name */
-  luaK_indexed(fs, var, &key);  /* 'var' represents _ENV[varname] */
+  codestring(&ਕੁੰਜੀ, varname);  /* key is variable name */
+  lua_K_ਸੂਚਕਾਂਕਿਤ(fs, var, &ਕੁੰਜੀ);  /* 'var' represents _ENV[varname] */
 }
 
 
@@ -517,25 +517,25 @@ static void buildglobal (LexState *ls, TString *varname, expdesc *var) {
 ** Find a variable with the given name 'n', handling global variables
 ** too.
 */
-static void buildvar (LexState *ls, TString *varname, expdesc *var) {
+ਸਥਿਰ ਖਾਲੀ buildvar (LexState *ls, TString *varname, expdesc *var) {
   FuncState *fs = ls->fs;
   init_exp(var, VGLOBAL, -1);  /* global by default */
   singlevaraux(fs, varname, var, 1);
-  if (var->k == VGLOBAL) {  /* global name? */
-    int info = var->u.info;
+  ਜੇ (var->k == VGLOBAL) {  /* global name? */
+    ਪੂਰਨ info = var->u.info;
     /* global by default in the scope of a global declaration? */
-    if (info == -2)
+    ਜੇ (info == -2)
       luaK_semerror(ls, "variable '%s' not declared", getstr(varname));
     buildglobal(ls, varname, var);
-    if (info != -1 && ls->dyd->actvar.arr[info].vd.kind == GDKCONST)
+    ਜੇ (info != -1 && ls->dyd->actvar.arr[info].vd.ਕਿਸਮ == GDKCONST)
       var->u.ind.ro = 1;  /* mark variable as read-only */
-    else  /* anyway must be a global */
-      lua_assert(info == -1 || ls->dyd->actvar.arr[info].vd.kind == GDKREG);
+    ਨਹੀਂਤਾਂ  /* anyway must be a global */
+      lua_assert(info == -1 || ls->dyd->actvar.arr[info].vd.ਕਿਸਮ == GDKREG);
   }
 }
 
 
-static void singlevar (LexState *ls, expdesc *var) {
+ਸਥਿਰ ਖਾਲੀ singlevar (LexState *ls, expdesc *var) {
   buildvar(ls, str_checkname(ls), var);
 }
 
@@ -544,45 +544,45 @@ static void singlevar (LexState *ls, expdesc *var) {
 ** Adjust the number of results from an expression list 'e' with 'nexps'
 ** expressions to 'nvars' values.
 */
-static void adjust_assign (LexState *ls, int nvars, int nexps, expdesc *e) {
+ਸਥਿਰ ਖਾਲੀ adjust_ਸੌਂਪੋ (LexState *ls, ਪੂਰਨ nvars, ਪੂਰਨ nexps, expdesc *e) {
   FuncState *fs = ls->fs;
-  int needed = nvars - nexps;  /* extra values needed */
+  ਪੂਰਨ needed = nvars - nexps;  /* extra values needed */
   luaK_checkstack(fs, needed);
-  if (hasmultret(e->k)) {  /* last expression has multiple returns? */
-    int extra = needed + 1;  /* discount last expression itself */
-    if (extra < 0)
+  ਜੇ (hasmultret(e->k)) {  /* last expression has multiple returns? */
+    ਪੂਰਨ extra = needed + 1;  /* discount last expression itself */
+    ਜੇ (extra < 0)
       extra = 0;
     luaK_setreturns(fs, e, extra);  /* last exp. provides the difference */
   }
-  else {
-    if (e->k != VVOID)  /* at least one expression? */
+  ਨਹੀਂਤਾਂ {
+    ਜੇ (e->k != VVOID)  /* at least one expression? */
       luaK_exp2nextreg(fs, e);  /* close last expression */
-    if (needed > 0)  /* missing values? */
+    ਜੇ (needed > 0)  /* missing values? */
       luaK_nil(fs, fs->freereg, needed);  /* complete with nils */
   }
-  if (needed > 0)
+  ਜੇ (needed > 0)
     luaK_reserveregs(fs, needed);  /* registers for extra values */
-  else  /* adding 'needed' is actually a subtraction */
+  ਨਹੀਂਤਾਂ  /* adding 'needed' is actually a subtraction */
     fs->freereg = cast_byte(fs->freereg + needed);  /* remove extra values */
 }
 
 
-#define enterlevel(ls)	luaE_incCstack(ls->L)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ enterlevel(ls)	luaE_incCstack(ls->L)
 
 
-#define leavelevel(ls) ((ls)->L->nCcalls--)
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ leavelevel(ls) ((ls)->L->nCcalls--)
 
 
 /*
 ** Generates an error that a goto jumps into the scope of some
 ** variable declaration.
 */
-static l_noret jumpscopeerror (LexState *ls, Labeldesc *gt) {
+ਸਥਿਰ l_noret jumpscopeerror (LexState *ls, Labeldesc *gt) {
   TString *tsname = getlocalvardesc(ls->fs, gt->nactvar)->vd.name;
-  const char *varname = (tsname != NULL) ? getstr(tsname) : "*";
+  ਅਚਲ ਅੱਖਰ *varname = (tsname != ਨਿਰਾ) ? getstr(tsname) : "*";
   luaK_semerror(ls,
      "<goto %s> at line %d jumps into the scope of '%s'",
-      getstr(gt->name), gt->line, varname);  /* raise the error */
+      getstr(gt->name), gt->ਸਤਰ, varname);  /* raise the error */
 }
 
 
@@ -594,25 +594,25 @@ static l_noret jumpscopeerror (LexState *ls, Labeldesc *gt) {
 ** or out of the scope of some variable and the block has upvalues
 ** (signaled by parameter 'bup').
 */
-static void closegoto (LexState *ls, int g, Labeldesc *label, int bup) {
-  int i;
+ਸਥਿਰ ਖਾਲੀ closegoto (LexState *ls, ਪੂਰਨ g, Labeldesc *label, ਪੂਰਨ bup) {
+  ਪੂਰਨ i;
   FuncState *fs = ls->fs;
   Labellist *gl = &ls->dyd->gt;  /* list of gotos */
   Labeldesc *gt = &gl->arr[g];  /* goto to be resolved */
   lua_assert(eqstr(gt->name, label->name));
-  if (l_unlikely(gt->nactvar < label->nactvar))  /* enter some scope? */
+  ਜੇ (l_unlikely(gt->nactvar < label->nactvar))  /* enter some scope? */
     jumpscopeerror(ls, gt);
-  if (gt->close ||
+  ਜੇ (gt->close ||
       (label->nactvar < gt->nactvar && bup)) {  /* needs close? */
     lu_byte stklevel = reglevel(fs, label->nactvar);
     /* move jump to CLOSE position */
-    fs->f->code[gt->pc + 1] = fs->f->code[gt->pc];
+    fs->f->ਕੋਡ[gt->pc + 1] = fs->f->ਕੋਡ[gt->pc];
     /* put CLOSE instruction at original position */
-    fs->f->code[gt->pc] = CREATE_ABCk(OP_CLOSE, stklevel, 0, 0, 0);
+    fs->f->ਕੋਡ[gt->pc] = CREATE_ABCk(OP_CLOSE, stklevel, 0, 0, 0);
     gt->pc++;  /* must point to jump instruction */
   }
   luaK_patchlist(ls->fs, gt->pc, label->pc);  /* goto jumps to label */
-  for (i = g; i < gl->n - 1; i++)  /* remove goto from pending list */
+  ਲਈ (i = g; i < gl->n - 1; i++)  /* remove goto from pending list */
     gl->arr[i] = gl->arr[i + 1];
   gl->n--;
 }
@@ -623,32 +623,32 @@ static void closegoto (LexState *ls, int g, Labeldesc *label, int bup) {
 ** index 'ilb' (so that it can search for all labels in current block
 ** or all labels in current function).
 */
-static Labeldesc *findlabel (LexState *ls, TString *name, int ilb) {
+ਸਥਿਰ Labeldesc *findlabel (LexState *ls, TString *name, ਪੂਰਨ ilb) {
   Dyndata *dyd = ls->dyd;
-  for (; ilb < dyd->label.n; ilb++) {
+  ਲਈ (; ilb < dyd->label.n; ilb++) {
     Labeldesc *lb = &dyd->label.arr[ilb];
-    if (eqstr(lb->name, name))  /* correct label? */
-      return lb;
+    ਜੇ (eqstr(lb->name, name))  /* correct label? */
+      ਵਾਪਸ lb;
   }
-  return NULL;  /* label not found */
+  ਵਾਪਸ ਨਿਰਾ;  /* label not found */
 }
 
 
 /*
 ** Adds a new label/goto in the corresponding list.
 */
-static int newlabelentry (LexState *ls, Labellist *l, TString *name,
-                          int line, int pc) {
-  int n = l->n;
-  luaM_growvector(ls->L, l->arr, n, l->size,
+ਸਥਿਰ ਪੂਰਨ newlabelentry (LexState *ls, Labellist *l, TString *name,
+                          ਪੂਰਨ ਸਤਰ, ਪੂਰਨ pc) {
+  ਪੂਰਨ n = l->n;
+  luaM_growvector(ls->L, l->arr, n, l->ਮਾਪ,
                   Labeldesc, SHRT_MAX, "labels/gotos");
   l->arr[n].name = name;
-  l->arr[n].line = line;
+  l->arr[n].ਸਤਰ = ਸਤਰ;
   l->arr[n].nactvar = ls->fs->nactvar;
   l->arr[n].close = 0;
   l->arr[n].pc = pc;
   l->n = n + 1;
-  return n;
+  ਵਾਪਸ n;
 }
 
 
@@ -660,11 +660,11 @@ static int newlabelentry (LexState *ls, Labellist *l, TString *name,
 ** against a label, if it needs a CLOSE, the two instructions swap
 ** positions, so that the CLOSE comes before the jump.
 */
-static int newgotoentry (LexState *ls, TString *name, int line) {
+ਸਥਿਰ ਪੂਰਨ newgotoentry (LexState *ls, TString *name, ਪੂਰਨ ਸਤਰ) {
   FuncState *fs = ls->fs;
-  int pc = luaK_jump(fs);  /* create jump */
-  luaK_codeABC(fs, OP_CLOSE, 0, 1, 0);  /* spaceholder, marked as dead */
-  return newlabelentry(ls, &ls->dyd->gt, name, line, pc);
+  ਪੂਰਨ pc = luaK_jump(fs);  /* create jump */
+  lua_K_ਕੋਡ_ABC(fs, OP_CLOSE, 0, 1, 0);  /* spaceholder, marked as dead */
+  ਵਾਪਸ newlabelentry(ls, &ls->dyd->gt, name, ਸਤਰ, pc);
 }
 
 
@@ -675,11 +675,11 @@ static int newgotoentry (LexState *ls, TString *name, int line) {
 ** a close instruction if necessary.
 ** Returns true iff it added a close instruction.
 */
-static void createlabel (LexState *ls, TString *name, int line, int last) {
+ਸਥਿਰ ਖਾਲੀ createlabel (LexState *ls, TString *name, ਪੂਰਨ ਸਤਰ, ਪੂਰਨ ਆਖਰੀ) {
   FuncState *fs = ls->fs;
   Labellist *ll = &ls->dyd->label;
-  int l = newlabelentry(ls, ll, name, line, luaK_getlabel(fs));
-  if (last) {  /* label is last no-op statement in the block? */
+  ਪੂਰਨ l = newlabelentry(ls, ll, name, ਸਤਰ, luaK_getlabel(fs));
+  ਜੇ (ਆਖਰੀ) {  /* label is last no-op statement in the block? */
     /* assume that locals are already out of scope */
     ll->arr[l].nactvar = fs->bl->nactvar;
   }
@@ -693,21 +693,21 @@ static void createlabel (LexState *ls, TString *name, int line, int last) {
 ** its 'nactvar' is updated with the level of the inner block,
 ** as the variables of the inner block are now out of scope.
 */
-static void solvegotos (FuncState *fs, BlockCnt *bl) {
+ਸਥਿਰ ਖਾਲੀ solvegotos (FuncState *fs, ਖੰਡ_Cnt *bl) {
   LexState *ls = fs->ls;
   Labellist *gl = &ls->dyd->gt;
-  int outlevel = reglevel(fs, bl->nactvar);  /* level outside the block */
-  int igt = bl->firstgoto;  /* first goto in the finishing block */
-  while (igt < gl->n) {   /* for each pending goto */
+  ਪੂਰਨ outlevel = reglevel(fs, bl->nactvar);  /* level outside the block */
+  ਪੂਰਨ igt = bl->firstgoto;  /* first goto in the finishing block */
+  ਜਦੋਂ (igt < gl->n) {   /* for each pending goto */
     Labeldesc *gt = &gl->arr[igt];
     /* search for a matching label in the current block */
     Labeldesc *lb = findlabel(ls, gt->name, bl->firstlabel);
-    if (lb != NULL)  /* found a match? */
+    ਜੇ (lb != ਨਿਰਾ)  /* found a match? */
       closegoto(ls, igt, lb, bl->upval);  /* close and remove goto */
-    else {  /* adjust 'goto' for outer block */
+    ਨਹੀਂਤਾਂ {  /* adjust 'goto' for outer block */
       /* block has variables to be closed and goto escapes the scope of
          some variable? */
-      if (bl->upval && reglevel(fs, gt->nactvar) > outlevel)
+      ਜੇ (bl->upval && reglevel(fs, gt->nactvar) > outlevel)
         gt->close = 1;  /* jump may need a close */
       gt->nactvar = bl->nactvar;  /* correct level for outer block */
       igt++;  /* go to next goto */
@@ -717,15 +717,15 @@ static void solvegotos (FuncState *fs, BlockCnt *bl) {
 }
 
 
-static void enterblock (FuncState *fs, BlockCnt *bl, lu_byte isloop) {
+ਸਥਿਰ ਖਾਲੀ enterblock (FuncState *fs, ਖੰਡ_Cnt *bl, lu_byte isloop) {
   bl->isloop = isloop;
   bl->nactvar = fs->nactvar;
   bl->firstlabel = fs->ls->dyd->label.n;
   bl->firstgoto = fs->ls->dyd->gt.n;
   bl->upval = 0;
   /* inherit 'insidetbc' from enclosing block */
-  bl->insidetbc = (fs->bl != NULL && fs->bl->insidetbc);
-  bl->previous = fs->bl;  /* link block in function's block list */
+  bl->insidetbc = (fs->bl != ਨਿਰਾ && fs->bl->insidetbc);
+  bl->ਪਿਛਲਾ = fs->bl;  /* link block in function's block list */
   fs->bl = bl;
   lua_assert(fs->freereg == luaY_nvarstack(fs));
 }
@@ -734,51 +734,51 @@ static void enterblock (FuncState *fs, BlockCnt *bl, lu_byte isloop) {
 /*
 ** generates an error for an undefined 'goto'.
 */
-static l_noret undefgoto (LexState *ls, Labeldesc *gt) {
+ਸਥਿਰ l_noret undefgoto (LexState *ls, Labeldesc *gt) {
   /* breaks are checked when created, cannot be undefined */
   lua_assert(!eqstr(gt->name, ls->brkn));
   luaK_semerror(ls, "no visible label '%s' for <goto> at line %d",
-                    getstr(gt->name), gt->line);
+                    getstr(gt->name), gt->ਸਤਰ);
 }
 
 
-static void leaveblock (FuncState *fs) {
-  BlockCnt *bl = fs->bl;
+ਸਥਿਰ ਖਾਲੀ leaveblock (FuncState *fs) {
+  ਖੰਡ_Cnt *bl = fs->bl;
   LexState *ls = fs->ls;
   lu_byte stklevel = reglevel(fs, bl->nactvar);  /* level outside block */
-  if (bl->previous && bl->upval)  /* need a 'close'? */
-    luaK_codeABC(fs, OP_CLOSE, stklevel, 0, 0);
+  ਜੇ (bl->ਪਿਛਲਾ && bl->upval)  /* need a 'close'? */
+    lua_K_ਕੋਡ_ABC(fs, OP_CLOSE, stklevel, 0, 0);
   fs->freereg = stklevel;  /* free registers */
   removevars(fs, bl->nactvar);  /* remove block locals */
   lua_assert(bl->nactvar == fs->nactvar);  /* back to level on entry */
-  if (bl->isloop == 2)  /* has to fix pending breaks? */
+  ਜੇ (bl->isloop == 2)  /* has to fix pending breaks? */
     createlabel(ls, ls->brkn, 0, 0);
   solvegotos(fs, bl);
-  if (bl->previous == NULL) {  /* was it the last block? */
-    if (bl->firstgoto < ls->dyd->gt.n)  /* still pending gotos? */
+  ਜੇ (bl->ਪਿਛਲਾ == ਨਿਰਾ) {  /* was it the last block? */
+    ਜੇ (bl->firstgoto < ls->dyd->gt.n)  /* still pending gotos? */
       undefgoto(ls, &ls->dyd->gt.arr[bl->firstgoto]);  /* error */
   }
-  fs->bl = bl->previous;  /* current block now is previous one */
+  fs->bl = bl->ਪਿਛਲਾ;  /* current block now is previous one */
 }
 
 
 /*
 ** adds a new prototype into list of prototypes
 */
-static Proto *addprototype (LexState *ls) {
+ਸਥਿਰ Proto *addprototype (LexState *ls) {
   Proto *clp;
   lua_State *L = ls->L;
   FuncState *fs = ls->fs;
   Proto *f = fs->f;  /* prototype of current function */
-  if (fs->np >= f->sizep) {
-    int oldsize = f->sizep;
+  ਜੇ (fs->np >= f->sizep) {
+    ਪੂਰਨ oldsize = f->sizep;
     luaM_growvector(L, f->p, fs->np, f->sizep, Proto *, MAXARG_Bx, "functions");
-    while (oldsize < f->sizep)
-      f->p[oldsize++] = NULL;
+    ਜਦੋਂ (oldsize < f->sizep)
+      f->p[oldsize++] = ਨਿਰਾ;
   }
   f->p[fs->np++] = clp = luaF_newproto(L);
   luaC_objbarrier(L, f, clp);
-  return clp;
+  ਵਾਪਸ clp;
 }
 
 
@@ -789,14 +789,14 @@ static Proto *addprototype (LexState *ls) {
 ** are in use at that time.
 
 */
-static void codeclosure (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ codeclosure (LexState *ls, expdesc *v) {
   FuncState *fs = ls->fs->prev;
-  init_exp(v, VRELOC, luaK_codeABx(fs, OP_CLOSURE, 0, fs->np - 1));
+  init_exp(v, VRELOC, lua_K_ਕੋਡ_ABx(fs, OP_ਘੇਰਾ, 0, fs->np - 1));
   luaK_exp2nextreg(fs, v);  /* fix it at the last register */
 }
 
 
-static void open_func (LexState *ls, FuncState *fs, BlockCnt *bl) {
+ਸਥਿਰ ਖਾਲੀ open_func (LexState *ls, FuncState *fs, ਖੰਡ_Cnt *bl) {
   lua_State *L = ls->L;
   Proto *f = fs->f;
   fs->prev = ls->fs;  /* linked list of funcstates */
@@ -816,9 +816,9 @@ static void open_func (LexState *ls, FuncState *fs, BlockCnt *bl) {
   fs->needclose = 0;
   fs->firstlocal = ls->dyd->actvar.n;
   fs->firstlabel = ls->dyd->label.n;
-  fs->bl = NULL;
-  f->source = ls->source;
-  luaC_objbarrier(L, f, f->source);
+  fs->bl = ਨਿਰਾ;
+  f->ਸਰੋਤ = ls->ਸਰੋਤ;
+  luaC_objbarrier(L, f, f->ਸਰੋਤ);
   f->maxstacksize = 2;  /* registers 0/1 are always valid */
   fs->kcache = luaH_new(L);  /* create table for function */
   luaD_anchorobj(L, ls->h, obj2gco(fs->kcache));  /* anchor it */
@@ -826,26 +826,26 @@ static void open_func (LexState *ls, FuncState *fs, BlockCnt *bl) {
 }
 
 
-static void close_func (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ close_func (LexState *ls) {
   lua_State *L = ls->L;
   FuncState *fs = ls->fs;
   Proto *f = fs->f;
-  TValue temp;
+  TValue ਆਰਜ਼ੀ;
   luaK_ret(fs, luaY_nvarstack(fs), 0);  /* final return */
   leaveblock(fs);
-  lua_assert(fs->bl == NULL);
-  luaK_finish(fs);
-  luaM_shrinkvector(L, f->code, f->sizecode, fs->pc, Instruction);
+  lua_assert(fs->bl == ਨਿਰਾ);
+  lua_K_ਅੰਤ(fs);
+  luaM_shrinkvector(L, f->ਕੋਡ, f->sizecode, fs->pc, Instruction);
   luaM_shrinkvector(L, f->lineinfo, f->sizelineinfo, fs->pc, ls_byte);
   luaM_shrinkvector(L, f->abslineinfo, f->sizeabslineinfo,
-                       fs->nabslineinfo, AbsLineInfo);
+                       fs->nabslineinfo, Abs_ਸਤਰ_Info);
   luaM_shrinkvector(L, f->k, f->sizek, fs->nk, TValue);
   luaM_shrinkvector(L, f->p, f->sizep, fs->np, Proto *);
   luaM_shrinkvector(L, f->locvars, f->sizelocvars, fs->ndebugvars, LocVar);
   luaM_shrinkvector(L, f->upvalues, f->sizeupvalues, fs->nups, Upvaldesc);
   /* remove kcache table from scanner table ("weigh" its anchor) */
-  sethvalue(L, &temp, fs->kcache);  /* key to be set to nil */
-  luaH_set(L, ls->h, &temp, &G(L)->nilvalue);
+  sethvalue(L, &ਆਰਜ਼ੀ, fs->kcache);  /* key to be set to nil */
+  lua_H_ਸੈੱਟ(L, ls->h, &ਆਰਜ਼ੀ, &G(L)->nilvalue);
   ls->fs = fs->prev;
   luaC_checkGC(L);
 }
@@ -863,44 +863,44 @@ static void close_func (LexState *ls) {
 ** 'until' closes syntactical blocks, but do not close scope,
 ** so it is handled in separate.
 */
-static int block_follow (LexState *ls, int withuntil) {
-  switch (ls->t.token) {
-    case TK_ELSE: case TK_ELSEIF:
-    case TK_END: case TK_EOS:
-      return 1;
-    case TK_UNTIL: return withuntil;
-    default: return 0;
+ਸਥਿਰ ਪੂਰਨ ਖੰਡ_follow (LexState *ls, ਪੂਰਨ withuntil) {
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ TK_ELSE: ਹਾਲਤ TK_ELSEIF:
+    ਹਾਲਤ TK_ਸਿਰਾ: ਹਾਲਤ TK_EOS:
+      ਵਾਪਸ 1;
+    ਹਾਲਤ TK_UNTIL: ਵਾਪਸ withuntil;
+    ਮੂਲ: ਵਾਪਸ 0;
   }
 }
 
 
-static void statlist (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ statlist (LexState *ls) {
   /* statlist -> { stat [';'] } */
-  while (!block_follow(ls, 1)) {
-    if (ls->t.token == TK_RETURN) {
+  ਜਦੋਂ (!ਖੰਡ_follow(ls, 1)) {
+    ਜੇ (ls->t.token == TK_RETURN) {
       statement(ls);
-      return;  /* 'return' must be last statement */
+      ਵਾਪਸ;  /* 'return' must be last statement */
     }
     statement(ls);
   }
 }
 
 
-static void fieldsel (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ fieldsel (LexState *ls, expdesc *v) {
   /* fieldsel -> ['.' | ':'] NAME */
   FuncState *fs = ls->fs;
-  expdesc key;
+  expdesc ਕੁੰਜੀ;
   luaK_exp2anyregup(fs, v);
-  luaX_next(ls);  /* skip the dot or colon */
-  codename(ls, &key);
-  luaK_indexed(fs, v, &key);
+  lua_X_ਅਗਲਾ(ls);  /* skip the dot or colon */
+  codename(ls, &ਕੁੰਜੀ);
+  lua_K_ਸੂਚਕਾਂਕਿਤ(fs, v, &ਕੁੰਜੀ);
 }
 
 
-static void yindex (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ yindex (LexState *ls, expdesc *v) {
   /* index -> '[' expr ']' */
-  luaX_next(ls);  /* skip the '[' */
-  expr(ls, v);
+  lua_X_ਅਗਲਾ(ls);  /* skip the '[' */
+  ਵਿਅੰਜਕ(ls, v);
   luaK_exp2val(ls->fs, v);
   checknext(ls, ']');
 }
@@ -912,13 +912,13 @@ static void yindex (LexState *ls, expdesc *v) {
 ** =======================================================================
 */
 
-typedef struct ConsControl {
+ਕਿਸਮਪਰਿਭਾਸ਼ਾ ਬਣਤਰ ConsControl {
   expdesc v;  /* last list item read */
   expdesc *t;  /* table descriptor */
-  int nh;  /* total number of 'record' elements */
-  int na;  /* number of array elements already stored */
-  int tostore;  /* number of array elements pending to be stored */
-  int maxtostore;  /* maximum number of pending elements */
+  ਪੂਰਨ nh;  /* total number of 'record' elements */
+  ਪੂਰਨ na;  /* number of array elements already stored */
+  ਪੂਰਨ tostore;  /* number of array elements pending to be stored */
+  ਪੂਰਨ maxtostore;  /* maximum number of pending elements */
 } ConsControl;
 
 
@@ -928,37 +928,37 @@ typedef struct ConsControl {
 ** * overflows in 'extra' for OP_NEWTABLE and OP_SETLIST;
 ** * overflows when adding multiple returns in OP_SETLIST.
 */
-#define MAX_CNST	(INT_MAX/2)
-#if MAX_CNST/(MAXARG_vC + 1) > MAXARG_Ax
-#undef MAX_CNST
-#define MAX_CNST	(MAXARG_Ax * (MAXARG_vC + 1))
-#endif
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_CNST	(ਵੱਧ_ਤੋਂ_ਵੱਧ_ਅੰਕ/2)
+#ਜੇ MAX_CNST/(MAXARG_vC + 1) > MAXARG_Ax
+#ਪਰਿਭਾਸ਼ਾ_ਰੱਦ MAX_CNST
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ MAX_CNST	(MAXARG_Ax * (MAXARG_vC + 1))
+#ਜੇ_ਅੰਤ
 
 
-static void recfield (LexState *ls, ConsControl *cc) {
+ਸਥਿਰ ਖਾਲੀ recfield (LexState *ls, ConsControl *cc) {
   /* recfield -> (NAME | '['exp']') = exp */
   FuncState *fs = ls->fs;
   lu_byte reg = ls->fs->freereg;
-  expdesc tab, key, val;
-  if (ls->t.token == TK_NAME)
-    codename(ls, &key);
-  else  /* ls->t.token == '[' */
-    yindex(ls, &key);
+  expdesc tab, ਕੁੰਜੀ, val;
+  ਜੇ (ls->t.token == TK_NAME)
+    codename(ls, &ਕੁੰਜੀ);
+  ਨਹੀਂਤਾਂ  /* ls->t.token == '[' */
+    yindex(ls, &ਕੁੰਜੀ);
   cc->nh++;
   checknext(ls, '=');
   tab = *cc->t;
-  luaK_indexed(fs, &tab, &key);
-  expr(ls, &val);
+  lua_K_ਸੂਚਕਾਂਕਿਤ(fs, &tab, &ਕੁੰਜੀ);
+  ਵਿਅੰਜਕ(ls, &val);
   luaK_storevar(fs, &tab, &val);
   fs->freereg = reg;  /* free registers */
 }
 
 
-static void closelistfield (FuncState *fs, ConsControl *cc) {
+ਸਥਿਰ ਖਾਲੀ closelistfield (FuncState *fs, ConsControl *cc) {
   lua_assert(cc->tostore > 0);
   luaK_exp2nextreg(fs, &cc->v);
   cc->v.k = VVOID;
-  if (cc->tostore >= cc->maxtostore) {
+  ਜੇ (cc->tostore >= cc->maxtostore) {
     luaK_setlist(fs, cc->t->u.info, cc->na, cc->tostore);  /* flush */
     cc->na += cc->tostore;
     cc->tostore = 0;  /* no more items pending */
@@ -966,15 +966,15 @@ static void closelistfield (FuncState *fs, ConsControl *cc) {
 }
 
 
-static void lastlistfield (FuncState *fs, ConsControl *cc) {
-  if (cc->tostore == 0) return;
-  if (hasmultret(cc->v.k)) {
+ਸਥਿਰ ਖਾਲੀ lastlistfield (FuncState *fs, ConsControl *cc) {
+  ਜੇ (cc->tostore == 0) ਵਾਪਸ;
+  ਜੇ (hasmultret(cc->v.k)) {
     luaK_setmultret(fs, &cc->v);
     luaK_setlist(fs, cc->t->u.info, cc->na, LUA_MULTRET);
     cc->na--;  /* do not count last expression (unknown number of elements) */
   }
-  else {
-    if (cc->v.k != VVOID)
+  ਨਹੀਂਤਾਂ {
+    ਜੇ (cc->v.k != VVOID)
       luaK_exp2nextreg(fs, &cc->v);
     luaK_setlist(fs, cc->t->u.info, cc->na, cc->tostore);
   }
@@ -982,30 +982,30 @@ static void lastlistfield (FuncState *fs, ConsControl *cc) {
 }
 
 
-static void listfield (LexState *ls, ConsControl *cc) {
+ਸਥਿਰ ਖਾਲੀ listfield (LexState *ls, ConsControl *cc) {
   /* listfield -> exp */
-  expr(ls, &cc->v);
+  ਵਿਅੰਜਕ(ls, &cc->v);
   cc->tostore++;
 }
 
 
-static void field (LexState *ls, ConsControl *cc) {
+ਸਥਿਰ ਖਾਲੀ ਖੇਤਰ (LexState *ls, ConsControl *cc) {
   /* field -> listfield | recfield */
-  switch(ls->t.token) {
-    case TK_NAME: {  /* may be 'listfield' or 'recfield' */
-      if (luaX_lookahead(ls) != '=')  /* expression? */
+  ਚੋਣ(ls->t.token) {
+    ਹਾਲਤ TK_NAME: {  /* may be 'listfield' or 'recfield' */
+      ਜੇ (luaX_lookahead(ls) != '=')  /* expression? */
         listfield(ls, cc);
-      else
+      ਨਹੀਂਤਾਂ
         recfield(ls, cc);
-      break;
+      ਰੋਕੋ;
     }
-    case '[': {
+    ਹਾਲਤ '[': {
       recfield(ls, cc);
-      break;
+      ਰੋਕੋ;
     }
-    default: {
+    ਮੂਲ: {
       listfield(ls, cc);
-      break;
+      ਰੋਕੋ;
     }
   }
 }
@@ -1016,25 +1016,25 @@ static void field (LexState *ls, ConsControl *cc) {
 ** emitting a 'SETLIST' instruction, based on how many registers are
 ** available.
 */
-static int maxtostore (FuncState *fs) {
-  int numfreeregs = MAX_FSTACK - fs->freereg;
-  if (numfreeregs >= 160)  /* "lots" of registers? */
-    return numfreeregs / 5;  /* use up to 1/5 of them */
-  else if (numfreeregs >= 80)  /* still "enough" registers? */
-    return 10;  /* one 'SETLIST' instruction for each 10 values */
-  else  /* save registers for potential more nesting */
-    return 1;
+ਸਥਿਰ ਪੂਰਨ maxtostore (FuncState *fs) {
+  ਪੂਰਨ numfreeregs = MAX_FSTACK - fs->freereg;
+  ਜੇ (numfreeregs >= 160)  /* "lots" of registers? */
+    ਵਾਪਸ numfreeregs / 5;  /* use up to 1/5 of them */
+  ਨਹੀਂਤਾਂ ਜੇ (numfreeregs >= 80)  /* still "enough" registers? */
+    ਵਾਪਸ 10;  /* one 'SETLIST' instruction for each 10 values */
+  ਨਹੀਂਤਾਂ  /* save registers for potential more nesting */
+    ਵਾਪਸ 1;
 }
 
 
-static void constructor (LexState *ls, expdesc *t) {
+ਸਥਿਰ ਖਾਲੀ constructor (LexState *ls, expdesc *t) {
   /* constructor -> '{' [ field { sep field } [sep] ] '}'
      sep -> ',' | ';' */
   FuncState *fs = ls->fs;
-  int line = ls->linenumber;
-  int pc = luaK_codevABCk(fs, OP_NEWTABLE, 0, 0, 0, 0);
+  ਪੂਰਨ ਸਤਰ = ls->linenumber;
+  ਪੂਰਨ pc = luaK_codevABCk(fs, OP_NEWTABLE, 0, 0, 0, 0);
   ConsControl cc;
-  luaK_code(fs, 0);  /* space for extra arg. */
+  lua_K_ਕੋਡ(fs, 0);  /* space for extra arg. */
   cc.na = cc.nh = cc.tostore = 0;
   cc.t = t;
   init_exp(t, VNONRELOC, fs->freereg);  /* table will be at stack top */
@@ -1042,15 +1042,15 @@ static void constructor (LexState *ls, expdesc *t) {
   init_exp(&cc.v, VVOID, 0);  /* no value (yet) */
   checknext(ls, '{' /*}*/);
   cc.maxtostore = maxtostore(fs);
-  do {
-    if (ls->t.token == /*{*/ '}') break;
-    if (cc.v.k != VVOID)  /* is there a previous list item? */
+  ਕਰੋ {
+    ਜੇ (ls->t.token == /*{*/ '}') ਰੋਕੋ;
+    ਜੇ (cc.v.k != VVOID)  /* is there a previous list item? */
       closelistfield(fs, &cc);  /* close it */
-    field(ls, &cc);
+    ਖੇਤਰ(ls, &cc);
     luaY_checklimit(fs, cc.tostore + cc.na + cc.nh, MAX_CNST,
                     "items in a constructor");
-  } while (testnext(ls, ',') || testnext(ls, ';'));
-  check_match(ls, /*{*/ '}', '{' /*}*/, line);
+  } ਜਦੋਂ (testnext(ls, ',') || testnext(ls, ';'));
+  check_ਮੇਲ(ls, /*{*/ '}', '{' /*}*/, ਸਤਰ);
   lastlistfield(fs, &cc);
   luaK_settablesize(fs, pc, t->u.info, cc.na, cc.nh);
 }
@@ -1058,42 +1058,42 @@ static void constructor (LexState *ls, expdesc *t) {
 /* }====================================================================== */
 
 
-static void setvararg (FuncState *fs) {
+ਸਥਿਰ ਖਾਲੀ setvararg (FuncState *fs) {
   fs->f->flag |= PF_VAHID;  /* by default, use hidden vararg arguments */
-  luaK_codeABC(fs, OP_VARARGPREP, 0, 0, 0);
+  lua_K_ਕੋਡ_ABC(fs, OP_VARARGPREP, 0, 0, 0);
 }
 
 
-static void parlist (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ parlist (LexState *ls) {
   /* parlist -> [ {NAME ','} (NAME | '...') ] */
   FuncState *fs = ls->fs;
   Proto *f = fs->f;
-  int nparams = 0;
-  int varargk = 0;
-  if (ls->t.token != ')') {  /* is 'parlist' not empty? */
-    do {
-      switch (ls->t.token) {
-        case TK_NAME: {
+  ਪੂਰਨ nparams = 0;
+  ਪੂਰਨ varargk = 0;
+  ਜੇ (ls->t.token != ')') {  /* is 'parlist' not empty? */
+    ਕਰੋ {
+      ਚੋਣ (ls->t.token) {
+        ਹਾਲਤ TK_NAME: {
           new_localvar(ls, str_checkname(ls));
           nparams++;
-          break;
+          ਰੋਕੋ;
         }
-        case TK_DOTS: {
+        ਹਾਲਤ TK_DOTS: {
           varargk = 1;
-          luaX_next(ls);  /* skip '...' */
-          if (ls->t.token == TK_NAME)
+          lua_X_ਅਗਲਾ(ls);  /* skip '...' */
+          ਜੇ (ls->t.token == TK_NAME)
             new_varkind(ls, str_checkname(ls), RDKVAVAR);
-          else
+          ਨਹੀਂਤਾਂ
             new_localvarliteral(ls, "(vararg table)");
-          break;
+          ਰੋਕੋ;
         }
-        default: luaX_syntaxerror(ls, "<name> or '...' expected");
+        ਮੂਲ: luaX_syntaxerror(ls, "<name> or '...' expected");
       }
-    } while (!varargk && testnext(ls, ','));
+    } ਜਦੋਂ (!varargk && testnext(ls, ','));
   }
   adjustlocalvars(ls, nparams);
   f->numparams = cast_byte(fs->nactvar);
-  if (varargk) {
+  ਜੇ (varargk) {
     setvararg(fs);  /* declared vararg */
     adjustlocalvars(ls, 1);  /* vararg parameter */
   }
@@ -1102,15 +1102,15 @@ static void parlist (LexState *ls) {
 }
 
 
-static void body (LexState *ls, expdesc *e, int ismethod, int line) {
+ਸਥਿਰ ਖਾਲੀ body (LexState *ls, expdesc *e, ਪੂਰਨ ismethod, ਪੂਰਨ ਸਤਰ) {
   /* body ->  '(' parlist ')' block END */
   FuncState new_fs;
-  BlockCnt bl;
+  ਖੰਡ_Cnt bl;
   new_fs.f = addprototype(ls);
-  new_fs.f->linedefined = line;
+  new_fs.f->linedefined = ਸਤਰ;
   open_func(ls, &new_fs, &bl);
   checknext(ls, '(');
-  if (ismethod) {
+  ਜੇ (ismethod) {
     new_localvarliteral(ls, "self");  /* create 'self' parameter */
     adjustlocalvars(ls, 1);
   }
@@ -1118,71 +1118,71 @@ static void body (LexState *ls, expdesc *e, int ismethod, int line) {
   checknext(ls, ')');
   statlist(ls);
   new_fs.f->lastlinedefined = ls->linenumber;
-  check_match(ls, TK_END, TK_FUNCTION, line);
+  check_ਮੇਲ(ls, TK_ਸਿਰਾ, TK_FUNCTION, ਸਤਰ);
   codeclosure(ls, e);
   close_func(ls);
 }
 
 
-static int explist (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਪੂਰਨ explist (LexState *ls, expdesc *v) {
   /* explist -> expr { ',' expr } */
-  int n = 1;  /* at least one expression */
-  expr(ls, v);
-  while (testnext(ls, ',')) {
+  ਪੂਰਨ n = 1;  /* at least one expression */
+  ਵਿਅੰਜਕ(ls, v);
+  ਜਦੋਂ (testnext(ls, ',')) {
     luaK_exp2nextreg(ls->fs, v);
-    expr(ls, v);
+    ਵਿਅੰਜਕ(ls, v);
     n++;
   }
-  return n;
+  ਵਾਪਸ n;
 }
 
 
-static void funcargs (LexState *ls, expdesc *f) {
+ਸਥਿਰ ਖਾਲੀ funcargs (LexState *ls, expdesc *f) {
   FuncState *fs = ls->fs;
-  expdesc args;
-  int base, nparams;
-  int line = ls->linenumber;
-  switch (ls->t.token) {
-    case '(': {  /* funcargs -> '(' [ explist ] ')' */
-      luaX_next(ls);
-      if (ls->t.token == ')')  /* arg list is empty? */
-        args.k = VVOID;
-      else {
-        explist(ls, &args);
-        if (hasmultret(args.k))
-          luaK_setmultret(fs, &args);
+  expdesc ਦਲੀਲਾਂ;
+  ਪੂਰਨ ਅਧਾਰ, nparams;
+  ਪੂਰਨ ਸਤਰ = ls->linenumber;
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ '(': {  /* funcargs -> '(' [ explist ] ')' */
+      lua_X_ਅਗਲਾ(ls);
+      ਜੇ (ls->t.token == ')')  /* arg list is empty? */
+        ਦਲੀਲਾਂ.k = VVOID;
+      ਨਹੀਂਤਾਂ {
+        explist(ls, &ਦਲੀਲਾਂ);
+        ਜੇ (hasmultret(ਦਲੀਲਾਂ.k))
+          luaK_setmultret(fs, &ਦਲੀਲਾਂ);
       }
-      check_match(ls, ')', '(', line);
-      break;
+      check_ਮੇਲ(ls, ')', '(', ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case '{' /*}*/: {  /* funcargs -> constructor */
-      constructor(ls, &args);
-      break;
+    ਹਾਲਤ '{' /*}*/: {  /* funcargs -> constructor */
+      constructor(ls, &ਦਲੀਲਾਂ);
+      ਰੋਕੋ;
     }
-    case TK_STRING: {  /* funcargs -> STRING */
-      codestring(&args, ls->t.seminfo.ts);
-      luaX_next(ls);  /* must use 'seminfo' before 'next' */
-      break;
+    ਹਾਲਤ TK_STRING: {  /* funcargs -> STRING */
+      codestring(&ਦਲੀਲਾਂ, ls->t.seminfo.ts);
+      lua_X_ਅਗਲਾ(ls);  /* must use 'seminfo' before 'next' */
+      ਰੋਕੋ;
     }
-    default: {
+    ਮੂਲ: {
       luaX_syntaxerror(ls, "function arguments expected");
-      return;  /* to avoid warnings */
+      ਵਾਪਸ;  /* to avoid warnings */
     }
   }
   lua_assert(f->k == VNONRELOC);
-  base = f->u.info;  /* base register for call */
-  if (hasmultret(args.k))
+  ਅਧਾਰ = f->u.info;  /* base register for call */
+  ਜੇ (hasmultret(ਦਲੀਲਾਂ.k))
     nparams = LUA_MULTRET;  /* open call */
-  else {
-    if (args.k != VVOID)
-      luaK_exp2nextreg(fs, &args);  /* close last argument */
-    nparams = fs->freereg - (base+1);
+  ਨਹੀਂਤਾਂ {
+    ਜੇ (ਦਲੀਲਾਂ.k != VVOID)
+      luaK_exp2nextreg(fs, &ਦਲੀਲਾਂ);  /* close last argument */
+    nparams = fs->freereg - (ਅਧਾਰ+1);
   }
-  init_exp(f, VCALL, luaK_codeABC(fs, OP_CALL, base, nparams+1, 2));
-  luaK_fixline(fs, line);
+  init_exp(f, VCALL, lua_K_ਕੋਡ_ABC(fs, OP_CALL, ਅਧਾਰ, nparams+1, 2));
+  luaK_fixline(fs, ਸਤਰ);
   /* call removes function and arguments and leaves one result (unless
      changed later) */
-  fs->freereg = cast_byte(base + 1);
+  fs->freereg = cast_byte(ਅਧਾਰ + 1);
 }
 
 
@@ -1195,155 +1195,155 @@ static void funcargs (LexState *ls, expdesc *f) {
 */
 
 
-static void primaryexp (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ primaryexp (LexState *ls, expdesc *v) {
   /* primaryexp -> NAME | '(' expr ')' */
-  switch (ls->t.token) {
-    case '(': {
-      int line = ls->linenumber;
-      luaX_next(ls);
-      expr(ls, v);
-      check_match(ls, ')', '(', line);
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ '(': {
+      ਪੂਰਨ ਸਤਰ = ls->linenumber;
+      lua_X_ਅਗਲਾ(ls);
+      ਵਿਅੰਜਕ(ls, v);
+      check_ਮੇਲ(ls, ')', '(', ਸਤਰ);
       luaK_dischargevars(ls->fs, v);
-      return;
+      ਵਾਪਸ;
     }
-    case TK_NAME: {
+    ਹਾਲਤ TK_NAME: {
       singlevar(ls, v);
-      return;
+      ਵਾਪਸ;
     }
-    default: {
+    ਮੂਲ: {
       luaX_syntaxerror(ls, "unexpected symbol");
     }
   }
 }
 
 
-static void suffixedexp (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ suffixedexp (LexState *ls, expdesc *v) {
   /* suffixedexp ->
        primaryexp { '.' NAME | '[' exp ']' | ':' NAME funcargs | funcargs } */
   FuncState *fs = ls->fs;
   primaryexp(ls, v);
-  for (;;) {
-    switch (ls->t.token) {
-      case '.': {  /* fieldsel */
+  ਲਈ (;;) {
+    ਚੋਣ (ls->t.token) {
+      ਹਾਲਤ '.': {  /* fieldsel */
         fieldsel(ls, v);
-        break;
+        ਰੋਕੋ;
       }
-      case '[': {  /* '[' exp ']' */
-        expdesc key;
+      ਹਾਲਤ '[': {  /* '[' exp ']' */
+        expdesc ਕੁੰਜੀ;
         luaK_exp2anyregup(fs, v);
-        yindex(ls, &key);
-        luaK_indexed(fs, v, &key);
-        break;
+        yindex(ls, &ਕੁੰਜੀ);
+        lua_K_ਸੂਚਕਾਂਕਿਤ(fs, v, &ਕੁੰਜੀ);
+        ਰੋਕੋ;
       }
-      case ':': {  /* ':' NAME funcargs */
-        expdesc key;
-        luaX_next(ls);
-        codename(ls, &key);
-        luaK_self(fs, v, &key);
+      ਹਾਲਤ ':': {  /* ':' NAME funcargs */
+        expdesc ਕੁੰਜੀ;
+        lua_X_ਅਗਲਾ(ls);
+        codename(ls, &ਕੁੰਜੀ);
+        luaK_self(fs, v, &ਕੁੰਜੀ);
         funcargs(ls, v);
-        break;
+        ਰੋਕੋ;
       }
-      case '(': case TK_STRING: case '{' /*}*/: {  /* funcargs */
+      ਹਾਲਤ '(': ਹਾਲਤ TK_STRING: ਹਾਲਤ '{' /*}*/: {  /* funcargs */
         luaK_exp2nextreg(fs, v);
         funcargs(ls, v);
-        break;
+        ਰੋਕੋ;
       }
-      default: return;
+      ਮੂਲ: ਵਾਪਸ;
     }
   }
 }
 
 
-static void simpleexp (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ simpleexp (LexState *ls, expdesc *v) {
   /* simpleexp -> FLT | INT | STRING | NIL | TRUE | FALSE | ... |
                   constructor | FUNCTION body | suffixedexp */
-  switch (ls->t.token) {
-    case TK_FLT: {
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ TK_FLT: {
       init_exp(v, VKFLT, 0);
       v->u.nval = ls->t.seminfo.r;
-      break;
+      ਰੋਕੋ;
     }
-    case TK_INT: {
+    ਹਾਲਤ TK_INT: {
       init_exp(v, VKINT, 0);
       v->u.ival = ls->t.seminfo.i;
-      break;
+      ਰੋਕੋ;
     }
-    case TK_STRING: {
+    ਹਾਲਤ TK_STRING: {
       codestring(v, ls->t.seminfo.ts);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_NIL: {
+    ਹਾਲਤ TK_NIL: {
       init_exp(v, VNIL, 0);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_TRUE: {
+    ਹਾਲਤ TK_TRUE: {
       init_exp(v, VTRUE, 0);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_FALSE: {
+    ਹਾਲਤ TK_FALSE: {
       init_exp(v, VFALSE, 0);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_DOTS: {  /* vararg */
+    ਹਾਲਤ TK_DOTS: {  /* vararg */
       FuncState *fs = ls->fs;
       check_condition(ls, isvararg(fs->f),
                       "cannot use '...' outside a vararg function");
-      init_exp(v, VVARARG, luaK_codeABC(fs, OP_VARARG, 0, fs->f->numparams, 1));
-      break;
+      init_exp(v, VVARARG, lua_K_ਕੋਡ_ABC(fs, OP_VARARG, 0, fs->f->numparams, 1));
+      ਰੋਕੋ;
     }
-    case '{' /*}*/: {  /* constructor */
+    ਹਾਲਤ '{' /*}*/: {  /* constructor */
       constructor(ls, v);
-      return;
+      ਵਾਪਸ;
     }
-    case TK_FUNCTION: {
-      luaX_next(ls);
+    ਹਾਲਤ TK_FUNCTION: {
+      lua_X_ਅਗਲਾ(ls);
       body(ls, v, 0, ls->linenumber);
-      return;
+      ਵਾਪਸ;
     }
-    default: {
+    ਮੂਲ: {
       suffixedexp(ls, v);
-      return;
+      ਵਾਪਸ;
     }
   }
-  luaX_next(ls);
+  lua_X_ਅਗਲਾ(ls);
 }
 
 
-static UnOpr getunopr (int op) {
-  switch (op) {
-    case TK_NOT: return OPR_NOT;
-    case '-': return OPR_MINUS;
-    case '~': return OPR_BNOT;
-    case '#': return OPR_LEN;
-    default: return OPR_NOUNOPR;
+ਸਥਿਰ UnOpr getunopr (ਪੂਰਨ op) {
+  ਚੋਣ (op) {
+    ਹਾਲਤ TK_NOT: ਵਾਪਸ OPR_NOT;
+    ਹਾਲਤ '-': ਵਾਪਸ OPR_MINUS;
+    ਹਾਲਤ '~': ਵਾਪਸ OPR_BNOT;
+    ਹਾਲਤ '#': ਵਾਪਸ OPR_LEN;
+    ਮੂਲ: ਵਾਪਸ OPR_NOUNOPR;
   }
 }
 
 
-static BinOpr getbinopr (int op) {
-  switch (op) {
-    case '+': return OPR_ADD;
-    case '-': return OPR_SUB;
-    case '*': return OPR_MUL;
-    case '%': return OPR_MOD;
-    case '^': return OPR_POW;
-    case '/': return OPR_DIV;
-    case TK_IDIV: return OPR_IDIV;
-    case '&': return OPR_BAND;
-    case '|': return OPR_BOR;
-    case '~': return OPR_BXOR;
-    case TK_SHL: return OPR_SHL;
-    case TK_SHR: return OPR_SHR;
-    case TK_CONCAT: return OPR_CONCAT;
-    case TK_NE: return OPR_NE;
-    case TK_EQ: return OPR_EQ;
-    case '<': return OPR_LT;
-    case TK_LE: return OPR_LE;
-    case '>': return OPR_GT;
-    case TK_GE: return OPR_GE;
-    case TK_AND: return OPR_AND;
-    case TK_OR: return OPR_OR;
-    default: return OPR_NOBINOPR;
+ਸਥਿਰ BinOpr getbinopr (ਪੂਰਨ op) {
+  ਚੋਣ (op) {
+    ਹਾਲਤ '+': ਵਾਪਸ OPR_ਜੋੜੋ;
+    ਹਾਲਤ '-': ਵਾਪਸ OPR_SUB;
+    ਹਾਲਤ '*': ਵਾਪਸ OPR_MUL;
+    ਹਾਲਤ '%': ਵਾਪਸ OPR_MOD;
+    ਹਾਲਤ '^': ਵਾਪਸ OPR_POW;
+    ਹਾਲਤ '/': ਵਾਪਸ OPR_DIV;
+    ਹਾਲਤ TK_IDIV: ਵਾਪਸ OPR_IDIV;
+    ਹਾਲਤ '&': ਵਾਪਸ OPR_BAND;
+    ਹਾਲਤ '|': ਵਾਪਸ OPR_BOR;
+    ਹਾਲਤ '~': ਵਾਪਸ OPR_BXOR;
+    ਹਾਲਤ TK_SHL: ਵਾਪਸ OPR_SHL;
+    ਹਾਲਤ TK_SHR: ਵਾਪਸ OPR_SHR;
+    ਹਾਲਤ TK_CONCAT: ਵਾਪਸ OPR_CONCAT;
+    ਹਾਲਤ TK_NE: ਵਾਪਸ OPR_NE;
+    ਹਾਲਤ TK_EQ: ਵਾਪਸ OPR_EQ;
+    ਹਾਲਤ '<': ਵਾਪਸ OPR_LT;
+    ਹਾਲਤ TK_LE: ਵਾਪਸ OPR_LE;
+    ਹਾਲਤ '>': ਵਾਪਸ OPR_GT;
+    ਹਾਲਤ TK_GE: ਵਾਪਸ OPR_GE;
+    ਹਾਲਤ TK_AND: ਵਾਪਸ OPR_AND;
+    ਹਾਲਤ TK_OR: ਵਾਪਸ OPR_OR;
+    ਮੂਲ: ਵਾਪਸ OPR_NOBINOPR;
   }
 }
 
@@ -1351,10 +1351,10 @@ static BinOpr getbinopr (int op) {
 /*
 ** Priority table for binary operators.
 */
-static const struct {
-  lu_byte left;  /* left priority for each binary operator */
-  lu_byte right; /* right priority */
-} priority[] = {  /* ORDER OPR */
+ਸਥਿਰ ਅਚਲ ਬਣਤਰ {
+  lu_byte ਖੱਬਾ;  /* left priority for each binary operator */
+  lu_byte ਸੱਜਾ; /* right priority */
+} ਤਰਜੀਹ[] = {  /* ORDER OPR */
    {10, 10}, {10, 10},           /* '+' '-' */
    {11, 11}, {11, 11},           /* '*' '%' */
    {14, 13},                  /* '^' (right associative) */
@@ -1367,44 +1367,44 @@ static const struct {
    {2, 2}, {1, 1}            /* and, or */
 };
 
-#define UNARY_PRIORITY	12  /* priority for unary operators */
+#ਪਰਿਭਾਸ਼ਿਤ_ਕਰੋ UNARY_ਤਰਜੀਹ	12  /* priority for unary operators */
 
 
 /*
 ** subexpr -> (simpleexp | unop subexpr) { binop subexpr }
 ** where 'binop' is any binary operator with a priority higher than 'limit'
 */
-static BinOpr subexpr (LexState *ls, expdesc *v, int limit) {
+ਸਥਿਰ BinOpr subexpr (LexState *ls, expdesc *v, ਪੂਰਨ ਹੱਦਬੰਦੀ) {
   BinOpr op;
   UnOpr uop;
   enterlevel(ls);
   uop = getunopr(ls->t.token);
-  if (uop != OPR_NOUNOPR) {  /* prefix (unary) operator? */
-    int line = ls->linenumber;
-    luaX_next(ls);  /* skip operator */
-    subexpr(ls, v, UNARY_PRIORITY);
-    luaK_prefix(ls->fs, uop, v, line);
+  ਜੇ (uop != OPR_NOUNOPR) {  /* prefix (unary) operator? */
+    ਪੂਰਨ ਸਤਰ = ls->linenumber;
+    lua_X_ਅਗਲਾ(ls);  /* skip operator */
+    subexpr(ls, v, UNARY_ਤਰਜੀਹ);
+    lua_K_ਅਗੇਤਰ(ls->fs, uop, v, ਸਤਰ);
   }
-  else simpleexp(ls, v);
+  ਨਹੀਂਤਾਂ simpleexp(ls, v);
   /* expand while operators have priorities higher than 'limit' */
   op = getbinopr(ls->t.token);
-  while (op != OPR_NOBINOPR && priority[op].left > limit) {
+  ਜਦੋਂ (op != OPR_NOBINOPR && ਤਰਜੀਹ[op].ਖੱਬਾ > ਹੱਦਬੰਦੀ) {
     expdesc v2;
     BinOpr nextop;
-    int line = ls->linenumber;
-    luaX_next(ls);  /* skip operator */
+    ਪੂਰਨ ਸਤਰ = ls->linenumber;
+    lua_X_ਅਗਲਾ(ls);  /* skip operator */
     luaK_infix(ls->fs, op, v);
     /* read sub-expression with higher priority */
-    nextop = subexpr(ls, &v2, priority[op].right);
-    luaK_posfix(ls->fs, op, v, &v2, line);
+    nextop = subexpr(ls, &v2, ਤਰਜੀਹ[op].ਸੱਜਾ);
+    luaK_posfix(ls->fs, op, v, &v2, ਸਤਰ);
     op = nextop;
   }
   leavelevel(ls);
-  return op;  /* return first untreated operator */
+  ਵਾਪਸ op;  /* return first untreated operator */
 }
 
 
-static void expr (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ ਵਿਅੰਜਕ (LexState *ls, expdesc *v) {
   subexpr(ls, v, 0);
 }
 
@@ -1419,10 +1419,10 @@ static void expr (LexState *ls, expdesc *v) {
 */
 
 
-static void block (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ ਖੰਡ (LexState *ls) {
   /* block -> statlist */
   FuncState *fs = ls->fs;
-  BlockCnt bl;
+  ਖੰਡ_Cnt bl;
   enterblock(fs, &bl, 0);
   statlist(ls);
   leaveblock(fs);
@@ -1433,8 +1433,8 @@ static void block (LexState *ls) {
 ** structure to chain all variables in the left-hand side of an
 ** assignment
 */
-struct LHS_assign {
-  struct LHS_assign *prev;
+ਬਣਤਰ LHS_ਸੌਂਪੋ {
+  ਬਣਤਰ LHS_ਸੌਂਪੋ *prev;
   expdesc v;  /* variable (global, local, upvalue, or indexed) */
 };
 
@@ -1445,26 +1445,26 @@ struct LHS_assign {
 ** table. If so, save original upvalue/local value in a safe place and
 ** use this safe copy in the previous assignment.
 */
-static void check_conflict (LexState *ls, struct LHS_assign *lh, expdesc *v) {
+ਸਥਿਰ ਖਾਲੀ check_conflict (LexState *ls, ਬਣਤਰ LHS_ਸੌਂਪੋ *lh, expdesc *v) {
   FuncState *fs = ls->fs;
   lu_byte extra = fs->freereg;  /* eventual position to save local variable */
-  int conflict = 0;
-  for (; lh; lh = lh->prev) {  /* check all previous assignments */
-    if (vkisindexed(lh->v.k)) {  /* assignment to table field? */
-      if (lh->v.k == VINDEXUP) {  /* is table an upvalue? */
-        if (v->k == VUPVAL && lh->v.u.ind.t == v->u.info) {
+  ਪੂਰਨ conflict = 0;
+  ਲਈ (; lh; lh = lh->prev) {  /* check all previous assignments */
+    ਜੇ (vkisindexed(lh->v.k)) {  /* assignment to table field? */
+      ਜੇ (lh->v.k == VINDEXUP) {  /* is table an upvalue? */
+        ਜੇ (v->k == VUPVAL && lh->v.u.ind.t == v->u.info) {
           conflict = 1;  /* table is the upvalue being assigned now */
           lh->v.k = VINDEXSTR;
           lh->v.u.ind.t = extra;  /* assignment will use safe copy */
         }
       }
-      else {  /* table is a register */
-        if (v->k == VLOCAL && lh->v.u.ind.t == v->u.var.ridx) {
+      ਨਹੀਂਤਾਂ {  /* table is a register */
+        ਜੇ (v->k == VLOCAL && lh->v.u.ind.t == v->u.var.ridx) {
           conflict = 1;  /* table is the local being assigned now */
           lh->v.u.ind.t = extra;  /* assignment will use safe copy */
         }
         /* is index the local being assigned? */
-        if (lh->v.k == VINDEXED && v->k == VLOCAL &&
+        ਜੇ (lh->v.k == VINDEXED && v->k == VLOCAL &&
             lh->v.u.ind.idx == v->u.var.ridx) {
           conflict = 1;
           lh->v.u.ind.idx = extra;  /* previous assignment will use safe copy */
@@ -1472,19 +1472,19 @@ static void check_conflict (LexState *ls, struct LHS_assign *lh, expdesc *v) {
       }
     }
   }
-  if (conflict) {
+  ਜੇ (conflict) {
     /* copy upvalue/local value to a temporary (in position 'extra') */
-    if (v->k == VLOCAL)
-      luaK_codeABC(fs, OP_MOVE, extra, v->u.var.ridx, 0);
-    else
-      luaK_codeABC(fs, OP_GETUPVAL, extra, v->u.info, 0);
+    ਜੇ (v->k == VLOCAL)
+      lua_K_ਕੋਡ_ABC(fs, OP_MOVE, extra, v->u.var.ridx, 0);
+    ਨਹੀਂਤਾਂ
+      lua_K_ਕੋਡ_ABC(fs, OP_GETUPVAL, extra, v->u.info, 0);
     luaK_reserveregs(fs, 1);
   }
 }
 
 
 /* Create code to store the "top" register in 'var' */
-static void storevartop (FuncState *fs, expdesc *var) {
+ਸਥਿਰ ਖਾਲੀ storevartop (FuncState *fs, expdesc *var) {
   expdesc e;
   init_exp(&e, VNONRELOC, fs->freereg - 1);
   luaK_storevar(fs, var, &e);  /* will also free the top register */
@@ -1498,66 +1498,66 @@ static void storevartop (FuncState *fs, expdesc *var) {
 ** assignment -> suffixedexp restassign
 ** restassign -> ',' suffixedexp restassign | '=' explist
 */
-static void restassign (LexState *ls, struct LHS_assign *lh, int nvars) {
+ਸਥਿਰ ਖਾਲੀ restassign (LexState *ls, ਬਣਤਰ LHS_ਸੌਂਪੋ *lh, ਪੂਰਨ nvars) {
   expdesc e;
   check_condition(ls, vkisvar(lh->v.k), "syntax error");
   check_readonly(ls, &lh->v);
-  if (testnext(ls, ',')) {  /* restassign -> ',' suffixedexp restassign */
-    struct LHS_assign nv;
+  ਜੇ (testnext(ls, ',')) {  /* restassign -> ',' suffixedexp restassign */
+    ਬਣਤਰ LHS_ਸੌਂਪੋ nv;
     nv.prev = lh;
     suffixedexp(ls, &nv.v);
-    if (!vkisindexed(nv.v.k))
+    ਜੇ (!vkisindexed(nv.v.k))
       check_conflict(ls, lh, &nv.v);
     enterlevel(ls);  /* control recursion depth */
     restassign(ls, &nv, nvars+1);
     leavelevel(ls);
   }
-  else {  /* restassign -> '=' explist */
-    int nexps;
+  ਨਹੀਂਤਾਂ {  /* restassign -> '=' explist */
+    ਪੂਰਨ nexps;
     checknext(ls, '=');
     nexps = explist(ls, &e);
-    if (nexps != nvars)
-      adjust_assign(ls, nvars, nexps, &e);
-    else {
+    ਜੇ (nexps != nvars)
+      adjust_ਸੌਂਪੋ(ls, nvars, nexps, &e);
+    ਨਹੀਂਤਾਂ {
       luaK_setoneret(ls->fs, &e);  /* close last expression */
       luaK_storevar(ls->fs, &lh->v, &e);
-      return;  /* avoid default */
+      ਵਾਪਸ;  /* avoid default */
     }
   }
   storevartop(ls->fs, &lh->v);  /* default assignment */
 }
 
 
-static int cond (LexState *ls) {
+ਸਥਿਰ ਪੂਰਨ cond (LexState *ls) {
   /* cond -> exp */
   expdesc v;
-  expr(ls, &v);  /* read condition */
-  if (v.k == VNIL) v.k = VFALSE;  /* 'falses' are all equal here */
+  ਵਿਅੰਜਕ(ls, &v);  /* read condition */
+  ਜੇ (v.k == VNIL) v.k = VFALSE;  /* 'falses' are all equal here */
   luaK_goiftrue(ls->fs, &v);
-  return v.f;
+  ਵਾਪਸ v.f;
 }
 
 
-static void gotostat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ gotostat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   TString *name = str_checkname(ls);  /* label's name */
-  newgotoentry(ls, name, line);
+  newgotoentry(ls, name, ਸਤਰ);
 }
 
 
 /*
 ** Break statement. Semantically equivalent to "goto break".
 */
-static void breakstat (LexState *ls, int line) {
-  BlockCnt *bl;  /* to look for an enclosing loop */
-  for (bl = ls->fs->bl; bl != NULL; bl = bl->previous) {
-    if (bl->isloop)  /* found one? */
-      goto ok;
+ਸਥਿਰ ਖਾਲੀ breakstat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
+  ਖੰਡ_Cnt *bl;  /* to look for an enclosing loop */
+  ਲਈ (bl = ls->fs->bl; bl != ਨਿਰਾ; bl = bl->ਪਿਛਲਾ) {
+    ਜੇ (bl->isloop)  /* found one? */
+      ਜਾਓ ok;
   }
   luaX_syntaxerror(ls, "break outside loop");
  ok:
   bl->isloop = 2;  /* signal that block has pending breaks */
-  luaX_next(ls);  /* skip break */
-  newgotoentry(ls, ls->brkn, line);
+  lua_X_ਅਗਲਾ(ls);  /* skip break */
+  newgotoentry(ls, ls->brkn, ਸਤਰ);
 }
 
 
@@ -1565,61 +1565,61 @@ static void breakstat (LexState *ls, int line) {
 ** Check whether there is already a label with the given 'name' at
 ** current function.
 */
-static void checkrepeated (LexState *ls, TString *name) {
+ਸਥਿਰ ਖਾਲੀ checkrepeated (LexState *ls, TString *name) {
   Labeldesc *lb = findlabel(ls, name, ls->fs->firstlabel);
-  if (l_unlikely(lb != NULL))  /* already defined? */
+  ਜੇ (l_unlikely(lb != ਨਿਰਾ))  /* already defined? */
     luaK_semerror(ls, "label '%s' already defined on line %d",
-                      getstr(name), lb->line);  /* error */
+                      getstr(name), lb->ਸਤਰ);  /* error */
 }
 
 
-static void labelstat (LexState *ls, TString *name, int line) {
+ਸਥਿਰ ਖਾਲੀ labelstat (LexState *ls, TString *name, ਪੂਰਨ ਸਤਰ) {
   /* label -> '::' NAME '::' */
   checknext(ls, TK_DBCOLON);  /* skip double colon */
-  while (ls->t.token == ';' || ls->t.token == TK_DBCOLON)
+  ਜਦੋਂ (ls->t.token == ';' || ls->t.token == TK_DBCOLON)
     statement(ls);  /* skip other no-op statements */
   checkrepeated(ls, name);  /* check for repeated labels */
-  createlabel(ls, name, line, block_follow(ls, 0));
+  createlabel(ls, name, ਸਤਰ, ਖੰਡ_follow(ls, 0));
 }
 
 
-static void whilestat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ whilestat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* whilestat -> WHILE cond DO block END */
   FuncState *fs = ls->fs;
-  int whileinit;
-  int condexit;
-  BlockCnt bl;
-  luaX_next(ls);  /* skip WHILE */
+  ਪੂਰਨ whileinit;
+  ਪੂਰਨ condexit;
+  ਖੰਡ_Cnt bl;
+  lua_X_ਅਗਲਾ(ls);  /* skip WHILE */
   whileinit = luaK_getlabel(fs);
   condexit = cond(ls);
   enterblock(fs, &bl, 1);
   checknext(ls, TK_DO);
-  block(ls);
+  ਖੰਡ(ls);
   luaK_jumpto(fs, whileinit);
-  check_match(ls, TK_END, TK_WHILE, line);
+  check_ਮੇਲ(ls, TK_ਸਿਰਾ, TK_WHILE, ਸਤਰ);
   leaveblock(fs);
   luaK_patchtohere(fs, condexit);  /* false conditions finish the loop */
 }
 
 
-static void repeatstat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ repeatstat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* repeatstat -> REPEAT block UNTIL cond */
-  int condexit;
+  ਪੂਰਨ condexit;
   FuncState *fs = ls->fs;
-  int repeat_init = luaK_getlabel(fs);
-  BlockCnt bl1, bl2;
+  ਪੂਰਨ repeat_init = luaK_getlabel(fs);
+  ਖੰਡ_Cnt bl1, bl2;
   enterblock(fs, &bl1, 1);  /* loop block */
   enterblock(fs, &bl2, 0);  /* scope block */
-  luaX_next(ls);  /* skip REPEAT */
+  lua_X_ਅਗਲਾ(ls);  /* skip REPEAT */
   statlist(ls);
-  check_match(ls, TK_UNTIL, TK_REPEAT, line);
+  check_ਮੇਲ(ls, TK_UNTIL, TK_REPEAT, ਸਤਰ);
   condexit = cond(ls);  /* read condition (inside scope block) */
-  if (bl2.upval) {  /* upvalues? */
-    int exit = luaK_jump(fs);  /* normal exit must jump over fix */
+  ਜੇ (bl2.upval) {  /* upvalues? */
+    ਪੂਰਨ ਬਾਹਰ_ਨਿਕਲੋ = luaK_jump(fs);  /* normal exit must jump over fix */
     luaK_patchtohere(fs, condexit);  /* repetition must close upvalues */
-    luaK_codeABC(fs, OP_CLOSE, reglevel(fs, bl2.nactvar), 0, 0);
+    lua_K_ਕੋਡ_ABC(fs, OP_CLOSE, reglevel(fs, bl2.nactvar), 0, 0);
     condexit = luaK_jump(fs);  /* repeat after closing upvalues */
-    luaK_patchtohere(fs, exit);  /* normal exit comes to here */
+    luaK_patchtohere(fs, ਬਾਹਰ_ਨਿਕਲੋ);  /* normal exit comes to here */
   }
   luaK_patchlist(fs, condexit, repeat_init);  /* close the loop */
   leaveblock(fs);  /* finish scope */
@@ -1632,9 +1632,9 @@ static void repeatstat (LexState *ls, int line) {
 ** stack slot.
 **
 */
-static void exp1 (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ exp1 (LexState *ls) {
   expdesc e;
-  expr(ls, &e);
+  ਵਿਅੰਜਕ(ls, &e);
   luaK_exp2nextreg(ls->fs, &e);
   lua_assert(e.k == VNONRELOC);
 }
@@ -1645,146 +1645,146 @@ static void exp1 (LexState *ls) {
 ** (Jump addresses are relative in Lua). 'back' true means
 ** a back jump.
 */
-static void fixforjump (FuncState *fs, int pc, int dest, int back) {
-  Instruction *jmp = &fs->f->code[pc];
-  int offset = dest - (pc + 1);
-  if (back)
-    offset = -offset;
-  if (l_unlikely(offset > MAXARG_Bx))
+ਸਥਿਰ ਖਾਲੀ fixforjump (FuncState *fs, ਪੂਰਨ pc, ਪੂਰਨ dest, ਪੂਰਨ ਪਿੱਠ) {
+  Instruction *jmp = &fs->f->ਕੋਡ[pc];
+  ਪੂਰਨ ਵਿੱਥ = dest - (pc + 1);
+  ਜੇ (ਪਿੱਠ)
+    ਵਿੱਥ = -ਵਿੱਥ;
+  ਜੇ (l_unlikely(ਵਿੱਥ > MAXARG_Bx))
     luaX_syntaxerror(fs->ls, "control structure too long");
-  SETARG_Bx(*jmp, offset);
+  SETARG_Bx(*jmp, ਵਿੱਥ);
 }
 
 
 /*
 ** Generate code for a 'for' loop.
 */
-static void forbody (LexState *ls, int base, int line, int nvars, int isgen) {
+ਸਥਿਰ ਖਾਲੀ forbody (LexState *ls, ਪੂਰਨ ਅਧਾਰ, ਪੂਰਨ ਸਤਰ, ਪੂਰਨ nvars, ਪੂਰਨ isgen) {
   /* forbody -> DO block */
-  static const OpCode forprep[2] = {OP_FORPREP, OP_TFORPREP};
-  static const OpCode forloop[2] = {OP_FORLOOP, OP_TFORLOOP};
-  BlockCnt bl;
+  ਸਥਿਰ ਅਚਲ Op_ਕੋਡ forprep[2] = {OP_FORPREP, OP_TFORPREP};
+  ਸਥਿਰ ਅਚਲ Op_ਕੋਡ forloop[2] = {OP_FORLOOP, OP_TFORLOOP};
+  ਖੰਡ_Cnt bl;
   FuncState *fs = ls->fs;
-  int prep, endfor;
+  ਪੂਰਨ prep, endfor;
   checknext(ls, TK_DO);
-  prep = luaK_codeABx(fs, forprep[isgen], base, 0);
+  prep = lua_K_ਕੋਡ_ABx(fs, forprep[isgen], ਅਧਾਰ, 0);
   fs->freereg--;  /* both 'forprep' remove one register from the stack */
   enterblock(fs, &bl, 0);  /* scope for declared variables */
   adjustlocalvars(ls, nvars);
   luaK_reserveregs(fs, nvars);
-  block(ls);
+  ਖੰਡ(ls);
   leaveblock(fs);  /* end of scope for declared variables */
   fixforjump(fs, prep, luaK_getlabel(fs), 0);
-  if (isgen) {  /* generic for? */
-    luaK_codeABC(fs, OP_TFORCALL, base, 0, nvars);
-    luaK_fixline(fs, line);
+  ਜੇ (isgen) {  /* generic for? */
+    lua_K_ਕੋਡ_ABC(fs, OP_TFORCALL, ਅਧਾਰ, 0, nvars);
+    luaK_fixline(fs, ਸਤਰ);
   }
-  endfor = luaK_codeABx(fs, forloop[isgen], base, 0);
+  endfor = lua_K_ਕੋਡ_ABx(fs, forloop[isgen], ਅਧਾਰ, 0);
   fixforjump(fs, endfor, prep + 1, 1);
-  luaK_fixline(fs, line);
+  luaK_fixline(fs, ਸਤਰ);
 }
 
 
-static void fornum (LexState *ls, TString *varname, int line) {
+ਸਥਿਰ ਖਾਲੀ fornum (LexState *ls, TString *varname, ਪੂਰਨ ਸਤਰ) {
   /* fornum -> NAME = exp,exp[,exp] forbody */
   FuncState *fs = ls->fs;
-  int base = fs->freereg;
+  ਪੂਰਨ ਅਧਾਰ = fs->freereg;
   new_localvarliteral(ls, "(for state)");
   new_localvarliteral(ls, "(for state)");
   new_varkind(ls, varname, RDKCONST);  /* control variable */
   checknext(ls, '=');
   exp1(ls);  /* initial value */
   checknext(ls, ',');
-  exp1(ls);  /* limit */
-  if (testnext(ls, ','))
+  exp1(ls);  /*ਹੱਦਬੰਦੀ*/
+  ਜੇ (testnext(ls, ','))
     exp1(ls);  /* optional step */
-  else {  /* default step = 1 */
+  ਨਹੀਂਤਾਂ {  /* default step = 1 */
     luaK_int(fs, fs->freereg, 1);
     luaK_reserveregs(fs, 1);
   }
   adjustlocalvars(ls, 2);  /* start scope for internal variables */
-  forbody(ls, base, line, 1, 0);
+  forbody(ls, ਅਧਾਰ, ਸਤਰ, 1, 0);
 }
 
 
-static void forlist (LexState *ls, TString *indexname) {
+ਸਥਿਰ ਖਾਲੀ forlist (LexState *ls, TString *indexname) {
   /* forlist -> NAME {,NAME} IN explist forbody */
   FuncState *fs = ls->fs;
   expdesc e;
-  int nvars = 4;  /* function, state, closing, control */
-  int line;
-  int base = fs->freereg;
+  ਪੂਰਨ nvars = 4;  /* function, state, closing, control */
+  ਪੂਰਨ ਸਤਰ;
+  ਪੂਰਨ ਅਧਾਰ = fs->freereg;
   /* create internal variables */
   new_localvarliteral(ls, "(for state)");  /* iterator function */
   new_localvarliteral(ls, "(for state)");  /* state */
   new_localvarliteral(ls, "(for state)");  /* closing var. (after swap) */
   new_varkind(ls, indexname, RDKCONST);  /* control variable */
   /* other declared variables */
-  while (testnext(ls, ',')) {
+  ਜਦੋਂ (testnext(ls, ',')) {
     new_localvar(ls, str_checkname(ls));
     nvars++;
   }
-  checknext(ls, TK_IN);
-  line = ls->linenumber;
-  adjust_assign(ls, 4, explist(ls, &e), &e);
+  checknext(ls, TK_ਵਿੱਚ);
+  ਸਤਰ = ls->linenumber;
+  adjust_ਸੌਂਪੋ(ls, 4, explist(ls, &e), &e);
   adjustlocalvars(ls, 3);  /* start scope for internal variables */
   marktobeclosed(fs);  /* last internal var. must be closed */
   luaK_checkstack(fs, 2);  /* extra space to call iterator */
-  forbody(ls, base, line, nvars - 3, 1);
+  forbody(ls, ਅਧਾਰ, ਸਤਰ, nvars - 3, 1);
 }
 
 
-static void forstat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ forstat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* forstat -> FOR (fornum | forlist) END */
   FuncState *fs = ls->fs;
   TString *varname;
-  BlockCnt bl;
+  ਖੰਡ_Cnt bl;
   enterblock(fs, &bl, 1);  /* scope for loop and control variables */
-  luaX_next(ls);  /* skip 'for' */
+  lua_X_ਅਗਲਾ(ls);  /* skip 'for' */
   varname = str_checkname(ls);  /* first variable name */
-  switch (ls->t.token) {
-    case '=': fornum(ls, varname, line); break;
-    case ',': case TK_IN: forlist(ls, varname); break;
-    default: luaX_syntaxerror(ls, "'=' or 'in' expected");
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ '=': fornum(ls, varname, ਸਤਰ); ਰੋਕੋ;
+    ਹਾਲਤ ',': ਹਾਲਤ TK_ਵਿੱਚ: forlist(ls, varname); ਰੋਕੋ;
+    ਮੂਲ: luaX_syntaxerror(ls, "'=' or 'in' expected");
   }
-  check_match(ls, TK_END, TK_FOR, line);
+  check_ਮੇਲ(ls, TK_ਸਿਰਾ, TK_FOR, ਸਤਰ);
   leaveblock(fs);  /* loop scope ('break' jumps to this point) */
 }
 
 
-static void test_then_block (LexState *ls, int *escapelist) {
+ਸਥਿਰ ਖਾਲੀ test_then_ਖੰਡ (LexState *ls, ਪੂਰਨ *escapelist) {
   /* test_then_block -> [IF | ELSEIF] cond THEN block */
   FuncState *fs = ls->fs;
-  int condtrue;
-  luaX_next(ls);  /* skip IF or ELSEIF */
+  ਪੂਰਨ condtrue;
+  lua_X_ਅਗਲਾ(ls);  /* skip IF or ELSEIF */
   condtrue = cond(ls);  /* read condition */
   checknext(ls, TK_THEN);
-  block(ls);  /* 'then' part */
-  if (ls->t.token == TK_ELSE ||
+  ਖੰਡ(ls);  /* 'then' part */
+  ਜੇ (ls->t.token == TK_ELSE ||
       ls->t.token == TK_ELSEIF)  /* followed by 'else'/'elseif'? */
     luaK_concat(fs, escapelist, luaK_jump(fs));  /* must jump over it */
   luaK_patchtohere(fs, condtrue);
 }
 
 
-static void ifstat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ ifstat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* ifstat -> IF cond THEN block {ELSEIF cond THEN block} [ELSE block] END */
   FuncState *fs = ls->fs;
-  int escapelist = NO_JUMP;  /* exit list for finished parts */
-  test_then_block(ls, &escapelist);  /* IF cond THEN block */
-  while (ls->t.token == TK_ELSEIF)
-    test_then_block(ls, &escapelist);  /* ELSEIF cond THEN block */
-  if (testnext(ls, TK_ELSE))
-    block(ls);  /* 'else' part */
-  check_match(ls, TK_END, TK_IF, line);
+  ਪੂਰਨ escapelist = NO_JUMP;  /* exit list for finished parts */
+  test_then_ਖੰਡ(ls, &escapelist);  /* IF cond THEN block */
+  ਜਦੋਂ (ls->t.token == TK_ELSEIF)
+    test_then_ਖੰਡ(ls, &escapelist);  /* ELSEIF cond THEN block */
+  ਜੇ (testnext(ls, TK_ELSE))
+    ਖੰਡ(ls);  /* 'else' part */
+  check_ਮੇਲ(ls, TK_ਸਿਰਾ, TK_IF, ਸਤਰ);
   luaK_patchtohere(fs, escapelist);  /* patch escape list to 'if' end */
 }
 
 
-static void localfunc (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ localfunc (LexState *ls) {
   expdesc b;
   FuncState *fs = ls->fs;
-  int fvar = fs->nactvar;  /* function's variable index */
+  ਪੂਰਨ fvar = fs->nactvar;  /* function's variable index */
   new_localvar(ls, str_checkname(ls));  /* new local variable */
   adjustlocalvars(ls, 1);  /* enter its scope */
   body(ls, &b, 0, ls->linenumber);  /* function created in next register */
@@ -1793,96 +1793,96 @@ static void localfunc (LexState *ls) {
 }
 
 
-static lu_byte getvarattribute (LexState *ls, lu_byte df) {
+ਸਥਿਰ lu_byte getvarattribute (LexState *ls, lu_byte df) {
   /* attrib -> ['<' NAME '>'] */
-  if (testnext(ls, '<')) {
+  ਜੇ (testnext(ls, '<')) {
     TString *ts = str_checkname(ls);
-    const char *attr = getstr(ts);
+    ਅਚਲ ਅੱਖਰ *attr = getstr(ts);
     checknext(ls, '>');
-    if (strcmp(attr, "const") == 0)
-      return RDKCONST;  /* read-only variable */
-    else if (strcmp(attr, "close") == 0)
-      return RDKTOCLOSE;  /* to-be-closed variable */
-    else
+    ਜੇ (strcmp(attr, "const") == 0)
+      ਵਾਪਸ RDKCONST;  /* read-only variable */
+    ਨਹੀਂਤਾਂ ਜੇ (strcmp(attr, "close") == 0)
+      ਵਾਪਸ RDKTOCLOSE;  /* to-be-closed variable */
+    ਨਹੀਂਤਾਂ
       luaK_semerror(ls, "unknown attribute '%s'", attr);
   }
-  return df;  /* return default value */
+  ਵਾਪਸ df;  /* return default value */
 }
 
 
-static void checktoclose (FuncState *fs, int level) {
-  if (level != -1) {  /* is there a to-be-closed variable? */
+ਸਥਿਰ ਖਾਲੀ checktoclose (FuncState *fs, ਪੂਰਨ level) {
+  ਜੇ (level != -1) {  /* is there a to-be-closed variable? */
     marktobeclosed(fs);
-    luaK_codeABC(fs, OP_TBC, reglevel(fs, level), 0, 0);
+    lua_K_ਕੋਡ_ABC(fs, OP_TBC, reglevel(fs, level), 0, 0);
   }
 }
 
 
-static void localstat (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ localstat (LexState *ls) {
   /* stat -> LOCAL NAME attrib { ',' NAME attrib } ['=' explist] */
   FuncState *fs = ls->fs;
-  int toclose = -1;  /* index of to-be-closed variable (if any) */
+  ਪੂਰਨ toclose = -1;  /* index of to-be-closed variable (if any) */
   Vardesc *var;  /* last variable */
-  int vidx;  /* index of last variable */
-  int nvars = 0;
-  int nexps;
+  ਪੂਰਨ vidx;  /* index of last variable */
+  ਪੂਰਨ nvars = 0;
+  ਪੂਰਨ nexps;
   expdesc e;
   /* get prefixed attribute (if any); default is regular local variable */
   lu_byte defkind = getvarattribute(ls, VDKREG);
-  do {  /* for each variable */
+  ਕਰੋ {  /* for each variable */
     TString *vname = str_checkname(ls);  /* get its name */
-    lu_byte kind = getvarattribute(ls, defkind);  /* postfixed attribute */
-    vidx = new_varkind(ls, vname, kind);  /* predeclare it */
-    if (kind == RDKTOCLOSE) {  /* to-be-closed? */
-      if (toclose != -1)  /* one already present? */
+    lu_byte ਕਿਸਮ = getvarattribute(ls, defkind);  /* postfixed attribute */
+    vidx = new_varkind(ls, vname, ਕਿਸਮ);  /* predeclare it */
+    ਜੇ (ਕਿਸਮ == RDKTOCLOSE) {  /* to-be-closed? */
+      ਜੇ (toclose != -1)  /* one already present? */
         luaK_semerror(ls, "multiple to-be-closed variables in local list");
       toclose = fs->nactvar + nvars;
     }
     nvars++;
-  } while (testnext(ls, ','));
-  if (testnext(ls, '='))  /* initialization? */
+  } ਜਦੋਂ (testnext(ls, ','));
+  ਜੇ (testnext(ls, '='))  /* initialization? */
     nexps = explist(ls, &e);
-  else {
+  ਨਹੀਂਤਾਂ {
     e.k = VVOID;
     nexps = 0;
   }
   var = getlocalvardesc(fs, vidx);  /* retrieve last variable */
-  if (nvars == nexps &&  /* no adjustments? */
-      var->vd.kind == RDKCONST &&  /* last variable is const? */
+  ਜੇ (nvars == nexps &&  /* no adjustments? */
+      var->vd.ਕਿਸਮ == RDKCONST &&  /* last variable is const? */
       luaK_exp2const(fs, &e, &var->k)) {  /* compile-time constant? */
-    var->vd.kind = RDKCTC;  /* variable is a compile-time constant */
+    var->vd.ਕਿਸਮ = RDKCTC;  /* variable is a compile-time constant */
     adjustlocalvars(ls, nvars - 1);  /* exclude last variable */
     fs->nactvar++;  /* but count it */
   }
-  else {
-    adjust_assign(ls, nvars, nexps, &e);
+  ਨਹੀਂਤਾਂ {
+    adjust_ਸੌਂਪੋ(ls, nvars, nexps, &e);
     adjustlocalvars(ls, nvars);
   }
   checktoclose(fs, toclose);
 }
 
 
-static lu_byte getglobalattribute (LexState *ls, lu_byte df) {
-  lu_byte kind = getvarattribute(ls, df);
-  switch (kind) {
-    case RDKTOCLOSE:
+ਸਥਿਰ lu_byte getglobalattribute (LexState *ls, lu_byte df) {
+  lu_byte ਕਿਸਮ = getvarattribute(ls, df);
+  ਚੋਣ (ਕਿਸਮ) {
+    ਹਾਲਤ RDKTOCLOSE:
       luaK_semerror(ls, "global variables cannot be to-be-closed");
-      return kind;  /* to avoid warnings */
-    case RDKCONST:
-      return GDKCONST;  /* adjust kind for global variable */
-    default:
-      return kind;
+      ਵਾਪਸ ਕਿਸਮ;  /* to avoid warnings */
+    ਹਾਲਤ RDKCONST:
+      ਵਾਪਸ GDKCONST;  /* adjust kind for global variable */
+    ਮੂਲ:
+      ਵਾਪਸ ਕਿਸਮ;
   }
 }
 
 
-static void checkglobal (LexState *ls, TString *varname, int line) {
+ਸਥਿਰ ਖਾਲੀ checkglobal (LexState *ls, TString *varname, ਪੂਰਨ ਸਤਰ) {
   FuncState *fs = ls->fs;
   expdesc var;
-  int k;
+  ਪੂਰਨ k;
   buildglobal(ls, varname, &var);  /* create global variable in 'var' */
   k = var.u.ind.keystr;  /* index of global name in 'k' */
-  luaK_codecheckglobal(fs, &var, k, line);
+  luaK_codecheckglobal(fs, &var, k, ਸਤਰ);
 }
 
 
@@ -1894,60 +1894,60 @@ static void checkglobal (LexState *ls, TString *varname, int line) {
 ** the stack to the corresponding table description. 'n' is the variable
 ** being handled, range [0, nvars - 1].
 */
-static void initglobal (LexState *ls, int nvars, int firstidx, int n,
-                        int line) {
-  if (n == nvars) {  /* traversed all variables? */
+ਸਥਿਰ ਖਾਲੀ initglobal (LexState *ls, ਪੂਰਨ nvars, ਪੂਰਨ firstidx, ਪੂਰਨ n,
+                        ਪੂਰਨ ਸਤਰ) {
+  ਜੇ (n == nvars) {  /* traversed all variables? */
     expdesc e;
-    int nexps = explist(ls, &e);  /* read list of expressions */
-    adjust_assign(ls, nvars, nexps, &e);
+    ਪੂਰਨ nexps = explist(ls, &e);  /* read list of expressions */
+    adjust_ਸੌਂਪੋ(ls, nvars, nexps, &e);
   }
-  else {  /* handle variable 'n' */
+  ਨਹੀਂਤਾਂ {  /* handle variable 'n' */
     FuncState *fs = ls->fs;
     expdesc var;
     TString *varname = getlocalvardesc(fs, firstidx + n)->vd.name;
     buildglobal(ls, varname, &var);  /* create global variable in 'var' */
     enterlevel(ls);  /* control recursion depth */
-    initglobal(ls, nvars, firstidx, n + 1, line);
+    initglobal(ls, nvars, firstidx, n + 1, ਸਤਰ);
     leavelevel(ls);
-    checkglobal(ls, varname, line);
+    checkglobal(ls, varname, ਸਤਰ);
     storevartop(fs, &var);
   }
 }
 
 
-static void globalnames (LexState *ls, lu_byte defkind) {
+ਸਥਿਰ ਖਾਲੀ globalnames (LexState *ls, lu_byte defkind) {
   FuncState *fs = ls->fs;
-  int nvars = 0;
-  int lastidx;  /* index of last registered variable */
-  do {  /* for each name */
+  ਪੂਰਨ nvars = 0;
+  ਪੂਰਨ lastidx;  /* index of last registered variable */
+  ਕਰੋ {  /* for each name */
     TString *vname = str_checkname(ls);
-    lu_byte kind = getglobalattribute(ls, defkind);
-    lastidx = new_varkind(ls, vname, kind);
+    lu_byte ਕਿਸਮ = getglobalattribute(ls, defkind);
+    lastidx = new_varkind(ls, vname, ਕਿਸਮ);
     nvars++;
-  } while (testnext(ls, ','));
-  if (testnext(ls, '='))  /* initialization? */
+  } ਜਦੋਂ (testnext(ls, ','));
+  ਜੇ (testnext(ls, '='))  /* initialization? */
     initglobal(ls, nvars, lastidx - nvars + 1, 0, ls->linenumber);
   fs->nactvar = cast_short(fs->nactvar + nvars);  /* activate declaration */
 }
 
 
-static void globalstat (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ globalstat (LexState *ls) {
   /* globalstat -> (GLOBAL) attrib '*'
      globalstat -> (GLOBAL) attrib NAME attrib {',' NAME attrib} */
   FuncState *fs = ls->fs;
   /* get prefixed attribute (if any); default is regular global variable */
   lu_byte defkind = getglobalattribute(ls, GDKREG);
-  if (!testnext(ls, '*'))
+  ਜੇ (!testnext(ls, '*'))
     globalnames(ls, defkind);
-  else {
+  ਨਹੀਂਤਾਂ {
     /* use NULL as name to represent '*' entries */
-    new_varkind(ls, NULL, defkind);
+    new_varkind(ls, ਨਿਰਾ, defkind);
     fs->nactvar++;  /* activate declaration */
   }
 }
 
 
-static void globalfunc (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ globalfunc (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* globalfunc -> (GLOBAL FUNCTION) NAME body */
   expdesc var, b;
   FuncState *fs = ls->fs;
@@ -1956,59 +1956,59 @@ static void globalfunc (LexState *ls, int line) {
   fs->nactvar++;  /* enter its scope */
   buildglobal(ls, fname, &var);
   body(ls, &b, 0, ls->linenumber);  /* compile and return closure in 'b' */
-  checkglobal(ls, fname, line);
+  checkglobal(ls, fname, ਸਤਰ);
   luaK_storevar(fs, &var, &b);
-  luaK_fixline(fs, line);  /* definition "happens" in the first line */
+  luaK_fixline(fs, ਸਤਰ);  /* definition "happens" in the first line */
 }
 
 
-static void globalstatfunc (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ globalstatfunc (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* stat -> GLOBAL globalfunc | GLOBAL globalstat */
-  luaX_next(ls);  /* skip 'global' */
-  if (testnext(ls, TK_FUNCTION))
-    globalfunc(ls, line);
-  else
+  lua_X_ਅਗਲਾ(ls);  /* skip 'global' */
+  ਜੇ (testnext(ls, TK_FUNCTION))
+    globalfunc(ls, ਸਤਰ);
+  ਨਹੀਂਤਾਂ
     globalstat(ls);
 }
 
 
-static int funcname (LexState *ls, expdesc *v) {
+ਸਥਿਰ ਪੂਰਨ funcname (LexState *ls, expdesc *v) {
   /* funcname -> NAME {fieldsel} [':' NAME] */
-  int ismethod = 0;
+  ਪੂਰਨ ismethod = 0;
   singlevar(ls, v);
-  while (ls->t.token == '.')
+  ਜਦੋਂ (ls->t.token == '.')
     fieldsel(ls, v);
-  if (ls->t.token == ':') {
+  ਜੇ (ls->t.token == ':') {
     ismethod = 1;
     fieldsel(ls, v);
   }
-  return ismethod;
+  ਵਾਪਸ ismethod;
 }
 
 
-static void funcstat (LexState *ls, int line) {
+ਸਥਿਰ ਖਾਲੀ funcstat (LexState *ls, ਪੂਰਨ ਸਤਰ) {
   /* funcstat -> FUNCTION funcname body */
-  int ismethod;
+  ਪੂਰਨ ismethod;
   expdesc v, b;
-  luaX_next(ls);  /* skip FUNCTION */
+  lua_X_ਅਗਲਾ(ls);  /* skip FUNCTION */
   ismethod = funcname(ls, &v);
   check_readonly(ls, &v);
-  body(ls, &b, ismethod, line);
+  body(ls, &b, ismethod, ਸਤਰ);
   luaK_storevar(ls->fs, &v, &b);
-  luaK_fixline(ls->fs, line);  /* definition "happens" in the first line */
+  luaK_fixline(ls->fs, ਸਤਰ);  /* definition "happens" in the first line */
 }
 
 
-static void exprstat (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ exprstat (LexState *ls) {
   /* stat -> func | assignment */
   FuncState *fs = ls->fs;
-  struct LHS_assign v;
+  ਬਣਤਰ LHS_ਸੌਂਪੋ v;
   suffixedexp(ls, &v.v);
-  if (ls->t.token == '=' || ls->t.token == ',') { /* stat -> assignment ? */
-    v.prev = NULL;
+  ਜੇ (ls->t.token == '=' || ls->t.token == ',') { /* stat -> assignment ? */
+    v.prev = ਨਿਰਾ;
     restassign(ls, &v, 1);
   }
-  else {  /* stat -> func */
+  ਨਹੀਂਤਾਂ {  /* stat -> func */
     Instruction *inst;
     check_condition(ls, v.v.k == VCALL, "syntax error");
     inst = &getinstruction(fs, &v.v);
@@ -2017,122 +2017,122 @@ static void exprstat (LexState *ls) {
 }
 
 
-static void retstat (LexState *ls) {
+ਸਥਿਰ ਖਾਲੀ retstat (LexState *ls) {
   /* stat -> RETURN [explist] [';'] */
   FuncState *fs = ls->fs;
   expdesc e;
-  int nret;  /* number of values being returned */
-  int first = luaY_nvarstack(fs);  /* first slot to be returned */
-  if (block_follow(ls, 1) || ls->t.token == ';')
+  ਪੂਰਨ nret;  /* number of values being returned */
+  ਪੂਰਨ ਪਹਿਲਾ = luaY_nvarstack(fs);  /* first slot to be returned */
+  ਜੇ (ਖੰਡ_follow(ls, 1) || ls->t.token == ';')
     nret = 0;  /* return no values */
-  else {
+  ਨਹੀਂਤਾਂ {
     nret = explist(ls, &e);  /* optional return values */
-    if (hasmultret(e.k)) {
+    ਜੇ (hasmultret(e.k)) {
       luaK_setmultret(fs, &e);
-      if (e.k == VCALL && nret == 1 && !fs->bl->insidetbc) {  /* tail call? */
-        SET_OPCODE(getinstruction(fs,&e), OP_TAILCALL);
+      ਜੇ (e.k == VCALL && nret == 1 && !fs->bl->insidetbc) {  /* tail call? */
+        ਸੈੱਟ_OPCODE(getinstruction(fs,&e), OP_TAILCALL);
         lua_assert(GETARG_A(getinstruction(fs,&e)) == luaY_nvarstack(fs));
       }
       nret = LUA_MULTRET;  /* return all values */
     }
-    else {
-      if (nret == 1)  /* only one single value? */
-        first = luaK_exp2anyreg(fs, &e);  /* can use original slot */
-      else {  /* values must go to the top of the stack */
+    ਨਹੀਂਤਾਂ {
+      ਜੇ (nret == 1)  /* only one single value? */
+        ਪਹਿਲਾ = luaK_exp2anyreg(fs, &e);  /* can use original slot */
+      ਨਹੀਂਤਾਂ {  /* values must go to the top of the stack */
         luaK_exp2nextreg(fs, &e);
-        lua_assert(nret == fs->freereg - first);
+        lua_assert(nret == fs->freereg - ਪਹਿਲਾ);
       }
     }
   }
-  luaK_ret(fs, first, nret);
+  luaK_ret(fs, ਪਹਿਲਾ, nret);
   testnext(ls, ';');  /* skip optional semicolon */
 }
 
 
-static void statement (LexState *ls) {
-  int line = ls->linenumber;  /* may be needed for error messages */
+ਸਥਿਰ ਖਾਲੀ statement (LexState *ls) {
+  ਪੂਰਨ ਸਤਰ = ls->linenumber;  /* may be needed for error messages */
   enterlevel(ls);
-  switch (ls->t.token) {
-    case ';': {  /* stat -> ';' (empty statement) */
-      luaX_next(ls);  /* skip ';' */
-      break;
+  ਚੋਣ (ls->t.token) {
+    ਹਾਲਤ ';': {  /* stat -> ';' (empty statement) */
+      lua_X_ਅਗਲਾ(ls);  /* skip ';' */
+      ਰੋਕੋ;
     }
-    case TK_IF: {  /* stat -> ifstat */
-      ifstat(ls, line);
-      break;
+    ਹਾਲਤ TK_IF: {  /* stat -> ifstat */
+      ifstat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_WHILE: {  /* stat -> whilestat */
-      whilestat(ls, line);
-      break;
+    ਹਾਲਤ TK_WHILE: {  /* stat -> whilestat */
+      whilestat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_DO: {  /* stat -> DO block END */
-      luaX_next(ls);  /* skip DO */
-      block(ls);
-      check_match(ls, TK_END, TK_DO, line);
-      break;
+    ਹਾਲਤ TK_DO: {  /* stat -> DO block END */
+      lua_X_ਅਗਲਾ(ls);  /* skip DO */
+      ਖੰਡ(ls);
+      check_ਮੇਲ(ls, TK_ਸਿਰਾ, TK_DO, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_FOR: {  /* stat -> forstat */
-      forstat(ls, line);
-      break;
+    ਹਾਲਤ TK_FOR: {  /* stat -> forstat */
+      forstat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_REPEAT: {  /* stat -> repeatstat */
-      repeatstat(ls, line);
-      break;
+    ਹਾਲਤ TK_REPEAT: {  /* stat -> repeatstat */
+      repeatstat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_FUNCTION: {  /* stat -> funcstat */
-      funcstat(ls, line);
-      break;
+    ਹਾਲਤ TK_FUNCTION: {  /* stat -> funcstat */
+      funcstat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_LOCAL: {  /* stat -> localstat */
-      luaX_next(ls);  /* skip LOCAL */
-      if (testnext(ls, TK_FUNCTION))  /* local function? */
+    ਹਾਲਤ TK_LOCAL: {  /* stat -> localstat */
+      lua_X_ਅਗਲਾ(ls);  /* skip LOCAL */
+      ਜੇ (testnext(ls, TK_FUNCTION))  /* local function? */
         localfunc(ls);
-      else
+      ਨਹੀਂਤਾਂ
         localstat(ls);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_GLOBAL: {  /* stat -> globalstatfunc */
-      globalstatfunc(ls, line);
-      break;
+    ਹਾਲਤ TK_GLOBAL: {  /* stat -> globalstatfunc */
+      globalstatfunc(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_DBCOLON: {  /* stat -> label */
-      luaX_next(ls);  /* skip double colon */
-      labelstat(ls, str_checkname(ls), line);
-      break;
+    ਹਾਲਤ TK_DBCOLON: {  /* stat -> label */
+      lua_X_ਅਗਲਾ(ls);  /* skip double colon */
+      labelstat(ls, str_checkname(ls), ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_RETURN: {  /* stat -> retstat */
-      luaX_next(ls);  /* skip RETURN */
+    ਹਾਲਤ TK_RETURN: {  /* stat -> retstat */
+      lua_X_ਅਗਲਾ(ls);  /* skip RETURN */
       retstat(ls);
-      break;
+      ਰੋਕੋ;
     }
-    case TK_BREAK: {  /* stat -> breakstat */
-      breakstat(ls, line);
-      break;
+    ਹਾਲਤ TK_BREAK: {  /* stat -> breakstat */
+      breakstat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-    case TK_GOTO: {  /* stat -> 'goto' NAME */
-      luaX_next(ls);  /* skip 'goto' */
-      gotostat(ls, line);
-      break;
+    ਹਾਲਤ TK_GOTO: {  /* stat -> 'goto' NAME */
+      lua_X_ਅਗਲਾ(ls);  /* skip 'goto' */
+      gotostat(ls, ਸਤਰ);
+      ਰੋਕੋ;
     }
-#if LUA_COMPAT_GLOBAL
-    case TK_NAME: {
+#ਜੇ LUA_COMPAT_GLOBAL
+    ਹਾਲਤ TK_NAME: {
       /* compatibility code to parse global keyword when "global"
          is not reserved */
-      if (ls->t.seminfo.ts == ls->glbn) {  /* current = "global"? */
-        int lk = luaX_lookahead(ls);
-        if (lk == '<' || lk == TK_NAME || lk == '*' || lk == TK_FUNCTION) {
+      ਜੇ (ls->t.seminfo.ts == ls->glbn) {  /* current = "global"? */
+        ਪੂਰਨ lk = luaX_lookahead(ls);
+        ਜੇ (lk == '<' || lk == TK_NAME || lk == '*' || lk == TK_FUNCTION) {
           /* 'global <attrib>' or 'global name' or 'global *' or
              'global function' */
-          globalstatfunc(ls, line);
-          break;
+          globalstatfunc(ls, ਸਤਰ);
+          ਰੋਕੋ;
         }
       }  /* else... */
     }
-#endif
+#ਜੇ_ਅੰਤ
     /* FALLTHROUGH */
-    default: {  /* stat -> func | assignment */
+    ਮੂਲ: {  /* stat -> func | assignment */
       exprstat(ls);
-      break;
+      ਰੋਕੋ;
     }
   }
   lua_assert(ls->fs->f->maxstacksize >= ls->fs->freereg &&
@@ -2150,26 +2150,26 @@ static void statement (LexState *ls) {
 ** compiles the main function, which is a regular vararg function with an
 ** upvalue named LUA_ENV
 */
-static void mainfunc (LexState *ls, FuncState *fs) {
-  BlockCnt bl;
+ਸਥਿਰ ਖਾਲੀ mainfunc (LexState *ls, FuncState *fs) {
+  ਖੰਡ_Cnt bl;
   Upvaldesc *env;
   open_func(ls, fs, &bl);
   setvararg(fs);  /* main function is always vararg */
   env = allocupvalue(fs);  /* ...set environment upvalue */
   env->instack = 1;
   env->idx = 0;
-  env->kind = VDKREG;
+  env->ਕਿਸਮ = VDKREG;
   env->name = ls->envn;
   luaC_objbarrier(ls->L, fs->f, env->name);
-  luaX_next(ls);  /* read first token */
+  lua_X_ਅਗਲਾ(ls);  /* read first token */
   statlist(ls);  /* parse main body */
   check(ls, TK_EOS);
   close_func(ls);
 }
 
 
-LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor, Mbuffer *buff,
-                       Dyndata *dyd, const char *name, int firstchar) {
+LClosure *luaY_parser (lua_State *L, ZIO *z, ਸਾਰਣੀ *anchor, Mbuffer *buff,
+                       Dyndata *dyd, ਅਚਲ ਅੱਖਰ *name, ਪੂਰਨ firstchar) {
   LexState lexstate;
   FuncState funcstate;
   LClosure *cl;
@@ -2178,16 +2178,16 @@ LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor, Mbuffer *buff,
   luaD_anchorobj(L, anchor, obj2gco(cl));  /* anchor it in scanner table */
   funcstate.f = cl->p = luaF_newproto(L);
   luaC_objbarrier(L, cl, cl->p);
-  funcstate.f->source = luaS_new(L, name);  /* create and anchor TString */
-  luaC_objbarrier(L, funcstate.f, funcstate.f->source);
+  funcstate.f->ਸਰੋਤ = luaS_new(L, name);  /* create and anchor TString */
+  luaC_objbarrier(L, funcstate.f, funcstate.f->ਸਰੋਤ);
   lexstate.buff = buff;
   lexstate.dyd = dyd;
   dyd->actvar.n = dyd->gt.n = dyd->label.n = 0;
-  luaX_setinput(L, &lexstate, z, funcstate.f->source, firstchar);
+  luaX_setinput(L, &lexstate, z, funcstate.f->ਸਰੋਤ, firstchar);
   mainfunc(&lexstate, &funcstate);
   lua_assert(!funcstate.prev && funcstate.nups == 1 && !lexstate.fs);
   /* all scopes should be correctly finished */
   lua_assert(dyd->actvar.n == 0 && dyd->gt.n == 0 && dyd->label.n == 0);
-  return cl;
+  ਵਾਪਸ cl;
 }
 
