@@ -4,15 +4,15 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ltable_h
-#define ltable_h
+#که_نه_تعریف_شوی ltable_h
+#تعریف_کړه ltable_h
 
-#include "lobject.h"
+#ضمن "lobject.h"
 
 
-#define gnode(t,i)	(&(t)->node[i])
-#define gval(n)		(&(n)->i_val)
-#define gnext(n)	((n)->u.next)
+#تعریف_کړه gnode(t,i)	(&(t)->غوټه[i])
+#تعریف_کړه gval(n)		(&(n)->i_val)
+#تعریف_کړه gnext(n)	((n)->u.بل)
 
 
 /*
@@ -20,7 +20,7 @@
 ** may have any of these metamethods. (First access that fails after the
 ** clearing will set the bit again.)
 */
-#define invalidateTMcache(t)	((t)->flags &= cast_byte(~maskflags))
+#تعریف_کړه invalidateTMcache(t)	((t)->flags &= cast_byte(~maskflags))
 
 
 /*
@@ -28,47 +28,47 @@
 ** for its hash part.
 */
 
-#define BITDUMMY		(1 << 6)
-#define NOTBITDUMMY		cast_byte(~BITDUMMY)
-#define isdummy(t)		((t)->flags & BITDUMMY)
+#تعریف_کړه BITDUMMY		(1 << 6)
+#تعریف_کړه NOTBITDUMMY		cast_byte(~BITDUMMY)
+#تعریف_کړه isdummy(t)		((t)->flags & BITDUMMY)
 
-#define setnodummy(t)		((t)->flags &= NOTBITDUMMY)
-#define setdummy(t)		((t)->flags |= BITDUMMY)
+#تعریف_کړه setnodummy(t)		((t)->flags &= NOTBITDUMMY)
+#تعریف_کړه setdummy(t)		((t)->flags |= BITDUMMY)
 
 
 
 /* allocated size for hash nodes */
-#define allocsizenode(t)	(isdummy(t) ? 0 : sizenode(t))
+#تعریف_کړه allocsizenode(t)	(isdummy(t) ? 0 : sizenode(t))
 
 
 /* returns the Node, given the value of a table entry */
-#define nodefromval(v)	cast(Node *, (v))
+#تعریف_کړه nodefromval(v)	cast(غوټه_2 *, (v))
 
 
 
-#define luaH_fastgeti(t,k,res,tag) \
-  { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
-      tag = *getArrTag(h, u); \
-      if (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
-    else { tag = luaH_getint(h, (k), res); }}
+#تعریف_کړه luaH_fastgeti(t,k,res,نښان) \
+  { جدول *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
+    إذا ((u < h->asize)) { \
+      نښان = *get_Arr_نښان(h, u); \
+      إذا (!tagisempty(نښان)) { farr2val(h, u, نښان, res); }} \
+    وإلا { نښان = luaH_getint(h, (k), res); }}
 
 
-#define luaH_fastseti(t,k,val,hres) \
-  { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
-      lu_byte *tag = getArrTag(h, u); \
-      if (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
-        { fval2arr(h, u, tag, val); hres = HOK; } \
-      else hres = ~cast_int(u); } \
-    else { hres = luaH_psetint(h, k, val); }}
+#تعریف_کړه luaH_fastseti(t,k,val,hres) \
+  { جدول *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
+    إذا ((u < h->asize)) { \
+      lu_byte *نښان = get_Arr_نښان(h, u); \
+      إذا (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*نښان)) \
+        { fval2arr(h, u, نښان, val); hres = HOK; } \
+      وإلا hres = ~cast_int(u); } \
+    وإلا { hres = luaH_psetint(h, k, val); }}
 
 
 /* results from pset */
-#define HOK		0
-#define HNOTFOUND	1
-#define HNOTATABLE	2
-#define HFIRSTNODE	3
+#تعریف_کړه HOK		0
+#تعریف_کړه HNOTFOUND	1
+#تعریف_کړه HNOTATABLE	2
+#تعریف_کړه HFIRSTNODE	3
 
 /*
 ** 'luaH_get*' operations set 'res', unless the value is absent, and
@@ -110,10 +110,10 @@
 */
 
 /* Computes the address of the tag for the abstract C-index 'k' */
-#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + sizeof(unsigned) + (k))
+#تعریف_کړه get_Arr_نښان(t,k)	(cast(lu_byte*, (t)->array) + حجم(بینښه) + (k))
 
 /* Computes the address of the value for the abstract C-index 'k' */
-#define getArrVal(t,k)	((t)->array - 1 - (k))
+#تعریف_کړه getArrVal(t,k)	((t)->array - 1 - (k))
 
 
 /*
@@ -121,17 +121,17 @@
 ** see luaH_getn. It is stored there to avoid wasting space in
 ** the structure Table for tables with no array part.
 */
-#define lenhint(t)	cast(unsigned*, (t)->array)
+#تعریف_کړه lenhint(t)	cast(بینښه*, (t)->array)
 
 
 /*
 ** Move TValues to/from arrays, using C indices
 */
-#define arr2obj(h,k,val)  \
-  ((val)->tt_ = *getArrTag(h,(k)), (val)->value_ = *getArrVal(h,(k)))
+#تعریف_کړه arr2obj(h,k,val)  \
+  ((val)->tt_ = *get_Arr_نښان(h,(k)), (val)->ارزښت_3 = *getArrVal(h,(k)))
 
-#define obj2arr(h,k,val)  \
-  (*getArrTag(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+#تعریف_کړه obj2arr(h,k,val)  \
+  (*get_Arr_نښان(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->ارزښت_3)
 
 
 /*
@@ -139,46 +139,46 @@
 ** following macros also move TValues to/from arrays, but receive the
 ** precomputed tag value or address as an extra argument.
 */
-#define farr2val(h,k,tag,res)  \
-  ((res)->tt_ = tag, (res)->value_ = *getArrVal(h,(k)))
+#تعریف_کړه farr2val(h,k,نښان,res)  \
+  ((res)->tt_ = نښان, (res)->ارزښت_3 = *getArrVal(h,(k)))
 
-#define fval2arr(h,k,tag,val)  \
-  (*tag = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+#تعریف_کړه fval2arr(h,k,نښان,val)  \
+  (*نښان = (val)->tt_, *getArrVal(h,(k)) = (val)->ارزښت_3)
 
 
-LUAI_FUNC lu_byte luaH_get (Table *t, const TValue *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res);
+LUAI_FUNC lu_byte luaH_get (جدول *t, ثابت TValue *کلی, TValue *res);
+LUAI_FUNC lu_byte luaH_getshortstr (جدول *t, TString *کلی, TValue *res);
+LUAI_FUNC lu_byte luaH_getstr (جدول *t, TString *کلی, TValue *res);
+LUAI_FUNC lu_byte luaH_getint (جدول *t, lua_Integer کلی, TValue *res);
 
 /* Special get for metamethods */
-LUAI_FUNC const TValue *luaH_Hgetshortstr (Table *t, TString *key);
+LUAI_FUNC ثابت TValue *luaH_Hgetshortstr (جدول *t, TString *کلی);
 
-LUAI_FUNC int luaH_psetint (Table *t, lua_Integer key, TValue *val);
-LUAI_FUNC int luaH_psetshortstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_psetstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_pset (Table *t, const TValue *key, TValue *val);
+LUAI_FUNC صحيح luaH_psetint (جدول *t, lua_Integer کلی, TValue *val);
+LUAI_FUNC صحيح luaH_psetshortstr (جدول *t, TString *کلی, TValue *val);
+LUAI_FUNC صحيح luaH_psetstr (جدول *t, TString *کلی, TValue *val);
+LUAI_FUNC صحيح luaH_pset (جدول *t, ثابت TValue *کلی, TValue *val);
 
-LUAI_FUNC void luaH_setint (lua_State *L, Table *t, lua_Integer key,
-                                                    TValue *value);
-LUAI_FUNC void luaH_set (lua_State *L, Table *t, const TValue *key,
-                                                 TValue *value);
+LUAI_FUNC فراغ luaH_setint (lua_State *L, جدول *t, lua_Integer کلی,
+                                                    TValue *ارزښت);
+LUAI_FUNC فراغ lua_H_سېټ (lua_State *L, جدول *t, ثابت TValue *کلی,
+                                                 TValue *ارزښت);
 
-LUAI_FUNC void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                              TValue *value, int hres);
-LUAI_FUNC Table *luaH_new (lua_State *L);
-LUAI_FUNC void luaH_resize (lua_State *L, Table *t, unsigned nasize,
-                                                    unsigned nhsize);
-LUAI_FUNC void luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
-LUAI_FUNC lu_mem luaH_size (Table *t);
-LUAI_FUNC void luaH_free (lua_State *L, Table *t);
-LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key);
-LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, Table *t);
-
-
-#if defined(LUA_DEBUG)
-LUAI_FUNC Node *luaH_mainposition (const Table *t, const TValue *key);
-#endif
+LUAI_FUNC فراغ luaH_finishset (lua_State *L, جدول *t, ثابت TValue *کلی,
+                                              TValue *ارزښت, صحيح hres);
+LUAI_FUNC جدول *luaH_new (lua_State *L);
+LUAI_FUNC فراغ luaH_resize (lua_State *L, جدول *t, بینښه nasize,
+                                                    بینښه nhsize);
+LUAI_FUNC فراغ luaH_resizearray (lua_State *L, جدول *t, بینښه nasize);
+LUAI_FUNC lu_mem lua_H_اندازه (جدول *t);
+LUAI_FUNC فراغ luaH_free (lua_State *L, جدول *t);
+LUAI_FUNC صحيح lua_H_بل (lua_State *L, جدول *t, StkId کلی);
+LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, جدول *t);
 
 
-#endif
+#إذا defined(LUA_DEBUG)
+LUAI_FUNC غوټه_2 *luaH_mainposition (ثابت جدول *t, ثابت TValue *کلی);
+#د_که_پای
+
+
+#د_که_پای

@@ -4,15 +4,15 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lgc_h
-#define lgc_h
+#که_نه_تعریف_شوی lgc_h
+#تعریف_کړه lgc_h
 
 
-#include <stddef.h>
+#ضمن <stddef.h>
 
 
-#include "lobject.h"
-#include "lstate.h"
+#ضمن "lobject.h"
+#ضمن "lstate.h"
 
 /*
 ** Collectable objects may have one of three colors: white, which means
@@ -32,18 +32,18 @@
 /*
 ** Possible states of the Garbage Collector
 */
-#define GCSpropagate	0
-#define GCSenteratomic	1
-#define GCSatomic	2
-#define GCSswpallgc	3
-#define GCSswpfinobj	4
-#define GCSswptobefnz	5
-#define GCSswpend	6
-#define GCScallfin	7
-#define GCSpause	8
+#تعریف_کړه GCSpropagate	0
+#تعریف_کړه GCSenteratomic	1
+#تعریف_کړه GCSatomic	2
+#تعریف_کړه GCSswpallgc	3
+#تعریف_کړه GCSswpfinobj	4
+#تعریف_کړه GCSswptobefnz	5
+#تعریف_کړه GCSswpend	6
+#تعریف_کړه GCScallfin	7
+#تعریف_کړه GCSpause	8
 
 
-#define issweepphase(g)  \
+#تعریف_کړه issweepphase(g)  \
 	(GCSswpallgc <= (g)->gcstate && (g)->gcstate <= GCSswpend)
 
 
@@ -55,20 +55,20 @@
 ** are white again.
 */
 
-#define keepinvariant(g)	((g)->gcstate <= GCSatomic)
+#تعریف_کړه keepinvariant(g)	((g)->gcstate <= GCSatomic)
 
 
 /*
 ** some useful bit tricks
 */
-#define resetbits(x,m)		((x) &= cast_byte(~(m)))
-#define setbits(x,m)		((x) |= (m))
-#define testbits(x,m)		((x) & (m))
-#define bitmask(b)		(1<<(b))
-#define bit2mask(b1,b2)		(bitmask(b1) | bitmask(b2))
-#define l_setbit(x,b)		setbits(x, bitmask(b))
-#define resetbit(x,b)		resetbits(x, bitmask(b))
-#define testbit(x,b)		testbits(x, bitmask(b))
+#تعریف_کړه resetbits(x,m)		((x) &= cast_byte(~(m)))
+#تعریف_کړه setbits(x,m)		((x) |= (m))
+#تعریف_کړه testbits(x,m)		((x) & (m))
+#تعریف_کړه bitmask(b)		(1<<(b))
+#تعریف_کړه bit2mask(b1,b2)		(bitmask(b1) | bitmask(b2))
+#تعریف_کړه l_setbit(x,b)		setbits(x, bitmask(b))
+#تعریف_کړه resetbit(x,b)		resetbits(x, bitmask(b))
+#تعریف_کړه testbit(x,b)		testbits(x, bitmask(b))
 
 
 /*
@@ -76,50 +76,50 @@
 ** used for object "age" in generational mode. Last bit is used
 ** by tests.
 */
-#define WHITE0BIT	3  /* object is white (type 0) */
-#define WHITE1BIT	4  /* object is white (type 1) */
-#define BLACKBIT	5  /* object is black */
-#define FINALIZEDBIT	6  /* object has been marked for finalization */
+#تعریف_کړه WHITE0_بټ	3  /* object is white (type 0) */
+#تعریف_کړه WHITE1_بټ	4  /* object is white (type 1) */
+#تعریف_کړه BLACKBIT	5  /* object is black */
+#تعریف_کړه FINALIZEDBIT	6  /* object has been marked for finalization */
 
-#define TESTBIT		7
-
-
-
-#define WHITEBITS	bit2mask(WHITE0BIT, WHITE1BIT)
+#تعریف_کړه TESTBIT		7
 
 
-#define iswhite(x)      testbits((x)->marked, WHITEBITS)
-#define isblack(x)      testbit((x)->marked, BLACKBIT)
-#define isgray(x)  /* neither white nor black */  \
+
+#تعریف_کړه WHITEBITS	bit2mask(WHITE0_بټ, WHITE1_بټ)
+
+
+#تعریف_کړه iswhite(x)      testbits((x)->marked, WHITEBITS)
+#تعریف_کړه isblack(x)      testbit((x)->marked, BLACKBIT)
+#تعریف_کړه isgray(x)  /* neither white nor black */  \
 	(!testbits((x)->marked, WHITEBITS | bitmask(BLACKBIT)))
 
-#define tofinalize(x)	testbit((x)->marked, FINALIZEDBIT)
+#تعریف_کړه tofinalize(x)	testbit((x)->marked, FINALIZEDBIT)
 
-#define otherwhite(g)	((g)->currentwhite ^ WHITEBITS)
-#define isdeadm(ow,m)	((m) & (ow))
-#define isdead(g,v)	isdeadm(otherwhite(g), (v)->marked)
+#تعریف_کړه otherwhite(g)	((g)->currentwhite ^ WHITEBITS)
+#تعریف_کړه isdeadm(ow,m)	((m) & (ow))
+#تعریف_کړه isdead(g,v)	isdeadm(otherwhite(g), (v)->marked)
 
-#define changewhite(x)	((x)->marked ^= WHITEBITS)
-#define nw2black(x)  \
+#تعریف_کړه changewhite(x)	((x)->marked ^= WHITEBITS)
+#تعریف_کړه nw2black(x)  \
 	check_exp(!iswhite(x), l_setbit((x)->marked, BLACKBIT))
 
-#define luaC_white(g)	cast_byte((g)->currentwhite & WHITEBITS)
+#تعریف_کړه luaC_white(g)	cast_byte((g)->currentwhite & WHITEBITS)
 
 
 /* object age in generational mode */
-#define G_NEW		0	/* created in current cycle */
-#define G_SURVIVAL	1	/* created in previous cycle */
-#define G_OLD0		2	/* marked old by frw. barrier in this cycle */
-#define G_OLD1		3	/* first full cycle as old */
-#define G_OLD		4	/* really old object (not to be visited) */
-#define G_TOUCHED1	5	/* old object touched this cycle */
-#define G_TOUCHED2	6	/* old object touched in previous cycle */
+#تعریف_کړه G_NEW		0	/* created in current cycle */
+#تعریف_کړه G_SURVIVAL	1	/* created in previous cycle */
+#تعریف_کړه G_OLD0		2	/* marked old by frw. barrier in this cycle */
+#تعریف_کړه G_OLD1		3	/* first full cycle as old */
+#تعریف_کړه G_OLD		4	/* really old object (not to be visited) */
+#تعریف_کړه G_TOUCHED1	5	/* old object touched this cycle */
+#تعریف_کړه G_TOUCHED2	6	/* old object touched in previous cycle */
 
-#define AGEBITS		7  /* all age bits (111) */
+#تعریف_کړه AGEBITS		7  /* all age bits (111) */
 
-#define getage(o)	((o)->marked & AGEBITS)
-#define setage(o,a)  ((o)->marked = cast_byte(((o)->marked & (~AGEBITS)) | a))
-#define isold(o)	(getage(o) > G_SURVIVAL)
+#تعریف_کړه getage(o)	((o)->marked & AGEBITS)
+#تعریف_کړه setage(o,a)  ((o)->marked = cast_byte(((o)->marked & (~AGEBITS)) | a))
+#تعریف_کړه isold(o)	(getage(o) > G_SURVIVAL)
 
 
 /*
@@ -170,39 +170,39 @@
 ** Minor collections will shift to major ones after LUAI_MINORMAJOR%
 ** bytes become old.
 */
-#define LUAI_MINORMAJOR         70
+#تعریف_کړه LUAI_MINORMAJOR         70
 
 /*
 ** Major collections will shift to minor ones after a collection
 ** collects at least LUAI_MAJORMINOR% of the new bytes.
 */
-#define LUAI_MAJORMINOR         50
+#تعریف_کړه LUAI_MAJORMINOR         50
 
 /*
 ** A young (minor) collection will run after creating LUAI_GENMINORMUL%
 ** new bytes.
 */
-#define LUAI_GENMINORMUL         20
+#تعریف_کړه LUAI_GENMINORMUL         20
 
 
 /* incremental */
 
 /* Number of bytes must be LUAI_GCPAUSE% before starting new cycle */
-#define LUAI_GCPAUSE    250
+#تعریف_کړه LUAI_GCPAUSE    250
 
 /*
 ** Step multiplier: The collector handles LUAI_GCMUL% work units for
 ** each new allocated word. (Each "work unit" corresponds roughly to
 ** sweeping one object or traversing one slot.)
 */
-#define LUAI_GCMUL      200
+#تعریف_کړه LUAI_GCMUL      200
 
 /* How many bytes to allocate before next GC step */
-#define LUAI_GCSTEPSIZE	(200 * sizeof(Table))
+#تعریف_کړه LUAI_GCSTEPSIZE	(200 * حجم(جدول))
 
 
-#define setgcparam(g,p,v)  (g->gcparams[LUA_GCP##p] = luaO_codeparam(v))
-#define applygcparam(g,p,x)  luaO_applyparam(g->gcparams[LUA_GCP##p], x)
+#تعریف_کړه setgcparam(g,p,v)  (g->gcparams[LUA_GCP##p] = luaO_codeparam(v))
+#تعریف_کړه applygcparam(g,p,x)  luaO_applyparam(g->gcparams[LUA_GCP##p], x)
 
 /* }====================================================== */
 
@@ -210,10 +210,10 @@
 /*
 ** Control when GC is running:
 */
-#define GCSTPUSR	1  /* bit true when GC stopped by user */
-#define GCSTPGC		2  /* bit true when GC stopped by itself */
-#define GCSTPCLS	4  /* bit true when closing Lua state */
-#define gcrunning(g)	((g)->gcstp == 0)
+#تعریف_کړه GCSTPUSR	1  /* bit true when GC stopped by user */
+#تعریف_کړه GCSTPGC		2  /* bit true when GC stopped by itself */
+#تعریف_کړه GCSTPCLS	4  /* bit true when closing Lua state */
+#تعریف_کړه gcrunning(g)	((g)->gcstp == 0)
 
 
 /*
@@ -223,47 +223,47 @@
 ** GC cycle on every opportunity)
 */
 
-#if !defined(HARDMEMTESTS)
-#define condchangemem(L,pre,pos,emg)	((void)0)
-#else
-#define condchangemem(L,pre,pos,emg)  \
-	{ if (gcrunning(G(L))) { pre; luaC_fullgc(L, emg); pos; } }
-#endif
+#إذا !defined(HARDMEMTESTS)
+#تعریف_کړه condchangemem(L,pre,pos,emg)	((فراغ)0)
+#وإلا
+#تعریف_کړه condchangemem(L,pre,pos,emg)  \
+	{ إذا (gcrunning(G(L))) { pre; luaC_fullgc(L, emg); pos; } }
+#د_که_پای
 
-#define luaC_condGC(L,pre,pos) \
-	{ if (G(L)->GCdebt <= 0)  \
-	  { pre; luaC_step(L); condchangemem(L,{},{},0); pos;} \
-	  else condchangemem(L,pre,pos,0); }
+#تعریف_کړه luaC_condGC(L,pre,pos) \
+	{ إذا (G(L)->GCdebt <= 0)  \
+	  { pre; lua_C_ګام(L); condchangemem(L,{},{},0); pos;} \
+	  وإلا condchangemem(L,pre,pos,0); }
 
 /* more often than not, 'pre'/'pos' are empty */
-#define luaC_checkGC(L)		luaC_condGC(L,(void)0,(void)0)
+#تعریف_کړه luaC_checkGC(L)		luaC_condGC(L,(فراغ)0,(فراغ)0)
 
 
-#define luaC_objbarrier(L,p,o) (  \
+#تعریف_کړه luaC_objbarrier(L,p,o) (  \
 	(isblack(p) && iswhite(o)) ? \
 	luaC_barrier_(L,obj2gco(p),obj2gco(o)) : cast_void(0))
 
-#define luaC_barrier(L,p,v) (  \
+#تعریف_کړه luaC_barrier(L,p,v) (  \
 	iscollectable(v) ? luaC_objbarrier(L,p,gcvalue(v)) : cast_void(0))
 
-#define luaC_objbarrierback(L,p,o) (  \
+#تعریف_کړه luaC_objbarrierback(L,p,o) (  \
 	(isblack(p) && iswhite(o)) ? luaC_barrierback_(L,p) : cast_void(0))
 
-#define luaC_barrierback(L,p,v) (  \
+#تعریف_کړه luaC_barrierback(L,p,v) (  \
 	iscollectable(v) ? luaC_objbarrierback(L, p, gcvalue(v)) : cast_void(0))
 
-LUAI_FUNC void luaC_fix (lua_State *L, GCObject *o);
-LUAI_FUNC void luaC_freeallobjects (lua_State *L);
-LUAI_FUNC void luaC_step (lua_State *L);
-LUAI_FUNC void luaC_runtilstate (lua_State *L, int state, int fast);
-LUAI_FUNC void luaC_fullgc (lua_State *L, int isemergency);
+LUAI_FUNC فراغ luaC_fix (lua_State *L, GCObject *o);
+LUAI_FUNC فراغ luaC_freeallobjects (lua_State *L);
+LUAI_FUNC فراغ lua_C_ګام (lua_State *L);
+LUAI_FUNC فراغ luaC_runtilstate (lua_State *L, صحيح state, صحيح fast);
+LUAI_FUNC فراغ luaC_fullgc (lua_State *L, صحيح isemergency);
 LUAI_FUNC GCObject *luaC_newobj (lua_State *L, lu_byte tt, size_t sz);
 LUAI_FUNC GCObject *luaC_newobjdt (lua_State *L, lu_byte tt, size_t sz,
-                                                 size_t offset);
-LUAI_FUNC void luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v);
-LUAI_FUNC void luaC_barrierback_ (lua_State *L, GCObject *o);
-LUAI_FUNC void luaC_checkfinalizer (lua_State *L, GCObject *o, Table *mt);
-LUAI_FUNC void luaC_changemode (lua_State *L, int newmode);
+                                                 size_t دننه_واټن);
+LUAI_FUNC فراغ luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v);
+LUAI_FUNC فراغ luaC_barrierback_ (lua_State *L, GCObject *o);
+LUAI_FUNC فراغ luaC_checkfinalizer (lua_State *L, GCObject *o, جدول *mt);
+LUAI_FUNC فراغ luaC_changemode (lua_State *L, صحيح newmode);
 
 
-#endif
+#د_که_پای

@@ -4,15 +4,15 @@
 ** See Copyright Notice in lua.h
 */
 
-#if !defined(lopnames_h)
-#define lopnames_h
+#إذا !defined(lopnames_h)
+#تعریف_کړه lopnames_h
 
-#include <stddef.h>
+#ضمن <stddef.h>
 
 
 /* ORDER OP */
 
-static const char *const opnames[] = {
+ساكن ثابت حرف *ثابت opnames[] = {
   "MOVE",
   "LOADI",
   "LOADF",
@@ -98,8 +98,8 @@ static const char *const opnames[] = {
   "ERRNNIL",
   "VARARGPREP",
   "EXTRAARG",
-  NULL
+  عدم
 };
 
-#endif
+#د_که_پای
 
