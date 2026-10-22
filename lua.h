@@ -53,7 +53,7 @@
 #define LUA_ERRERR	5
 
 
-typedef struct lua_State lua_State;
+typedef sa_nracanaa lua_State lua_State;
 
 
 /*
@@ -103,20 +103,20 @@ typedef LUA_KCONTEXT lua_KContext;
 /*
 ** Type for C functions registered with Lua
 */
-typedef int (*lua_CFunction) (lua_State *L);
+typedef පූර්ණ_සංඛ්‍යා (*lua_CFunction) (lua_State *L);
 
 /*
 ** Type for continuation functions
 */
-typedef int (*lua_KFunction) (lua_State *L, int status, lua_KContext ctx);
+typedef පූර්ණ_සංඛ්‍යා (*lua_KFunction) (lua_State *L, පූර්ණ_සංඛ්‍යා status, lua_KContext ctx);
 
 
 /*
 ** Type for functions that read/write blocks when loading/dumping Lua chunks
 */
-typedef const char * (*lua_Reader) (lua_State *L, void *ud, size_t *sz);
+typedef const var_na * (*lua_Reader) (lua_State *L, void *ud, size_t *sz);
 
-typedef int (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
+typedef පූර්ණ_සංඛ්‍යා (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
 
 
 /*
@@ -128,13 +128,13 @@ typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
 /*
 ** Type for warning functions
 */
-typedef void (*lua_WarnFunction) (void *ud, const char *msg, int tocont);
+typedef void (*lua_WarnFunction) (void *ud, const var_na *msg, පූර්ණ_සංඛ්‍යා tocont);
 
 
 /*
 ** Type used by the debug API to collect debug information
 */
-typedef struct lua_Debug lua_Debug;
+typedef sa_nracanaa lua_Debug lua_Debug;
 
 
 /*
@@ -146,7 +146,7 @@ typedef void (*lua_Hook) (lua_State *L, lua_Debug *ar);
 /*
 ** generic extra include file
 */
-#if defined(LUA_USER_H)
+#නම් defined(LUA_USER_H)
 #include LUA_USER_H
 #endif
 
@@ -154,7 +154,7 @@ typedef void (*lua_Hook) (lua_State *L, lua_Debug *ar);
 /*
 ** RCS ident string
 */
-extern const char lua_ident[];
+extern const var_na lua_ident[];
 
 
 /*
@@ -163,7 +163,7 @@ extern const char lua_ident[];
 LUA_API lua_State *(lua_newstate) (lua_Alloc f, void *ud, unsigned seed);
 LUA_API void       (lua_close) (lua_State *L);
 LUA_API lua_State *(lua_newthread) (lua_State *L);
-LUA_API int        (lua_closethread) (lua_State *L, lua_State *from);
+LUA_API පූර්ණ_සංඛ්‍යා        (lua_closethread) (lua_State *L, lua_State *from);
 
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
@@ -174,38 +174,38 @@ LUA_API lua_Number (lua_version) (lua_State *L);
 /*
 ** basic stack manipulation
 */
-LUA_API int   (lua_absindex) (lua_State *L, int idx);
-LUA_API int   (lua_gettop) (lua_State *L);
-LUA_API void  (lua_settop) (lua_State *L, int idx);
-LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
-LUA_API void  (lua_rotate) (lua_State *L, int idx, int n);
-LUA_API void  (lua_copy) (lua_State *L, int fromidx, int toidx);
-LUA_API int   (lua_checkstack) (lua_State *L, int n);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_absindex) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_gettop) (lua_State *L);
+LUA_API void  (lua_settop) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void  (lua_pushvalue) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void  (lua_rotate) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, පූර්ණ_සංඛ්‍යා n);
+LUA_API void  (lua_copy) (lua_State *L, පූර්ණ_සංඛ්‍යා fromidx, පූර්ණ_සංඛ්‍යා toidx);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_checkstack) (lua_State *L, පූර්ණ_සංඛ්‍යා n);
 
-LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
+LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, පූර්ණ_සංඛ්‍යා n);
 
 
 /*
 ** access functions (stack -> C)
 */
 
-LUA_API int             (lua_isnumber) (lua_State *L, int idx);
-LUA_API int             (lua_isstring) (lua_State *L, int idx);
-LUA_API int             (lua_iscfunction) (lua_State *L, int idx);
-LUA_API int             (lua_isinteger) (lua_State *L, int idx);
-LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
-LUA_API int             (lua_type) (lua_State *L, int idx);
-LUA_API const char     *(lua_typename) (lua_State *L, int tp);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_isnumber) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_isstring) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_iscfunction) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_isinteger) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_isuserdata) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_type) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API const var_na     *(lua_typename) (lua_State *L, පූර්ණ_සංඛ්‍යා tp);
 
-LUA_API lua_Number      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
-LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);
-LUA_API int             (lua_toboolean) (lua_State *L, int idx);
-LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
-LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, int idx);
-LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
-LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
-LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
-LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
+LUA_API lua_Number      (lua_tonumberx) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, පූර්ණ_සංඛ්‍යා *isnum);
+LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, පූර්ණ_සංඛ්‍යා *isnum);
+LUA_API පූර්ණ_සංඛ්‍යා             (lua_toboolean) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API const var_na     *(lua_tolstring) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, size_t *len);
+LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void	       *(lua_touserdata) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API lua_State      *(lua_tothread) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API const void     *(lua_topointer) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
 
 
 /*
@@ -227,14 +227,14 @@ LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 #define LUA_OPUNM	12
 #define LUA_OPBNOT	13
 
-LUA_API void  (lua_arith) (lua_State *L, int op);
+LUA_API void  (lua_arith) (lua_State *L, පූර්ණ_සංඛ්‍යා op);
 
 #define LUA_OPEQ	0
 #define LUA_OPLT	1
 #define LUA_OPLE	2
 
-LUA_API int   (lua_rawequal) (lua_State *L, int idx1, int idx2);
-LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_rawequal) (lua_State *L, පූර්ණ_සංඛ්‍යා idx1, පූර්ණ_සංඛ්‍යා idx2);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_compare) (lua_State *L, පූර්ණ_සංඛ්‍යා idx1, පූර්ණ_සංඛ්‍යා idx2, පූර්ණ_සංඛ්‍යා op);
 
 
 /*
@@ -243,76 +243,76 @@ LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
 LUA_API void        (lua_pushnil) (lua_State *L);
 LUA_API void        (lua_pushnumber) (lua_State *L, lua_Number n);
 LUA_API void        (lua_pushinteger) (lua_State *L, lua_Integer n);
-LUA_API const char *(lua_pushlstring) (lua_State *L, const char *s, size_t len);
-LUA_API const char *(lua_pushexternalstring) (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUA_API const char *(lua_pushstring) (lua_State *L, const char *s);
-LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
+LUA_API const var_na *(lua_pushlstring) (lua_State *L, const var_na *s, size_t len);
+LUA_API const var_na *(lua_pushexternalstring) (lua_State *L,
+		const var_na *s, size_t len, lua_Alloc falloc, void *ud);
+LUA_API const var_na *(lua_pushstring) (lua_State *L, const var_na *s);
+LUA_API const var_na *(lua_pushvfstring) (lua_State *L, const var_na *fmt,
                                                       va_list argp);
-LUA_API const char *(lua_pushfstring) (lua_State *L, const char *fmt, ...);
-LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, int n);
-LUA_API void  (lua_pushboolean) (lua_State *L, int b);
+LUA_API const var_na *(lua_pushfstring) (lua_State *L, const var_na *fmt, ...);
+LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, පූර්ණ_සංඛ්‍යා n);
+LUA_API void  (lua_pushboolean) (lua_State *L, පූර්ණ_සංඛ්‍යා b);
 LUA_API void  (lua_pushlightuserdata) (lua_State *L, void *p);
-LUA_API int   (lua_pushthread) (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_pushthread) (lua_State *L);
 
 
 /*
 ** get functions (Lua -> stack)
 */
-LUA_API int (lua_getglobal) (lua_State *L, const char *name);
-LUA_API int (lua_gettable) (lua_State *L, int idx);
-LUA_API int (lua_getfield) (lua_State *L, int idx, const char *k);
-LUA_API int (lua_geti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawget) (lua_State *L, int idx);
-LUA_API int (lua_rawgeti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawgetp) (lua_State *L, int idx, const void *p);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_getglobal) (lua_State *L, const var_na *name);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_gettable) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_getfield) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, const var_na *k);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_geti) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, lua_Integer n);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_rawget) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_rawgeti) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, lua_Integer n);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_rawgetp) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, const void *p);
 
-LUA_API void  (lua_createtable) (lua_State *L, int narr, int nrec);
-LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, int nuvalue);
-LUA_API int   (lua_getmetatable) (lua_State *L, int objindex);
-LUA_API int  (lua_getiuservalue) (lua_State *L, int idx, int n);
+LUA_API void  (lua_createtable) (lua_State *L, පූර්ණ_සංඛ්‍යා narr, පූර්ණ_සංඛ්‍යා nrec);
+LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, පූර්ණ_සංඛ්‍යා nuvalue);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_getmetatable) (lua_State *L, පූර්ණ_සංඛ්‍යා objindex);
+LUA_API පූර්ණ_සංඛ්‍යා  (lua_getiuservalue) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, පූර්ණ_සංඛ්‍යා n);
 
 
 /*
 ** set functions (stack -> Lua)
 */
-LUA_API void  (lua_setglobal) (lua_State *L, const char *name);
-LUA_API void  (lua_settable) (lua_State *L, int idx);
-LUA_API void  (lua_setfield) (lua_State *L, int idx, const char *k);
-LUA_API void  (lua_seti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawset) (lua_State *L, int idx);
-LUA_API void  (lua_rawseti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawsetp) (lua_State *L, int idx, const void *p);
-LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
-LUA_API int   (lua_setiuservalue) (lua_State *L, int idx, int n);
+LUA_API void  (lua_setglobal) (lua_State *L, const var_na *name);
+LUA_API void  (lua_settable) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void  (lua_setfield) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, const var_na *k);
+LUA_API void  (lua_seti) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, lua_Integer n);
+LUA_API void  (lua_rawset) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void  (lua_rawseti) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, lua_Integer n);
+LUA_API void  (lua_rawsetp) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, const void *p);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_setmetatable) (lua_State *L, පූර්ණ_සංඛ්‍යා objindex);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_setiuservalue) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, පූර්ණ_සංඛ්‍යා n);
 
 
 /*
 ** 'load' and 'call' functions (load and run Lua code)
 */
-LUA_API void  (lua_callk) (lua_State *L, int nargs, int nresults,
+LUA_API void  (lua_callk) (lua_State *L, පූර්ණ_සංඛ්‍යා nargs, පූර්ණ_සංඛ්‍යා nresults,
                            lua_KContext ctx, lua_KFunction k);
 #define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, NULL)
 
-LUA_API int   (lua_pcallk) (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_pcallk) (lua_State *L, පූර්ණ_සංඛ්‍යා nargs, පූර්ණ_සංඛ්‍යා nresults, පූර්ණ_සංඛ්‍යා errfunc,
                             lua_KContext ctx, lua_KFunction k);
 #define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, NULL)
 
-LUA_API int   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
-                          const char *chunkname, const char *mode);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
+                          const var_na *chunkname, const var_na *mode);
 
-LUA_API int (lua_dump) (lua_State *L, lua_Writer writer, void *data, int strip);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_dump) (lua_State *L, lua_Writer writer, void *data, පූර්ණ_සංඛ්‍යා strip);
 
 
 /*
 ** coroutine functions
 */
-LUA_API int  (lua_yieldk)     (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API පූර්ණ_සංඛ්‍යා  (lua_yieldk)     (lua_State *L, පූර්ණ_සංඛ්‍යා nresults, lua_KContext ctx,
                                lua_KFunction k);
-LUA_API int  (lua_resume)     (lua_State *L, lua_State *from, int narg,
-                               int *nres);
-LUA_API int  (lua_status)     (lua_State *L);
-LUA_API int (lua_isyieldable) (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා  (lua_resume)     (lua_State *L, lua_State *from, පූර්ණ_සංඛ්‍යා narg,
+                               පූර්ණ_සංඛ්‍යා *nres);
+LUA_API පූර්ණ_සංඛ්‍යා  (lua_status)     (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_isyieldable) (lua_State *L);
 
 #define lua_yield(L,n)		lua_yieldk(L, (n), 0, NULL)
 
@@ -321,7 +321,7 @@ LUA_API int (lua_isyieldable) (lua_State *L);
 ** Warning-related functions
 */
 LUA_API void (lua_setwarnf) (lua_State *L, lua_WarnFunction f, void *ud);
-LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
+LUA_API void (lua_warning)  (lua_State *L, const var_na *msg, පූර්ණ_සංඛ්‍යා tocont);
 
 
 /*
@@ -357,29 +357,29 @@ LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
 #define LUA_GCPN		6
 
 
-LUA_API int (lua_gc) (lua_State *L, int what, ...);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_gc) (lua_State *L, පූර්ණ_සංඛ්‍යා what, ...);
 
 
 /*
 ** miscellaneous functions
 */
 
-LUA_API int   (lua_error) (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_error) (lua_State *L);
 
-LUA_API int   (lua_next) (lua_State *L, int idx);
+LUA_API පූර්ණ_සංඛ්‍යා   (lua_next) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
 
-LUA_API void  (lua_concat) (lua_State *L, int n);
-LUA_API void  (lua_len)    (lua_State *L, int idx);
+LUA_API void  (lua_concat) (lua_State *L, පූර්ණ_සංඛ්‍යා n);
+LUA_API void  (lua_len)    (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
 
 #define LUA_N2SBUFFSZ	64
-LUA_API unsigned  (lua_numbertocstring) (lua_State *L, int idx, char *buff);
-LUA_API size_t  (lua_stringtonumber) (lua_State *L, const char *s);
+LUA_API unsigned  (lua_numbertocstring) (lua_State *L, පූර්ණ_සංඛ්‍යා idx, var_na *buff);
+LUA_API size_t  (lua_stringtonumber) (lua_State *L, const var_na *s);
 
 LUA_API lua_Alloc (lua_getallocf) (lua_State *L, void **ud);
 LUA_API void      (lua_setallocf) (lua_State *L, lua_Alloc f, void *ud);
 
-LUA_API void (lua_toclose) (lua_State *L, int idx);
-LUA_API void (lua_closeslot) (lua_State *L, int idx);
+LUA_API void (lua_toclose) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
+LUA_API void (lua_closeslot) (lua_State *L, පූර්ණ_සංඛ්‍යා idx);
 
 
 /*
@@ -388,7 +388,7 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 ** ===============================================================
 */
 
-#define lua_getextraspace(L)	((void *)((char *)(L) - LUA_EXTRASPACE))
+#define lua_getextraspace(L)	((void *)((var_na *)(L) - LUA_EXTRASPACE))
 
 #define lua_tonumber(L,i)	lua_tonumberx(L,(i),NULL)
 #define lua_tointeger(L,i)	lua_tointegerx(L,(i),NULL)
@@ -467,43 +467,43 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define LUA_MASKCOUNT	(1 << LUA_HOOKCOUNT)
 
 
-LUA_API int (lua_getstack) (lua_State *L, int level, lua_Debug *ar);
-LUA_API int (lua_getinfo) (lua_State *L, const char *what, lua_Debug *ar);
-LUA_API const char *(lua_getlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_setlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_getupvalue) (lua_State *L, int funcindex, int n);
-LUA_API const char *(lua_setupvalue) (lua_State *L, int funcindex, int n);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_getstack) (lua_State *L, පූර්ණ_සංඛ්‍යා level, lua_Debug *ar);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_getinfo) (lua_State *L, const var_na *what, lua_Debug *ar);
+LUA_API const var_na *(lua_getlocal) (lua_State *L, const lua_Debug *ar, පූර්ණ_සංඛ්‍යා n);
+LUA_API const var_na *(lua_setlocal) (lua_State *L, const lua_Debug *ar, පූර්ණ_සංඛ්‍යා n);
+LUA_API const var_na *(lua_getupvalue) (lua_State *L, පූර්ණ_සංඛ්‍යා funcindex, පූර්ණ_සංඛ්‍යා n);
+LUA_API const var_na *(lua_setupvalue) (lua_State *L, පූර්ණ_සංඛ්‍යා funcindex, පූර්ණ_සංඛ්‍යා n);
 
-LUA_API void *(lua_upvalueid) (lua_State *L, int fidx, int n);
-LUA_API void  (lua_upvaluejoin) (lua_State *L, int fidx1, int n1,
-                                               int fidx2, int n2);
+LUA_API void *(lua_upvalueid) (lua_State *L, පූර්ණ_සංඛ්‍යා fidx, පූර්ණ_සංඛ්‍යා n);
+LUA_API void  (lua_upvaluejoin) (lua_State *L, පූර්ණ_සංඛ්‍යා fidx1, පූර්ණ_සංඛ්‍යා n1,
+                                               පූර්ණ_සංඛ්‍යා fidx2, පූර්ණ_සංඛ්‍යා n2);
 
-LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, පූර්ණ_සංඛ්‍යා mask, පූර්ණ_සංඛ්‍යා count);
 LUA_API lua_Hook (lua_gethook) (lua_State *L);
-LUA_API int (lua_gethookmask) (lua_State *L);
-LUA_API int (lua_gethookcount) (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_gethookmask) (lua_State *L);
+LUA_API පූර්ණ_සංඛ්‍යා (lua_gethookcount) (lua_State *L);
 
 
-struct lua_Debug {
-  int event;
-  const char *name;	/* (n) */
-  const char *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
-  const char *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
-  const char *source;	/* (S) */
+sa_nracanaa lua_Debug {
+  පූර්ණ_සංඛ්‍යා event;
+  const var_na *name;	/* (n) */
+  const var_na *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
+  const var_na *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
+  const var_na *source;	/* (S) */
   size_t srclen;	/* (S) */
-  int currentline;	/* (l) */
-  int linedefined;	/* (S) */
-  int lastlinedefined;	/* (S) */
-  unsigned char nups;	/* (u) number of upvalues */
-  unsigned char nparams;/* (u) number of parameters */
-  char isvararg;        /* (u) */
-  unsigned char extraargs;  /* (t) number of extra arguments */
-  char istailcall;	/* (t) */
-  int ftransfer;   /* (r) index of first value transferred */
-  int ntransfer;   /* (r) number of transferred values */
-  char short_src[LUA_IDSIZE]; /* (S) */
+  පූර්ණ_සංඛ්‍යා currentline;	/* (l) */
+  පූර්ණ_සංඛ්‍යා linedefined;	/* (S) */
+  පූර්ණ_සංඛ්‍යා lastlinedefined;	/* (S) */
+  unsigned var_na nups;	/* (u) number of upvalues */
+  unsigned var_na nparams;/* (u) number of parameters */
+  var_na isvararg;        /* (u) */
+  unsigned var_na extraargs;  /* (t) number of extra arguments */
+  var_na istailcall;	/* (t) */
+  පූර්ණ_සංඛ්‍යා ftransfer;   /* (r) index of first value transferred */
+  පූර්ණ_සංඛ්‍යා ntransfer;   /* (r) number of transferred values */
+  var_na short_src[LUA_IDSIZE]; /* (S) */
   /* private part */
-  struct CallInfo *i_ci;  /* active function */
+  sa_nracanaa CallInfo *i_ci;  /* active function */
 };
 
 /* }====================================================================== */

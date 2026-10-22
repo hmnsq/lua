@@ -4,7 +4,7 @@
 ** See Copyright Notice in lua.h
 */
 
-#if !defined(lopnames_h)
+#නම් !defined(lopnames_h)
 #define lopnames_h
 
 #include <stddef.h>
@@ -12,7 +12,7 @@
 
 /* ORDER OP */
 
-static const char *const opnames[] = {
+static const var_na *const opnames[] = {
   "MOVE",
   "LOADI",
   "LOADF",

@@ -11,7 +11,7 @@
 
 
 /* Some header files included here need this definition */
-typedef struct CallInfo CallInfo;
+typedef sa_nracanaa CallInfo CallInfo;
 
 
 #include "lobject.h"
@@ -119,14 +119,14 @@ typedef struct CallInfo CallInfo;
 
 
 
-struct lua_longjmp;  /* defined in ldo.c */
+sa_nracanaa lua_longjmp;  /* defined in ldo.c */
 
 
 /*
 ** Atomic type (relative to signals) to better ensure that 'lua_sethook'
 ** is thread safe
 */
-#if !defined(l_signalT)
+#නම් !defined(l_signalT)
 #include <signal.h>
 #define l_signalT	sig_atomic_t
 #endif
@@ -147,7 +147,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** sets (better be a prime) and "M" is the size of each set.
 ** (M == 1 makes a direct cache.)
 */
-#if !defined(STRCACHE_N)
+#නම් !defined(STRCACHE_N)
 #define STRCACHE_N              53
 #define STRCACHE_M              2
 #endif
@@ -164,10 +164,10 @@ struct lua_longjmp;  /* defined in ldo.c */
 #define KGC_GENMAJOR	2	/* generational in major mode */
 
 
-typedef struct stringtable {
+typedef sa_nracanaa stringtable {
   TString **hash;  /* array of buckets (linked lists of strings) */
-  int nuse;  /* number of elements */
-  int size;  /* number of buckets */
+  පූර්ණ_සංඛ්‍යා nuse;  /* number of elements */
+  පූර්ණ_සංඛ්‍යා size;  /* number of buckets */
 } stringtable;
 
 
@@ -184,26 +184,26 @@ typedef struct stringtable {
 ** - field 'nres' is used only while closing tbc variables when
 ** returning from a function;
 */
-struct CallInfo {
+sa_nracanaa CallInfo {
   StkIdRel func;  /* function index in the stack */
   StkIdRel top;  /* top for this function */
-  struct CallInfo *previous, *next;  /* dynamic call link */
-  union {
-    struct {  /* only for Lua functions */
+  sa_nracanaa CallInfo *previous, *next;  /* dynamic call link */
+  sa_ngha {
+    sa_nracanaa {  /* only for Lua functions */
       const Instruction *savedpc;
-      volatile l_signalT trap;  /* function is tracing lines/counts */
-      int nextraargs;  /* # of extra arguments in vararg functions */
+      ca_ncala l_signalT trap;  /* function is tracing lines/counts */
+      පූර්ණ_සංඛ්‍යා nextraargs;  /* # of extra arguments in vararg functions */
     } l;
-    struct {  /* only for C functions */
+    sa_nracanaa {  /* only for C functions */
       lua_KFunction k;  /* continuation in case of yields */
       ptrdiff_t old_errfunc;
       lua_KContext ctx;  /* context info. in case of yields */
     } c;
   } u;
-  union {
-    int funcidx;  /* called-function index */
-    int nyield;  /* number of values yielded */
-    int nres;  /* number of values returned */
+  sa_ngha {
+    පූර්ණ_සංඛ්‍යා funcidx;  /* called-function index */
+    පූර්ණ_සංඛ්‍යා nyield;  /* number of values yielded */
+    පූර්ණ_සංඛ්‍යා nres;  /* number of values returned */
   } u2;
   l_uint32 callstatus;
 };
@@ -282,32 +282,32 @@ struct CallInfo {
 /*
 ** 'per thread' state
 */
-struct lua_State {
+sa_nracanaa lua_State {
   CommonHeader;
   lu_byte allowhook;
   TStatus status;
   StkIdRel top;  /* first free slot in the stack */
-  struct global_State *l_G;
+  sa_nracanaa global_State *l_G;
   CallInfo *ci;  /* call info for current function */
   StkIdRel stack_last;  /* end of stack (last element + 1) */
   StkIdRel stack;  /* stack base */
   UpVal *openupval;  /* list of open upvalues in this stack */
   StkIdRel tbclist;  /* list of to-be-closed variables */
   GCObject *gclist;
-  struct lua_State *twups;  /* list of threads with open upvalues */
-  struct lua_longjmp *errorJmp;  /* current error recover point */
+  sa_nracanaa lua_State *twups;  /* list of threads with open upvalues */
+  sa_nracanaa lua_longjmp *errorJmp;  /* current error recover point */
   CallInfo base_ci;  /* CallInfo for first level (C host) */
-  volatile lua_Hook hook;
+  ca_ncala lua_Hook hook;
   ptrdiff_t errfunc;  /* current error handling function (stack index) */
   l_uint32 nCcalls;  /* number of nested non-yieldable or C calls */
-  int oldpc;  /* last pc traced */
-  int nci;  /* number of items in 'ci' list */
-  int basehookcount;
-  int hookcount;
-  volatile l_signalT hookmask;
-  struct {  /* info about transferred values (for call/return hooks) */
-    int ftransfer;  /* offset of first value transferred */
-    int ntransfer;  /* number of values transferred */
+  පූර්ණ_සංඛ්‍යා oldpc;  /* last pc traced */
+  පූර්ණ_සංඛ්‍යා nci;  /* number of items in 'ci' list */
+  පූර්ණ_සංඛ්‍යා basehookcount;
+  පූර්ණ_සංඛ්‍යා hookcount;
+  ca_ncala l_signalT hookmask;
+  sa_nracanaa {  /* info about transferred values (for call/return hooks) */
+    පූර්ණ_සංඛ්‍යා ftransfer;  /* offset of first value transferred */
+    පූර්ණ_සංඛ්‍යා ntransfer;  /* number of values transferred */
   } transferinfo;
 };
 
@@ -315,7 +315,7 @@ struct lua_State {
 /*
 ** thread state + extra space
 */
-typedef struct LX {
+typedef sa_nracanaa LX {
   lu_byte extra_[LUA_EXTRASPACE];
   lua_State l;
 } LX;
@@ -324,7 +324,7 @@ typedef struct LX {
 /*
 ** 'global state', shared by all threads of this state
 */
-typedef struct global_State {
+typedef sa_nracanaa global_State {
   lua_Alloc frealloc;  /* function to reallocate memory */
   void *ud;         /* auxiliary data to 'frealloc' */
   l_mem GCtotalbytes;  /* number of bytes currently allocated + debt */
@@ -334,7 +334,7 @@ typedef struct global_State {
   stringtable strt;  /* hash table for strings */
   TValue l_registry;
   TValue nilvalue;  /* a nil value */
-  unsigned int seed;  /* randomized seed for hashes */
+  unsigned පූර්ණ_සංඛ්‍යා seed;  /* randomized seed for hashes */
   lu_byte gcparams[LUA_GCPN];
   lu_byte currentwhite;
   lu_byte gcstate;  /* state of garbage collector */
@@ -360,11 +360,11 @@ typedef struct global_State {
   GCObject *finobjsur;  /* list of survival objects with finalizers */
   GCObject *finobjold1;  /* list of old1 objects with finalizers */
   GCObject *finobjrold;  /* list of really old objects with finalizers */
-  struct lua_State *twups;  /* list of threads with open upvalues */
+  sa_nracanaa lua_State *twups;  /* list of threads with open upvalues */
   lua_CFunction panic;  /* to be called in unprotected errors */
   TString *memerrmsg;  /* message for memory-allocation errors */
   TString *tmname[TM_N];  /* array with tag-method names */
-  struct Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
+  sa_nracanaa Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
   TString *strcache[STRCACHE_N][STRCACHE_M];  /* cache for strings in API */
   lua_WarnFunction warnf;  /* warning function */
   void *ud_warn;         /* auxiliary data to 'warnf' */
@@ -391,15 +391,15 @@ typedef struct global_State {
 ** part of any of them anywhere that a declaration of the complete type
 ** of the union is visible."
 */
-union GCUnion {
+sa_ngha GCUnion {
   GCObject gc;  /* common header */
-  struct TString ts;
-  struct Udata u;
-  union Closure cl;
-  struct Table h;
-  struct Proto p;
-  struct lua_State th;  /* thread */
-  struct UpVal upv;
+  sa_nracanaa TString ts;
+  sa_nracanaa Udata u;
+  sa_ngha Closure cl;
+  sa_nracanaa Table h;
+  sa_nracanaa Proto p;
+  sa_nracanaa lua_State th;  /* thread */
+  sa_nracanaa UpVal upv;
 };
 
 
@@ -438,12 +438,12 @@ union GCUnion {
 LUAI_FUNC void luaE_setdebt (global_State *g, l_mem debt);
 LUAI_FUNC void luaE_freethread (lua_State *L, lua_State *L1);
 LUAI_FUNC lu_mem luaE_threadsize (lua_State *L);
-LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
+LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, පූර්ණ_සංඛ්‍යා err);
 LUAI_FUNC void luaE_shrinkCI (lua_State *L);
 LUAI_FUNC void luaE_checkcstack (lua_State *L);
 LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
-LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
+LUAI_FUNC void luaE_warning (lua_State *L, const var_na *msg, පූර්ණ_සංඛ්‍යා tocont);
+LUAI_FUNC void luaE_warnerror (lua_State *L, const var_na *where);
 LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
 
 

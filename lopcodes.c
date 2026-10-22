@@ -117,15 +117,15 @@ LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
 ** and for instructions that use multiple values set by the previous
 ** instruction.
 */
-int luaP_isIT (Instruction i) {
+පූර්ණ_සංඛ්‍යා luaP_isIT (Instruction i) {
   OpCode op = GET_OPCODE(i);
   switch (op) {
-    case OP_SETLIST:
-      return GETARG_vB(i) == 0;
-    case OP_VARARGPREP:
-      return 1;
+    pak_sa OP_SETLIST:
+      ආපසු GETARG_vB(i) == 0;
+    pak_sa OP_VARARGPREP:
+      ආපසු 1;
     default:
-      return testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
+      ආපසු testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
   }
 }
 
