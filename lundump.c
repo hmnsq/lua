@@ -26,15 +26,15 @@
 #include "lzio.h"
 
 
-#if !defined(luai_verifycode)
+#ပေႃး !defined(luai_verifycode)
 #define luai_verifycode(L,f)  /* empty */
 #endif
 
 
-typedef struct {
+typedef sa_nracanaa {
   lua_State *L;
   ZIO *Z;
-  const char *name;
+  const var_na *name;
   Table *h;  /* list for string reuse */
   size_t offset;  /* current position relative to beginning of dump */
   lua_Unsigned nstr;  /* number of strings in the list */
@@ -42,7 +42,7 @@ typedef struct {
 } LoadState;
 
 
-static l_noret error (LoadState *S, const char *why) {
+static l_noret error (LoadState *S, const var_na *why) {
   luaO_pushfstring(S->L, "%s: bad binary format (%s)", S->name, why);
   luaD_throw(S->L, LUA_ERRSYNTAX);
 }
@@ -52,10 +52,10 @@ static l_noret error (LoadState *S, const char *why) {
 ** All high-level loads go through loadVector; you can change it to
 ** adapt to the endianness of the input
 */
-#define loadVector(S,b,n)	loadBlock(S,b,cast_sizet(n)*sizeof((b)[0]))
+#define loadVector(S,b,n)	loadBlock(S,b,cast_sizet(n)*parimaa_na((b)[0]))
 
 static void loadBlock (LoadState *S, void *b, size_t size) {
-  if (luaZ_read(S->Z, b, size) != 0)
+  ပေႃး (luaZ_read(S->Z, b, size) != 0)
     error(S, "truncated chunk");
   S->offset += size;
 }
@@ -63,7 +63,7 @@ static void loadBlock (LoadState *S, void *b, size_t size) {
 
 static void loadAlign (LoadState *S, unsigned align) {
   unsigned padding = align - cast_uint(S->offset % align);
-  if (padding < align) {  /* (padding == align) means no padding */
+  ပေႃး (padding < align) {  /* (padding == align) means no padding */
     lua_Integer paddingContent;
     loadBlock(S, &paddingContent, padding);
     lua_assert(S->offset % align == 0);
@@ -71,14 +71,14 @@ static void loadAlign (LoadState *S, unsigned align) {
 }
 
 
-#define getaddr(S,n,t)	cast(t *, getaddr_(S,cast_sizet(n) * sizeof(t)))
+#define getaddr(S,n,t)	cast(t *, getaddr_(S,cast_sizet(n) * parimaa_na(t)))
 
 static const void *getaddr_ (LoadState *S, size_t size) {
   const void *block = luaZ_getaddr(S->Z, size);
   S->offset += size;
-  if (block == NULL)
+  ပေႃး (block == NULL)
     error(S, "truncated fixed buffer");
-  return block;
+  ပွၵ်ႈ block;
 }
 
 
@@ -86,31 +86,31 @@ static const void *getaddr_ (LoadState *S, size_t size) {
 
 
 static lu_byte loadByte (LoadState *S) {
-  int b = zgetc(S->Z);
-  if (b == EOZ)
+  puur_naa_nka b = zgetc(S->Z);
+  ပေႃး (b == EOZ)
     error(S, "truncated chunk");
   S->offset++;
-  return cast_byte(b);
+  ပွၵ်ႈ cast_byte(b);
 }
 
 
 static lua_Unsigned loadVarint (LoadState *S, lua_Unsigned limit) {
   lua_Unsigned x = 0;
   lua_Unsigned limit_high = limit >> 7;
-  int limit_low = limit & 0x7f;
-  int b;
+  puur_naa_nka limit_low = limit & 0x7f;
+  puur_naa_nka b;
   do {
     b = loadByte(S);
-    if (x >= limit_high && (x > limit_high || (b & 0x7f) > limit_low))
+    ပေႃး (x >= limit_high && (x > limit_high || (b & 0x7f) > limit_low))
       error(S, "integer overflow");
     x = (x << 7) | (b & 0x7f);
-  } while ((b & 0x80) != 0);
-  return x;
+  } ၶၢဝ်း ((b & 0x80) != 0);
+  ပွၵ်ႈ x;
 }
 
 
-static int loadInt (LoadState *S) {
-  return cast_int(loadVarint(S, cast_sizet(INT_MAX)));
+static puur_naa_nka loadInt (LoadState *S) {
+  ပွၵ်ႈ cast_int(loadVarint(S, cast_sizet(INT_MAX)));
 }
 
 
@@ -118,17 +118,17 @@ static int loadInt (LoadState *S) {
 static lua_Number loadNumber (LoadState *S) {
   lua_Number x;
   loadVar(S, x);
-  return x;
+  ပွၵ်ႈ x;
 }
 
 
 static lua_Integer loadInteger (LoadState *S) {
   lua_Unsigned cx = loadVarint(S, LUA_MAXUNSIGNED);
   /* decode unsigned to signed */
-  if ((cx & 1) != 0)
-    return l_castU2S(~(cx >> 1));
-  else
-    return l_castU2S(cx >> 1);
+  ပေႃး ((cx & 1) != 0)
+    ပွၵ်ႈ l_castU2S(~(cx >> 1));
+  ပေႃးဢမ်ႇ
+    ပွၵ်ႈ l_castU2S(cx >> 1);
 }
 
 
@@ -143,32 +143,32 @@ static void loadString (LoadState *S, Proto *p, TString **sl) {
   lua_State *L = S->L;
   TString *ts;
   TValue sv;
-  size_t size = cast_sizet(loadVarint(S, MAX_SIZE - sizeof(TString) + 1));
-  if (size == 0) {  /* previously saved string? */
+  size_t size = cast_sizet(loadVarint(S, MAX_SIZE - parimaa_na(TString) + 1));
+  ပေႃး (size == 0) {  /* previously saved string? */
     lua_Unsigned idx = loadVarint(S, LUA_MAXUNSIGNED);  /* get its index */
     TValue stv;
-    if (idx == 0) {  /* no string? */
+    ပေႃး (idx == 0) {  /* no string? */
       lua_assert(*sl == NULL);  /* must be prefilled */
-      return;
+      ပွၵ်ႈ;
     }
-    if (novariant(luaH_getint(S->h, l_castU2S(idx), &stv)) != LUA_TSTRING)
+    ပေႃး (novariant(luaH_getint(S->h, l_castU2S(idx), &stv)) != LUA_TSTRING)
       error(S, "invalid string index");
     *sl = ts = tsvalue(&stv);  /* get its value */
     luaC_objbarrier(L, p, ts);
-    return;  /* do not save it again */
+    ပွၵ်ႈ;  /* do not save it again */
   }
-  else if (--size <= LUAI_MAXSHORTLEN) {  /* short string? */
-    char buff[LUAI_MAXSHORTLEN + 1];  /* extra space for '\0' */
+  ပေႃးဢမ်ႇ ပေႃး (--size <= LUAI_MAXSHORTLEN) {  /* short string? */
+    var_na buff[LUAI_MAXSHORTLEN + 1];  /* extra space for '\0' */
     loadVector(S, buff, size + 1);  /* load string into buffer */
     *sl = ts = luaS_newlstr(L, buff, size);  /* create string */
     luaC_objbarrier(L, p, ts);
   }
-  else if (S->fixed) {  /* for a fixed buffer, use a fixed string */
-    const char *s = getaddr(S, size + 1, char);  /* get content address */
+  ပေႃးဢမ်ႇ ပေႃး (S->fixed) {  /* for a fixed buffer, use a fixed string */
+    const var_na *s = getaddr(S, size + 1, var_na);  /* get content address */
     *sl = ts = luaS_newextlstr(L, s, size, NULL, NULL);
     luaC_objbarrier(L, p, ts);
   }
-  else {  /* create internal copy */
+  ပေႃးဢမ်ႇ {  /* create internal copy */
     *sl = ts = luaS_createlngstrobj(L, size);  /* create string */
     luaC_objbarrier(L, p, ts);
     loadVector(S, getlngstr(ts), size + 1);  /* load directly in final place */
@@ -182,13 +182,13 @@ static void loadString (LoadState *S, Proto *p, TString **sl) {
 
 
 static void loadCode (LoadState *S, Proto *f) {
-  int n = loadInt(S);
-  loadAlign(S, sizeof(f->code[0]));
-  if (S->fixed) {
+  puur_naa_nka n = loadInt(S);
+  loadAlign(S, parimaa_na(f->code[0]));
+  ပေႃး (S->fixed) {
     f->code = getaddr(S, n, Instruction);
     f->sizecode = n;
   }
-  else {
+  ပေႃးဢမ်ႇ {
     f->code = luaM_newvectorchecked(S->L, n, Instruction);
     f->sizecode = n;
     loadVector(S, f->code, n);
@@ -200,40 +200,40 @@ static void loadFunction(LoadState *S, Proto *f);
 
 
 static void loadConstants (LoadState *S, Proto *f) {
-  int i;
-  int n = loadInt(S);
+  puur_naa_nka i;
+  puur_naa_nka n = loadInt(S);
   f->k = luaM_newvectorchecked(S->L, n, TValue);
   f->sizek = n;
   for (i = 0; i < n; i++)
     setnilvalue(&f->k[i]);
   for (i = 0; i < n; i++) {
     TValue *o = &f->k[i];
-    int t = loadByte(S);
+    puur_naa_nka t = loadByte(S);
     switch (t) {
-      case LUA_VNIL:
+      pak_sa LUA_VNIL:
         setnilvalue(o);
-        break;
-      case LUA_VFALSE:
+        bha_nga;
+      pak_sa LUA_VFALSE:
         setbfvalue(o);
-        break;
-      case LUA_VTRUE:
+        bha_nga;
+      pak_sa LUA_VTRUE:
         setbtvalue(o);
-        break;
-      case LUA_VNUMFLT:
+        bha_nga;
+      pak_sa LUA_VNUMFLT:
         setfltvalue(o, loadNumber(S));
-        break;
-      case LUA_VNUMINT:
+        bha_nga;
+      pak_sa LUA_VNUMINT:
         setivalue(o, loadInteger(S));
-        break;
-      case LUA_VSHRSTR:
-      case LUA_VLNGSTR: {
+        bha_nga;
+      pak_sa LUA_VSHRSTR:
+      pak_sa LUA_VLNGSTR: {
         lua_assert(f->source == NULL);
         loadString(S, f, &f->source);  /* use 'source' to anchor string */
-        if (f->source == NULL)
+        ပေႃး (f->source == NULL)
           error(S, "bad format for constant string");
         setsvalue2n(S->L, o, f->source);  /* save it in the right place */
         f->source = NULL;
-        break;
+        bha_nga;
       }
       default: error(S, "invalid constant");
     }
@@ -242,8 +242,8 @@ static void loadConstants (LoadState *S, Proto *f) {
 
 
 static void loadProtos (LoadState *S, Proto *f) {
-  int i;
-  int n = loadInt(S);
+  puur_naa_nka i;
+  puur_naa_nka n = loadInt(S);
   f->p = luaM_newvectorchecked(S->L, n, Proto *);
   f->sizep = n;
   for (i = 0; i < n; i++)
@@ -263,8 +263,8 @@ static void loadProtos (LoadState *S, Proto *f) {
 ** in that case all prototypes must be consistent for the GC.
 */
 static void loadUpvalues (LoadState *S, Proto *f) {
-  int i;
-  int n = loadInt(S);
+  puur_naa_nka i;
+  puur_naa_nka n = loadInt(S);
   f->upvalues = luaM_newvectorchecked(S->L, n, Upvaldesc);
   f->sizeupvalues = n;
   for (i = 0; i < n; i++)  /* make array valid for GC */
@@ -278,25 +278,25 @@ static void loadUpvalues (LoadState *S, Proto *f) {
 
 
 static void loadDebug (LoadState *S, Proto *f) {
-  int i;
-  int n = loadInt(S);
-  if (S->fixed) {
+  puur_naa_nka i;
+  puur_naa_nka n = loadInt(S);
+  ပေႃး (S->fixed) {
     f->lineinfo = getaddr(S, n, ls_byte);
     f->sizelineinfo = n;
   }
-  else {
+  ပေႃးဢမ်ႇ {
     f->lineinfo = luaM_newvectorchecked(S->L, n, ls_byte);
     f->sizelineinfo = n;
     loadVector(S, f->lineinfo, n);
   }
   n = loadInt(S);
-  if (n > 0) {
-    loadAlign(S, sizeof(int));
-    if (S->fixed) {
+  ပေႃး (n > 0) {
+    loadAlign(S, parimaa_na(puur_naa_nka));
+    ပေႃး (S->fixed) {
       f->abslineinfo = getaddr(S, n, AbsLineInfo);
       f->sizeabslineinfo = n;
     }
-    else {
+    ပေႃးဢမ်ႇ {
       f->abslineinfo = luaM_newvectorchecked(S->L, n, AbsLineInfo);
       f->sizeabslineinfo = n;
       loadVector(S, f->abslineinfo, n);
@@ -313,7 +313,7 @@ static void loadDebug (LoadState *S, Proto *f) {
     f->locvars[i].endpc = loadInt(S);
   }
   n = loadInt(S);
-  if (n != 0)  /* does it have debug information? */
+  ပေႃး (n != 0)  /* does it have debug information? */
     n = f->sizeupvalues;  /* must be this many */
   for (i = 0; i < n; i++)
     loadString(S, f, &f->upvalues[i].name);
@@ -326,7 +326,7 @@ static void loadFunction (LoadState *S, Proto *f) {
   f->numparams = loadByte(S);
   /* get only the meaningful flags */
   f->flag = cast_byte(loadByte(S) & ~PF_FIXED);
-  if (S->fixed)
+  ပေႃး (S->fixed)
     f->flag |= PF_FIXED;  /* signal that code is fixed */
   f->maxstacksize = loadByte(S);
   loadCode(S, f);
@@ -338,35 +338,35 @@ static void loadFunction (LoadState *S, Proto *f) {
 }
 
 
-static void checkliteral (LoadState *S, const char *s, const char *msg) {
-  char buff[sizeof(LUA_SIGNATURE) + sizeof(LUAC_DATA)]; /* larger than both */
+static void checkliteral (LoadState *S, const var_na *s, const var_na *msg) {
+  var_na buff[parimaa_na(LUA_SIGNATURE) + parimaa_na(LUAC_DATA)]; /* larger than both */
   size_t len = strlen(s);
   loadVector(S, buff, len);
-  if (memcmp(s, buff, len) != 0)
+  ပေႃး (memcmp(s, buff, len) != 0)
     error(S, msg);
 }
 
 
-static l_noret numerror (LoadState *S, const char *what, const char *tname) {
-  const char *msg = luaO_pushfstring(S->L, "%s %s mismatch", tname, what);
+static l_noret numerror (LoadState *S, const var_na *what, const var_na *tname) {
+  const var_na *msg = luaO_pushfstring(S->L, "%s %s mismatch", tname, what);
   error(S, msg);
 }
 
 
-static void checknumsize (LoadState *S, int size, const char *tname) {
-  if (size != loadByte(S))
+static void checknumsize (LoadState *S, puur_naa_nka size, const var_na *tname) {
+  ပေႃး (size != loadByte(S))
     numerror(S, "size", tname);
 }
 
 
-static void checknumformat (LoadState *S, int eq, const char *tname) {
-  if (!eq)
+static void checknumformat (LoadState *S, puur_naa_nka eq, const var_na *tname) {
+  ပေႃး (!eq)
     numerror(S, "format", tname);
 }
 
 
 #define checknum(S,tvar,value,tname)  \
-  { tvar i; checknumsize(S, sizeof(i), tname); \
+  { tvar i; checknumsize(S, parimaa_na(i), tname); \
     loadVar(S, i); \
     checknumformat(S, i == value, tname); }
 
@@ -374,12 +374,12 @@ static void checknumformat (LoadState *S, int eq, const char *tname) {
 static void checkHeader (LoadState *S) {
   /* skip 1st char (already read and checked) */
   checkliteral(S, &LUA_SIGNATURE[1], "not a binary chunk");
-  if (loadByte(S) != LUAC_VERSION)
+  ပေႃး (loadByte(S) != LUAC_VERSION)
     error(S, "version mismatch");
-  if (loadByte(S) != LUAC_FORMAT)
+  ပေႃး (loadByte(S) != LUAC_FORMAT)
     error(S, "format mismatch");
   checkliteral(S, LUAC_DATA, "corrupted chunk");
-  checknum(S, int, LUAC_INT, "int");
+  checknum(S, puur_naa_nka, LUAC_INT, "int");
   checknum(S, Instruction, LUAC_INST, "instruction");
   checknum(S, lua_Integer, LUAC_INT, "Lua integer");
   checknum(S, lua_Number, LUAC_NUM, "Lua number");
@@ -389,13 +389,13 @@ static void checkHeader (LoadState *S) {
 /*
 ** Load precompiled chunk.
 */
-LClosure *luaU_undump (lua_State *L, ZIO *Z, Table *anchor, const char *name,
-                       int fixed) {
+LClosure *luaU_undump (lua_State *L, ZIO *Z, Table *anchor, const var_na *name,
+                       puur_naa_nka fixed) {
   LoadState S;
   LClosure *cl;
-  if (*name == '@' || *name == '=')
+  ပေႃး (*name == '@' || *name == '=')
     name = name + 1;
-  else if (*name == LUA_SIGNATURE[0])
+  ပေႃးဢမ်ႇ ပေႃး (*name == LUA_SIGNATURE[0])
     name = "binary string";
   S.name = name;
   S.L = L;
@@ -410,9 +410,9 @@ LClosure *luaU_undump (lua_State *L, ZIO *Z, Table *anchor, const char *name,
   cl->p = luaF_newproto(L);
   luaC_objbarrier(L, cl, cl->p);
   loadFunction(&S, cl->p);
-  if (cl->nupvalues != cl->p->sizeupvalues)
+  ပေႃး (cl->nupvalues != cl->p->sizeupvalues)
     error(&S, "corrupted chunk");
   luai_verifycode(L, cl->p);
-  return cl;
+  ပွၵ်ႈ cl;
 }
 
