@@ -7,39 +7,39 @@
 #define lvm_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
-#include <float.h>
-#include <limits.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#अन्तर्भाव <float.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lvm.h"
+#अन्तर्भाव "lapi.h"
+#अन्तर्भाव "ldebug.h"
+#अन्तर्भाव "ldo.h"
+#अन्तर्भाव "lfunc.h"
+#अन्तर्भाव "lgc.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lopcodes.h"
+#अन्तर्भाव "lstate.h"
+#अन्तर्भाव "lstring.h"
+#अन्तर्भाव "ltable.h"
+#अन्तर्भाव "ltm.h"
+#अन्तर्भाव "lvm.h"
 
 
 /*
 ** By default, use jump tables in the main interpreter loop on gcc
 ** and compatible compilers.
 */
-#if !defined(LUA_USE_JUMPTABLE)
-#if defined(__GNUC__)
+#जइ !defined(LUA_USE_JUMPTABLE)
+#जइ defined(__GNUC__)
 #define LUA_USE_JUMPTABLE	1
-#else
+#अण्णहा
 #define LUA_USE_JUMPTABLE	0
 #endif
 #endif
@@ -65,7 +65,7 @@
 ** of an integer. In a worst case, NBM == 113 for long double and
 ** sizeof(long) == 32.)
 */
-#if ((((LUA_MAXINTEGER >> (NBM / 4)) >> (NBM / 4)) >> (NBM / 4)) \
+#जइ ((((LUA_MAXINTEGER >> (NBM / 4)) >> (NBM / 4)) >> (NBM / 4)) \
 	>> (NBM - (3 * (NBM / 4))))  >  0
 
 /* limit for integers that fit in a float */
@@ -74,7 +74,7 @@
 /* check whether 'i' is in the interval [-MAXINTFITSF, MAXINTFITSF] */
 #define l_intfitsf(i)	((MAXINTFITSF + l_castS2U(i)) <= (2 * MAXINTFITSF))
 
-#else  /* all integers fit in a float precisely */
+#अण्णहा  /* all integers fit in a float precisely */
 
 #define l_intfitsf(i)	1
 
@@ -88,15 +88,15 @@
 ** are disabled via macro 'cvt2num'), do not modify 'result'
 ** and return 0.
 */
-static int l_strton (const TValue *obj, TValue *result) {
+स्थिर पूर्णाङ्क l_strton (ध्रुव TValue *obj, TValue *result) {
   lua_assert(obj != result);
-  if (!cvt2num(obj))  /* is object not a string? */
-    return 0;
-  else {
+  जइ (!cvt2num(obj))  /* is object not a string? */
+    प्रत्यागम 0;
+  अण्णहा {
     TString *st = tsvalue(obj);
     size_t stlen;
-    const char *s = getlstr(st, stlen);
-    return (luaO_str2num(s, result) == stlen + 1);
+    ध्रुव वर्ण *s = getlstr(st, stlen);
+    प्रत्यागम (luaO_str2num(s, result) == stlen + 1);
   }
 }
 
@@ -105,32 +105,32 @@ static int l_strton (const TValue *obj, TValue *result) {
 ** Try to convert a value to a float. The float case is already handled
 ** by the macro 'tonumber'.
 */
-int luaV_tonumber_ (const TValue *obj, lua_Number *n) {
+पूर्णाङ्क luaV_tonumber_ (ध्रुव TValue *obj, lua_सङ्ख्या *n) {
   TValue v;
-  if (ttisinteger(obj)) {
-    *n = cast_num(ivalue(obj));
-    return 1;
+  जइ (ttisinteger(obj)) {
+    *n = cast_अङ्कः(ivalue(obj));
+    प्रत्यागम 1;
   }
-  else if (l_strton(obj, &v)) {  /* string coercible to number? */
+  अण्णहा जइ (l_strton(obj, &v)) {  /* string coercible to number? */
     *n = nvalue(&v);  /* convert result of 'luaO_str2num' to a float */
-    return 1;
+    प्रत्यागम 1;
   }
-  else
-    return 0;  /* conversion failed */
+  अण्णहा
+    प्रत्यागम 0;  /* conversion failed */
 }
 
 
 /*
 ** try to convert a float to an integer, rounding according to 'mode'.
 */
-int luaV_flttointeger (lua_Number n, lua_Integer *p, F2Imod mode) {
-  lua_Number f = l_floor(n);
-  if (n != f) {  /* not an integral value? */
-    if (mode == F2Ieq) return 0;  /* fails if mode demands integral value */
-    else if (mode == F2Iceil)  /* needs ceiling? */
+पूर्णाङ्क luaV_flttointeger (lua_सङ्ख्या n, lua_Integer *p, F2Imod mode) {
+  lua_सङ्ख्या f = l_floor(n);
+  जइ (n != f) {  /* not an integral value? */
+    जइ (mode == F2Ieq) प्रत्यागम 0;  /* fails if mode demands integral value */
+    अण्णहा जइ (mode == F2Iceil)  /* needs ceiling? */
       f += 1;  /* convert floor to ceiling (remember: n != f) */
   }
-  return lua_numbertointeger(f, p);
+  प्रत्यागम lua_numbertointeger(f, p);
 }
 
 
@@ -139,26 +139,26 @@ int luaV_flttointeger (lua_Number n, lua_Integer *p, F2Imod mode) {
 ** without string coercion.
 ** ("Fast track" handled by macro 'tointegerns'.)
 */
-int luaV_tointegerns (const TValue *obj, lua_Integer *p, F2Imod mode) {
-  if (ttisfloat(obj))
-    return luaV_flttointeger(fltvalue(obj), p, mode);
-  else if (ttisinteger(obj)) {
+पूर्णाङ्क luaV_tointegerns (ध्रुव TValue *obj, lua_Integer *p, F2Imod mode) {
+  जइ (ttisfloat(obj))
+    प्रत्यागम luaV_flttointeger(fltvalue(obj), p, mode);
+  अण्णहा जइ (ttisinteger(obj)) {
     *p = ivalue(obj);
-    return 1;
+    प्रत्यागम 1;
   }
-  else
-    return 0;
+  अण्णहा
+    प्रत्यागम 0;
 }
 
 
 /*
 ** try to convert a value to an integer.
 */
-int luaV_tointeger (const TValue *obj, lua_Integer *p, F2Imod mode) {
+पूर्णाङ्क luaV_tointeger (ध्रुव TValue *obj, lua_Integer *p, F2Imod mode) {
   TValue v;
-  if (l_strton(obj, &v))  /* does 'obj' point to a numerical string? */
+  जइ (l_strton(obj, &v))  /* does 'obj' point to a numerical string? */
     obj = &v;  /* change it to point to its corresponding number */
-  return luaV_tointegerns(obj, p, mode);
+  प्रत्यागम luaV_tointegerns(obj, p, mode);
 }
 
 
@@ -178,25 +178,25 @@ int luaV_tointeger (const TValue *obj, lua_Integer *p, F2Imod mode) {
 ** correct; even a limit of LUA_MININTEGER would run the loop once for
 ** an initial value equal to LUA_MININTEGER.)
 */
-static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
+स्थिर पूर्णाङ्क forlimit (lua_State *L, lua_Integer init, ध्रुव TValue *lim,
                                    lua_Integer *p, lua_Integer step) {
-  if (!luaV_tointeger(lim, p, (step < 0 ? F2Iceil : F2Ifloor))) {
+  जइ (!luaV_tointeger(lim, p, (step < 0 ? F2Iceil : F2Ifloor))) {
     /* not coercible to in integer */
-    lua_Number flim;  /* try to convert to float */
-    if (!tonumber(lim, &flim)) /* cannot convert to float? */
+    lua_सङ्ख्या flim;  /* try to convert to float */
+    जइ (!tonumber(lim, &flim)) /* cannot convert to float? */
       luaG_forerror(L, lim, "limit");
     /* else 'flim' is a float out of integer bounds */
-    if (luai_numlt(0, flim)) {  /* if it is positive, it is too large */
-      if (step < 0) return 1;  /* initial value must be less than it */
+    जइ (luai_numlt(0, flim)) {  /* if it is positive, it is too large */
+      जइ (step < 0) प्रत्यागम 1;  /* initial value must be less than it */
       *p = LUA_MAXINTEGER;  /* truncate */
     }
-    else if (luai_numgt(0, flim)) {  /* if it is negative, it is too small */
-      if (step > 0) return 1;  /* initial value must be greater than it */
+    अण्णहा जइ (luai_numgt(0, flim)) {  /* if it is negative, it is too small */
+      जइ (step > 0) प्रत्यागम 1;  /* initial value must be greater than it */
       *p = LUA_MININTEGER;  /* truncate */
     }
-    else return 1;  /* limit is NaN (neither 0 nor positive nor negative) */
+    अण्णहा प्रत्यागम 1;  /* limit is NaN (neither 0 nor positive nor negative) */
   }
-  return (step > 0 ? init > *p : init < *p);  /* not to run? */
+  प्रत्यागम (step > 0 ? init > *p : init < *p);  /* not to run? */
 }
 
 
@@ -212,57 +212,57 @@ static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
 **   ra + 1 : step
 **   ra + 2 : control variable
 */
-static int forprep (lua_State *L, StkId ra) {
+स्थिर पूर्णाङ्क forprep (lua_State *L, StkId ra) {
   TValue *pinit = s2v(ra);
   TValue *plimit = s2v(ra + 1);
   TValue *pstep = s2v(ra + 2);
-  if (ttisinteger(pinit) && ttisinteger(pstep)) { /* integer loop? */
+  जइ (ttisinteger(pinit) && ttisinteger(pstep)) { /* integer loop? */
     lua_Integer init = ivalue(pinit);
     lua_Integer step = ivalue(pstep);
     lua_Integer limit;
-    if (step == 0)
+    जइ (step == 0)
       luaG_runerror(L, "'for' step is zero");
-    if (forlimit(L, init, plimit, &limit, step))
-      return 1;  /* skip the loop */
-    else {  /* prepare loop counter */
-      lua_Unsigned count;
-      if (step > 0) {  /* ascending loop? */
-        count = l_castS2U(limit) - l_castS2U(init);
-        if (step != 1)  /* avoid division in the too common case */
-          count /= l_castS2U(step);
+    जइ (forlimit(L, init, plimit, &limit, step))
+      प्रत्यागम 1;  /* skip the loop */
+    अण्णहा {  /* prepare loop counter */
+      lua_Unsigned गणनम्;
+      जइ (step > 0) {  /* ascending loop? */
+        गणनम् = l_castS2U(limit) - l_castS2U(init);
+        जइ (step != 1)  /* avoid division in the too common case */
+          गणनम् /= l_castS2U(step);
       }
-      else {  /* step < 0; descending loop */
-        count = l_castS2U(init) - l_castS2U(limit);
+      अण्णहा {  /* step < 0; descending loop */
+        गणनम् = l_castS2U(init) - l_castS2U(limit);
         /* 'step+1' avoids negating 'mininteger' */
-        count /= l_castS2U(-(step + 1)) + 1u;
+        गणनम् /= l_castS2U(-(step + 1)) + 1u;
       }
       /* use 'chgivalue' for places that for sure had integers */
-      chgivalue(s2v(ra), l_castU2S(count));  /* change init to count */
+      chgivalue(s2v(ra), l_castU2S(गणनम्));  /* change init to count */
       setivalue(s2v(ra + 1), step);  /* change limit to step */
       chgivalue(s2v(ra + 2), init);  /* change step to init */
     }
   }
-  else {  /* try making all values floats */
-    lua_Number init; lua_Number limit; lua_Number step;
-    if (l_unlikely(!tonumber(plimit, &limit)))
+  अण्णहा {  /* try making all values floats */
+    lua_सङ्ख्या init; lua_सङ्ख्या limit; lua_सङ्ख्या step;
+    जइ (l_unlikely(!tonumber(plimit, &limit)))
       luaG_forerror(L, plimit, "limit");
-    if (l_unlikely(!tonumber(pstep, &step)))
+    जइ (l_unlikely(!tonumber(pstep, &step)))
       luaG_forerror(L, pstep, "step");
-    if (l_unlikely(!tonumber(pinit, &init)))
+    जइ (l_unlikely(!tonumber(pinit, &init)))
       luaG_forerror(L, pinit, "initial value");
-    if (step == 0)
+    जइ (step == 0)
       luaG_runerror(L, "'for' step is zero");
-    if (!(luai_numge(0, step) ? luai_numge(init, limit)
+    जइ (!(luai_numge(0, step) ? luai_numge(init, limit)
                               : luai_numge(limit, init)))
-      return 1;  /* skip the loop */
-    else {
+      प्रत्यागम 1;  /* skip the loop */
+    अण्णहा {
       /* make sure all values are floats */
       setfltvalue(s2v(ra), limit);
       setfltvalue(s2v(ra + 1), step);
       setfltvalue(s2v(ra + 2), init);  /* control variable */
     }
   }
-  return 0;
+  प्रत्यागम 0;
 }
 
 
@@ -271,56 +271,56 @@ static int forprep (lua_State *L, StkId ra) {
 ** true iff the loop must continue. (The integer case is
 ** written inline with opcode OP_FORLOOP, for performance.)
 */
-static int floatforloop (lua_State *L, StkId ra) {
-  lua_Number step = fltvalue(s2v(ra + 1));
-  lua_Number limit = fltvalue(s2v(ra));
-  lua_Number idx = fltvalue(s2v(ra + 2));  /* control variable */
+स्थिर पूर्णाङ्क floatforloop (lua_State *L, StkId ra) {
+  lua_सङ्ख्या step = fltvalue(s2v(ra + 1));
+  lua_सङ्ख्या limit = fltvalue(s2v(ra));
+  lua_सङ्ख्या idx = fltvalue(s2v(ra + 2));  /* control variable */
   idx = luai_numadd(L, idx, step);  /* increment index */
-  if (luai_numlt(0, step) ? luai_numle(idx, limit)
+  जइ (luai_numlt(0, step) ? luai_numle(idx, limit)
                           : luai_numle(limit, idx)) {
     chgfltvalue(s2v(ra + 2), idx);  /* update control variable */
-    return 1;  /* jump back */
+    प्रत्यागम 1;  /* jump back */
   }
-  else
-    return 0;  /* finish the loop */
+  अण्णहा
+    प्रत्यागम 0;  /* finish the loop */
 }
 
 
 /*
 ** Finish the table access 'val = t[key]' and return the tag of the result.
 */
-lu_byte luaV_finishget (lua_State *L, const TValue *t, TValue *key,
+lu_byte luaV_finishget (lua_State *L, ध्रुव TValue *t, TValue *कुञ्चिका,
                                       StkId val, lu_byte tag) {
-  int loop;  /* counter to avoid infinite loops */
-  const TValue *tm;  /* metamethod */
-  for (loop = 0; loop < MAXTAGLOOP; loop++) {
-    if (tag == LUA_VNOTABLE) {  /* 't' is not a table? */
+  पूर्णाङ्क loop;  /* counter to avoid infinite loops */
+  ध्रुव TValue *tm;  /* metamethod */
+  प्रति (loop = 0; loop < MAXTAGLOOP; loop++) {
+    जइ (tag == LUA_VNOTABLE) {  /* 't' is not a table? */
       lua_assert(!ttistable(t));
       tm = luaT_gettmbyobj(L, t, TM_INDEX);
-      if (l_unlikely(notm(tm)))
+      जइ (l_unlikely(notm(tm)))
         luaG_typeerror(L, t, "index");  /* no metamethod */
       /* else will try the metamethod */
     }
-    else {  /* 't' is a table */
+    अण्णहा {  /* 't' is a table */
       tm = fasttm(L, hvalue(t)->metatable, TM_INDEX);  /* table's metamethod */
-      if (tm == NULL) {  /* no metamethod? */
+      जइ (tm == रिक्त) {  /* no metamethod? */
         setnilvalue2s(val);  /* result is nil */
-        return LUA_VNIL;
+        प्रत्यागम LUA_VNIL;
       }
       /* else will try the metamethod */
     }
-    if (ttisfunction(tm)) {  /* is metamethod a function? */
-      tag = luaT_callTMres(L, tm, t, key, val);  /* call it */
-      return tag;  /* return tag of the result */
+    जइ (ttisfunction(tm)) {  /* is metamethod a function? */
+      tag = luaT_callTMres(L, tm, t, कुञ्चिका, val);  /* call it */
+      प्रत्यागम tag;  /* return tag of the result */
     }
     t = tm;  /* else try to access 'tm[key]' */
-    luaV_fastget(t, key, s2v(val), luaH_get, tag);
-    if (!tagisempty(tag))
-      return tag;  /* done */
+    luaV_fastget(t, कुञ्चिका, s2v(val), luaH_get, tag);
+    जइ (!tagisempty(tag))
+      प्रत्यागम tag;  /* done */
     /* else repeat (tail call 'luaV_finishget') */
   }
   luaG_runerror(L, "'__index' chain too long; possible loop");
-  return 0;  /* to avoid warnings */
+  प्रत्यागम 0;  /* to avoid warnings */
 }
 
 
@@ -332,45 +332,45 @@ lu_byte luaV_finishget (lua_State *L, const TValue *t, TValue *key,
 ** metatable is weak and the table is not anchored, this collection
 ** could collect that table while it is being updated.
 */
-void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
-                      TValue *val, int hres) {
-  int loop;  /* counter to avoid infinite loops */
-  for (loop = 0; loop < MAXTAGLOOP; loop++) {
-    const TValue *tm;  /* '__newindex' metamethod */
-    if (hres != HNOTATABLE) {  /* is 't' a table? */
+शून्य luaV_finishset (lua_State *L, ध्रुव TValue *t, TValue *कुञ्चिका,
+                      TValue *val, पूर्णाङ्क hres) {
+  पूर्णाङ्क loop;  /* counter to avoid infinite loops */
+  प्रति (loop = 0; loop < MAXTAGLOOP; loop++) {
+    ध्रुव TValue *tm;  /* '__newindex' metamethod */
+    जइ (hres != HNOTATABLE) {  /* is 't' a table? */
       Table *h = hvalue(t);  /* save 't' table */
       tm = fasttm(L, h->metatable, TM_NEWINDEX);  /* get metamethod */
-      if (tm == NULL) {  /* no metamethod? */
-        sethvalue2s(L, L->top.p, h);  /* anchor 't' */
-        L->top.p++;  /* assume EXTRA_STACK */
-        luaH_finishset(L, h, key, val, hres);  /* set new value */
-        L->top.p--;
+      जइ (tm == रिक्त) {  /* no metamethod? */
+        sethvalue2s(L, L->शिखरम्.p, h);  /* anchor 't' */
+        L->शिखरम्.p++;  /* assume EXTRA_STACK */
+        luaH_finishset(L, h, कुञ्चिका, val, hres);  /* set new value */
+        L->शिखरम्.p--;
         invalidateTMcache(h);
         luaC_barrierback(L, obj2gco(h), val);
-        return;
+        प्रत्यागम;
       }
       /* else will try the metamethod */
     }
-    else {  /* not a table; check metamethod */
+    अण्णहा {  /* not a table; check metamethod */
       tm = luaT_gettmbyobj(L, t, TM_NEWINDEX);
-      if (l_unlikely(notm(tm)))
+      जइ (l_unlikely(notm(tm)))
         luaG_typeerror(L, t, "index");
     }
     /* try the metamethod */
-    if (ttisfunction(tm)) {
-      luaT_callTM(L, tm, t, key, val);
-      return;
+    जइ (ttisfunction(tm)) {
+      luaT_callTM(L, tm, t, कुञ्चिका, val);
+      प्रत्यागम;
     }
     t = tm;  /* else must repeat assignment over 'tm' */
     /* do the equivalent to 'luaV_fastset', but saving 'h' */
-    if (!ttistable(t))
+    जइ (!ttistable(t))
       hres = HNOTATABLE;
-    else {
+    अण्णहा {
       Table *h = hvalue(t);  /* next call can change the value at 't' */
-      hres = luaH_pset(h, key, val);
-      if (hres == HOK) {
+      hres = luaH_pset(h, कुञ्चिका, val);
+      जइ (hres == HOK) {
         luaC_barrierback(L, obj2gco(h), val);  /* luaV_finishfastset */
-        return;  /* done */
+        प्रत्यागम;  /* done */
       }
     }
     /* else 'return luaV_finishset(L, t, key, val, hres)' (loop) */
@@ -382,7 +382,7 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
 /*
 ** Function to be used for 0-terminated string order comparison
 */
-#if !defined(l_strcoll)
+#जइ !defined(l_strcoll)
 #define l_strcoll	strcoll
 #endif
 
@@ -395,22 +395,22 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
 ** of the strings. Note that segments can compare equal but still
 ** have different lengths.
 */
-static int l_strcmp (const TString *ts1, const TString *ts2) {
+स्थिर पूर्णाङ्क l_strcmp (ध्रुव TString *ts1, ध्रुव TString *ts2) {
   size_t rl1;  /* real length */
-  const char *s1 = getlstr(ts1, rl1);
+  ध्रुव वर्ण *s1 = getlstr(ts1, rl1);
   size_t rl2;
-  const char *s2 = getlstr(ts2, rl2);
-  for (;;) {  /* for each segment */
-    int temp = l_strcoll(s1, s2);
-    if (temp != 0)  /* not equal? */
-      return temp;  /* done */
-    else {  /* strings are equal up to a '\0' */
+  ध्रुव वर्ण *s2 = getlstr(ts2, rl2);
+  प्रति (;;) {  /* for each segment */
+    पूर्णाङ्क temp = l_strcoll(s1, s2);
+    जइ (temp != 0)  /* not equal? */
+      प्रत्यागम temp;  /* done */
+    अण्णहा {  /* strings are equal up to a '\0' */
       size_t zl1 = strlen(s1);  /* index of first '\0' in 's1' */
       size_t zl2 = strlen(s2);  /* index of first '\0' in 's2' */
-      if (zl2 == rl2)  /* 's2' is finished? */
-        return (zl1 == rl1) ? 0 : 1;  /* check 's1' */
-      else if (zl1 == rl1)  /* 's1' is finished? */
-        return -1;  /* 's1' is less than 's2' ('s2' is not finished) */
+      जइ (zl2 == rl2)  /* 's2' is finished? */
+        प्रत्यागम (zl1 == rl1) ? 0 : 1;  /* check 's1' */
+      अण्णहा जइ (zl1 == rl1)  /* 's1' is finished? */
+        प्रत्यागम -1;  /* 's1' is less than 's2' ('s2' is not finished) */
       /* both strings longer than 'zl'; go on comparing after the '\0' */
       zl1++; zl2++;
       s1 += zl1; rl1 -= zl1; s2 += zl2; rl2 -= zl2;
@@ -430,15 +430,15 @@ static int l_strcmp (const TString *ts1, const TString *ts2) {
 ** from float to int.)
 ** When 'f' is NaN, comparisons must result in false.
 */
-l_sinline int LTintfloat (lua_Integer i, lua_Number f) {
-  if (l_intfitsf(i))
-    return luai_numlt(cast_num(i), f);  /* compare them as floats */
-  else {  /* i < f <=> i < ceil(f) */
+l_sinline पूर्णाङ्क LTintfloat (lua_Integer i, lua_सङ्ख्या f) {
+  जइ (l_intfitsf(i))
+    प्रत्यागम luai_numlt(cast_अङ्कः(i), f);  /* compare them as floats */
+  अण्णहा {  /* i < f <=> i < ceil(f) */
     lua_Integer fi;
-    if (luaV_flttointeger(f, &fi, F2Iceil))  /* fi = ceil(f) */
-      return i < fi;   /* compare them as integers */
-    else  /* 'f' is either greater or less than all integers */
-      return f > 0;  /* greater? */
+    जइ (luaV_flttointeger(f, &fi, F2Iceil))  /* fi = ceil(f) */
+      प्रत्यागम i < fi;   /* compare them as integers */
+    अण्णहा  /* 'f' is either greater or less than all integers */
+      प्रत्यागम f > 0;  /* greater? */
   }
 }
 
@@ -447,15 +447,15 @@ l_sinline int LTintfloat (lua_Integer i, lua_Number f) {
 ** Check whether integer 'i' is less than or equal to float 'f'.
 ** See comments on previous function.
 */
-l_sinline int LEintfloat (lua_Integer i, lua_Number f) {
-  if (l_intfitsf(i))
-    return luai_numle(cast_num(i), f);  /* compare them as floats */
-  else {  /* i <= f <=> i <= floor(f) */
+l_sinline पूर्णाङ्क LEintfloat (lua_Integer i, lua_सङ्ख्या f) {
+  जइ (l_intfitsf(i))
+    प्रत्यागम luai_numle(cast_अङ्कः(i), f);  /* compare them as floats */
+  अण्णहा {  /* i <= f <=> i <= floor(f) */
     lua_Integer fi;
-    if (luaV_flttointeger(f, &fi, F2Ifloor))  /* fi = floor(f) */
-      return i <= fi;   /* compare them as integers */
-    else  /* 'f' is either greater or less than all integers */
-      return f > 0;  /* greater? */
+    जइ (luaV_flttointeger(f, &fi, F2Ifloor))  /* fi = floor(f) */
+      प्रत्यागम i <= fi;   /* compare them as integers */
+    अण्णहा  /* 'f' is either greater or less than all integers */
+      प्रत्यागम f > 0;  /* greater? */
   }
 }
 
@@ -464,15 +464,15 @@ l_sinline int LEintfloat (lua_Integer i, lua_Number f) {
 ** Check whether float 'f' is less than integer 'i'.
 ** See comments on previous function.
 */
-l_sinline int LTfloatint (lua_Number f, lua_Integer i) {
-  if (l_intfitsf(i))
-    return luai_numlt(f, cast_num(i));  /* compare them as floats */
-  else {  /* f < i <=> floor(f) < i */
+l_sinline पूर्णाङ्क LTfloatint (lua_सङ्ख्या f, lua_Integer i) {
+  जइ (l_intfitsf(i))
+    प्रत्यागम luai_numlt(f, cast_अङ्कः(i));  /* compare them as floats */
+  अण्णहा {  /* f < i <=> floor(f) < i */
     lua_Integer fi;
-    if (luaV_flttointeger(f, &fi, F2Ifloor))  /* fi = floor(f) */
-      return fi < i;   /* compare them as integers */
-    else  /* 'f' is either greater or less than all integers */
-      return f < 0;  /* less? */
+    जइ (luaV_flttointeger(f, &fi, F2Ifloor))  /* fi = floor(f) */
+      प्रत्यागम fi < i;   /* compare them as integers */
+    अण्णहा  /* 'f' is either greater or less than all integers */
+      प्रत्यागम f < 0;  /* less? */
   }
 }
 
@@ -481,15 +481,15 @@ l_sinline int LTfloatint (lua_Number f, lua_Integer i) {
 ** Check whether float 'f' is less than or equal to integer 'i'.
 ** See comments on previous function.
 */
-l_sinline int LEfloatint (lua_Number f, lua_Integer i) {
-  if (l_intfitsf(i))
-    return luai_numle(f, cast_num(i));  /* compare them as floats */
-  else {  /* f <= i <=> ceil(f) <= i */
+l_sinline पूर्णाङ्क LEfloatint (lua_सङ्ख्या f, lua_Integer i) {
+  जइ (l_intfitsf(i))
+    प्रत्यागम luai_numle(f, cast_अङ्कः(i));  /* compare them as floats */
+  अण्णहा {  /* f <= i <=> ceil(f) <= i */
     lua_Integer fi;
-    if (luaV_flttointeger(f, &fi, F2Iceil))  /* fi = ceil(f) */
-      return fi <= i;   /* compare them as integers */
-    else  /* 'f' is either greater or less than all integers */
-      return f < 0;  /* less? */
+    जइ (luaV_flttointeger(f, &fi, F2Iceil))  /* fi = ceil(f) */
+      प्रत्यागम fi <= i;   /* compare them as integers */
+    अण्णहा  /* 'f' is either greater or less than all integers */
+      प्रत्यागम f < 0;  /* less? */
   }
 }
 
@@ -497,21 +497,21 @@ l_sinline int LEfloatint (lua_Number f, lua_Integer i) {
 /*
 ** Return 'l < r', for numbers.
 */
-l_sinline int LTnum (const TValue *l, const TValue *r) {
+l_sinline पूर्णाङ्क LTnum (ध्रुव TValue *l, ध्रुव TValue *r) {
   lua_assert(ttisnumber(l) && ttisnumber(r));
-  if (ttisinteger(l)) {
+  जइ (ttisinteger(l)) {
     lua_Integer li = ivalue(l);
-    if (ttisinteger(r))
-      return li < ivalue(r);  /* both are integers */
-    else  /* 'l' is int and 'r' is float */
-      return LTintfloat(li, fltvalue(r));  /* l < r ? */
+    जइ (ttisinteger(r))
+      प्रत्यागम li < ivalue(r);  /* both are integers */
+    अण्णहा  /* 'l' is int and 'r' is float */
+      प्रत्यागम LTintfloat(li, fltvalue(r));  /* l < r ? */
   }
-  else {
-    lua_Number lf = fltvalue(l);  /* 'l' must be float */
-    if (ttisfloat(r))
-      return luai_numlt(lf, fltvalue(r));  /* both are float */
-    else  /* 'l' is float and 'r' is int */
-      return LTfloatint(lf, ivalue(r));
+  अण्णहा {
+    lua_सङ्ख्या lf = fltvalue(l);  /* 'l' must be float */
+    जइ (ttisfloat(r))
+      प्रत्यागम luai_numlt(lf, fltvalue(r));  /* both are float */
+    अण्णहा  /* 'l' is float and 'r' is int */
+      प्रत्यागम LTfloatint(lf, ivalue(r));
   }
 }
 
@@ -519,21 +519,21 @@ l_sinline int LTnum (const TValue *l, const TValue *r) {
 /*
 ** Return 'l <= r', for numbers.
 */
-l_sinline int LEnum (const TValue *l, const TValue *r) {
+l_sinline पूर्णाङ्क LEnum (ध्रुव TValue *l, ध्रुव TValue *r) {
   lua_assert(ttisnumber(l) && ttisnumber(r));
-  if (ttisinteger(l)) {
+  जइ (ttisinteger(l)) {
     lua_Integer li = ivalue(l);
-    if (ttisinteger(r))
-      return li <= ivalue(r);  /* both are integers */
-    else  /* 'l' is int and 'r' is float */
-      return LEintfloat(li, fltvalue(r));  /* l <= r ? */
+    जइ (ttisinteger(r))
+      प्रत्यागम li <= ivalue(r);  /* both are integers */
+    अण्णहा  /* 'l' is int and 'r' is float */
+      प्रत्यागम LEintfloat(li, fltvalue(r));  /* l <= r ? */
   }
-  else {
-    lua_Number lf = fltvalue(l);  /* 'l' must be float */
-    if (ttisfloat(r))
-      return luai_numle(lf, fltvalue(r));  /* both are float */
-    else  /* 'l' is float and 'r' is int */
-      return LEfloatint(lf, ivalue(r));
+  अण्णहा {
+    lua_सङ्ख्या lf = fltvalue(l);  /* 'l' must be float */
+    जइ (ttisfloat(r))
+      प्रत्यागम luai_numle(lf, fltvalue(r));  /* both are float */
+    अण्णहा  /* 'l' is float and 'r' is int */
+      प्रत्यागम LEfloatint(lf, ivalue(r));
   }
 }
 
@@ -541,44 +541,44 @@ l_sinline int LEnum (const TValue *l, const TValue *r) {
 /*
 ** return 'l < r' for non-numbers.
 */
-static int lessthanothers (lua_State *L, const TValue *l, const TValue *r) {
+स्थिर पूर्णाङ्क lessthanothers (lua_State *L, ध्रुव TValue *l, ध्रुव TValue *r) {
   lua_assert(!ttisnumber(l) || !ttisnumber(r));
-  if (ttisstring(l) && ttisstring(r))  /* both are strings? */
-    return l_strcmp(tsvalue(l), tsvalue(r)) < 0;
-  else
-    return luaT_callorderTM(L, l, r, TM_LT);
+  जइ (ttisstring(l) && ttisstring(r))  /* both are strings? */
+    प्रत्यागम l_strcmp(tsvalue(l), tsvalue(r)) < 0;
+  अण्णहा
+    प्रत्यागम luaT_callorderTM(L, l, r, TM_LT);
 }
 
 
 /*
 ** Main operation less than; return 'l < r'.
 */
-int luaV_lessthan (lua_State *L, const TValue *l, const TValue *r) {
-  if (ttisnumber(l) && ttisnumber(r))  /* both operands are numbers? */
-    return LTnum(l, r);
-  else return lessthanothers(L, l, r);
+पूर्णाङ्क luaV_lessthan (lua_State *L, ध्रुव TValue *l, ध्रुव TValue *r) {
+  जइ (ttisnumber(l) && ttisnumber(r))  /* both operands are numbers? */
+    प्रत्यागम LTnum(l, r);
+  अण्णहा प्रत्यागम lessthanothers(L, l, r);
 }
 
 
 /*
 ** return 'l <= r' for non-numbers.
 */
-static int lessequalothers (lua_State *L, const TValue *l, const TValue *r) {
+स्थिर पूर्णाङ्क lessequalothers (lua_State *L, ध्रुव TValue *l, ध्रुव TValue *r) {
   lua_assert(!ttisnumber(l) || !ttisnumber(r));
-  if (ttisstring(l) && ttisstring(r))  /* both are strings? */
-    return l_strcmp(tsvalue(l), tsvalue(r)) <= 0;
-  else
-    return luaT_callorderTM(L, l, r, TM_LE);
+  जइ (ttisstring(l) && ttisstring(r))  /* both are strings? */
+    प्रत्यागम l_strcmp(tsvalue(l), tsvalue(r)) <= 0;
+  अण्णहा
+    प्रत्यागम luaT_callorderTM(L, l, r, TM_LE);
 }
 
 
 /*
 ** Main operation less than or equal to; return 'l <= r'.
 */
-int luaV_lessequal (lua_State *L, const TValue *l, const TValue *r) {
-  if (ttisnumber(l) && ttisnumber(r))  /* both operands are numbers? */
-    return LEnum(l, r);
-  else return lessequalothers(L, l, r);
+पूर्णाङ्क luaV_lessequal (lua_State *L, ध्रुव TValue *l, ध्रुव TValue *r) {
+  जइ (ttisnumber(l) && ttisnumber(r))  /* both operands are numbers? */
+    प्रत्यागम LEnum(l, r);
+  अण्णहा प्रत्यागम lessequalothers(L, l, r);
 }
 
 
@@ -586,75 +586,75 @@ int luaV_lessequal (lua_State *L, const TValue *l, const TValue *r) {
 ** Main operation for equality of Lua values; return 't1 == t2'.
 ** L == NULL means raw equality (no metamethods)
 */
-int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2) {
-  const TValue *tm;
-  if (ttype(t1) != ttype(t2))  /* not the same type? */
-    return 0;
-  else if (ttypetag(t1) != ttypetag(t2)) {
-    switch (ttypetag(t1)) {
-      case LUA_VNUMINT: {  /* integer == float? */
+पूर्णाङ्क luaV_equalobj (lua_State *L, ध्रुव TValue *t1, ध्रुव TValue *t2) {
+  ध्रुव TValue *tm;
+  जइ (ttype(t1) != ttype(t2))  /* not the same type? */
+    प्रत्यागम 0;
+  अण्णहा जइ (ttypetag(t1) != ttypetag(t2)) {
+    विकल्प (ttypetag(t1)) {
+      पक्ष LUA_VNUMINT: {  /* integer == float? */
         /* integer and float can only be equal if float has an integer
            value equal to the integer */
         lua_Integer i2;
-        return (luaV_flttointeger(fltvalue(t2), &i2, F2Ieq) &&
+        प्रत्यागम (luaV_flttointeger(fltvalue(t2), &i2, F2Ieq) &&
                 ivalue(t1) == i2);
       }
-      case LUA_VNUMFLT: {  /* float == integer? */
+      पक्ष LUA_VNUMFLT: {  /* float == integer? */
         lua_Integer i1;  /* see comment in previous case */
-        return (luaV_flttointeger(fltvalue(t1), &i1, F2Ieq) &&
+        प्रत्यागम (luaV_flttointeger(fltvalue(t1), &i1, F2Ieq) &&
                 i1 == ivalue(t2));
       }
-      case LUA_VSHRSTR: case LUA_VLNGSTR: {
+      पक्ष LUA_VSHRSTR: पक्ष LUA_VLNGSTR: {
         /* compare two strings with different variants: they can be
            equal when one string is a short string and the other is
            an external string  */
-        return luaS_eqstr(tsvalue(t1), tsvalue(t2));
+        प्रत्यागम luaS_eqstr(tsvalue(t1), tsvalue(t2));
       }
-      default:
+      स्वभाव:
         /* only numbers (integer/float) and strings (long/short) can have
            equal values with different variants */
-        return 0;
+        प्रत्यागम 0;
     }
   }
-  else {  /* equal variants */
-    switch (ttypetag(t1)) {
-      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE:
-        return 1;
-      case LUA_VNUMINT:
-        return (ivalue(t1) == ivalue(t2));
-      case LUA_VNUMFLT:
-        return (fltvalue(t1) == fltvalue(t2));
-      case LUA_VLIGHTUSERDATA: return pvalue(t1) == pvalue(t2);
-      case LUA_VSHRSTR:
-        return eqshrstr(tsvalue(t1), tsvalue(t2));
-      case LUA_VLNGSTR:
-        return luaS_eqstr(tsvalue(t1), tsvalue(t2));
-      case LUA_VUSERDATA: {
-        if (uvalue(t1) == uvalue(t2)) return 1;
-        else if (L == NULL) return 0;
+  अण्णहा {  /* equal variants */
+    विकल्प (ttypetag(t1)) {
+      पक्ष LUA_VNIL: पक्ष LUA_VFALSE: पक्ष LUA_VTRUE:
+        प्रत्यागम 1;
+      पक्ष LUA_VNUMINT:
+        प्रत्यागम (ivalue(t1) == ivalue(t2));
+      पक्ष LUA_VNUMFLT:
+        प्रत्यागम (fltvalue(t1) == fltvalue(t2));
+      पक्ष LUA_VLIGHTUSERDATA: प्रत्यागम pvalue(t1) == pvalue(t2);
+      पक्ष LUA_VSHRSTR:
+        प्रत्यागम eqshrstr(tsvalue(t1), tsvalue(t2));
+      पक्ष LUA_VLNGSTR:
+        प्रत्यागम luaS_eqstr(tsvalue(t1), tsvalue(t2));
+      पक्ष LUA_VUSERDATA: {
+        जइ (uvalue(t1) == uvalue(t2)) प्रत्यागम 1;
+        अण्णहा जइ (L == रिक्त) प्रत्यागम 0;
         tm = fasttm(L, uvalue(t1)->metatable, TM_EQ);
-        if (tm == NULL)
+        जइ (tm == रिक्त)
           tm = fasttm(L, uvalue(t2)->metatable, TM_EQ);
-        break;  /* will try TM */
+        भङ्ग;  /* will try TM */
       }
-      case LUA_VTABLE: {
-        if (hvalue(t1) == hvalue(t2)) return 1;
-        else if (L == NULL) return 0;
+      पक्ष LUA_VTABLE: {
+        जइ (hvalue(t1) == hvalue(t2)) प्रत्यागम 1;
+        अण्णहा जइ (L == रिक्त) प्रत्यागम 0;
         tm = fasttm(L, hvalue(t1)->metatable, TM_EQ);
-        if (tm == NULL)
+        जइ (tm == रिक्त)
           tm = fasttm(L, hvalue(t2)->metatable, TM_EQ);
-        break;  /* will try TM */
+        भङ्ग;  /* will try TM */
       }
-      case LUA_VLCF:
-        return (fvalue(t1) == fvalue(t2));
-      default:  /* functions and threads */
-        return (gcvalue(t1) == gcvalue(t2));
+      पक्ष LUA_VLCF:
+        प्रत्यागम (fvalue(t1) == fvalue(t2));
+      स्वभाव:  /* functions and threads */
+        प्रत्यागम (gcvalue(t1) == gcvalue(t2));
     }
-    if (tm == NULL)  /* no TM? */
-      return 0;  /* objects are different */
-    else {
-      int tag = luaT_callTMres(L, tm, t1, t2, L->top.p);  /* call TM */
-      return !tagisfalse(tag);
+    जइ (tm == रिक्त)  /* no TM? */
+      प्रत्यागम 0;  /* objects are different */
+    अण्णहा {
+      पूर्णाङ्क tag = luaT_callTMres(L, tm, t1, t2, L->शिखरम्.p);  /* call TM */
+      प्रत्यागम !tagisfalse(tag);
     }
   }
 }
@@ -672,15 +672,15 @@ int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2) {
 #define isemptystr(o)	(ttisshrstring(o) && tsvalue(o)->shrlen == 0)
 
 /* copy strings in stack from top - n up to top - 1 to buffer */
-static void copy2buff (StkId top, int n, char *buff) {
+स्थिर शून्य copy2buff (StkId शिखरम्, पूर्णाङ्क n, वर्ण *buff) {
   size_t tl = 0;  /* size already copied */
-  do {
-    TString *st = tsvalue(s2v(top - n));
+  करेहि {
+    TString *st = tsvalue(s2v(शिखरम् - n));
     size_t l;  /* length of string being copied */
-    const char *s = getlstr(st, l);
-    memcpy(buff + tl, s, l * sizeof(char));
+    ध्रुव वर्ण *s = getlstr(st, l);
+    memcpy(buff + tl, s, l * परिमाण(वर्ण));
     tl += l;
-  } while (--n > 0);
+  } जाव (--n > 0);
 }
 
 
@@ -688,76 +688,76 @@ static void copy2buff (StkId top, int n, char *buff) {
 ** Main operation for concatenation: concat 'total' values in the stack,
 ** from 'L->top.p - total' up to 'L->top.p - 1'.
 */
-void luaV_concat (lua_State *L, int total) {
-  if (total == 1)
-    return;  /* "all" values already concatenated */
-  do {
-    StkId top = L->top.p;
-    int n = 2;  /* number of elements handled in this pass (at least 2) */
-    if (!(ttisstring(s2v(top - 2)) || cvt2str(s2v(top - 2))) ||
-        !tostring(L, s2v(top - 1)))
+शून्य luaV_concat (lua_State *L, पूर्णाङ्क total) {
+  जइ (total == 1)
+    प्रत्यागम;  /* "all" values already concatenated */
+  करेहि {
+    StkId शिखरम् = L->शिखरम्.p;
+    पूर्णाङ्क n = 2;  /* number of elements handled in this pass (at least 2) */
+    जइ (!(ttisstring(s2v(शिखरम् - 2)) || cvt2str(s2v(शिखरम् - 2))) ||
+        !tostring(L, s2v(शिखरम् - 1)))
       luaT_tryconcatTM(L);  /* may invalidate 'top' */
-    else if (isemptystr(s2v(top - 1)))  /* second operand is empty? */
-      cast_void(tostring(L, s2v(top - 2)));  /* result is first operand */
-    else if (isemptystr(s2v(top - 2))) {  /* first operand is empty string? */
-      setobjs2s(L, top - 2, top - 1);  /* result is second op. */
+    अण्णहा जइ (isemptystr(s2v(शिखरम् - 1)))  /* second operand is empty? */
+      cast_void(tostring(L, s2v(शिखरम् - 2)));  /* result is first operand */
+    अण्णहा जइ (isemptystr(s2v(शिखरम् - 2))) {  /* first operand is empty string? */
+      setobjs2s(L, शिखरम् - 2, शिखरम् - 1);  /* result is second op. */
     }
-    else {
+    अण्णहा {
       /* at least two string values; get as many as possible */
-      size_t tl = tsslen(tsvalue(s2v(top - 1)));  /* total length */
+      size_t tl = tsslen(tsvalue(s2v(शिखरम् - 1)));  /* total length */
       TString *ts;
       /* collect total length and number of strings */
-      for (n = 1; n < total && tostring(L, s2v(top - n - 1)); n++) {
-        size_t l = tsslen(tsvalue(s2v(top - n - 1)));
-        if (l_unlikely(l >= MAX_SIZE - sizeof(TString) - tl)) {
-          L->top.p = top - total;  /* pop strings to avoid wasting stack */
+      प्रति (n = 1; n < total && tostring(L, s2v(शिखरम् - n - 1)); n++) {
+        size_t l = tsslen(tsvalue(s2v(शिखरम् - n - 1)));
+        जइ (l_unlikely(l >= MAX_SIZE - परिमाण(TString) - tl)) {
+          L->शिखरम्.p = शिखरम् - total;  /* pop strings to avoid wasting stack */
           luaG_runerror(L, "string length overflow");
         }
         tl += l;
       }
-      if (tl <= LUAI_MAXSHORTLEN) {  /* is result a short string? */
-        char buff[LUAI_MAXSHORTLEN];
-        copy2buff(top, n, buff);  /* copy strings to buffer */
+      जइ (tl <= LUAI_MAXSHORTLEN) {  /* is result a short string? */
+        वर्ण buff[LUAI_MAXSHORTLEN];
+        copy2buff(शिखरम्, n, buff);  /* copy strings to buffer */
         ts = luaS_newlstr(L, buff, tl);
       }
-      else {  /* long string; copy strings directly to final result */
+      अण्णहा {  /* long string; copy strings directly to final result */
         ts = luaS_createlngstrobj(L, tl);
-        copy2buff(top, n, getlngstr(ts));
+        copy2buff(शिखरम्, n, getlngstr(ts));
       }
-      setsvalue2s(L, top - n, ts);  /* create result */
+      setsvalue2s(L, शिखरम् - n, ts);  /* create result */
     }
     total -= n - 1;  /* got 'n' strings to create one new */
-    L->top.p -= n - 1;  /* popped 'n' strings and pushed one */
-  } while (total > 1);  /* repeat until only 1 result left */
+    L->शिखरम्.p -= n - 1;  /* popped 'n' strings and pushed one */
+  } जाव (total > 1);  /* repeat until only 1 result left */
 }
 
 
 /*
 ** Main operation 'ra = #rb'.
 */
-void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
-  const TValue *tm;
-  switch (ttypetag(rb)) {
-    case LUA_VTABLE: {
+शून्य luaV_objlen (lua_State *L, StkId ra, ध्रुव TValue *rb) {
+  ध्रुव TValue *tm;
+  विकल्प (ttypetag(rb)) {
+    पक्ष LUA_VTABLE: {
       Table *h = hvalue(rb);
       tm = fasttm(L, h->metatable, TM_LEN);
-      if (tm) break;  /* metamethod? break switch to call it */
+      जइ (tm) भङ्ग;  /* metamethod? break switch to call it */
       setivalue(s2v(ra), l_castU2S(luaH_getn(L, h)));  /* else primitive len */
-      return;
+      प्रत्यागम;
     }
-    case LUA_VSHRSTR: {
+    पक्ष LUA_VSHRSTR: {
       setivalue(s2v(ra), tsvalue(rb)->shrlen);
-      return;
+      प्रत्यागम;
     }
-    case LUA_VLNGSTR: {
+    पक्ष LUA_VLNGSTR: {
       setivalue(s2v(ra), cast_st2S(tsvalue(rb)->u.lnglen));
-      return;
+      प्रत्यागम;
     }
-    default: {  /* try metamethod */
+    स्वभाव: {  /* try metamethod */
       tm = luaT_gettmbyobj(L, rb, TM_LEN);
-      if (l_unlikely(notm(tm)))  /* no metamethod? */
+      जइ (l_unlikely(notm(tm)))  /* no metamethod? */
         luaG_typeerror(L, rb, "get length of");
-      break;
+      भङ्ग;
     }
   }
   luaT_callTMres(L, tm, rb, rb, ra);
@@ -771,16 +771,16 @@ void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
 ** otherwise 'floor(q) == trunc(q) - 1'.
 */
 lua_Integer luaV_idiv (lua_State *L, lua_Integer m, lua_Integer n) {
-  if (l_unlikely(l_castS2U(n) + 1u <= 1u)) {  /* special cases: -1 or 0 */
-    if (n == 0)
+  जइ (l_unlikely(l_castS2U(n) + 1u <= 1u)) {  /* special cases: -1 or 0 */
+    जइ (n == 0)
       luaG_runerror(L, "attempt to divide by zero");
-    return intop(-, 0, m);   /* n==-1; avoid overflow with 0x80000...//-1 */
+    प्रत्यागम intop(-, 0, m);   /* n==-1; avoid overflow with 0x80000...//-1 */
   }
-  else {
+  अण्णहा {
     lua_Integer q = m / n;  /* perform C division */
-    if ((m ^ n) < 0 && m % n != 0)  /* 'm/n' would be negative non-integer? */
+    जइ ((m ^ n) < 0 && m % n != 0)  /* 'm/n' would be negative non-integer? */
       q -= 1;  /* correct result for different rounding */
-    return q;
+    प्रत्यागम q;
   }
 }
 
@@ -791,16 +791,16 @@ lua_Integer luaV_idiv (lua_State *L, lua_Integer m, lua_Integer n) {
 ** about luaV_idiv.)
 */
 lua_Integer luaV_mod (lua_State *L, lua_Integer m, lua_Integer n) {
-  if (l_unlikely(l_castS2U(n) + 1u <= 1u)) {  /* special cases: -1 or 0 */
-    if (n == 0)
+  जइ (l_unlikely(l_castS2U(n) + 1u <= 1u)) {  /* special cases: -1 or 0 */
+    जइ (n == 0)
       luaG_runerror(L, "attempt to perform 'n%%0'");
-    return 0;   /* m % -1 == 0; avoid overflow with 0x80000...%-1 */
+    प्रत्यागम 0;   /* m % -1 == 0; avoid overflow with 0x80000...%-1 */
   }
-  else {
+  अण्णहा {
     lua_Integer r = m % n;
-    if (r != 0 && (r ^ n) < 0)  /* 'm/n' would be non-integer negative? */
+    जइ (r != 0 && (r ^ n) < 0)  /* 'm/n' would be non-integer negative? */
       r += n;  /* correct result for different rounding */
-    return r;
+    प्रत्यागम r;
   }
 }
 
@@ -808,10 +808,10 @@ lua_Integer luaV_mod (lua_State *L, lua_Integer m, lua_Integer n) {
 /*
 ** Float modulus
 */
-lua_Number luaV_modf (lua_State *L, lua_Number m, lua_Number n) {
-  lua_Number r;
+lua_सङ्ख्या luaV_modf (lua_State *L, lua_सङ्ख्या m, lua_सङ्ख्या n) {
+  lua_सङ्ख्या r;
   luai_nummod(L, m, n, r);
-  return r;
+  प्रत्यागम r;
 }
 
 
@@ -823,13 +823,13 @@ lua_Number luaV_modf (lua_State *L, lua_Number m, lua_Number n) {
 ** Shift left operation. (Shift right just negates 'y'.)
 */
 lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y) {
-  if (y < 0) {  /* shift right? */
-    if (y <= -NBITS) return 0;
-    else return intop(>>, x, -y);
+  जइ (y < 0) {  /* shift right? */
+    जइ (y <= -NBITS) प्रत्यागम 0;
+    अण्णहा प्रत्यागम intop(>>, x, -y);
   }
-  else {  /* shift left */
-    if (y >= NBITS) return 0;
-    else return intop(<<, x, y);
+  अण्णहा {  /* shift left */
+    जइ (y >= NBITS) प्रत्यागम 0;
+    अण्णहा प्रत्यागम intop(<<, x, y);
   }
 }
 
@@ -838,18 +838,18 @@ lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y) {
 ** create a new Lua closure, push it in the stack, and initialize
 ** its upvalues.
 */
-static void pushclosure (lua_State *L, Proto *p, UpVal **encup, StkId base,
+स्थिर शून्य pushclosure (lua_State *L, Proto *p, UpVal **encup, StkId base,
                          StkId ra) {
-  int nup = p->sizeupvalues;
+  पूर्णाङ्क nup = p->sizeupvalues;
   Upvaldesc *uv = p->upvalues;
-  int i;
+  पूर्णाङ्क i;
   LClosure *ncl = luaF_newLclosure(L, nup);
   ncl->p = p;
   setclLvalue2s(L, ra, ncl);  /* anchor new closure in stack */
-  for (i = 0; i < nup; i++) {  /* fill in its upvalues */
-    if (uv[i].instack)  /* upvalue refers to local variable? */
+  प्रति (i = 0; i < nup; i++) {  /* fill in its upvalues */
+    जइ (uv[i].instack)  /* upvalue refers to local variable? */
       ncl->upvals[i] = luaF_findupval(L, base + uv[i].idx);
-    else  /* get upvalue from enclosing function */
+    अण्णहा  /* get upvalue from enclosing function */
       ncl->upvals[i] = encup[uv[i].idx];
     luaC_objbarrier(L, ncl, ncl->upvals[i]);
   }
@@ -859,61 +859,61 @@ static void pushclosure (lua_State *L, Proto *p, UpVal **encup, StkId base,
 /*
 ** finish execution of an opcode interrupted by a yield
 */
-void luaV_finishOp (lua_State *L) {
+शून्य luaV_finishOp (lua_State *L) {
   CallInfo *ci = L->ci;
   StkId base = ci->func.p + 1;
   Instruction inst = *(ci->u.l.savedpc - 1);  /* interrupted instruction */
   OpCode op = GET_OPCODE(inst);
-  switch (op) {  /* finish its execution */
-    case OP_MMBIN: case OP_MMBINI: case OP_MMBINK: {
-      setobjs2s(L, base + GETARG_A(*(ci->u.l.savedpc - 2)), --L->top.p);
-      break;
+  विकल्प (op) {  /* finish its execution */
+    पक्ष OP_MMBIN: पक्ष OP_MMBINI: पक्ष OP_MMBINK: {
+      setobjs2s(L, base + GETARG_A(*(ci->u.l.savedpc - 2)), --L->शिखरम्.p);
+      भङ्ग;
     }
-    case OP_UNM: case OP_BNOT: case OP_LEN:
-    case OP_GETTABUP: case OP_GETTABLE: case OP_GETI:
-    case OP_GETFIELD: case OP_SELF: {
-      setobjs2s(L, base + GETARG_A(inst), --L->top.p);
-      break;
+    पक्ष OP_UNM: पक्ष OP_BNOT: पक्ष OP_LEN:
+    पक्ष OP_GETTABUP: पक्ष OP_GETTABLE: पक्ष OP_GETI:
+    पक्ष OP_GETFIELD: पक्ष OP_SELF: {
+      setobjs2s(L, base + GETARG_A(inst), --L->शिखरम्.p);
+      भङ्ग;
     }
-    case OP_LT: case OP_LE:
-    case OP_LTI: case OP_LEI:
-    case OP_GTI: case OP_GEI:
-    case OP_EQ: {  /* note that 'OP_EQI'/'OP_EQK' cannot yield */
-      int res = !l_isfalse(s2v(L->top.p - 1));
-      L->top.p--;
+    पक्ष OP_LT: पक्ष OP_LE:
+    पक्ष OP_LTI: पक्ष OP_LEI:
+    पक्ष OP_GTI: पक्ष OP_GEI:
+    पक्ष OP_EQ: {  /* note that 'OP_EQI'/'OP_EQK' cannot yield */
+      पूर्णाङ्क res = !l_isfalse(s2v(L->शिखरम्.p - 1));
+      L->शिखरम्.p--;
       lua_assert(GET_OPCODE(*ci->u.l.savedpc) == OP_JMP);
-      if (res != GETARG_k(inst))  /* condition failed? */
+      जइ (res != GETARG_k(inst))  /* condition failed? */
         ci->u.l.savedpc++;  /* skip jump instruction */
-      break;
+      भङ्ग;
     }
-    case OP_CONCAT: {
-      StkId top = L->top.p - 1;  /* top when 'luaT_tryconcatTM' was called */
-      int a = GETARG_A(inst);      /* first element to concatenate */
-      int total = cast_int(top - 1 - (base + a));  /* yet to concatenate */
-      setobjs2s(L, top - 2, top);  /* put TM result in proper position */
-      L->top.p = top - 1;  /* top is one after last element (at top-2) */
+    पक्ष OP_CONCAT: {
+      StkId शिखरम् = L->शिखरम्.p - 1;  /* top when 'luaT_tryconcatTM' was called */
+      पूर्णाङ्क a = GETARG_A(inst);      /* first element to concatenate */
+      पूर्णाङ्क total = cast_int(शिखरम् - 1 - (base + a));  /* yet to concatenate */
+      setobjs2s(L, शिखरम् - 2, शिखरम्);  /* put TM result in proper position */
+      L->शिखरम्.p = शिखरम् - 1;  /* top is one after last element (at top-2) */
       luaV_concat(L, total);  /* concat them (may yield again) */
-      break;
+      भङ्ग;
     }
-    case OP_CLOSE: {  /* yielded closing variables */
+    पक्ष OP_CLOSE: {  /* yielded closing variables */
       ci->u.l.savedpc--;  /* repeat instruction to close other vars. */
-      break;
+      भङ्ग;
     }
-    case OP_RETURN: {  /* yielded closing variables */
+    पक्ष OP_RETURN: {  /* yielded closing variables */
       StkId ra = base + GETARG_A(inst);
       /* adjust top to signal correct number of returns, in case the
          return is "up to top" ('isIT') */
-      L->top.p = ra + ci->u2.nres;
+      L->शिखरम्.p = ra + ci->u2.nres;
       /* repeat instruction to close other vars. and complete the return */
       ci->u.l.savedpc--;
-      break;
+      भङ्ग;
     }
-    default: {
+    स्वभाव: {
       /* only these other opcodes can yield */
       lua_assert(op == OP_TFORCALL || op == OP_CALL ||
            op == OP_TAILCALL || op == OP_SETTABUP || op == OP_SETTABLE ||
            op == OP_SETI || op == OP_SETFIELD);
-      break;
+      भङ्ग;
     }
   }
 }
@@ -951,14 +951,14 @@ void luaV_finishOp (lua_State *L) {
 #define op_arithI(L,iop,fop) {  \
   TValue *ra = vRA(i); \
   TValue *v1 = vRB(i);  \
-  int imm = GETARG_sC(i);  \
-  if (ttisinteger(v1)) {  \
+  पूर्णाङ्क imm = GETARG_sC(i);  \
+  जइ (ttisinteger(v1)) {  \
     lua_Integer iv1 = ivalue(v1);  \
     pc++; setivalue(ra, iop(L, iv1, imm));  \
   }  \
-  else if (ttisfloat(v1)) {  \
-    lua_Number nb = fltvalue(v1);  \
-    lua_Number fimm = cast_num(imm);  \
+  अण्णहा जइ (ttisfloat(v1)) {  \
+    lua_सङ्ख्या nb = fltvalue(v1);  \
+    lua_सङ्ख्या fimm = cast_अङ्कः(imm);  \
     pc++; setfltvalue(ra, fop(L, nb, fimm)); \
   }}
 
@@ -968,8 +968,8 @@ void luaV_finishOp (lua_State *L) {
 ** with two operands.
 */
 #define op_arithf_aux(L,v1,v2,fop) {  \
-  lua_Number n1; lua_Number n2;  \
-  if (tonumberns(v1, n1) && tonumberns(v2, n2)) {  \
+  lua_सङ्ख्या n1; lua_सङ्ख्या n2;  \
+  जइ (tonumberns(v1, n1) && tonumberns(v2, n2)) {  \
     StkId ra = RA(i);  \
     pc++; setfltvalue(s2v(ra), fop(L, n1, n2));  \
   }}
@@ -997,12 +997,12 @@ void luaV_finishOp (lua_State *L) {
 ** Arithmetic operations over integers and floats.
 */
 #define op_arith_aux(L,v1,v2,iop,fop) {  \
-  if (ttisinteger(v1) && ttisinteger(v2)) {  \
+  जइ (ttisinteger(v1) && ttisinteger(v2)) {  \
     StkId ra = RA(i); \
     lua_Integer i1 = ivalue(v1); lua_Integer i2 = ivalue(v2);  \
     pc++; setivalue(s2v(ra), iop(L, i1, i2));  \
   }  \
-  else op_arithf_aux(L, v1, v2, fop); }
+  अण्णहा op_arithf_aux(L, v1, v2, fop); }
 
 
 /*
@@ -1031,7 +1031,7 @@ void luaV_finishOp (lua_State *L) {
   TValue *v2 = KC(i);  \
   lua_Integer i1;  \
   lua_Integer i2 = ivalue(v2);  \
-  if (tointegerns(v1, &i1)) {  \
+  जइ (tointegerns(v1, &i1)) {  \
     StkId ra = RA(i); \
     pc++; setivalue(s2v(ra), op(i1, i2));  \
   }}
@@ -1044,7 +1044,7 @@ void luaV_finishOp (lua_State *L) {
   TValue *v1 = vRB(i);  \
   TValue *v2 = vRC(i);  \
   lua_Integer i1; lua_Integer i2;  \
-  if (tointegerns(v1, &i1) && tointegerns(v2, &i2)) {  \
+  जइ (tointegerns(v1, &i1) && tointegerns(v2, &i2)) {  \
     StkId ra = RA(i); \
     pc++; setivalue(s2v(ra), op(i1, i2));  \
   }}
@@ -1057,16 +1057,16 @@ void luaV_finishOp (lua_State *L) {
 */
 #define op_order(L,opi,opn,other) {  \
   TValue *ra = vRA(i); \
-  int cond;  \
+  पूर्णाङ्क cond;  \
   TValue *rb = vRB(i);  \
-  if (ttisinteger(ra) && ttisinteger(rb)) {  \
+  जइ (ttisinteger(ra) && ttisinteger(rb)) {  \
     lua_Integer ia = ivalue(ra);  \
     lua_Integer ib = ivalue(rb);  \
     cond = opi(ia, ib);  \
   }  \
-  else if (ttisnumber(ra) && ttisnumber(rb))  \
+  अण्णहा जइ (ttisnumber(ra) && ttisnumber(rb))  \
     cond = opn(ra, rb);  \
-  else  \
+  अण्णहा  \
     Protect(cond = other(L, ra, rb));  \
   docondjump(); }
 
@@ -1077,17 +1077,17 @@ void luaV_finishOp (lua_State *L) {
 */
 #define op_orderI(L,opi,opf,inv,tm) {  \
   TValue *ra = vRA(i); \
-  int cond;  \
-  int im = GETARG_sB(i);  \
-  if (ttisinteger(ra))  \
+  पूर्णाङ्क cond;  \
+  पूर्णाङ्क im = GETARG_sB(i);  \
+  जइ (ttisinteger(ra))  \
     cond = opi(ivalue(ra), im);  \
-  else if (ttisfloat(ra)) {  \
-    lua_Number fa = fltvalue(ra);  \
-    lua_Number fim = cast_num(im);  \
+  अण्णहा जइ (ttisfloat(ra)) {  \
+    lua_सङ्ख्या fa = fltvalue(ra);  \
+    lua_सङ्ख्या fim = cast_अङ्कः(im);  \
     cond = opf(fa, fim);  \
   }  \
-  else {  \
-    int isf = GETARG_C(i);  \
+  अण्णहा {  \
+    पूर्णाङ्क isf = GETARG_C(i);  \
     Protect(cond = luaT_callorderiTM(L, ra, im, inv, isf, tm));  \
   }  \
   docondjump(); }
@@ -1124,7 +1124,7 @@ void luaV_finishOp (lua_State *L) {
 
 
 #define updatestack(ci)  \
-	{ if (l_unlikely(trap)) { updatebase(ci); ra = RA(i); } }
+	{ जइ (l_unlikely(trap)) { updatebase(ci); ra = RA(i); } }
 
 
 /*
@@ -1142,7 +1142,7 @@ void luaV_finishOp (lua_State *L) {
 ** was expected (parameter 'k'), else do next instruction, which must
 ** be a jump.
 */
-#define docondjump()	if (cond != GETARG_k(i)) pc++; else donextjump(ci);
+#define docondjump()	जइ (cond != GETARG_k(i)) pc++; अण्णहा donextjump(ci);
 
 
 /*
@@ -1155,7 +1155,7 @@ void luaV_finishOp (lua_State *L) {
 ** Whenever code can raise errors, the global 'pc' and the global
 ** 'top' must be correct to report occasional errors.
 */
-#define savestate(L,ci)		(savepc(ci), L->top.p = ci->top.p)
+#define savestate(L,ci)		(savepc(ci), L->शिखरम्.p = ci->शिखरम्.p)
 
 
 /*
@@ -1177,39 +1177,39 @@ void luaV_finishOp (lua_State *L) {
 ** macro executed during Lua functions at points where the
 ** function can yield.
 */
-#if !defined(luai_threadyield)
+#जइ !defined(luai_threadyield)
 #define luai_threadyield(L)	{lua_unlock(L); lua_lock(L);}
 #endif
 
 /* 'c' is the limit of live values in the stack */
 #define checkGC(L,c)  \
-	{ luaC_condGC(L, (savepc(ci), L->top.p = (c)), \
+	{ luaC_condGC(L, (savepc(ci), L->शिखरम्.p = (c)), \
                          updatetrap(ci)); \
            luai_threadyield(L); }
 
 
 /* fetch an instruction and prepare its execution */
 #define vmfetch()	{ \
-  if (l_unlikely(trap)) {  /* stack reallocation or hooks? */ \
+  जइ (l_unlikely(trap)) {  /* stack reallocation or hooks? */ \
     trap = luaG_traceexec(L, pc);  /* handle hooks */ \
     updatebase(ci);  /* correct stack */ \
   } \
   i = *(pc++); \
 }
 
-#define vmdispatch(o)	switch(o)
-#define vmcase(l)	case l:
-#define vmbreak		break
+#define vmdispatch(o)	विकल्प(o)
+#define vmcase(l)	पक्ष l:
+#define vmbreak		भङ्ग
 
 
-void luaV_execute (lua_State *L, CallInfo *ci) {
+शून्य luaV_execute (lua_State *L, CallInfo *ci) {
   LClosure *cl;
   TValue *k;
   StkId base;
-  const Instruction *pc;
-  int trap;
-#if LUA_USE_JUMPTABLE
-#include "ljumptab.h"
+  ध्रुव Instruction *pc;
+  पूर्णाङ्क trap;
+#जइ LUA_USE_JUMPTABLE
+#अन्तर्भाव "ljumptab.h"
 #endif
  startfunc:
   trap = cast_int(L->hookmask);
@@ -1217,25 +1217,25 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
   cl = ci_func(ci);
   k = cl->p->k;
   pc = ci->u.l.savedpc;
-  if (l_unlikely(trap))
+  जइ (l_unlikely(trap))
     trap = luaG_tracecall(L);
   base = ci->func.p + 1;
   /* main loop of interpreter */
-  for (;;) {
+  प्रति (;;) {
     Instruction i;  /* instruction being executed */
     vmfetch();
-    #if 0
+    #जइ 0
     { /* low-level line tracing for debugging Lua */
-      #include "lopnames.h"
-      int pcrel = pcRel(pc, cl->p);
+      #अन्तर्भाव "lopnames.h"
+      पूर्णाङ्क pcrel = pcRel(pc, cl->p);
       printf("line: %d; %s (%d)\n", luaG_getfuncline(cl->p, pcrel),
              opnames[GET_OPCODE(i)], pcrel);
     }
     #endif
     lua_assert(base == ci->func.p + 1);
-    lua_assert(base <= L->top.p && L->top.p <= L->stack_last.p);
+    lua_assert(base <= L->शिखरम्.p && L->शिखरम्.p <= L->राशिः_last.p);
     /* for tests, invalidate top for instructions not expecting it */
-    lua_assert(luaP_isIT(i) || (cast_void(L->top.p = base), 1));
+    lua_assert(luaP_isIT(i) || (cast_void(L->शिखरम्.p = base), 1));
     vmdispatch (GET_OPCODE(i)) {
       vmcase(OP_MOVE) {
         StkId ra = RA(i);
@@ -1250,8 +1250,8 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_LOADF) {
         StkId ra = RA(i);
-        int b = GETARG_sBx(i);
-        setfltvalue(s2v(ra), cast_num(b));
+        पूर्णाङ्क b = GETARG_sBx(i);
+        setfltvalue(s2v(ra), cast_अङ्कः(b));
         vmbreak;
       }
       vmcase(OP_LOADK) {
@@ -1285,15 +1285,15 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_LOADNIL) {
         StkId ra = RA(i);
-        int b = GETARG_B(i);
-        do {
+        पूर्णाङ्क b = GETARG_B(i);
+        करेहि {
           setnilvalue(s2v(ra++));
-        } while (b--);
+        } जाव (b--);
         vmbreak;
       }
       vmcase(OP_GETUPVAL) {
         StkId ra = RA(i);
-        int b = GETARG_B(i);
+        पूर्णाङ्क b = GETARG_B(i);
         setobj2s(L, ra, cl->upvals[b]->v.p);
         vmbreak;
       }
@@ -1308,10 +1308,10 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         StkId ra = RA(i);
         TValue *upval = cl->upvals[GETARG_B(i)]->v.p;
         TValue *rc = KC(i);
-        TString *key = tsvalue(rc);  /* key must be a short string */
+        TString *कुञ्चिका = tsvalue(rc);  /* key must be a short string */
         lu_byte tag;
-        luaV_fastget(upval, key, s2v(ra), luaH_getshortstr, tag);
-        if (tagisempty(tag))
+        luaV_fastget(upval, कुञ्चिका, s2v(ra), luaH_getshortstr, tag);
+        जइ (tagisempty(tag))
           Protect(luaV_finishget(L, upval, rc, ra, tag));
         vmbreak;
       }
@@ -1320,25 +1320,25 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         TValue *rb = vRB(i);
         TValue *rc = vRC(i);
         lu_byte tag;
-        if (ttisinteger(rc)) {  /* fast track for integers? */
+        जइ (ttisinteger(rc)) {  /* fast track for integers? */
           luaV_fastgeti(rb, ivalue(rc), s2v(ra), tag);
         }
-        else
+        अण्णहा
           luaV_fastget(rb, rc, s2v(ra), luaH_get, tag);
-        if (tagisempty(tag))
+        जइ (tagisempty(tag))
           Protect(luaV_finishget(L, rb, rc, ra, tag));
         vmbreak;
       }
       vmcase(OP_GETI) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        int c = GETARG_C(i);
+        पूर्णाङ्क c = GETARG_C(i);
         lu_byte tag;
         luaV_fastgeti(rb, c, s2v(ra), tag);
-        if (tagisempty(tag)) {
-          TValue key;
-          setivalue(&key, c);
-          Protect(luaV_finishget(L, rb, &key, ra, tag));
+        जइ (tagisempty(tag)) {
+          TValue कुञ्चिका;
+          setivalue(&कुञ्चिका, c);
+          Protect(luaV_finishget(L, rb, &कुञ्चिका, ra, tag));
         }
         vmbreak;
       }
@@ -1346,68 +1346,68 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
         TValue *rc = KC(i);
-        TString *key = tsvalue(rc);  /* key must be a short string */
+        TString *कुञ्चिका = tsvalue(rc);  /* key must be a short string */
         lu_byte tag;
-        luaV_fastget(rb, key, s2v(ra), luaH_getshortstr, tag);
-        if (tagisempty(tag))
+        luaV_fastget(rb, कुञ्चिका, s2v(ra), luaH_getshortstr, tag);
+        जइ (tagisempty(tag))
           Protect(luaV_finishget(L, rb, rc, ra, tag));
         vmbreak;
       }
       vmcase(OP_SETTABUP) {
-        int hres;
+        पूर्णाङ्क hres;
         TValue *upval = cl->upvals[GETARG_A(i)]->v.p;
         TValue *rb = KB(i);
         TValue *rc = RKC(i);
-        TString *key = tsvalue(rb);  /* key must be a short string */
-        luaV_fastset(upval, key, rc, hres, luaH_psetshortstr);
-        if (hres == HOK)
+        TString *कुञ्चिका = tsvalue(rb);  /* key must be a short string */
+        luaV_fastset(upval, कुञ्चिका, rc, hres, luaH_psetshortstr);
+        जइ (hres == HOK)
           luaV_finishfastset(L, upval, rc);
-        else
+        अण्णहा
           Protect(luaV_finishset(L, upval, rb, rc, hres));
         vmbreak;
       }
       vmcase(OP_SETTABLE) {
         StkId ra = RA(i);
-        int hres;
+        पूर्णाङ्क hres;
         TValue *rb = vRB(i);  /* key (table is in 'ra') */
-        TValue *rc = RKC(i);  /* value */
-        if (ttisinteger(rb)) {  /* fast track for integers? */
+        TValue *rc = RKC(i);  /*मानम्*/
+        जइ (ttisinteger(rb)) {  /* fast track for integers? */
           luaV_fastseti(s2v(ra), ivalue(rb), rc, hres);
         }
-        else {
+        अण्णहा {
           luaV_fastset(s2v(ra), rb, rc, hres, luaH_pset);
         }
-        if (hres == HOK)
+        जइ (hres == HOK)
           luaV_finishfastset(L, s2v(ra), rc);
-        else
+        अण्णहा
           Protect(luaV_finishset(L, s2v(ra), rb, rc, hres));
         vmbreak;
       }
       vmcase(OP_SETI) {
         StkId ra = RA(i);
-        int hres;
-        int b = GETARG_B(i);
+        पूर्णाङ्क hres;
+        पूर्णाङ्क b = GETARG_B(i);
         TValue *rc = RKC(i);
         luaV_fastseti(s2v(ra), b, rc, hres);
-        if (hres == HOK)
+        जइ (hres == HOK)
           luaV_finishfastset(L, s2v(ra), rc);
-        else {
-          TValue key;
-          setivalue(&key, b);
-          Protect(luaV_finishset(L, s2v(ra), &key, rc, hres));
+        अण्णहा {
+          TValue कुञ्चिका;
+          setivalue(&कुञ्चिका, b);
+          Protect(luaV_finishset(L, s2v(ra), &कुञ्चिका, rc, hres));
         }
         vmbreak;
       }
       vmcase(OP_SETFIELD) {
         StkId ra = RA(i);
-        int hres;
+        पूर्णाङ्क hres;
         TValue *rb = KB(i);
         TValue *rc = RKC(i);
-        TString *key = tsvalue(rb);  /* key must be a short string */
-        luaV_fastset(s2v(ra), key, rc, hres, luaH_psetshortstr);
-        if (hres == HOK)
+        TString *कुञ्चिका = tsvalue(rb);  /* key must be a short string */
+        luaV_fastset(s2v(ra), कुञ्चिका, rc, hres, luaH_psetshortstr);
+        जइ (hres == HOK)
           luaV_finishfastset(L, s2v(ra), rc);
-        else
+        अण्णहा
           Protect(luaV_finishset(L, s2v(ra), rb, rc, hres));
         vmbreak;
       }
@@ -1416,18 +1416,18 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         unsigned b = cast_uint(GETARG_vB(i));  /* log2(hash size) + 1 */
         unsigned c = cast_uint(GETARG_vC(i));  /* array size */
         Table *t;
-        if (b > 0)
+        जइ (b > 0)
           b = 1u << (b - 1);  /* hash size is 2^(b - 1) */
-        if (TESTARG_k(i)) {  /* non-zero extra argument? */
+        जइ (TESTARG_k(i)) {  /* non-zero extra argument? */
           lua_assert(GETARG_Ax(*pc) != 0);
           /* add it to array size */
           c += cast_uint(GETARG_Ax(*pc)) * (MAXARG_vC + 1);
         }
         pc++;  /* skip extra argument */
-        L->top.p = ra + 1;  /* correct top in case of emergency GC */
+        L->शिखरम्.p = ra + 1;  /* correct top in case of emergency GC */
         t = luaH_new(L);  /* memory allocation */
         sethvalue2s(L, ra, t);
-        if (b != 0 || c != 0)
+        जइ (b != 0 || c != 0)
           luaH_resize(L, t, c, b);  /* idem */
         checkGC(L, ra + 1);
         vmbreak;
@@ -1437,10 +1437,10 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         lu_byte tag;
         TValue *rb = vRB(i);
         TValue *rc = KC(i);
-        TString *key = tsvalue(rc);  /* key must be a short string */
+        TString *कुञ्चिका = tsvalue(rc);  /* key must be a short string */
         setobj2s(L, ra + 1, rb);
-        luaV_fastget(rb, key, s2v(ra), luaH_getshortstr, tag);
-        if (tagisempty(tag))
+        luaV_fastget(rb, कुञ्चिका, s2v(ra), luaH_getshortstr, tag);
+        जइ (tagisempty(tag))
           Protect(luaV_finishget(L, rb, rc, ra, tag));
         vmbreak;
       }
@@ -1493,9 +1493,9 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_SHLI) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        int ic = GETARG_sC(i);
+        पूर्णाङ्क ic = GETARG_sC(i);
         lua_Integer ib;
-        if (tointegerns(rb, &ib)) {
+        जइ (tointegerns(rb, &ib)) {
           pc++; setivalue(s2v(ra), luaV_shiftl(ic, ib));
         }
         vmbreak;
@@ -1503,9 +1503,9 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_SHRI) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        int ic = GETARG_sC(i);
+        पूर्णाङ्क ic = GETARG_sC(i);
         lua_Integer ib;
-        if (tointegerns(rb, &ib)) {
+        जइ (tointegerns(rb, &ib)) {
           pc++; setivalue(s2v(ra), luaV_shiftl(ib, -ic));
         }
         vmbreak;
@@ -1573,9 +1573,9 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_MMBINI) {
         StkId ra = RA(i);
         Instruction pi = *(pc - 2);  /* original arith. expression */
-        int imm = GETARG_sB(i);
+        पूर्णाङ्क imm = GETARG_sB(i);
         TMS tm = (TMS)GETARG_C(i);
-        int flip = GETARG_k(i);
+        पूर्णाङ्क flip = GETARG_k(i);
         StkId result = RA(pi);
         Protect(luaT_trybiniTM(L, s2v(ra), imm, flip, result, tm));
         vmbreak;
@@ -1585,7 +1585,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         Instruction pi = *(pc - 2);  /* original arith. expression */
         TValue *imm = KB(i);
         TMS tm = (TMS)GETARG_C(i);
-        int flip = GETARG_k(i);
+        पूर्णाङ्क flip = GETARG_k(i);
         StkId result = RA(pi);
         Protect(luaT_trybinassocTM(L, s2v(ra), imm, flip, result, tm));
         vmbreak;
@@ -1593,15 +1593,15 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_UNM) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        lua_Number nb;
-        if (ttisinteger(rb)) {
+        lua_सङ्ख्या nb;
+        जइ (ttisinteger(rb)) {
           lua_Integer ib = ivalue(rb);
           setivalue(s2v(ra), intop(-, 0, ib));
         }
-        else if (tonumberns(rb, nb)) {
+        अण्णहा जइ (tonumberns(rb, nb)) {
           setfltvalue(s2v(ra), luai_numunm(L, nb));
         }
-        else
+        अण्णहा
           Protect(luaT_trybinTM(L, rb, rb, ra, TM_UNM));
         vmbreak;
       }
@@ -1609,19 +1609,19 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
         lua_Integer ib;
-        if (tointegerns(rb, &ib)) {
+        जइ (tointegerns(rb, &ib)) {
           setivalue(s2v(ra), intop(^, ~l_castS2U(0), ib));
         }
-        else
+        अण्णहा
           Protect(luaT_trybinTM(L, rb, rb, ra, TM_BNOT));
         vmbreak;
       }
       vmcase(OP_NOT) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        if (l_isfalse(rb))
+        जइ (l_isfalse(rb))
           setbtvalue(s2v(ra));
-        else
+        अण्णहा
           setbfvalue(s2v(ra));
         vmbreak;
       }
@@ -1632,10 +1632,10 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_CONCAT) {
         StkId ra = RA(i);
-        int n = GETARG_B(i);  /* number of elements to concatenate */
-        L->top.p = ra + n;  /* mark the end of concat operands */
+        पूर्णाङ्क n = GETARG_B(i);  /* number of elements to concatenate */
+        L->शिखरम्.p = ra + n;  /* mark the end of concat operands */
         ProtectNT(luaV_concat(L, n));
-        checkGC(L, L->top.p); /* 'luaV_concat' ensures correct top */
+        checkGC(L, L->शिखरम्.p); /* 'luaV_concat' ensures correct top */
         vmbreak;
       }
       vmcase(OP_CLOSE) {
@@ -1656,7 +1656,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_EQ) {
         StkId ra = RA(i);
-        int cond;
+        पूर्णाङ्क cond;
         TValue *rb = vRB(i);
         Protect(cond = luaV_equalobj(L, s2v(ra), rb));
         docondjump();
@@ -1674,19 +1674,19 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         StkId ra = RA(i);
         TValue *rb = KB(i);
         /* basic types do not use '__eq'; we can use raw equality */
-        int cond = luaV_rawequalobj(s2v(ra), rb);
+        पूर्णाङ्क cond = luaV_rawequalobj(s2v(ra), rb);
         docondjump();
         vmbreak;
       }
       vmcase(OP_EQI) {
         StkId ra = RA(i);
-        int cond;
-        int im = GETARG_sB(i);
-        if (ttisinteger(s2v(ra)))
+        पूर्णाङ्क cond;
+        पूर्णाङ्क im = GETARG_sB(i);
+        जइ (ttisinteger(s2v(ra)))
           cond = (ivalue(s2v(ra)) == im);
-        else if (ttisfloat(s2v(ra)))
-          cond = luai_numeq(fltvalue(s2v(ra)), cast_num(im));
-        else
+        अण्णहा जइ (ttisfloat(s2v(ra)))
+          cond = luai_numeq(fltvalue(s2v(ra)), cast_अङ्कः(im));
+        अण्णहा
           cond = 0;  /* other types cannot be equal to a number */
         docondjump();
         vmbreak;
@@ -1709,16 +1709,16 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_TEST) {
         StkId ra = RA(i);
-        int cond = !l_isfalse(s2v(ra));
+        पूर्णाङ्क cond = !l_isfalse(s2v(ra));
         docondjump();
         vmbreak;
       }
       vmcase(OP_TESTSET) {
         StkId ra = RA(i);
         TValue *rb = vRB(i);
-        if (l_isfalse(rb) == GETARG_k(i))
+        जइ (l_isfalse(rb) == GETARG_k(i))
           pc++;
-        else {
+        अण्णहा {
           setobj2s(L, ra, rb);
           donextjump(ci);
         }
@@ -1727,128 +1727,128 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_CALL) {
         StkId ra = RA(i);
         CallInfo *newci;
-        int b = GETARG_B(i);
-        int nresults = GETARG_C(i) - 1;
-        if (b != 0)  /* fixed number of arguments? */
-          L->top.p = ra + b;  /* top signals number of arguments */
+        पूर्णाङ्क b = GETARG_B(i);
+        पूर्णाङ्क nresults = GETARG_C(i) - 1;
+        जइ (b != 0)  /* fixed number of arguments? */
+          L->शिखरम्.p = ra + b;  /* top signals number of arguments */
         /* else previous instruction set top */
         savepc(ci);  /* in case of errors */
-        if ((newci = luaD_precall(L, ra, nresults)) == NULL)
+        जइ ((newci = luaD_precall(L, ra, nresults)) == रिक्त)
           updatetrap(ci);  /* C call; nothing else to be done */
-        else {  /* Lua call: run function in this same C frame */
+        अण्णहा {  /* Lua call: run function in this same C frame */
           ci = newci;
-          goto startfunc;
+          गच्छ startfunc;
         }
         vmbreak;
       }
       vmcase(OP_TAILCALL) {
         StkId ra = RA(i);
-        int b = GETARG_B(i);  /* number of arguments + 1 (function) */
-        int n;  /* number of results when calling a C function */
-        int nparams1 = GETARG_C(i);
+        पूर्णाङ्क b = GETARG_B(i);  /* number of arguments + 1 (function) */
+        पूर्णाङ्क n;  /* number of results when calling a C function */
+        पूर्णाङ्क nparams1 = GETARG_C(i);
         /* delta is virtual 'func' - real 'func' (vararg functions) */
-        int delta = (nparams1) ? ci->u.l.nextraargs + nparams1 : 0;
-        if (b != 0)
-          L->top.p = ra + b;
-        else  /* previous instruction set top */
-          b = cast_int(L->top.p - ra);
+        पूर्णाङ्क delta = (nparams1) ? ci->u.l.nextraargs + nparams1 : 0;
+        जइ (b != 0)
+          L->शिखरम्.p = ra + b;
+        अण्णहा  /* previous instruction set top */
+          b = cast_int(L->शिखरम्.p - ra);
         savepc(ci);  /* several calls here can raise errors */
-        if (TESTARG_k(i)) {
+        जइ (TESTARG_k(i)) {
           luaF_closeupval(L, base);  /* close upvalues from current call */
           lua_assert(L->tbclist.p < base);  /* no pending tbc variables */
           lua_assert(base == ci->func.p + 1);
         }
-        if ((n = luaD_pretailcall(L, ci, ra, b, delta)) < 0)  /* Lua function? */
-          goto startfunc;  /* execute the callee */
-        else {  /* C function? */
+        जइ ((n = luaD_pretailcall(L, ci, ra, b, delta)) < 0)  /* Lua function? */
+          गच्छ startfunc;  /* execute the callee */
+        अण्णहा {  /* C function? */
           ci->func.p -= delta;  /* restore 'func' (if vararg) */
           luaD_poscall(L, ci, n);  /* finish caller */
           updatetrap(ci);  /* 'luaD_poscall' can change hooks */
-          goto ret;  /* caller returns after the tail call */
+          गच्छ ret;  /* caller returns after the tail call */
         }
       }
       vmcase(OP_RETURN) {
         StkId ra = RA(i);
-        int n = GETARG_B(i) - 1;  /* number of results */
-        int nparams1 = GETARG_C(i);
-        if (n < 0)  /* not fixed? */
-          n = cast_int(L->top.p - ra);  /* get what is available */
+        पूर्णाङ्क n = GETARG_B(i) - 1;  /* number of results */
+        पूर्णाङ्क nparams1 = GETARG_C(i);
+        जइ (n < 0)  /* not fixed? */
+          n = cast_int(L->शिखरम्.p - ra);  /* get what is available */
         savepc(ci);
-        if (TESTARG_k(i)) {  /* may there be open upvalues? */
+        जइ (TESTARG_k(i)) {  /* may there be open upvalues? */
           ci->u2.nres = n;  /* save number of returns */
-          if (L->top.p < ci->top.p)
-            L->top.p = ci->top.p;
+          जइ (L->शिखरम्.p < ci->शिखरम्.p)
+            L->शिखरम्.p = ci->शिखरम्.p;
           luaF_close(L, base, CLOSEKTOP, 1);
           updatetrap(ci);
           updatestack(ci);
         }
-        if (nparams1)  /* vararg function? */
+        जइ (nparams1)  /* vararg function? */
           ci->func.p -= ci->u.l.nextraargs + nparams1;
-        L->top.p = ra + n;  /* set call for 'luaD_poscall' */
+        L->शिखरम्.p = ra + n;  /* set call for 'luaD_poscall' */
         luaD_poscall(L, ci, n);
         updatetrap(ci);  /* 'luaD_poscall' can change hooks */
-        goto ret;
+        गच्छ ret;
       }
       vmcase(OP_RETURN0) {
-        if (l_unlikely(L->hookmask)) {
+        जइ (l_unlikely(L->hookmask)) {
           StkId ra = RA(i);
-          L->top.p = ra;
+          L->शिखरम्.p = ra;
           savepc(ci);
           luaD_poscall(L, ci, 0);  /* no hurry... */
           trap = 1;
         }
-        else {  /* do the 'poscall' here */
-          int nres = get_nresults(ci->callstatus);
+        अण्णहा {  /* do the 'poscall' here */
+          पूर्णाङ्क nres = get_nresults(ci->callstatus);
           L->ci = ci->previous;  /* back to caller */
-          L->top.p = base - 1;
-          for (; l_unlikely(nres > 0); nres--)
-            setnilvalue(s2v(L->top.p++));  /* all results are nil */
+          L->शिखरम्.p = base - 1;
+          प्रति (; l_unlikely(nres > 0); nres--)
+            setnilvalue(s2v(L->शिखरम्.p++));  /* all results are nil */
         }
-        goto ret;
+        गच्छ ret;
       }
       vmcase(OP_RETURN1) {
-        if (l_unlikely(L->hookmask)) {
+        जइ (l_unlikely(L->hookmask)) {
           StkId ra = RA(i);
-          L->top.p = ra + 1;
+          L->शिखरम्.p = ra + 1;
           savepc(ci);
           luaD_poscall(L, ci, 1);  /* no hurry... */
           trap = 1;
         }
-        else {  /* do the 'poscall' here */
-          int nres = get_nresults(ci->callstatus);
+        अण्णहा {  /* do the 'poscall' here */
+          पूर्णाङ्क nres = get_nresults(ci->callstatus);
           L->ci = ci->previous;  /* back to caller */
-          if (nres == 0)
-            L->top.p = base - 1;  /* asked for no results */
-          else {
+          जइ (nres == 0)
+            L->शिखरम्.p = base - 1;  /* asked for no results */
+          अण्णहा {
             StkId ra = RA(i);
             setobjs2s(L, base - 1, ra);  /* at least this result */
-            L->top.p = base;
-            for (; l_unlikely(nres > 1); nres--)
-              setnilvalue(s2v(L->top.p++));  /* complete missing results */
+            L->शिखरम्.p = base;
+            प्रति (; l_unlikely(nres > 1); nres--)
+              setnilvalue(s2v(L->शिखरम्.p++));  /* complete missing results */
           }
         }
        ret:  /* return from a Lua function */
-        if (ci->callstatus & CIST_FRESH)
-          return;  /* end this frame */
-        else {
+        जइ (ci->callstatus & CIST_FRESH)
+          प्रत्यागम;  /* end this frame */
+        अण्णहा {
           ci = ci->previous;
-          goto returning;  /* continue running caller in this frame */
+          गच्छ returning;  /* continue running caller in this frame */
         }
       }
       vmcase(OP_FORLOOP) {
         StkId ra = RA(i);
-        if (ttisinteger(s2v(ra + 1))) {  /* integer loop? */
-          lua_Unsigned count = l_castS2U(ivalue(s2v(ra)));
-          if (count > 0) {  /* still more iterations? */
+        जइ (ttisinteger(s2v(ra + 1))) {  /* integer loop? */
+          lua_Unsigned गणनम् = l_castS2U(ivalue(s2v(ra)));
+          जइ (गणनम् > 0) {  /* still more iterations? */
             lua_Integer step = ivalue(s2v(ra + 1));
             lua_Integer idx = ivalue(s2v(ra + 2));  /* control variable */
-            chgivalue(s2v(ra), l_castU2S(count - 1));  /* update counter */
+            chgivalue(s2v(ra), l_castU2S(गणनम् - 1));  /* update counter */
             idx = intop(+, idx, step);  /* add step to index */
             chgivalue(s2v(ra + 2), idx);  /* update control variable */
             pc -= GETARG_Bx(i);  /* jump back */
           }
         }
-        else if (floatforloop(L, ra))  /* float loop */
+        अण्णहा जइ (floatforloop(L, ra))  /* float loop */
           pc -= GETARG_Bx(i);  /* jump back */
         updatetrap(ci);  /* allows a signal to break the loop */
         vmbreak;
@@ -1856,7 +1856,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       vmcase(OP_FORPREP) {
         StkId ra = RA(i);
         savestate(L, ci);  /* in case of errors */
-        if (forprep(L, ra))
+        जइ (forprep(L, ra))
           pc += GETARG_Bx(i) + 1;  /* skip the loop */
         vmbreak;
       }
@@ -1877,7 +1877,7 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         pc += GETARG_Bx(i);  /* go to end of the loop */
         i = *(pc++);  /* fetch next instruction */
         lua_assert(GET_OPCODE(i) == OP_TFORCALL && ra == RA(i));
-        goto l_tforcall;
+        गच्छ l_tforcall;
       }
       vmcase(OP_TFORCALL) {
        l_tforcall: {
@@ -1891,17 +1891,17 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         setobjs2s(L, ra + 5, ra + 3);  /* copy the control variable */
         setobjs2s(L, ra + 4, ra + 1);  /* copy state */
         setobjs2s(L, ra + 3, ra);  /* copy function */
-        L->top.p = ra + 3 + 3;
+        L->शिखरम्.p = ra + 3 + 3;
         ProtectNT(luaD_call(L, ra + 3, GETARG_C(i)));  /* do the call */
         updatestack(ci);  /* stack may have changed */
         i = *(pc++);  /* go to next instruction */
         lua_assert(GET_OPCODE(i) == OP_TFORLOOP && ra == RA(i));
-        goto l_tforloop;
+        गच्छ l_tforloop;
       }}
       vmcase(OP_TFORLOOP) {
        l_tforloop: {
         StkId ra = RA(i);
-        if (!ttisnil(s2v(ra + 3)))  /* continue loop? */
+        जइ (!ttisnil(s2v(ra + 3)))  /* continue loop? */
           pc -= GETARG_Bx(i);  /* jump back */
         vmbreak;
       }}
@@ -1910,22 +1910,22 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         unsigned n = cast_uint(GETARG_vB(i));
         unsigned last = cast_uint(GETARG_vC(i));
         Table *h = hvalue(s2v(ra));
-        if (n == 0)
-          n = cast_uint(L->top.p - ra) - 1;  /* get up to the top */
-        else
-          L->top.p = ci->top.p;  /* correct top in case of emergency GC */
+        जइ (n == 0)
+          n = cast_uint(L->शिखरम्.p - ra) - 1;  /* get up to the top */
+        अण्णहा
+          L->शिखरम्.p = ci->शिखरम्.p;  /* correct top in case of emergency GC */
         last += n;
-        if (TESTARG_k(i)) {
+        जइ (TESTARG_k(i)) {
           last += cast_uint(GETARG_Ax(*pc)) * (MAXARG_vC + 1);
           pc++;
         }
         /* when 'n' is known, table should have proper size */
-        if (last > h->asize) {  /* needs more space? */
+        जइ (last > h->asize) {  /* needs more space? */
           /* fixed-size sets should have space preallocated */
           lua_assert(GETARG_vB(i) == 0);
           luaH_resizearray(L, h, last);  /* preallocate it at once */
         }
-        for (; n > 0; n--) {
+        प्रति (; n > 0; n--) {
           TValue *val = s2v(ra + n);
           obj2arr(h, last - 1, val);
           last--;
@@ -1942,8 +1942,8 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_VARARG) {
         StkId ra = RA(i);
-        int n = GETARG_C(i) - 1;  /* required results (-1 means all) */
-        int vatab = GETARG_k(i) ? GETARG_B(i) : -1;
+        पूर्णाङ्क n = GETARG_C(i) - 1;  /* required results (-1 means all) */
+        पूर्णाङ्क vatab = GETARG_k(i) ? GETARG_B(i) : -1;
         Protect(luaT_getvarargs(L, ci, ra, n, vatab));
         vmbreak;
       }
@@ -1955,13 +1955,13 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
       }
       vmcase(OP_ERRNNIL) {
         TValue *ra = vRA(i);
-        if (!ttisnil(ra))
+        जइ (!ttisnil(ra))
           halfProtect(luaG_errnnil(L, cl, GETARG_Bx(i)));
         vmbreak;
       }
       vmcase(OP_VARARGPREP) {
         ProtectNT(luaT_adjustvarargs(L, ci, cl->p));
-        if (l_unlikely(trap)) {  /* previous "Protect" updated trap */
+        जइ (l_unlikely(trap)) {  /* previous "Protect" updated trap */
           luaD_hookcall(L, ci);
           L->oldpc = 1;  /* next opcode will be seen as a "new" line */
         }

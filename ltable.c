@@ -7,7 +7,7 @@
 #define ltable_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
 /*
@@ -23,21 +23,21 @@
 ** Hence even when the load factor reaches 100%, performance remains good.
 */
 
-#include <math.h>
-#include <limits.h>
-#include <string.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <string.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lvm.h"
+#अन्तर्भाव "ldebug.h"
+#अन्तर्भाव "ldo.h"
+#अन्तर्भाव "lgc.h"
+#अन्तर्भाव "lmem.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lstate.h"
+#अन्तर्भाव "lstring.h"
+#अन्तर्भाव "ltable.h"
+#अन्तर्भाव "lvm.h"
 
 
 /*
@@ -52,29 +52,29 @@
 ** The union 'Limbox' stores 'lastfree' and ensures that what follows it
 ** is properly aligned to store a Node.
 */
-typedef struct { Node *dummy; Node follows_pNode; } Limbox_aux;
+प्रकारनिर्देश संरचना { ग्रन्थिः_2 *dummy; ग्रन्थिः_2 follows_p_ग्रन्थिः; } Limbox_aux;
 
-typedef union {
-  Node *lastfree;
-  char padding[offsetof(Limbox_aux, follows_pNode)];
+प्रकारनिर्देश सङ्घ {
+  ग्रन्थिः_2 *lastfree;
+  वर्ण padding[offsetof(Limbox_aux, follows_p_ग्रन्थिः)];
 } Limbox;
 
 #define haslastfree(t)     ((t)->lsizenode >= LIMFORLAST)
-#define getlastfree(t)     ((cast(Limbox *, (t)->node) - 1)->lastfree)
+#define getlastfree(t)     ((cast(Limbox *, (t)->ग्रन्थिः) - 1)->lastfree)
 
 
 /*
 ** MAXABITS is the largest integer such that 2^MAXABITS fits in an
 ** unsigned int.
 */
-#define MAXABITS	(l_numbits(int) - 1)
+#define MAXABITS	(l_numbits(पूर्णाङ्क) - 1)
 
 
 /*
 ** MAXASIZEB is the maximum number of elements in the array part such
 ** that the size of the array fits in 'size_t'.
 */
-#define MAXASIZEB	(MAX_SIZET/(sizeof(Value) + 1))
+#define MAXASIZEB	(MAX_SIZET/(परिमाण(मानम्_2) + 1))
 
 
 /*
@@ -96,7 +96,7 @@ typedef union {
 ** between 2^MAXHBITS and the maximum size such that, measured in bytes,
 ** it fits in a 'size_t'.
 */
-#define MAXHSIZE	luaM_limitN(1 << MAXHBITS, Node)
+#define MAXHSIZE	luaM_limitN(1 << MAXHBITS, ग्रन्थिः_2)
 
 
 /*
@@ -127,13 +127,13 @@ typedef union {
 ** part?") when indexing. Its sole node has an empty value and a key
 ** (DEADKEY, NULL) that is different from any valid TValue.
 */
-static const Node dummynode_ = {
-  {{NULL}, LUA_VEMPTY,  /* value's value and type */
-   LUA_TDEADKEY, 0, {NULL}}  /* key type, next, and key value */
+स्थिर ध्रुव ग्रन्थिः_2 dummynode_ = {
+  {{रिक्त}, LUA_VEMPTY,  /* value's value and type */
+   LUA_TDEADKEY, 0, {रिक्त}}  /* key type, next, and key value */
 };
 
 
-static const TValue absentkey = {ABSTKEYCONSTANT};
+स्थिर ध्रुव TValue absentkey = {ABSTKEYCONSTANT};
 
 
 /*
@@ -142,12 +142,12 @@ static const TValue absentkey = {ABSTKEYCONSTANT};
 ** remainder, which is faster. Otherwise, use an unsigned-integer
 ** remainder, which uses all bits and ensures a non-negative result.
 */
-static Node *hashint (const Table *t, lua_Integer i) {
+स्थिर ग्रन्थिः_2 *hashint (ध्रुव Table *t, lua_Integer i) {
   lua_Unsigned ui = l_castS2U(i);
-  if (ui <= cast_uint(INT_MAX))
-    return gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
-  else
-    return hashmod(t, ui);
+  जइ (ui <= cast_uint(INT_MAX))
+    प्रत्यागम gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
+  अण्णहा
+    प्रत्यागम hashmod(t, ui);
 }
 
 
@@ -164,18 +164,18 @@ static Node *hashint (const Table *t, lua_Integer i) {
 ** adding 'i'; the use of '~u' (instead of '-u') avoids problems with
 ** INT_MIN.
 */
-#if !defined(l_hashfloat)
-static unsigned l_hashfloat (lua_Number n) {
-  int i;
+#जइ !defined(l_hashfloat)
+स्थिर unsigned l_hashfloat (lua_सङ्ख्या n) {
+  पूर्णाङ्क i;
   lua_Integer ni;
-  n = l_mathop(frexp)(n, &i) * -cast_num(INT_MIN);
-  if (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
-    lua_assert(luai_numisnan(n) || l_mathop(fabs)(n) == cast_num(HUGE_VAL));
-    return 0;
+  n = l_mathop(frexp)(n, &i) * -cast_अङ्कः(INT_MIN);
+  जइ (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
+    lua_assert(luai_numisnan(n) || l_mathop(fabs)(n) == cast_अङ्कः(HUGE_VAL));
+    प्रत्यागम 0;
   }
-  else {  /* normal case */
-    unsigned int u = cast_uint(i) + cast_uint(ni);
-    return (u <= cast_uint(INT_MAX) ? u : ~u);
+  अण्णहा {  /* normal case */
+    unsigned पूर्णाङ्क u = cast_uint(i) + cast_uint(ni);
+    प्रत्यागम (u <= cast_uint(INT_MAX) ? u : ~u);
   }
 }
 #endif
@@ -185,48 +185,48 @@ static unsigned l_hashfloat (lua_Number n) {
 ** returns the 'main' position of an element in a table (that is,
 ** the index of its hash value).
 */
-static Node *mainpositionTV (const Table *t, const TValue *key) {
-  switch (ttypetag(key)) {
-    case LUA_VNUMINT: {
-      lua_Integer i = ivalue(key);
-      return hashint(t, i);
+स्थिर ग्रन्थिः_2 *mainpositionTV (ध्रुव Table *t, ध्रुव TValue *कुञ्चिका) {
+  विकल्प (ttypetag(कुञ्चिका)) {
+    पक्ष LUA_VNUMINT: {
+      lua_Integer i = ivalue(कुञ्चिका);
+      प्रत्यागम hashint(t, i);
     }
-    case LUA_VNUMFLT: {
-      lua_Number n = fltvalue(key);
-      return hashmod(t, l_hashfloat(n));
+    पक्ष LUA_VNUMFLT: {
+      lua_सङ्ख्या n = fltvalue(कुञ्चिका);
+      प्रत्यागम hashmod(t, l_hashfloat(n));
     }
-    case LUA_VSHRSTR: {
-      TString *ts = tsvalue(key);
-      return hashstr(t, ts);
+    पक्ष LUA_VSHRSTR: {
+      TString *ts = tsvalue(कुञ्चिका);
+      प्रत्यागम hashstr(t, ts);
     }
-    case LUA_VLNGSTR: {
-      TString *ts = tsvalue(key);
-      return hashpow2(t, luaS_hashlongstr(ts));
+    पक्ष LUA_VLNGSTR: {
+      TString *ts = tsvalue(कुञ्चिका);
+      प्रत्यागम hashpow2(t, luaS_hashlongstr(ts));
     }
-    case LUA_VFALSE:
-      return hashboolean(t, 0);
-    case LUA_VTRUE:
-      return hashboolean(t, 1);
-    case LUA_VLIGHTUSERDATA: {
-      void *p = pvalue(key);
-      return hashpointer(t, p);
+    पक्ष LUA_VFALSE:
+      प्रत्यागम hashboolean(t, 0);
+    पक्ष LUA_VTRUE:
+      प्रत्यागम hashboolean(t, 1);
+    पक्ष LUA_VLIGHTUSERDATA: {
+      शून्य *p = pvalue(कुञ्चिका);
+      प्रत्यागम hashpointer(t, p);
     }
-    case LUA_VLCF: {
-      lua_CFunction f = fvalue(key);
-      return hashpointer(t, f);
+    पक्ष LUA_VLCF: {
+      lua_CFunction f = fvalue(कुञ्चिका);
+      प्रत्यागम hashpointer(t, f);
     }
-    default: {
-      GCObject *o = gcvalue(key);
-      return hashpointer(t, o);
+    स्वभाव: {
+      GCObject *o = gcvalue(कुञ्चिका);
+      प्रत्यागम hashpointer(t, o);
     }
   }
 }
 
 
-l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
-  TValue key;
-  getnodekey(cast(lua_State *, NULL), &key, nd);
-  return mainpositionTV(t, &key);
+l_sinline ग्रन्थिः_2 *mainpositionfromnode (ध्रुव Table *t, ग्रन्थिः_2 *nd) {
+  TValue कुञ्चिका;
+  getnodekey(cast(lua_State *, रिक्त), &कुञ्चिका, nd);
+  प्रत्यागम mainpositionTV(t, &कुञ्चिका);
 }
 
 
@@ -249,35 +249,35 @@ l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
 ** anything.  (In particular, 'next' will return some other valid item
 ** on the table or nil.)
 */
-static int equalkey (const TValue *k1, const Node *n2, int deadok) {
-  if (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
-    if (keyisshrstr(n2) && ttislngstring(k1)) {
+स्थिर पूर्णाङ्क equalkey (ध्रुव TValue *k1, ध्रुव ग्रन्थिः_2 *n2, पूर्णाङ्क deadok) {
+  जइ (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
+    जइ (keyisshrstr(n2) && ttislngstring(k1)) {
       /* an external string can be equal to a short-string key */
-      return luaS_eqstr(tsvalue(k1), keystrval(n2));
+      प्रत्यागम luaS_eqstr(tsvalue(k1), keystrval(n2));
     }
-    else if (deadok && keyisdead(n2) && iscollectable(k1)) {
+    अण्णहा जइ (deadok && keyisdead(n2) && iscollectable(k1)) {
       /* a collectable value can be equal to a dead key */
-      return gcvalue(k1) == gcvalueraw(keyval(n2));
+      प्रत्यागम gcvalue(k1) == gcvalueraw(keyval(n2));
    }
-   else
-     return 0;  /* otherwise, different variants cannot be equal */
+   अण्णहा
+     प्रत्यागम 0;  /* otherwise, different variants cannot be equal */
   }
-  else {  /* equal variants */
-    switch (keytt(n2)) {
-      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE:
-        return 1;
-      case LUA_VNUMINT:
-        return (ivalue(k1) == keyival(n2));
-      case LUA_VNUMFLT:
-        return luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
-      case LUA_VLIGHTUSERDATA:
-        return pvalue(k1) == pvalueraw(keyval(n2));
-      case LUA_VLCF:
-        return fvalue(k1) == fvalueraw(keyval(n2));
-      case ctb(LUA_VLNGSTR):
-        return luaS_eqstr(tsvalue(k1), keystrval(n2));
-      default:
-        return gcvalue(k1) == gcvalueraw(keyval(n2));
+  अण्णहा {  /* equal variants */
+    विकल्प (keytt(n2)) {
+      पक्ष LUA_VNIL: पक्ष LUA_VFALSE: पक्ष LUA_VTRUE:
+        प्रत्यागम 1;
+      पक्ष LUA_VNUMINT:
+        प्रत्यागम (ivalue(k1) == keyival(n2));
+      पक्ष LUA_VNUMFLT:
+        प्रत्यागम luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
+      पक्ष LUA_VLIGHTUSERDATA:
+        प्रत्यागम pvalue(k1) == pvalueraw(keyval(n2));
+      पक्ष LUA_VLCF:
+        प्रत्यागम fvalue(k1) == fvalueraw(keyval(n2));
+      पक्ष ctb(LUA_VLNGSTR):
+        प्रत्यागम luaS_eqstr(tsvalue(k1), keystrval(n2));
+      स्वभाव:
+        प्रत्यागम gcvalue(k1) == gcvalueraw(keyval(n2));
     }
   }
 }
@@ -288,15 +288,15 @@ static int equalkey (const TValue *k1, const Node *n2, int deadok) {
 ** which may be in array part, nor for floats with integral values.)
 ** See explanation about 'deadok' in function 'equalkey'.
 */
-static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
-  Node *n = mainpositionTV(t, key);
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (equalkey(key, n, deadok))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+स्थिर ध्रुव TValue *getgeneric (Table *t, ध्रुव TValue *कुञ्चिका, पूर्णाङ्क deadok) {
+  ग्रन्थिः_2 *n = mainpositionTV(t, कुञ्चिका);
+  प्रति (;;) {  /* check whether 'key' is somewhere in the chain */
+    जइ (equalkey(कुञ्चिका, n, deadok))
+      प्रत्यागम gval(n);  /* that's it */
+    अण्णहा {
+      पूर्णाङ्क nx = gnext(n);
+      जइ (nx == 0)
+        प्रत्यागम &absentkey;  /* not found */
       n += nx;
     }
   }
@@ -307,8 +307,8 @@ static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
 ** Return the index 'k' (converted to an unsigned) if it is inside
 ** the range [1, limit].
 */
-static unsigned checkrange (lua_Integer k, unsigned limit) {
-  return (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
+स्थिर unsigned checkrange (lua_Integer k, unsigned limit) {
+  प्रत्यागम (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
 }
 
 
@@ -330,8 +330,8 @@ static unsigned checkrange (lua_Integer k, unsigned limit) {
 ** Check whether a key is in the array part of a table and return its
 ** index there, or zero.
 */
-static unsigned keyinarray (Table *t, const TValue *key) {
-  return (ttisinteger(key)) ? ikeyinarray(t, ivalue(key)) : 0;
+स्थिर unsigned keyinarray (Table *t, ध्रुव TValue *कुञ्चिका) {
+  प्रत्यागम (ttisinteger(कुञ्चिका)) ? ikeyinarray(t, ivalue(कुञ्चिका)) : 0;
 }
 
 
@@ -340,60 +340,60 @@ static unsigned keyinarray (Table *t, const TValue *key) {
 ** elements in the array part, then elements in the hash part. The
 ** beginning of a traversal is signaled by 0.
 */
-static unsigned findindex (lua_State *L, Table *t, TValue *key,
+स्थिर unsigned findindex (lua_State *L, Table *t, TValue *कुञ्चिका,
                                unsigned asize) {
-  unsigned int i;
-  if (ttisnil(key)) return 0;  /* first iteration */
-  i = keyinarray(t, key);
-  if (i != 0)  /* is 'key' inside array part? */
-    return i;  /* yes; that's the index */
-  else {
-    const TValue *n = getgeneric(t, key, 1);
-    if (l_unlikely(isabstkey(n)))
+  unsigned पूर्णाङ्क i;
+  जइ (ttisnil(कुञ्चिका)) प्रत्यागम 0;  /* first iteration */
+  i = keyinarray(t, कुञ्चिका);
+  जइ (i != 0)  /* is 'key' inside array part? */
+    प्रत्यागम i;  /* yes; that's the index */
+  अण्णहा {
+    ध्रुव TValue *n = getgeneric(t, कुञ्चिका, 1);
+    जइ (l_unlikely(isabstkey(n)))
       luaG_runerror(L, "invalid key to 'next'");  /* key not found */
     i = cast_uint(nodefromval(n) - gnode(t, 0));  /* key index in hash table */
     /* hash elements are numbered after array ones */
-    return (i + 1) + asize;
+    प्रत्यागम (i + 1) + asize;
   }
 }
 
 
-int luaH_next (lua_State *L, Table *t, StkId key) {
-  unsigned int asize = t->asize;
-  unsigned int i = findindex(L, t, s2v(key), asize);  /* find original key */
-  for (; i < asize; i++) {  /* try first array part */
+पूर्णाङ्क luaH_next (lua_State *L, Table *t, StkId कुञ्चिका) {
+  unsigned पूर्णाङ्क asize = t->asize;
+  unsigned पूर्णाङ्क i = findindex(L, t, s2v(कुञ्चिका), asize);  /* find original key */
+  प्रति (; i < asize; i++) {  /* try first array part */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
-      setivalue(s2v(key), cast_int(i) + 1);
-      farr2val(t, i, tag, s2v(key + 1));
-      return 1;
+    जइ (!tagisempty(tag)) {  /* a non-empty entry? */
+      setivalue(s2v(कुञ्चिका), cast_int(i) + 1);
+      farr2val(t, i, tag, s2v(कुञ्चिका + 1));
+      प्रत्यागम 1;
     }
   }
-  for (i -= asize; i < sizenode(t); i++) {  /* hash part */
-    if (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
-      Node *n = gnode(t, i);
-      getnodekey(L, s2v(key), n);
-      setobj2s(L, key + 1, gval(n));
-      return 1;
+  प्रति (i -= asize; i < sizenode(t); i++) {  /* hash part */
+    जइ (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
+      ग्रन्थिः_2 *n = gnode(t, i);
+      getnodekey(L, s2v(कुञ्चिका), n);
+      setobj2s(L, कुञ्चिका + 1, gval(n));
+      प्रत्यागम 1;
     }
   }
-  return 0;  /* no more elements */
+  प्रत्यागम 0;  /* no more elements */
 }
 
 
 /* Extra space in Node array if it has a lastfree entry */
-#define extraLastfree(t)	(haslastfree(t) ? sizeof(Limbox) : 0)
+#define extraLastfree(t)	(haslastfree(t) ? परिमाण(Limbox) : 0)
 
 /* 'node' size in bytes */
-static size_t sizehash (Table *t) {
-  return cast_sizet(sizenode(t)) * sizeof(Node) + extraLastfree(t);
+स्थिर size_t sizehash (Table *t) {
+  प्रत्यागम cast_sizet(sizenode(t)) * परिमाण(ग्रन्थिः_2) + extraLastfree(t);
 }
 
 
-static void freehash (lua_State *L, Table *t) {
-  if (!isdummy(t)) {
+स्थिर शून्य freehash (lua_State *L, Table *t) {
+  जइ (!isdummy(t)) {
     /* get pointer to the beginning of Node array */
-    char *arr = cast_charp(t->node) - extraLastfree(t);
+    वर्ण *arr = cast_charp(t->ग्रन्थिः) - extraLastfree(t);
     luaM_freearray(L, arr, sizehash(t));
   }
 }
@@ -405,8 +405,8 @@ static void freehash (lua_State *L, Table *t) {
 ** ==============================================================
 */
 
-static int insertkey (Table *t, const TValue *key, TValue *value);
-static void newcheckedkey (Table *t, const TValue *key, TValue *value);
+स्थिर पूर्णाङ्क insertkey (Table *t, ध्रुव TValue *कुञ्चिका, TValue *मानम्);
+स्थिर शून्य newcheckedkey (Table *t, ध्रुव TValue *कुञ्चिका, TValue *मानम्);
 
 
 /*
@@ -418,10 +418,10 @@ static void newcheckedkey (Table *t, const TValue *key, TValue *value);
 ** keys between 2^(i - 1) + 1 and 2^i. Note that 'na' is the summation
 ** of 'nums'.
 */
-typedef struct {
+प्रकारनिर्देश संरचना {
   unsigned total;
   unsigned na;
-  int deleted;
+  पूर्णाङ्क deleted;
   unsigned nums[MAXABITS + 1];
 } Counters;
 
@@ -443,66 +443,66 @@ typedef struct {
 ** and leaves with the number of keys that will go to the array part;
 ** return the optimal size for the array part.
 */
-static unsigned computesizes (Counters *ct) {
-  int i;
-  unsigned int twotoi;  /* 2^i (candidate for optimal size) */
-  unsigned int a = 0;  /* number of elements smaller than 2^i */
-  unsigned int na = 0;  /* number of elements to go to array part */
-  unsigned int optimal = 0;  /* optimal size for array part */
+स्थिर unsigned computesizes (Counters *ct) {
+  पूर्णाङ्क i;
+  unsigned पूर्णाङ्क twotoi;  /* 2^i (candidate for optimal size) */
+  unsigned पूर्णाङ्क a = 0;  /* number of elements smaller than 2^i */
+  unsigned पूर्णाङ्क na = 0;  /* number of elements to go to array part */
+  unsigned पूर्णाङ्क optimal = 0;  /* optimal size for array part */
   /* traverse slices while 'twotoi' does not overflow and total of array
      indices still can satisfy 'arrayXhash' against the array size */
-  for (i = 0, twotoi = 1;
+  प्रति (i = 0, twotoi = 1;
        twotoi > 0 && arrayXhash(twotoi, ct->na);
        i++, twotoi *= 2) {
     unsigned nums = ct->nums[i];
     a += nums;
-    if (nums > 0 &&  /* grows array only if it gets more elements... */
+    जइ (nums > 0 &&  /* grows array only if it gets more elements... */
         arrayXhash(twotoi, a)) {  /* ...while using "less memory" */
       optimal = twotoi;  /* optimal size (till now) */
       na = a;  /* all elements up to 'optimal' will go to array part */
     }
   }
   ct->na = na;
-  return optimal;
+  प्रत्यागम optimal;
 }
 
 
-static void countint (lua_Integer key, Counters *ct) {
-  unsigned int k = arrayindex(key);
-  if (k != 0) {  /* is 'key' an array index? */
+स्थिर शून्य countint (lua_Integer कुञ्चिका, Counters *ct) {
+  unsigned पूर्णाङ्क k = arrayindex(कुञ्चिका);
+  जइ (k != 0) {  /* is 'key' an array index? */
     ct->nums[luaO_ceillog2(k)]++;  /* count as such */
     ct->na++;
   }
 }
 
 
-l_sinline int arraykeyisempty (const Table *t, unsigned key) {
-  int tag = *getArrTag(t, key - 1);
-  return tagisempty(tag);
+l_sinline पूर्णाङ्क arraykeyisempty (ध्रुव Table *t, unsigned कुञ्चिका) {
+  पूर्णाङ्क tag = *getArrTag(t, कुञ्चिका - 1);
+  प्रत्यागम tagisempty(tag);
 }
 
 
 /*
 ** Count keys in array part of table 't'.
 */
-static void numusearray (const Table *t, Counters *ct) {
-  int lg;
-  unsigned int ttlg;  /* 2^lg */
-  unsigned int ause = 0;  /* summation of 'nums' */
-  unsigned int i = 1;  /* index to traverse all array keys */
-  unsigned int asize = t->asize;
+स्थिर शून्य numusearray (ध्रुव Table *t, Counters *ct) {
+  पूर्णाङ्क lg;
+  unsigned पूर्णाङ्क ttlg;  /* 2^lg */
+  unsigned पूर्णाङ्क ause = 0;  /* summation of 'nums' */
+  unsigned पूर्णाङ्क i = 1;  /* index to traverse all array keys */
+  unsigned पूर्णाङ्क asize = t->asize;
   /* traverse each slice */
-  for (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
-    unsigned int lc = 0;  /* counter */
-    unsigned int lim = ttlg;
-    if (lim > asize) {
+  प्रति (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
+    unsigned पूर्णाङ्क lc = 0;  /* counter */
+    unsigned पूर्णाङ्क lim = ttlg;
+    जइ (lim > asize) {
       lim = asize;  /* adjust upper limit */
-      if (i > lim)
-        break;  /* no more elements to count */
+      जइ (i > lim)
+        भङ्ग;  /* no more elements to count */
     }
     /* count elements in range (2^(lg - 1), 2^lg] */
-    for (; i <= lim; i++) {
-      if (!arraykeyisempty(t, i))
+    प्रति (; i <= lim; i++) {
+      जइ (!arraykeyisempty(t, i))
         lc++;
     }
     ct->nums[lg] += lc;
@@ -518,18 +518,18 @@ static void numusearray (const Table *t, Counters *ct) {
 ** a rehash, all nodes have been used. A node can have a nil value only
 ** if it was deleted after being created.
 */
-static void numusehash (const Table *t, Counters *ct) {
+स्थिर शून्य numusehash (ध्रुव Table *t, Counters *ct) {
   unsigned i = sizenode(t);
   unsigned total = 0;
-  while (i--) {
-    Node *n = &t->node[i];
-    if (isempty(gval(n))) {
+  जाव (i--) {
+    ग्रन्थिः_2 *n = &t->ग्रन्थिः[i];
+    जइ (isempty(gval(n))) {
       lua_assert(!keyisnil(n));  /* entry was deleted; key cannot be nil */
       ct->deleted = 1;
     }
-    else {
+    अण्णहा {
       total++;
-      if (keyisinteger(n))
+      जइ (keyisinteger(n))
         countint(keyival(n), ct);
     }
   }
@@ -541,11 +541,11 @@ static void numusehash (const Table *t, Counters *ct) {
 ** Convert an "abstract size" (number of slots in an array) to
 ** "concrete size" (number of bytes in the array).
 */
-static size_t concretesize (unsigned int size) {
-  if (size == 0)
-    return 0;
-  else  /* space for the two arrays plus an unsigned in between */
-    return size * (sizeof(Value) + 1) + sizeof(unsigned);
+स्थिर size_t concretesize (unsigned पूर्णाङ्क size) {
+  जइ (size == 0)
+    प्रत्यागम 0;
+  अण्णहा  /* space for the two arrays plus an unsigned in between */
+    प्रत्यागम size * (परिमाण(मानम्_2) + 1) + परिमाण(unsigned);
 }
 
 
@@ -560,34 +560,34 @@ static size_t concretesize (unsigned int size) {
 ** waste. Moreover, most allocators will move the array anyway when the
 ** new size is double the old one (the most common case).
 */
-static Value *resizearray (lua_State *L , Table *t,
+स्थिर मानम्_2 *resizearray (lua_State *L , Table *t,
                                unsigned oldasize,
                                unsigned newasize) {
-  if (oldasize == newasize)
-    return t->array;  /* nothing to be done */
-  else if (newasize == 0) {  /* erasing array? */
-    Value *op = t->array - oldasize;  /* original array's real address */
+  जइ (oldasize == newasize)
+    प्रत्यागम t->array;  /* nothing to be done */
+  अण्णहा जइ (newasize == 0) {  /* erasing array? */
+    मानम्_2 *op = t->array - oldasize;  /* original array's real address */
     luaM_freemem(L, op, concretesize(oldasize));  /* free it */
-    return NULL;
+    प्रत्यागम रिक्त;
   }
-  else {
+  अण्णहा {
     size_t newasizeb = concretesize(newasize);
-    Value *np = cast(Value *,
-                  luaM_reallocvector(L, NULL, 0, newasizeb, lu_byte));
-    if (np == NULL)  /* allocation error? */
-      return NULL;
+    मानम्_2 *np = cast(मानम्_2 *,
+                  luaM_reallocvector(L, रिक्त, 0, newasizeb, lu_byte));
+    जइ (np == रिक्त)  /* allocation error? */
+      प्रत्यागम रिक्त;
     np += newasize;  /* shift pointer to the end of value segment */
-    if (oldasize > 0) {
+    जइ (oldasize > 0) {
       /* move common elements to new position */
       size_t oldasizeb = concretesize(oldasize);
-      Value *op = t->array;  /* original array */
+      मानम्_2 *op = t->array;  /* original array */
       unsigned tomove = (oldasize < newasize) ? oldasize : newasize;
       size_t tomoveb = (oldasize < newasize) ? oldasizeb : newasizeb;
       lua_assert(tomoveb > 0);
       memcpy(np - tomove, op - tomove, tomoveb);
       luaM_freemem(L, op - oldasize, oldasizeb);  /* free old block */
     }
-    return np;
+    प्रत्यागम np;
   }
 }
 
@@ -599,30 +599,30 @@ static Value *resizearray (lua_State *L , Table *t,
 ** comparison ensures that the shift in the second one does not
 ** overflow.
 */
-static void setnodevector (lua_State *L, Table *t, unsigned size) {
-  if (size == 0) {  /* no elements to hash part? */
-    t->node = cast(Node *, dummynode);  /* use common 'dummynode' */
+स्थिर शून्य setnodevector (lua_State *L, Table *t, unsigned size) {
+  जइ (size == 0) {  /* no elements to hash part? */
+    t->ग्रन्थिः = cast(ग्रन्थिः_2 *, dummynode);  /* use common 'dummynode' */
     t->lsizenode = 0;
     setdummy(t);  /* signal that it is using dummy node */
   }
-  else {
-    int i;
-    int lsize = luaO_ceillog2(size);
-    if (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
+  अण्णहा {
+    पूर्णाङ्क i;
+    पूर्णाङ्क lsize = luaO_ceillog2(size);
+    जइ (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
       luaG_runerror(L, "table overflow");
     size = twoto(lsize);
-    if (lsize < LIMFORLAST)  /* no 'lastfree' field? */
-      t->node = luaM_newvector(L, size, Node);
-    else {
-      size_t bsize = size * sizeof(Node) + sizeof(Limbox);
-      char *node = luaM_newblock(L, bsize);
-      t->node = cast(Node *, node + sizeof(Limbox));
+    जइ (lsize < LIMFORLAST)  /* no 'lastfree' field? */
+      t->ग्रन्थिः = luaM_newvector(L, size, ग्रन्थिः_2);
+    अण्णहा {
+      size_t bsize = size * परिमाण(ग्रन्थिः_2) + परिमाण(Limbox);
+      वर्ण *ग्रन्थिः = luaM_newblock(L, bsize);
+      t->ग्रन्थिः = cast(ग्रन्थिः_2 *, ग्रन्थिः + परिमाण(Limbox));
       getlastfree(t) = gnode(t, size);  /* all positions are free */
     }
     t->lsizenode = cast_byte(lsize);
     setnodummy(t);
-    for (i = 0; i < cast_int(size); i++) {
-      Node *n = gnode(t, i);
+    प्रति (i = 0; i < cast_int(size); i++) {
+      ग्रन्थिः_2 *n = gnode(t, i);
       gnext(n) = 0;
       setnilkey(n);
       setempty(gval(n));
@@ -634,12 +634,12 @@ static void setnodevector (lua_State *L, Table *t, unsigned size) {
 /*
 ** (Re)insert all elements from the hash part of 'ot' into table 't'.
 */
-static void reinserthash (lua_State *L, Table *ot, Table *t) {
+स्थिर शून्य reinserthash (lua_State *L, Table *ot, Table *t) {
   unsigned j;
   unsigned size = sizenode(ot);
-  for (j = 0; j < size; j++) {
-    Node *old = gnode(ot, j);
-    if (!isempty(gval(old))) {
+  प्रति (j = 0; j < size; j++) {
+    ग्रन्थिः_2 *old = gnode(ot, j);
+    जइ (!isempty(gval(old))) {
       /* doesn't need barrier/invalidate cache, as entry was
          already present in the table */
       TValue k;
@@ -655,15 +655,15 @@ static void reinserthash (lua_State *L, Table *ot, Table *t) {
 ** bit must be exchanged:  The metamethod bits do not change during a
 ** resize, so the "real" table can keep their values.)
 */
-static void exchangehashpart (Table *t1, Table *t2) {
+स्थिर शून्य exchangehashpart (Table *t1, Table *t2) {
   lu_byte lsizenode = t1->lsizenode;
-  Node *node = t1->node;
-  int bitdummy1 = t1->flags & BITDUMMY;
+  ग्रन्थिः_2 *ग्रन्थिः = t1->ग्रन्थिः;
+  पूर्णाङ्क bitdummy1 = t1->flags & BITDUMMY;
   t1->lsizenode = t2->lsizenode;
-  t1->node = t2->node;
+  t1->ग्रन्थिः = t2->ग्रन्थिः;
   t1->flags = cast_byte((t1->flags & NOTBITDUMMY) | (t2->flags & BITDUMMY));
   t2->lsizenode = lsizenode;
-  t2->node = node;
+  t2->ग्रन्थिः = ग्रन्थिः;
   t2->flags = cast_byte((t2->flags & NOTBITDUMMY) | bitdummy1);
 }
 
@@ -672,16 +672,16 @@ static void exchangehashpart (Table *t1, Table *t2) {
 ** Re-insert into the new hash part of a table the elements from the
 ** vanishing slice of the array part.
 */
-static void reinsertOldSlice (Table *t, unsigned oldasize,
+स्थिर शून्य reinsertOldSlice (Table *t, unsigned oldasize,
                                         unsigned newasize) {
   unsigned i;
-  for (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
+  प्रति (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
-      TValue key, aux;
-      setivalue(&key, l_castU2S(i) + 1);  /* make the key */
+    जइ (!tagisempty(tag)) {  /* a non-empty entry? */
+      TValue कुञ्चिका, aux;
+      setivalue(&कुञ्चिका, l_castU2S(i) + 1);  /* make the key */
       farr2val(t, i, tag, &aux);  /* copy value into 'aux' */
-      insertkey(t, &key, &aux);  /* insert entry into the hash part */
+      insertkey(t, &कुञ्चिका, &aux);  /* insert entry into the hash part */
     }
   }
 }
@@ -690,8 +690,8 @@ static void reinsertOldSlice (Table *t, unsigned oldasize,
 /*
 ** Clear new slice of the array.
 */
-static void clearNewSlice (Table *t, unsigned oldasize, unsigned newasize) {
-  for (; oldasize < newasize; oldasize++)
+स्थिर शून्य clearNewSlice (Table *t, unsigned oldasize, unsigned newasize) {
+  प्रति (; oldasize < newasize; oldasize++)
     *getArrTag(t, oldasize) = LUA_VEMPTY;
 }
 
@@ -712,17 +712,17 @@ static void clearNewSlice (Table *t, unsigned oldasize, unsigned newasize) {
 ** the old one ('oldasize'), this function will do nothing with that
 ** part.
 */
-void luaH_resize (lua_State *L, Table *t, unsigned newasize,
+शून्य luaH_resize (lua_State *L, Table *t, unsigned newasize,
                                           unsigned nhsize) {
   Table newt;  /* to keep the new hash part */
   unsigned oldasize = t->asize;
-  Value *newarray;
-  if (newasize > MAXASIZE)
+  मानम्_2 *newarray;
+  जइ (newasize > MAXASIZE)
     luaG_runerror(L, "table overflow");
   /* create new hash part with appropriate size into 'newt' */
   newt.flags = 0;
   setnodevector(L, &newt, nhsize);
-  if (newasize < oldasize) {  /* will array shrink? */
+  जइ (newasize < oldasize) {  /* will array shrink? */
     /* re-insert into the new hash the elements from vanishing slice */
     exchangehashpart(t, &newt);  /* pretend table has new hash */
     reinsertOldSlice(t, oldasize, newasize);
@@ -730,7 +730,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   }
   /* allocate new array */
   newarray = resizearray(L, t, oldasize, newasize);
-  if (l_unlikely(newarray == NULL && newasize > 0)) {  /* allocation failed? */
+  जइ (l_unlikely(newarray == रिक्त && newasize > 0)) {  /* allocation failed? */
     freehash(L, &newt);  /* release new hash part */
     luaM_error(L);  /* raise error (with array unchanged) */
   }
@@ -738,7 +738,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   exchangehashpart(t, &newt);  /* 't' has the new hash ('newt' has the old) */
   t->array = newarray;  /* set new array part */
   t->asize = newasize;
-  if (newarray != NULL)
+  जइ (newarray != रिक्त)
     *lenhint(t) = newasize / 2u;  /* set an initial hint */
   clearNewSlice(t, oldasize, newasize);
   /* re-insert elements from old hash part into new parts */
@@ -747,7 +747,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
 }
 
 
-void luaH_resizearray (lua_State *L, Table *t, unsigned int nasize) {
+शून्य luaH_resizearray (lua_State *L, Table *t, unsigned पूर्णाङ्क nasize) {
   unsigned nsize = allocsizenode(t);
   luaH_resize(L, t, nasize, nsize);
 }
@@ -758,30 +758,30 @@ void luaH_resizearray (lua_State *L, Table *t, unsigned int nasize) {
 ** outside the array part, compute the new best size for that part.
 ** Then, resize the table.
 */
-static void rehash (lua_State *L, Table *t, const TValue *ek) {
+स्थिर शून्य rehash (lua_State *L, Table *t, ध्रुव TValue *ek) {
   unsigned asize;  /* optimal size for array part */
   Counters ct;
   unsigned i;
   unsigned nsize;  /* size for the hash part */
   /* reset counts */
-  for (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
+  प्रति (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
   ct.na = 0;
   ct.deleted = 0;
   ct.total = 1;  /* count extra key */
-  if (ttisinteger(ek))
+  जइ (ttisinteger(ek))
     countint(ivalue(ek), &ct);  /* extra key may go to array */
   numusehash(t, &ct);  /* count keys in hash part */
-  if (ct.na == 0) {
+  जइ (ct.na == 0) {
     /* no new keys to enter array part; keep it with the same size */
     asize = t->asize;
   }
-  else {  /* compute best size for array part */
+  अण्णहा {  /* compute best size for array part */
     numusearray(t, &ct);  /* count keys in array part */
     asize = computesizes(&ct);  /* compute new size for array part */
   }
   /* all keys not in the array part go to the hash part */
   nsize = ct.total - ct.na;
-  if (ct.deleted) {  /* table has deleted entries? */
+  जइ (ct.deleted) {  /* table has deleted entries? */
     /* insertion-deletion-insertion: give hash some extra size to
        avoid repeated resizings */
     nsize += nsize >> 2;
@@ -796,53 +796,53 @@ static void rehash (lua_State *L, Table *t, const TValue *ek) {
 
 
 Table *luaH_new (lua_State *L) {
-  GCObject *o = luaC_newobj(L, LUA_VTABLE, sizeof(Table));
+  GCObject *o = luaC_newobj(L, LUA_VTABLE, परिमाण(Table));
   Table *t = gco2t(o);
-  t->metatable = NULL;
+  t->metatable = रिक्त;
   t->flags = maskflags;  /* table has no metamethod fields */
-  t->array = NULL;
+  t->array = रिक्त;
   t->asize = 0;
   setnodevector(L, t, 0);
-  return t;
+  प्रत्यागम t;
 }
 
 
 lu_mem luaH_size (Table *t) {
-  lu_mem sz = cast(lu_mem, sizeof(Table)) + concretesize(t->asize);
-  if (!isdummy(t))
+  lu_mem sz = cast(lu_mem, परिमाण(Table)) + concretesize(t->asize);
+  जइ (!isdummy(t))
     sz += sizehash(t);
-  return sz;
+  प्रत्यागम sz;
 }
 
 
 /*
 ** Frees a table.
 */
-void luaH_free (lua_State *L, Table *t) {
+शून्य luaH_free (lua_State *L, Table *t) {
   freehash(L, t);
   resizearray(L, t, t->asize, 0);
   luaM_free(L, t);
 }
 
 
-static Node *getfreepos (Table *t) {
-  if (haslastfree(t)) {  /* does it have 'lastfree' information? */
+स्थिर ग्रन्थिः_2 *getfreepos (Table *t) {
+  जइ (haslastfree(t)) {  /* does it have 'lastfree' information? */
     /* look for a spot before 'lastfree', updating 'lastfree' */
-    while (getlastfree(t) > t->node) {
-      Node *free = --getlastfree(t);
-      if (keyisnil(free))
-        return free;
+    जाव (getlastfree(t) > t->ग्रन्थिः) {
+      ग्रन्थिः_2 *मुक्त = --getlastfree(t);
+      जइ (keyisnil(मुक्त))
+        प्रत्यागम मुक्त;
     }
   }
-  else {  /* no 'lastfree' information */
+  अण्णहा {  /* no 'lastfree' information */
     unsigned i = sizenode(t);
-    while (i--) {  /* do a linear search */
-      Node *free = gnode(t, i);
-      if (keyisnil(free))
-        return free;
+    जाव (i--) {  /* do a linear search */
+      ग्रन्थिः_2 *मुक्त = gnode(t, i);
+      जइ (keyisnil(मुक्त))
+        प्रत्यागम मुक्त;
     }
   }
-  return NULL;  /* could not find a free place */
+  प्रत्यागम रिक्त;  /* could not find a free place */
 }
 
 
@@ -855,42 +855,42 @@ static Node *getfreepos (Table *t) {
 ** its main position), new key goes to an empty position. Return 0 if
 ** could not insert key (could not find a free space).
 */
-static int insertkey (Table *t, const TValue *key, TValue *value) {
-  Node *mp = mainpositionTV(t, key);
+स्थिर पूर्णाङ्क insertkey (Table *t, ध्रुव TValue *कुञ्चिका, TValue *मानम्) {
+  ग्रन्थिः_2 *mp = mainpositionTV(t, कुञ्चिका);
   /* table cannot already contain the key */
-  lua_assert(isabstkey(getgeneric(t, key, 0)));
-  if (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
-    Node *othern;
-    Node *f = getfreepos(t);  /* get a free place */
-    if (f == NULL)  /* cannot find a free place? */
-      return 0;
+  lua_assert(isabstkey(getgeneric(t, कुञ्चिका, 0)));
+  जइ (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
+    ग्रन्थिः_2 *othern;
+    ग्रन्थिः_2 *f = getfreepos(t);  /* get a free place */
+    जइ (f == रिक्त)  /* cannot find a free place? */
+      प्रत्यागम 0;
     lua_assert(!isdummy(t));
     othern = mainpositionfromnode(t, mp);
-    if (othern != mp) {  /* is colliding node out of its main position? */
+    जइ (othern != mp) {  /* is colliding node out of its main position? */
       /* yes; move colliding node into free position */
-      while (othern + gnext(othern) != mp)  /* find previous */
+      जाव (othern + gnext(othern) != mp)  /* find previous */
         othern += gnext(othern);
       gnext(othern) = cast_int(f - othern);  /* rechain to point to 'f' */
       *f = *mp;  /* copy colliding node into free pos. (mp->next also goes) */
-      if (gnext(mp) != 0) {
+      जइ (gnext(mp) != 0) {
         gnext(f) += cast_int(mp - f);  /* correct 'next' */
         gnext(mp) = 0;  /* now 'mp' is free */
       }
       setempty(gval(mp));
     }
-    else {  /* colliding node is in its own main position */
+    अण्णहा {  /* colliding node is in its own main position */
       /* new node will go into free position */
-      if (gnext(mp) != 0)
+      जइ (gnext(mp) != 0)
         gnext(f) = cast_int((mp + gnext(mp)) - f);  /* chain new position */
-      else lua_assert(gnext(f) == 0);
+      अण्णहा lua_assert(gnext(f) == 0);
       gnext(mp) = cast_int(f - mp);
       mp = f;
     }
   }
-  setnodekey(mp, key);
+  setnodekey(mp, कुञ्चिका);
   lua_assert(isempty(gval(mp)));
-  setobj2t(cast(lua_State *, 0), gval(mp), value);
-  return 1;
+  setobj2t(cast(lua_State *, 0), gval(mp), मानम्);
+  प्रत्यागम 1;
 }
 
 
@@ -898,146 +898,146 @@ static int insertkey (Table *t, const TValue *key, TValue *value) {
 ** Insert a key in a table where there is space for that key, the
 ** key is valid, and the value is not nil.
 */
-static void newcheckedkey (Table *t, const TValue *key, TValue *value) {
-  unsigned i = keyinarray(t, key);
-  if (i > 0)  /* is key in the array part? */
-    obj2arr(t, i - 1, value);  /* set value in the array */
-  else {
-    int done = insertkey(t, key, value);  /* insert key in the hash part */
+स्थिर शून्य newcheckedkey (Table *t, ध्रुव TValue *कुञ्चिका, TValue *मानम्) {
+  unsigned i = keyinarray(t, कुञ्चिका);
+  जइ (i > 0)  /* is key in the array part? */
+    obj2arr(t, i - 1, मानम्);  /* set value in the array */
+  अण्णहा {
+    पूर्णाङ्क done = insertkey(t, कुञ्चिका, मानम्);  /* insert key in the hash part */
     lua_assert(done);  /* it cannot fail */
-    cast(void, done);  /* to avoid warnings */
+    cast(शून्य, done);  /* to avoid warnings */
   }
 }
 
 
-static void luaH_newkey (lua_State *L, Table *t, const TValue *key,
-                                                 TValue *value) {
-  if (!ttisnil(value)) {  /* do not insert nil values */
-    int done = insertkey(t, key, value);
-    if (!done) {  /* could not find a free place? */
-      rehash(L, t, key);  /* grow table */
-      newcheckedkey(t, key, value);  /* insert key in grown table */
+स्थिर शून्य luaH_newkey (lua_State *L, Table *t, ध्रुव TValue *कुञ्चिका,
+                                                 TValue *मानम्) {
+  जइ (!ttisnil(मानम्)) {  /* do not insert nil values */
+    पूर्णाङ्क done = insertkey(t, कुञ्चिका, मानम्);
+    जइ (!done) {  /* could not find a free place? */
+      rehash(L, t, कुञ्चिका);  /* grow table */
+      newcheckedkey(t, कुञ्चिका, मानम्);  /* insert key in grown table */
     }
-    luaC_barrierback(L, obj2gco(t), key);
+    luaC_barrierback(L, obj2gco(t), कुञ्चिका);
     /* for debugging only: any new key may force an emergency collection */
-    condchangemem(L, (void)0, (void)0, 1);
+    condchangemem(L, (शून्य)0, (शून्य)0, 1);
   }
 }
 
 
-static const TValue *getintfromhash (Table *t, lua_Integer key) {
-  Node *n = hashint(t, key);
-  lua_assert(!ikeyinarray(t, key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisinteger(n) && keyival(n) == key)
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0) break;
+स्थिर ध्रुव TValue *getintfromhash (Table *t, lua_Integer कुञ्चिका) {
+  ग्रन्थिः_2 *n = hashint(t, कुञ्चिका);
+  lua_assert(!ikeyinarray(t, कुञ्चिका));
+  प्रति (;;) {  /* check whether 'key' is somewhere in the chain */
+    जइ (keyisinteger(n) && keyival(n) == कुञ्चिका)
+      प्रत्यागम gval(n);  /* that's it */
+    अण्णहा {
+      पूर्णाङ्क nx = gnext(n);
+      जइ (nx == 0) भङ्ग;
       n += nx;
     }
   }
-  return &absentkey;
+  प्रत्यागम &absentkey;
 }
 
 
-static int hashkeyisempty (Table *t, lua_Unsigned key) {
-  const TValue *val = getintfromhash(t, l_castU2S(key));
-  return isempty(val);
+स्थिर पूर्णाङ्क hashkeyisempty (Table *t, lua_Unsigned कुञ्चिका) {
+  ध्रुव TValue *val = getintfromhash(t, l_castU2S(कुञ्चिका));
+  प्रत्यागम isempty(val);
 }
 
 
-static lu_byte finishnodeget (const TValue *val, TValue *res) {
-  if (!ttisnil(val)) {
-    setobj(((lua_State*)NULL), res, val);
+स्थिर lu_byte finishnodeget (ध्रुव TValue *val, TValue *res) {
+  जइ (!ttisnil(val)) {
+    setobj(((lua_State*)रिक्त), res, val);
   }
-  return ttypetag(val);
+  प्रत्यागम ttypetag(val);
 }
 
 
-lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res) {
-  unsigned k = ikeyinarray(t, key);
-  if (k > 0) {
+lu_byte luaH_getint (Table *t, lua_Integer कुञ्चिका, TValue *res) {
+  unsigned k = ikeyinarray(t, कुञ्चिका);
+  जइ (k > 0) {
     lu_byte tag = *getArrTag(t, k - 1);
-    if (!tagisempty(tag))
+    जइ (!tagisempty(tag))
       farr2val(t, k - 1, tag, res);
-    return tag;
+    प्रत्यागम tag;
   }
-  else
-    return finishnodeget(getintfromhash(t, key), res);
+  अण्णहा
+    प्रत्यागम finishnodeget(getintfromhash(t, कुञ्चिका), res);
 }
 
 
 /*
 ** search function for short strings
 */
-const TValue *luaH_Hgetshortstr (Table *t, TString *key) {
-  Node *n = hashstr(t, key);
-  lua_assert(strisshr(key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisshrstr(n) && eqshrstr(keystrval(n), key))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+ध्रुव TValue *luaH_Hgetshortstr (Table *t, TString *कुञ्चिका) {
+  ग्रन्थिः_2 *n = hashstr(t, कुञ्चिका);
+  lua_assert(strisshr(कुञ्चिका));
+  प्रति (;;) {  /* check whether 'key' is somewhere in the chain */
+    जइ (keyisshrstr(n) && eqshrstr(keystrval(n), कुञ्चिका))
+      प्रत्यागम gval(n);  /* that's it */
+    अण्णहा {
+      पूर्णाङ्क nx = gnext(n);
+      जइ (nx == 0)
+        प्रत्यागम &absentkey;  /* not found */
       n += nx;
     }
   }
 }
 
 
-lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(luaH_Hgetshortstr(t, key), res);
+lu_byte luaH_getshortstr (Table *t, TString *कुञ्चिका, TValue *res) {
+  प्रत्यागम finishnodeget(luaH_Hgetshortstr(t, कुञ्चिका), res);
 }
 
 
-static const TValue *Hgetlongstr (Table *t, TString *key) {
+स्थिर ध्रुव TValue *Hgetlongstr (Table *t, TString *कुञ्चिका) {
   TValue ko;
-  lua_assert(!strisshr(key));
-  setsvalue(cast(lua_State *, NULL), &ko, key);
-  return getgeneric(t, &ko, 0);  /* for long strings, use generic case */
+  lua_assert(!strisshr(कुञ्चिका));
+  setsvalue(cast(lua_State *, रिक्त), &ko, कुञ्चिका);
+  प्रत्यागम getgeneric(t, &ko, 0);  /* for long strings, use generic case */
 }
 
 
-static const TValue *Hgetstr (Table *t, TString *key) {
-  if (strisshr(key))
-    return luaH_Hgetshortstr(t, key);
-  else
-    return Hgetlongstr(t, key);
+स्थिर ध्रुव TValue *Hgetstr (Table *t, TString *कुञ्चिका) {
+  जइ (strisshr(कुञ्चिका))
+    प्रत्यागम luaH_Hgetshortstr(t, कुञ्चिका);
+  अण्णहा
+    प्रत्यागम Hgetlongstr(t, कुञ्चिका);
 }
 
 
-lu_byte luaH_getstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(Hgetstr(t, key), res);
+lu_byte luaH_getstr (Table *t, TString *कुञ्चिका, TValue *res) {
+  प्रत्यागम finishnodeget(Hgetstr(t, कुञ्चिका), res);
 }
 
 
 /*
 ** main search function
 */
-lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
-  const TValue *slot;
-  switch (ttypetag(key)) {
-    case LUA_VSHRSTR:
-      slot = luaH_Hgetshortstr(t, tsvalue(key));
-      break;
-    case LUA_VNUMINT:
-      return luaH_getint(t, ivalue(key), res);
-    case LUA_VNIL:
+lu_byte luaH_get (Table *t, ध्रुव TValue *कुञ्चिका, TValue *res) {
+  ध्रुव TValue *slot;
+  विकल्प (ttypetag(कुञ्चिका)) {
+    पक्ष LUA_VSHRSTR:
+      slot = luaH_Hgetshortstr(t, tsvalue(कुञ्चिका));
+      भङ्ग;
+    पक्ष LUA_VNUMINT:
+      प्रत्यागम luaH_getint(t, ivalue(कुञ्चिका), res);
+    पक्ष LUA_VNIL:
       slot = &absentkey;
-      break;
-    case LUA_VNUMFLT: {
+      भङ्ग;
+    पक्ष LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return luaH_getint(t, k, res);  /* use specialized version */
+      जइ (luaV_flttointeger(fltvalue(कुञ्चिका), &k, F2Ieq)) /* integral index? */
+        प्रत्यागम luaH_getint(t, k, res);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
-    default:
-      slot = getgeneric(t, key, 0);
-      break;
+    स्वभाव:
+      slot = getgeneric(t, कुञ्चिका, 0);
+      भङ्ग;
   }
-  return finishnodeget(slot, res);
+  प्रत्यागम finishnodeget(slot, res);
 }
 
 
@@ -1045,44 +1045,44 @@ lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
 ** When a 'pset' cannot be completed, this function returns an encoding
 ** of its result, to be used by 'luaH_finishset'.
 */
-static int retpsetcode (Table *t, const TValue *slot) {
-  if (isabstkey(slot))
-    return HNOTFOUND;  /* no slot with that key */
-  else  /* return node encoded */
-    return cast_int((cast(Node*, slot) - t->node)) + HFIRSTNODE;
+स्थिर पूर्णाङ्क retpsetcode (Table *t, ध्रुव TValue *slot) {
+  जइ (isabstkey(slot))
+    प्रत्यागम HNOTFOUND;  /* no slot with that key */
+  अण्णहा  /* return node encoded */
+    प्रत्यागम cast_int((cast(ग्रन्थिः_2*, slot) - t->ग्रन्थिः)) + HFIRSTNODE;
 }
 
 
-static int finishnodeset (Table *t, const TValue *slot, TValue *val) {
-  if (!ttisnil(slot)) {
-    setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return HOK;  /* success */
+स्थिर पूर्णाङ्क finishnodeset (Table *t, ध्रुव TValue *slot, TValue *val) {
+  जइ (!ttisnil(slot)) {
+    setobj(((lua_State*)रिक्त), cast(TValue*, slot), val);
+    प्रत्यागम HOK;  /* success */
   }
-  else
-    return retpsetcode(t, slot);
+  अण्णहा
+    प्रत्यागम retpsetcode(t, slot);
 }
 
 
-static int rawfinishnodeset (const TValue *slot, TValue *val) {
-  if (isabstkey(slot))
-    return 0;  /* no slot with that key */
-  else {
-    setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return 1;  /* success */
+स्थिर पूर्णाङ्क rawfinishnodeset (ध्रुव TValue *slot, TValue *val) {
+  जइ (isabstkey(slot))
+    प्रत्यागम 0;  /* no slot with that key */
+  अण्णहा {
+    setobj(((lua_State*)रिक्त), cast(TValue*, slot), val);
+    प्रत्यागम 1;  /* success */
   }
 }
 
 
-int luaH_psetint (Table *t, lua_Integer key, TValue *val) {
-  lua_assert(!ikeyinarray(t, key));
-  return finishnodeset(t, getintfromhash(t, key), val);
+पूर्णाङ्क luaH_psetint (Table *t, lua_Integer कुञ्चिका, TValue *val) {
+  lua_assert(!ikeyinarray(t, कुञ्चिका));
+  प्रत्यागम finishnodeset(t, getintfromhash(t, कुञ्चिका), val);
 }
 
 
-static int psetint (Table *t, lua_Integer key, TValue *val) {
-  int hres;
-  luaH_fastseti(t, key, val, hres);
-  return hres;
+स्थिर पूर्णाङ्क psetint (Table *t, lua_Integer कुञ्चिका, TValue *val) {
+  पूर्णाङ्क hres;
+  luaH_fastseti(t, कुञ्चिका, val, hres);
+  प्रत्यागम hres;
 }
 
 
@@ -1094,53 +1094,53 @@ static int psetint (Table *t, lua_Integer key, TValue *val) {
 ** it is not old/black, and it already has space for the key.
 */
 
-int luaH_psetshortstr (Table *t, TString *key, TValue *val) {
-  const TValue *slot = luaH_Hgetshortstr(t, key);
-  if (!ttisnil(slot)) {  /* key already has a value? (all too common) */
-    setobj(((lua_State*)NULL), cast(TValue*, slot), val);  /* update it */
-    return HOK;  /* done */
+पूर्णाङ्क luaH_psetshortstr (Table *t, TString *कुञ्चिका, TValue *val) {
+  ध्रुव TValue *slot = luaH_Hgetshortstr(t, कुञ्चिका);
+  जइ (!ttisnil(slot)) {  /* key already has a value? (all too common) */
+    setobj(((lua_State*)रिक्त), cast(TValue*, slot), val);  /* update it */
+    प्रत्यागम HOK;  /* done */
   }
-  else if (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
-    if (ttisnil(val))  /* new value is nil? */
-      return HOK;  /* done (value is already nil/absent) */
-    if (isabstkey(slot) &&  /* key is absent? */
-       !(isblack(t) && iswhite(key))) {  /* and don't need barrier? */
+  अण्णहा जइ (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
+    जइ (ttisnil(val))  /* new value is nil? */
+      प्रत्यागम HOK;  /* done (value is already nil/absent) */
+    जइ (isabstkey(slot) &&  /* key is absent? */
+       !(isblack(t) && iswhite(कुञ्चिका))) {  /* and don't need barrier? */
       TValue tk;  /* key as a TValue */
-      setsvalue(cast(lua_State *, NULL), &tk, key);
-      if (insertkey(t, &tk, val)) {  /* insert key, if there is space */
+      setsvalue(cast(lua_State *, रिक्त), &tk, कुञ्चिका);
+      जइ (insertkey(t, &tk, val)) {  /* insert key, if there is space */
         invalidateTMcache(t);
-        return HOK;
+        प्रत्यागम HOK;
       }
     }
   }
   /* Else, either table has new-index metamethod, or it needs barrier,
      or it needs to rehash for the new key. In any of these cases, the
      operation cannot be completed here. Return a code for the caller. */
-  return retpsetcode(t, slot);
+  प्रत्यागम retpsetcode(t, slot);
 }
 
 
-int luaH_psetstr (Table *t, TString *key, TValue *val) {
-  if (strisshr(key))
-    return luaH_psetshortstr(t, key, val);
-  else
-    return finishnodeset(t, Hgetlongstr(t, key), val);
+पूर्णाङ्क luaH_psetstr (Table *t, TString *कुञ्चिका, TValue *val) {
+  जइ (strisshr(कुञ्चिका))
+    प्रत्यागम luaH_psetshortstr(t, कुञ्चिका, val);
+  अण्णहा
+    प्रत्यागम finishnodeset(t, Hgetlongstr(t, कुञ्चिका), val);
 }
 
 
-int luaH_pset (Table *t, const TValue *key, TValue *val) {
-  switch (ttypetag(key)) {
-    case LUA_VSHRSTR: return luaH_psetshortstr(t, tsvalue(key), val);
-    case LUA_VNUMINT: return psetint(t, ivalue(key), val);
-    case LUA_VNIL: return HNOTFOUND;
-    case LUA_VNUMFLT: {
+पूर्णाङ्क luaH_pset (Table *t, ध्रुव TValue *कुञ्चिका, TValue *val) {
+  विकल्प (ttypetag(कुञ्चिका)) {
+    पक्ष LUA_VSHRSTR: प्रत्यागम luaH_psetshortstr(t, tsvalue(कुञ्चिका), val);
+    पक्ष LUA_VNUMINT: प्रत्यागम psetint(t, ivalue(कुञ्चिका), val);
+    पक्ष LUA_VNIL: प्रत्यागम HNOTFOUND;
+    पक्ष LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return psetint(t, k, val);  /* use specialized version */
+      जइ (luaV_flttointeger(fltvalue(कुञ्चिका), &k, F2Ieq)) /* integral index? */
+        प्रत्यागम psetint(t, k, val);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
-    default:
-      return finishnodeset(t, getgeneric(t, key, 0), val);
+    स्वभाव:
+      प्रत्यागम finishnodeset(t, getgeneric(t, कुञ्चिका, 0), val);
   }
 }
 
@@ -1150,40 +1150,40 @@ int luaH_pset (Table *t, const TValue *key, TValue *val) {
 ** Beware: when using this function the caller probably need to check a
 ** GC barrier and invalidate the TM cache.
 */
-void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                    TValue *value, int hres) {
+शून्य luaH_finishset (lua_State *L, Table *t, ध्रुव TValue *कुञ्चिका,
+                                    TValue *मानम्, पूर्णाङ्क hres) {
   lua_assert(hres != HOK);
-  if (hres == HNOTFOUND) {
+  जइ (hres == HNOTFOUND) {
     TValue aux;
-    const TValue *actk = key;  /* actual key to insert */
-    if (l_unlikely(ttisnil(key)))
+    ध्रुव TValue *actk = कुञ्चिका;  /* actual key to insert */
+    जइ (l_unlikely(ttisnil(कुञ्चिका)))
       luaG_runerror(L, "table index is nil");
-    else if (ttisfloat(key)) {
-      lua_Number f = fltvalue(key);
+    अण्णहा जइ (ttisfloat(कुञ्चिका)) {
+      lua_सङ्ख्या f = fltvalue(कुञ्चिका);
       lua_Integer k;
-      if (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
+      जइ (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
         setivalue(&aux, k);
         actk = &aux;  /* use the integer as the key */
       }
-      else if (l_unlikely(luai_numisnan(f)))
+      अण्णहा जइ (l_unlikely(luai_numisnan(f)))
         luaG_runerror(L, "table index is NaN");
     }
-    else if (isextstr(key)) {  /* external string? */
+    अण्णहा जइ (isextstr(कुञ्चिका)) {  /* external string? */
       /* If string is short, must internalize it to be used as table key */
-      TString *ts = luaS_normstr(L, tsvalue(key));
-      setsvalue2s(L, L->top.p++, ts);  /* anchor 'ts' (EXTRA_STACK) */
-      luaH_newkey(L, t, s2v(L->top.p - 1), value);
-      L->top.p--;
-      return;
+      TString *ts = luaS_normstr(L, tsvalue(कुञ्चिका));
+      setsvalue2s(L, L->शिखरम्.p++, ts);  /* anchor 'ts' (EXTRA_STACK) */
+      luaH_newkey(L, t, s2v(L->शिखरम्.p - 1), मानम्);
+      L->शिखरम्.p--;
+      प्रत्यागम;
     }
-    luaH_newkey(L, t, actk, value);
+    luaH_newkey(L, t, actk, मानम्);
   }
-  else if (hres > 0) {  /* regular Node? */
-    setobj2t(L, gval(gnode(t, hres - HFIRSTNODE)), value);
+  अण्णहा जइ (hres > 0) {  /* regular Node? */
+    setobj2t(L, gval(gnode(t, hres - HFIRSTNODE)), मानम्);
   }
-  else {  /* array entry */
+  अण्णहा {  /* array entry */
     hres = ~hres;  /* real index */
-    obj2arr(t, cast_uint(hres), value);
+    obj2arr(t, cast_uint(hres), मानम्);
   }
 }
 
@@ -1192,10 +1192,10 @@ void luaH_finishset (lua_State *L, Table *t, const TValue *key,
 ** beware: when using this function you probably need to check a GC
 ** barrier and invalidate the TM cache.
 */
-void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
-  int hres = luaH_pset(t, key, value);
-  if (hres != HOK)
-    luaH_finishset(L, t, key, value, hres);
+शून्य luaH_set (lua_State *L, Table *t, ध्रुव TValue *कुञ्चिका, TValue *मानम्) {
+  पूर्णाङ्क hres = luaH_pset(t, कुञ्चिका, मानम्);
+  जइ (hres != HOK)
+    luaH_finishset(L, t, कुञ्चिका, मानम्, hres);
 }
 
 
@@ -1203,16 +1203,16 @@ void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
 ** Ditto for a GC barrier. (No need to invalidate the TM cache, as
 ** integers cannot be keys to metamethods.)
 */
-void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
-  unsigned ik = ikeyinarray(t, key);
-  if (ik > 0)
-    obj2arr(t, ik - 1, value);
-  else {
-    int ok = rawfinishnodeset(getintfromhash(t, key), value);
-    if (!ok) {
+शून्य luaH_setint (lua_State *L, Table *t, lua_Integer कुञ्चिका, TValue *मानम्) {
+  unsigned ik = ikeyinarray(t, कुञ्चिका);
+  जइ (ik > 0)
+    obj2arr(t, ik - 1, मानम्);
+  अण्णहा {
+    पूर्णाङ्क ok = rawfinishnodeset(getintfromhash(t, कुञ्चिका), मानम्);
+    जइ (!ok) {
       TValue k;
-      setivalue(&k, key);
-      luaH_newkey(L, t, &k, value);
+      setivalue(&k, कुञ्चिका);
+      luaH_newkey(L, t, &k, मानम्);
     }
   }
 }
@@ -1236,54 +1236,54 @@ void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
 ** we "randomly double" 'i' by adding to it a random number roughly its
 ** width.
 */
-static lua_Unsigned hash_search (lua_State *L, Table *t, unsigned asize) {
+स्थिर lua_Unsigned hash_अन्वेषणम् (lua_State *L, Table *t, unsigned asize) {
   lua_Unsigned i = asize + 1;  /* caller ensures t[i] is present */
   unsigned rnd = G(L)->seed;
-  int n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
+  पूर्णाङ्क n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
   unsigned mask = (1u << n) - 1;  /* 11...111 with the width of 'asize' */
   unsigned incr = (rnd & mask) + 1;  /* first increment (at least 1) */
   lua_Unsigned j = (incr <= l_castS2U(LUA_MAXINTEGER) - i) ? i + incr : i + 1;
   rnd >>= n;  /* used 'n' bits from 'rnd' */
-  while (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
+  जाव (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
     i = j;  /* 'i' is a present index */
-    if (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
+    जइ (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
       j = j*2 + (rnd & 1);  /* try again with 2j or 2j+1 */
       rnd >>= 1;
     }
-    else {
+    अण्णहा {
       j = LUA_MAXINTEGER;
-      if (hashkeyisempty(t, j))  /* t[j] not present? */
-        break;  /* 'j' now is an absent index */
-      else  /* weird case */
-        return j;  /* well, max integer is a boundary... */
+      जइ (hashkeyisempty(t, j))  /* t[j] not present? */
+        भङ्ग;  /* 'j' now is an absent index */
+      अण्णहा  /* weird case */
+        प्रत्यागम j;  /* well, max integer is a boundary... */
     }
   }
   /* i < j  &&  t[i] present  &&  t[j] absent */
-  while (j - i > 1u) {  /* do a binary search between them */
+  जाव (j - i > 1u) {  /* do a binary search between them */
     lua_Unsigned m = (i + j) / 2;
-    if (hashkeyisempty(t, m)) j = m;
-    else i = m;
+    जइ (hashkeyisempty(t, m)) j = m;
+    अण्णहा i = m;
   }
-  return i;
+  प्रत्यागम i;
 }
 
 
-static unsigned int binsearch (Table *array, unsigned int i, unsigned int j) {
+स्थिर unsigned पूर्णाङ्क binsearch (Table *array, unsigned पूर्णाङ्क i, unsigned पूर्णाङ्क j) {
   lua_assert(i <= j);
-  while (j - i > 1u) {  /* binary search */
-    unsigned int m = (i + j) / 2;
-    if (arraykeyisempty(array, m)) j = m;
-    else i = m;
+  जाव (j - i > 1u) {  /*द्विमान अन्वेषणम्*/
+    unsigned पूर्णाङ्क m = (i + j) / 2;
+    जइ (arraykeyisempty(array, m)) j = m;
+    अण्णहा i = m;
   }
-  return i;
+  प्रत्यागम i;
 }
 
 
 /* return a border, saving it as a hint for next call */
-static lua_Unsigned newhint (Table *t, unsigned hint) {
+स्थिर lua_Unsigned newhint (Table *t, unsigned hint) {
   lua_assert(hint <= t->asize);
   *lenhint(t) = hint;
-  return hint;
+  प्रत्यागम hint;
 }
 
 
@@ -1300,34 +1300,34 @@ static lua_Unsigned newhint (Table *t, unsigned hint) {
 */
 lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   unsigned asize = t->asize;
-  if (asize > 0) {  /* is there an array part? */
-    const unsigned maxvicinity = 4;
+  जइ (asize > 0) {  /* is there an array part? */
+    ध्रुव unsigned maxvicinity = 4;
     unsigned limit = *lenhint(t);  /* start with the hint */
-    if (limit == 0)
+    जइ (limit == 0)
       limit = 1;  /* make limit a valid index in the array */
-    if (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
+    जइ (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
       /* there must be a border before 'limit' */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit > 1; i++) {
+      प्रति (i = 0; i < maxvicinity && limit > 1; i++) {
         limit--;
-        if (!arraykeyisempty(t, limit))
-          return newhint(t, limit);  /* 'limit' is a border */
+        जइ (!arraykeyisempty(t, limit))
+          प्रत्यागम newhint(t, limit);  /* 'limit' is a border */
       }
       /* t[limit] still empty; search for a border in [0, limit) */
-      return newhint(t, binsearch(t, 0, limit));
+      प्रत्यागम newhint(t, binsearch(t, 0, limit));
     }
-    else {  /* 'limit' is present in table; look for a border after it */
+    अण्णहा {  /* 'limit' is present in table; look for a border after it */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit < asize; i++) {
+      प्रति (i = 0; i < maxvicinity && limit < asize; i++) {
         limit++;
-        if (arraykeyisempty(t, limit))
-          return newhint(t, limit - 1);  /* 'limit - 1' is a border */
+        जइ (arraykeyisempty(t, limit))
+          प्रत्यागम newhint(t, limit - 1);  /* 'limit - 1' is a border */
       }
-      if (arraykeyisempty(t, asize)) {  /* last element empty? */
+      जइ (arraykeyisempty(t, asize)) {  /* last element empty? */
         /* t[limit] not empty; search for a border in [limit, asize) */
-        return newhint(t, binsearch(t, limit, asize));
+        प्रत्यागम newhint(t, binsearch(t, limit, asize));
       }
     }
     /* last element non empty; set a hint to speed up finding that again */
@@ -1336,20 +1336,20 @@ lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   }
   /* no array part or t[asize] is not empty; check the hash part */
   lua_assert(asize == 0 || !arraykeyisempty(t, asize));
-  if (isdummy(t) || hashkeyisempty(t, asize + 1))
-    return asize;  /* 'asize + 1' is empty */
-  else  /* 'asize + 1' is also non empty */
-    return hash_search(L, t, asize);
+  जइ (isdummy(t) || hashkeyisempty(t, asize + 1))
+    प्रत्यागम asize;  /* 'asize + 1' is empty */
+  अण्णहा  /* 'asize + 1' is also non empty */
+    प्रत्यागम hash_अन्वेषणम्(L, t, asize);
 }
 
 
 
-#if defined(LUA_DEBUG)
+#जइ defined(LUA_DEBUG)
 
 /* export this function for the test library */
 
-Node *luaH_mainposition (const Table *t, const TValue *key) {
-  return mainpositionTV(t, key);
+ग्रन्थिः_2 *luaH_mainposition (ध्रुव Table *t, ध्रुव TValue *कुञ्चिका) {
+  प्रत्यागम mainpositionTV(t, कुञ्चिका);
 }
 
 #endif
