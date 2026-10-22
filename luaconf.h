@@ -8,8 +8,8 @@
 #ifndef luaconf_h
 #define luaconf_h
 
-#include <limits.h>
-#include <stddef.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stddef.h>
 
 
 /*
@@ -47,12 +47,12 @@
 /*
 ** By default, Lua on Windows use (some) specific Windows features
 */
-#if !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
+#जर !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
 #define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
 #endif
 
 
-#if defined(LUA_USE_WINDOWS)
+#जर defined(LUA_USE_WINDOWS)
 #define LUA_DL_DLL	/* enable support for DLL */
 #define LUA_USE_C89	/* broadly, Windows is C89 */
 #endif
@@ -67,29 +67,29 @@
 ** without 'readline'.  If that macro is not defined, lua.c will not
 ** use 'readline'.
 */
-#if defined(LUA_USE_LINUX)
+#जर defined(LUA_USE_LINUX)
 #define LUA_USE_POSIX
 #define LUA_USE_DLOPEN		/* needs an extra library: -ldl */
-#if !defined(LUA_READLINELIB)
+#जर !defined(LUA_READLINELIB)
 #define LUA_READLINELIB		"libreadline.so"
 #endif
 #endif
 
 
-#if defined(LUA_USE_MACOSX)
+#जर defined(LUA_USE_MACOSX)
 #define LUA_USE_POSIX
 #define LUA_USE_DLOPEN		/* macOS does not need -ldl */
 #define LUA_USE_READLINE	/* needs an extra library: -lreadline */
 #endif
 
 
-#if defined(LUA_USE_IOS)
+#जर defined(LUA_USE_IOS)
 #define LUA_USE_POSIX
 #define LUA_USE_DLOPEN
 #endif
 
 
-#if defined(LUA_USE_C89) && defined(LUA_USE_POSIX)
+#जर defined(LUA_USE_C89) && defined(LUA_USE_POSIX)
 #error "POSIX is not compatible with C89"
 #endif
 
@@ -97,7 +97,7 @@
 /*
 @@ LUAI_IS32INT is true iff 'int' has (at least) 32 bits.
 */
-#define LUAI_IS32INT	((UINT_MAX >> 30) >= 3)
+#define LUAI_IS32INT	((अच_पूर्णांक_उच्च >> 30) >= 3)
 
 /* }================================================================== */
 
@@ -148,32 +148,32 @@
 ** C89 ('long' and 'double'); Windows always has '__int64', so it does
 ** not need to use this case.
 */
-#if defined(LUA_USE_C89) && !defined(LUA_USE_WINDOWS)
+#जर defined(LUA_USE_C89) && !defined(LUA_USE_WINDOWS)
 #define LUA_C89_NUMBERS		1
-#else
+#अन्यथा
 #define LUA_C89_NUMBERS		0
 #endif
 
 
-#if defined(LUA_32BITS)	/* { */
+#जर defined(LUA_32BITS)	/* { */
 /*
 ** 32-bit integers and 'float'
 */
-#if LUAI_IS32INT  /* use 'int' if big enough */
+#जर LUAI_IS32INT  /* use 'int' if big enough */
 #define LUA_INT_TYPE	LUA_INT_INT
-#else  /* otherwise use 'long' */
+#अन्यथा  /* otherwise use 'long' */
 #define LUA_INT_TYPE	LUA_INT_LONG
 #endif
 #define LUA_FLOAT_TYPE	LUA_FLOAT_FLOAT
 
-#elif LUA_C89_NUMBERS	/* }{ */
+#किंवाजर LUA_C89_NUMBERS	/* }{ */
 /*
 ** largest types available for C89 ('long' and 'double')
 */
 #define LUA_INT_TYPE	LUA_INT_LONG
 #define LUA_FLOAT_TYPE	LUA_FLOAT_DOUBLE
 
-#else		/* }{ */
+#अन्यथा		/* }{ */
 /* use defaults */
 
 #define LUA_INT_TYPE	LUA_INT_DEFAULT
@@ -215,7 +215,7 @@
 */
 
 #define LUA_VDIR	LUA_VERSION_MAJOR "." LUA_VERSION_MINOR
-#if defined(_WIN32)	/* { */
+#जर defined(_WIN32)	/* { */
 /*
 ** In Windows, any exclamation mark ('!') in the path is replaced by the
 ** path of the directory of the executable file of the current process.
@@ -224,7 +224,7 @@
 #define LUA_CDIR	"!\\"
 #define LUA_SHRDIR	"!\\..\\share\\lua\\" LUA_VDIR "\\"
 
-#if !defined(LUA_PATH_DEFAULT)
+#जर !defined(LUA_PATH_DEFAULT)
 #define LUA_PATH_DEFAULT  \
 		LUA_LDIR "?.lua;"  LUA_LDIR "?\\init.lua;" \
 		LUA_CDIR "?.lua;"  LUA_CDIR "?\\init.lua;" \
@@ -232,27 +232,27 @@
 		".\\?.lua;" ".\\?\\init.lua"
 #endif
 
-#if !defined(LUA_CPATH_DEFAULT)
+#जर !defined(LUA_CPATH_DEFAULT)
 #define LUA_CPATH_DEFAULT \
 		LUA_CDIR "?.dll;" \
 		LUA_CDIR "..\\lib\\lua\\"  LUA_VDIR "\\?.dll;" \
 		LUA_CDIR "loadall.dll;" ".\\?.dll"
 #endif
 
-#else			/* }{ */
+#अन्यथा			/* }{ */
 
-#define LUA_ROOT	"/usr/local/"
-#define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
-#define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
+#define LUA_मूळ	"/usr/local/"
+#define LUA_LDIR	LUA_मूळ "share/lua/" LUA_VDIR "/"
+#define LUA_CDIR	LUA_मूळ "lib/lua/" LUA_VDIR "/"
 
-#if !defined(LUA_PATH_DEFAULT)
+#जर !defined(LUA_PATH_DEFAULT)
 #define LUA_PATH_DEFAULT  \
 		LUA_LDIR "?.lua;"  LUA_LDIR "?/init.lua;" \
 		LUA_CDIR "?.lua;"  LUA_CDIR "?/init.lua;" \
 		"./?.lua;" "./?/init.lua"
 #endif
 
-#if !defined(LUA_CPATH_DEFAULT)
+#जर !defined(LUA_CPATH_DEFAULT)
 #define LUA_CPATH_DEFAULT \
 		LUA_CDIR "?.so;" LUA_CDIR "loadall.so;" "./?.so"
 #endif
@@ -265,11 +265,11 @@
 ** CHANGE it if your machine does not use "/" as the directory separator
 ** and is not Windows. (On Windows Lua automatically uses "\".)
 */
-#if !defined(LUA_DIRSEP)
+#जर !defined(LUA_DIRSEP)
 
-#if defined(_WIN32)
+#जर defined(_WIN32)
 #define LUA_DIRSEP	"\\"
-#else
+#अन्यथा
 #define LUA_DIRSEP	"/"
 #endif
 
@@ -302,17 +302,17 @@
 ** the libraries, you may want to use the following definition (define
 ** LUA_BUILD_AS_DLL to get it).
 */
-#if defined(LUA_BUILD_AS_DLL)	/* { */
+#जर defined(LUA_BUILD_AS_DLL)	/* { */
 
-#if defined(LUA_CORE) || defined(LUA_LIB)	/* { */
+#जर defined(LUA_CORE) || defined(LUA_LIB)	/* { */
 #define LUA_API __declspec(dllexport)
-#else						/* }{ */
+#अन्यथा						/* }{ */
 #define LUA_API __declspec(dllimport)
 #endif						/* } */
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
-#define LUA_API		extern
+#define LUA_API		बाह्य
 
 #endif				/* } */
 
@@ -322,10 +322,10 @@
 */
 #define LUALIB_API	LUA_API
 
-#if defined(__cplusplus)
+#जर defined(__cplusplus)
 /* Lua uses the "C name" when calling open functions */
-#define LUAMOD_API	extern "C"
-#else
+#define LUAMOD_API	बाह्य "C"
+#अन्यथा
 #define LUAMOD_API	LUA_API
 #endif
 
@@ -341,7 +341,7 @@
 /*
 @@ LUA_COMPAT_GLOBAL avoids 'global' being a reserved word
 */
-#if !defined(LUA_COMPAT_GLOBAL)
+#जर !defined(LUA_COMPAT_GLOBAL)
 #define LUA_COMPAT_GLOBAL	1
 #endif
 
@@ -402,61 +402,61 @@
 
 /* The following definition is good for most cases here */
 
-#define l_floor(x)		(l_mathop(floor)(x))
+#define l_floor(x)		(l_mathop(न्यूनमान)(x))
 
 
 /* now the variable definitions */
 
-#if LUA_FLOAT_TYPE == LUA_FLOAT_FLOAT		/* { single float */
+#जर LUA_FLOAT_TYPE == LUA_FLOAT_FLOAT		/* { single float */
 
-#define LUA_NUMBER	float
+#define LUA_संख्या	दशांश
 
 #define l_floatatt(n)		(FLT_##n)
 
-#define LUAI_UACNUMBER	double
+#define LUAI_UACNUMBER	द्विगुण
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.7g"
-#define LUA_NUMBER_FMT_N	"%.9g"
+#define LUA_संख्या_FRMLEN	""
+#define LUA_संख्या_FMT		"%.7g"
+#define LUA_संख्या_FMT_N	"%.9g"
 
 #define l_mathop(op)		op##f
 
 #define lua_str2number(s,p)	strtof((s), (p))
 
 
-#elif LUA_FLOAT_TYPE == LUA_FLOAT_LONGDOUBLE	/* }{ long double */
+#किंवाजर LUA_FLOAT_TYPE == LUA_FLOAT_LONGDOUBLE	/* }{ long double */
 
-#define LUA_NUMBER	long double
+#define LUA_संख्या	दीर्घ द्विगुण
 
 #define l_floatatt(n)		(LDBL_##n)
 
-#define LUAI_UACNUMBER	long double
+#define LUAI_UACNUMBER	दीर्घ द्विगुण
 
-#define LUA_NUMBER_FRMLEN	"L"
-#define LUA_NUMBER_FMT		"%.19Lg"
-#define LUA_NUMBER_FMT_N	"%.21Lg"
+#define LUA_संख्या_FRMLEN	"L"
+#define LUA_संख्या_FMT		"%.19Lg"
+#define LUA_संख्या_FMT_N	"%.21Lg"
 
 #define l_mathop(op)		op##l
 
 #define lua_str2number(s,p)	strtold((s), (p))
 
-#elif LUA_FLOAT_TYPE == LUA_FLOAT_DOUBLE	/* }{ double */
+#किंवाजर LUA_FLOAT_TYPE == LUA_FLOAT_DOUBLE	/* }{ double */
 
-#define LUA_NUMBER	double
+#define LUA_संख्या	द्विगुण
 
 #define l_floatatt(n)		(DBL_##n)
 
-#define LUAI_UACNUMBER	double
+#define LUAI_UACNUMBER	द्विगुण
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.15g"
-#define LUA_NUMBER_FMT_N	"%.17g"
+#define LUA_संख्या_FRMLEN	""
+#define LUA_संख्या_FMT		"%.15g"
+#define LUA_संख्या_FMT_N	"%.17g"
 
 #define l_mathop(op)		op
 
-#define lua_str2number(s,p)	strtod((s), (p))
+#define lua_str2number(s,p)	म_से_भग्न((s), (p))
 
-#else						/* }{ */
+#अन्यथा						/* }{ */
 
 #error "numeric float type not defined"
 
@@ -490,38 +490,38 @@
 ** use LUAI_UACINT here to avoid problems with promotions (which
 ** can turn a comparison between unsigneds into a signed comparison)
 */
-#define LUA_UNSIGNED		unsigned LUAI_UACINT
+#define LUA_UNSIGNED		अचिन्हित LUAI_UACINT
 
 
 /* now the variable definitions */
 
-#if LUA_INT_TYPE == LUA_INT_INT		/* { int */
+#जर LUA_INT_TYPE == LUA_INT_INT		/* { int */
 
-#define LUA_INTEGER		int
+#define LUA_INTEGER		पूर्णांक
 #define LUA_INTEGER_FRMLEN	""
 
-#define LUA_MAXINTEGER		INT_MAX
-#define LUA_MININTEGER		INT_MIN
+#define LUA_MAXINTEGER		पूर्णांक_उच्च
+#define LUA_MININTEGER		पूर्णांक_न्यून
 
-#define LUA_MAXUNSIGNED		UINT_MAX
+#define LUA_MAXUNSIGNED		अच_पूर्णांक_उच्च
 
-#elif LUA_INT_TYPE == LUA_INT_LONG	/* }{ long */
+#किंवाजर LUA_INT_TYPE == LUA_INT_LONG	/* }{ long */
 
-#define LUA_INTEGER		long
+#define LUA_INTEGER		दीर्घ
 #define LUA_INTEGER_FRMLEN	"l"
 
-#define LUA_MAXINTEGER		LONG_MAX
-#define LUA_MININTEGER		LONG_MIN
+#define LUA_MAXINTEGER		दीर्घ_उच्च
+#define LUA_MININTEGER		दीर्घ_न्यून
 
-#define LUA_MAXUNSIGNED		ULONG_MAX
+#define LUA_MAXUNSIGNED		अच_दीर्घ_उच्च
 
-#elif LUA_INT_TYPE == LUA_INT_LONGLONG	/* }{ long long */
+#किंवाजर LUA_INT_TYPE == LUA_INT_LONGLONG	/* }{ long long */
 
 /* use presence of macro LLONG_MAX as proxy for C99 compliance */
-#if defined(LLONG_MAX)		/* { */
+#जर defined(LLONG_MAX)		/* { */
 /* use ISO C99 stuff */
 
-#define LUA_INTEGER		long long
+#define LUA_INTEGER		दीर्घ दीर्घ
 #define LUA_INTEGER_FRMLEN	"ll"
 
 #define LUA_MAXINTEGER		LLONG_MAX
@@ -529,7 +529,7 @@
 
 #define LUA_MAXUNSIGNED		ULLONG_MAX
 
-#elif defined(LUA_USE_WINDOWS) /* }{ */
+#किंवाजर defined(LUA_USE_WINDOWS) /* }{ */
 /* in Windows, can use specific Windows types */
 
 #define LUA_INTEGER		__int64
@@ -540,14 +540,14 @@
 
 #define LUA_MAXUNSIGNED		_UI64_MAX
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
 #error "Compiler does not support 'long long'. Use option '-DLUA_32BITS' \
-  or '-DLUA_C89_NUMBERS' (see file 'luaconf.h' for details)"
+  or '-DLUA_C89_NUMBERS' (see file 'luaconf.h' साठी details)"
 
 #endif				/* } */
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 
 #error "numeric integer type not defined"
 
@@ -566,10 +566,10 @@
 @@ l_sprintf is equivalent to 'snprintf' or 'sprintf' in C89.
 ** (All uses in Lua have only one format item.)
 */
-#if !defined(LUA_USE_C89)
+#जर !defined(LUA_USE_C89)
 #define l_sprintf(s,sz,f,i)	snprintf(s,sz,f,i)
-#else
-#define l_sprintf(s,sz,f,i)	((void)(sz), sprintf(s,f,i))
+#अन्यथा
+#define l_sprintf(s,sz,f,i)	((शून्य)(sz), प्र_लिखो(s,f,i))
 #endif
 
 
@@ -579,7 +579,7 @@
 ** leave 'lua_strx2number' undefined and Lua will provide its own
 ** implementation.
 */
-#if !defined(LUA_USE_C89)
+#जर !defined(LUA_USE_C89)
 #define lua_strx2number(s,p)		lua_str2number(s,p)
 #endif
 
@@ -597,9 +597,9 @@
 ** Otherwise, you can leave 'lua_number2strx' undefined and Lua will
 ** provide its own implementation.
 */
-#if !defined(LUA_USE_C89)
+#जर !defined(LUA_USE_C89)
 #define lua_number2strx(L,b,sz,f,n)  \
-	((void)L, l_sprintf(b,sz,f,(LUAI_UACNUMBER)(n)))
+	((शून्य)L, l_sprintf(b,sz,f,(LUAI_UACNUMBER)(n)))
 #endif
 
 
@@ -609,11 +609,11 @@
 ** availability of these variants. ('math.h' is already included in
 ** all files that use these macros.)
 */
-#if defined(LUA_USE_C89) || (defined(HUGE_VAL) && !defined(HUGE_VALF))
+#जर defined(LUA_USE_C89) || (defined(विशाल_मान) && !defined(HUGE_VALF))
 #undef l_mathop  /* variants not available */
 #undef lua_str2number
-#define l_mathop(op)		(lua_Number)op  /* no variant */
-#define lua_str2number(s,p)	((lua_Number)strtod((s), (p)))
+#define l_mathop(op)		(lua_संख्या)op  /* no variant */
+#define lua_str2number(s,p)	((lua_संख्या)म_से_भग्न((s), (p)))
 #endif
 
 
@@ -623,12 +623,12 @@
 ** available, otherwise it will use 'ptrdiff_t' (the nearest thing to
 ** 'intptr_t' in C89)
 */
-#define LUA_KCONTEXT	ptrdiff_t
+#define LUA_KCONTEXT	सूचक_भेद_प्रकार
 
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#जर !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(INTPTR_MAX)  /* even in C99 this type is optional */
+#अन्तर्भाव <stdint.h>
+#जर defined(INTPTR_MAX)  /* even in C99 this type is optional */
 #undef LUA_KCONTEXT
 #define LUA_KCONTEXT	intptr_t
 #endif
@@ -640,8 +640,8 @@
 ** Change that if you do not want to use C locales. (Code using this
 ** macro must include the header 'locale.h'.)
 */
-#if !defined(lua_getlocaledecpoint)
-#define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
+#जर !defined(lua_getlocaledecpoint)
+#define lua_getlocaledecpoint()		(क्षेत्र_बदलो()->decimal_point[0])
 #endif
 
 
@@ -651,12 +651,12 @@
 ** Define LUA_NOBUILTIN if you do not want '__builtin_expect' in your
 ** code.)
 */
-#if !defined(luai_likely)
+#जर !defined(luai_likely)
 
-#if !defined(LUA_NOBUILTIN) && defined(__GNUC__) && (__GNUC__ >= 3)
+#जर !defined(LUA_NOBUILTIN) && defined(__GNUC__) && (__GNUC__ >= 3)
 #define luai_likely(x)		(__builtin_expect(((x) != 0), 1))
 #define luai_unlikely(x)	(__builtin_expect(((x) != 0), 0))
-#else
+#अन्यथा
 #define luai_likely(x)		(x)
 #define luai_unlikely(x)	(x)
 #endif
@@ -706,7 +706,7 @@
 ** a Lua state with very fast access.
 ** CHANGE it if you need a different size.
 */
-#define LUA_EXTRASPACE		(sizeof(void *))
+#define LUA_EXTRASPACE		(आकार(शून्य *))
 
 
 /*
@@ -721,7 +721,7 @@
 @@ LUAL_BUFFERSIZE is the initial buffer size used by the lauxlib
 ** buffer system.
 */
-#define LUAL_BUFFERSIZE   ((int)(16 * sizeof(void*) * sizeof(lua_Number)))
+#define LUAL_BUFFERSIZE   ((पूर्णांक)(16 * आकार(शून्य*) * आकार(lua_संख्या)))
 
 
 /*
@@ -729,12 +729,12 @@
 ** memory areas offered by Lua (e.g., userdata memory).
 ** Add fields to it if you need alignment for non-ISO objects.
 */
-#if defined(LLONG_MAX)
+#जर defined(LLONG_MAX)
 /* use ISO C99 stuff */
-#define LUAI_MAXALIGN long double u; void *s; long long l
-#else
+#define LUAI_MAXALIGN दीर्घ द्विगुण u; शून्य *s; दीर्घ दीर्घ l
+#अन्यथा
 /* use only C89 stuff */
-#define LUAI_MAXALIGN  lua_Number n; double u; void *s; lua_Integer i; long l
+#define LUAI_MAXALIGN  lua_संख्या n; द्विगुण u; शून्य *s; lua_Integer i; दीर्घ l
 #endif
 
 /* }================================================================== */

@@ -7,24 +7,24 @@
 #define lstrlib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#include <ctype.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#अन्तर्भाव <ctype.h>
+#अन्तर्भाव <float.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <locale.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#अन्तर्भाव "lauxlib.h"
+#अन्तर्भाव "lualib.h"
+#अन्तर्भाव "llimits.h"
 
 
 /*
@@ -32,16 +32,16 @@
 ** pattern-matching. This limit is arbitrary, but must fit in
 ** an unsigned char.
 */
-#if !defined(LUA_MAXCAPTURES)
+#जर !defined(LUA_MAXCAPTURES)
 #define LUA_MAXCAPTURES		32
 #endif
 
 
-static int str_len (lua_State *L) {
-  size_t l;
+स्थिर पूर्णांक str_len (lua_State *L) {
+  माप_प्रकार l;
   luaL_checklstring(L, 1, &l);
   lua_pushinteger(L, (lua_Integer)l);
-  return 1;
+  परत 1;
 }
 
 
@@ -53,14 +53,14 @@ static int str_len (lua_State *L) {
 ** The inverted comparison avoids a possible overflow
 ** computing '-pos'.
 */
-static size_t posrelatI (lua_Integer pos, size_t len) {
-  if (pos > 0)
-    return (size_t)pos;
-  else if (pos == 0)
-    return 1;
-  else if (pos < -(lua_Integer)len)  /* inverted comparison */
-    return 1;  /* clip to 1 */
-  else return len + (size_t)pos + 1;
+स्थिर माप_प्रकार posrelatI (lua_Integer pos, माप_प्रकार len) {
+  जर (pos > 0)
+    परत (माप_प्रकार)pos;
+  अन्यथा जर (pos == 0)
+    परत 1;
+  अन्यथा जर (pos < -(lua_Integer)len)  /* inverted comparison */
+    परत 1;  /* clip to 1 */
+  अन्यथा परत len + (माप_प्रकार)pos + 1;
 }
 
 
@@ -69,66 +69,66 @@ static size_t posrelatI (lua_Integer pos, size_t len) {
 ** with default value 'def'.
 ** Negative means back from end: clip result to [0, len]
 */
-static size_t getendpos (lua_State *L, int arg, lua_Integer def,
-                         size_t len) {
+स्थिर माप_प्रकार getendpos (lua_State *L, पूर्णांक arg, lua_Integer def,
+                         माप_प्रकार len) {
   lua_Integer pos = luaL_optinteger(L, arg, def);
-  if (pos > (lua_Integer)len)
-    return len;
-  else if (pos >= 0)
-    return (size_t)pos;
-  else if (pos < -(lua_Integer)len)
-    return 0;
-  else return len + (size_t)pos + 1;
+  जर (pos > (lua_Integer)len)
+    परत len;
+  अन्यथा जर (pos >= 0)
+    परत (माप_प्रकार)pos;
+  अन्यथा जर (pos < -(lua_Integer)len)
+    परत 0;
+  अन्यथा परत len + (माप_प्रकार)pos + 1;
 }
 
 
-static int str_sub (lua_State *L) {
-  size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
-  size_t start = posrelatI(luaL_checkinteger(L, 2), l);
-  size_t end = getendpos(L, 3, -1, l);
-  if (start <= end)
+स्थिर पूर्णांक str_sub (lua_State *L) {
+  माप_प्रकार l;
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &l);
+  माप_प्रकार start = posrelatI(luaL_checkinteger(L, 2), l);
+  माप_प्रकार end = getendpos(L, 3, -1, l);
+  जर (start <= end)
     lua_pushlstring(L, s + start - 1, (end - start) + 1);
-  else lua_pushliteral(L, "");
-  return 1;
+  अन्यथा lua_pushliteral(L, "");
+  परत 1;
 }
 
 
-static int str_reverse (lua_State *L) {
-  size_t l, i;
+स्थिर पूर्णांक str_reverse (lua_State *L) {
+  माप_प्रकार l, i;
   luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i = 0; i < l; i++)
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &l);
+  अक्षर *p = luaL_buffinitsize(L, &b, l);
+  साठी (i = 0; i < l; i++)
     p[i] = s[l - i - 1];
   luaL_pushresultsize(&b, l);
-  return 1;
+  परत 1;
 }
 
 
-static int str_lower (lua_State *L) {
-  size_t l;
-  size_t i;
+स्थिर पूर्णांक str_lower (lua_State *L) {
+  माप_प्रकार l;
+  माप_प्रकार i;
   luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i=0; i<l; i++)
-    p[i] = cast_char(tolower(cast_uchar(s[i])));
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &l);
+  अक्षर *p = luaL_buffinitsize(L, &b, l);
+  साठी (i=0; i<l; i++)
+    p[i] = cast_char(छोटे(cast_uchar(s[i])));
   luaL_pushresultsize(&b, l);
-  return 1;
+  परत 1;
 }
 
 
-static int str_upper (lua_State *L) {
-  size_t l;
-  size_t i;
+स्थिर पूर्णांक str_upper (lua_State *L) {
+  माप_प्रकार l;
+  माप_प्रकार i;
   luaL_Buffer b;
-  const char *s = luaL_checklstring(L, 1, &l);
-  char *p = luaL_buffinitsize(L, &b, l);
-  for (i=0; i<l; i++)
-    p[i] = cast_char(toupper(cast_uchar(s[i])));
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &l);
+  अक्षर *p = luaL_buffinitsize(L, &b, l);
+  साठी (i=0; i<l; i++)
+    p[i] = cast_char(बड़े(cast_uchar(s[i])));
   luaL_pushresultsize(&b, l);
-  return 1;
+  परत 1;
 }
 
 
@@ -136,63 +136,63 @@ static int str_upper (lua_State *L) {
 ** MAX_SIZE is limited both by size_t and lua_Integer.
 ** When x <= MAX_SIZE, x can be safely cast to size_t or lua_Integer.
 */
-static int str_rep (lua_State *L) {
-  size_t len, lsep;
-  const char *s = luaL_checklstring(L, 1, &len);
+स्थिर पूर्णांक str_rep (lua_State *L) {
+  माप_प्रकार len, lsep;
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &len);
   lua_Integer n = luaL_checkinteger(L, 2);
-  const char *sep = luaL_optlstring(L, 3, "", &lsep);
-  if (n <= 0 || (len | lsep) == 0)
+  स्थिरांक अक्षर *sep = luaL_optlstring(L, 3, "", &lsep);
+  जर (n <= 0 || (len | lsep) == 0)
     lua_pushliteral(L, "");  /* no repetitions or both strings empty */
-  else if (l_unlikely(len > MAX_SIZE - lsep ||
+  अन्यथा जर (l_unlikely(len > MAX_SIZE - lsep ||
                cast_st2S(len + lsep) > cast_st2S(MAX_SIZE) / n))
-    return luaL_error(L, "resulting string too large");
-  else {
-    size_t totallen = (cast_sizet(n) * (len + lsep)) - lsep;
+    परत luaL_error(L, "resulting string too large");
+  अन्यथा {
+    माप_प्रकार totallen = (cast_sizet(n) * (len + lsep)) - lsep;
     luaL_Buffer b;
-    char *p = luaL_buffinitsize(L, &b, totallen);
-    while (n-- > 1) {  /* first n-1 copies (followed by separator) */
-      memcpy(p, s, len * sizeof(char)); p += len;
-      if (lsep > 0) {  /* empty 'memcpy' is not that cheap */
-        memcpy(p, sep, lsep * sizeof(char)); p += lsep;
+    अक्षर *p = luaL_buffinitsize(L, &b, totallen);
+    पर्यंत (n-- > 1) {  /* first n-1 copies (followed by separator) */
+      स_नकल(p, s, len * आकार(अक्षर)); p += len;
+      जर (lsep > 0) {  /* empty 'memcpy' is not that cheap */
+        स_नकल(p, sep, lsep * आकार(अक्षर)); p += lsep;
       }
     }
-    memcpy(p, s, len * sizeof(char));  /* last copy without separator */
+    स_नकल(p, s, len * आकार(अक्षर));  /* last copy without separator */
     luaL_pushresultsize(&b, totallen);
   }
-  return 1;
+  परत 1;
 }
 
 
-static int str_byte (lua_State *L) {
-  size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
+स्थिर पूर्णांक str_byte (lua_State *L) {
+  माप_प्रकार l;
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &l);
   lua_Integer pi = luaL_optinteger(L, 2, 1);
-  size_t posi = posrelatI(pi, l);
-  size_t pose = getendpos(L, 3, pi, l);
-  int n, i;
-  if (posi > pose) return 0;  /* empty interval; return no values */
-  if (l_unlikely(pose - posi >= (size_t)INT_MAX))  /* arithmetic overflow? */
-    return luaL_error(L, "string slice too long");
-  n = (int)(pose -  posi) + 1;
+  माप_प्रकार posi = posrelatI(pi, l);
+  माप_प्रकार pose = getendpos(L, 3, pi, l);
+  पूर्णांक n, i;
+  जर (posi > pose) परत 0;  /* empty interval; return no values */
+  जर (l_unlikely(pose - posi >= (माप_प्रकार)पूर्णांक_उच्च))  /* arithmetic overflow? */
+    परत luaL_error(L, "string slice too long");
+  n = (पूर्णांक)(pose -  posi) + 1;
   luaL_checkstack(L, n, "string slice too long");
-  for (i=0; i<n; i++)
+  साठी (i=0; i<n; i++)
     lua_pushinteger(L, cast_uchar(s[posi + cast_uint(i) - 1]));
-  return n;
+  परत n;
 }
 
 
-static int str_char (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  int i;
+स्थिर पूर्णांक str_char (lua_State *L) {
+  पूर्णांक n = lua_gettop(L);  /* number of arguments */
+  पूर्णांक i;
   luaL_Buffer b;
-  char *p = luaL_buffinitsize(L, &b, cast_uint(n));
-  for (i=1; i<=n; i++) {
+  अक्षर *p = luaL_buffinitsize(L, &b, cast_uint(n));
+  साठी (i=1; i<=n; i++) {
     lua_Unsigned c = (lua_Unsigned)luaL_checkinteger(L, i);
-    luaL_argcheck(L, c <= (lua_Unsigned)UCHAR_MAX, i, "value out of range");
+    luaL_argcheck(L, c <= (lua_Unsigned)अच_अक्षर_उच्च, i, "value out of range");
     p[i - 1] = cast_char(cast_uchar(c));
   }
   luaL_pushresultsize(&b, cast_uint(n));
-  return 1;
+  परत 1;
 }
 
 
@@ -202,31 +202,31 @@ static int str_char (lua_State *L) {
 ** top of the stack when 'lua_dump' is called. ('luaL_buffinit' might
 ** push stuff.)
 */
-struct str_Writer {
-  int init;  /* true iff buffer has been initialized */
+संरचना str_Writer {
+  पूर्णांक init;  /* true iff buffer has been initialized */
   luaL_Buffer B;
 };
 
 
-static int writer (lua_State *L, const void *b, size_t size, void *ud) {
-  struct str_Writer *state = (struct str_Writer *)ud;
-  if (!state->init) {
+स्थिर पूर्णांक writer (lua_State *L, स्थिरांक शून्य *b, माप_प्रकार size, शून्य *ud) {
+  संरचना str_Writer *state = (संरचना str_Writer *)ud;
+  जर (!state->init) {
     state->init = 1;
     luaL_buffinit(L, &state->B);
   }
-  if (b == NULL) {  /* finishing dump? */
+  जर (b == रिक्त) {  /* finishing dump? */
     luaL_pushresult(&state->B);  /* push result */
     lua_replace(L, 1);  /* move it to reserved slot */
   }
-  else
-    luaL_addlstring(&state->B, (const char *)b, size);
-  return 0;
+  अन्यथा
+    luaL_addlstring(&state->B, (स्थिरांक अक्षर *)b, size);
+  परत 0;
 }
 
 
-static int str_dump (lua_State *L) {
-  struct str_Writer state;
-  int strip = lua_toboolean(L, 2);
+स्थिर पूर्णांक str_dump (lua_State *L) {
+  संरचना str_Writer state;
+  पूर्णांक strip = lua_toboolean(L, 2);
   luaL_argcheck(L, lua_type(L, 1) == LUA_TFUNCTION && !lua_iscfunction(L, 1),
                    1, "Lua function expected");
   /* ensure function is on the top of the stack and vacate slot 1 */
@@ -234,7 +234,7 @@ static int str_dump (lua_State *L) {
   state.init = 0;
   lua_dump(L, writer, &state, strip);
   lua_settop(L, 1);  /* leave final result on top */
-  return 1;
+  परत 1;
 }
 
 
@@ -245,26 +245,26 @@ static int str_dump (lua_State *L) {
 ** =======================================================
 */
 
-#if defined(LUA_NOCVTS2N)	/* { */
+#जर defined(LUA_NOCVTS2N)	/* { */
 
 /* no coercion from strings to numbers */
 
-static const luaL_Reg stringmetamethods[] = {
-  {"__index", NULL},  /* placeholder */
-  {NULL, NULL}
+स्थिर स्थिरांक luaL_Reg stringmetamethods[] = {
+  {"__index", रिक्त},  /* placeholder */
+  {रिक्त, रिक्त}
 };
 
-#else		/* }{ */
+#अन्यथा		/* }{ */
 
-static int tonum (lua_State *L, int arg) {
-  if (lua_type(L, arg) == LUA_TNUMBER) {  /* already a number? */
+स्थिर पूर्णांक tonum (lua_State *L, पूर्णांक arg) {
+  जर (lua_type(L, arg) == LUA_TNUMBER) {  /* already a number? */
     lua_pushvalue(L, arg);
-    return 1;
+    परत 1;
   }
-  else {  /* check whether it is a numerical string */
-    size_t len;
-    const char *s = lua_tolstring(L, arg, &len);
-    return (s != NULL && lua_stringtonumber(L, s) == len + 1);
+  अन्यथा {  /* check whether it is a numerical string */
+    माप_प्रकार len;
+    स्थिरांक अक्षर *s = lua_tolstring(L, arg, &len);
+    परत (s != रिक्त && lua_stringtonumber(L, s) == len + 1);
   }
 }
 
@@ -276,60 +276,60 @@ static int tonum (lua_State *L, int arg) {
 ** doesn't work, the only other option would be for the second
 ** operand to have a different metamethod.
 */
-static void trymt (lua_State *L, const char *mtkey, const char *opname) {
+स्थिर शून्य trymt (lua_State *L, स्थिरांक अक्षर *mtkey, स्थिरांक अक्षर *opname) {
   lua_settop(L, 2);  /* back to the original arguments */
-  if (l_unlikely(lua_type(L, 2) == LUA_TSTRING ||
+  जर (l_unlikely(lua_type(L, 2) == LUA_TSTRING ||
                  !luaL_getmetafield(L, 2, mtkey)))
     luaL_error(L, "attempt to %s a '%s' with a '%s'", opname,
                   luaL_typename(L, -2), luaL_typename(L, -1));
-  lua_insert(L, -3);  /* put metamethod before arguments */
+  lua_घाला(L, -3);  /* put metamethod before arguments */
   lua_call(L, 2, 1);  /* call metamethod */
 }
 
 
-static int arith (lua_State *L, int op, const char *mtname) {
-  if (tonum(L, 1) && tonum(L, 2))
+स्थिर पूर्णांक arith (lua_State *L, पूर्णांक op, स्थिरांक अक्षर *mtname) {
+  जर (tonum(L, 1) && tonum(L, 2))
     lua_arith(L, op);  /* result will be on the top */
-  else
+  अन्यथा
     trymt(L, mtname, mtname + 2);
-  return 1;
+  परत 1;
 }
 
 
-static int arith_add (lua_State *L) {
-  return arith(L, LUA_OPADD, "__add");
+स्थिर पूर्णांक arith_add (lua_State *L) {
+  परत arith(L, LUA_OPADD, "__add");
 }
 
-static int arith_sub (lua_State *L) {
-  return arith(L, LUA_OPSUB, "__sub");
+स्थिर पूर्णांक arith_sub (lua_State *L) {
+  परत arith(L, LUA_OPSUB, "__sub");
 }
 
-static int arith_mul (lua_State *L) {
-  return arith(L, LUA_OPMUL, "__mul");
+स्थिर पूर्णांक arith_mul (lua_State *L) {
+  परत arith(L, LUA_OPMUL, "__mul");
 }
 
-static int arith_mod (lua_State *L) {
-  return arith(L, LUA_OPMOD, "__mod");
+स्थिर पूर्णांक arith_mod (lua_State *L) {
+  परत arith(L, LUA_OPMOD, "__mod");
 }
 
-static int arith_pow (lua_State *L) {
-  return arith(L, LUA_OPPOW, "__pow");
+स्थिर पूर्णांक arith_pow (lua_State *L) {
+  परत arith(L, LUA_OPPOW, "__pow");
 }
 
-static int arith_div (lua_State *L) {
-  return arith(L, LUA_OPDIV, "__div");
+स्थिर पूर्णांक arith_div (lua_State *L) {
+  परत arith(L, LUA_OPDIV, "__div");
 }
 
-static int arith_idiv (lua_State *L) {
-  return arith(L, LUA_OPIDIV, "__idiv");
+स्थिर पूर्णांक arith_idiv (lua_State *L) {
+  परत arith(L, LUA_OPIDIV, "__idiv");
 }
 
-static int arith_unm (lua_State *L) {
-  return arith(L, LUA_OPUNM, "__unm");
+स्थिर पूर्णांक arith_unm (lua_State *L) {
+  परत arith(L, LUA_OPUNM, "__unm");
 }
 
 
-static const luaL_Reg stringmetamethods[] = {
+स्थिर स्थिरांक luaL_Reg stringmetamethods[] = {
   {"__add", arith_add},
   {"__sub", arith_sub},
   {"__mul", arith_mul},
@@ -338,8 +338,8 @@ static const luaL_Reg stringmetamethods[] = {
   {"__div", arith_div},
   {"__idiv", arith_idiv},
   {"__unm", arith_unm},
-  {"__index", NULL},  /* placeholder */
-  {NULL, NULL}
+  {"__index", रिक्त},  /* placeholder */
+  {रिक्त, रिक्त}
 };
 
 #endif		/* } */
@@ -357,26 +357,26 @@ static const luaL_Reg stringmetamethods[] = {
 #define CAP_POSITION	(-2)
 
 
-typedef struct MatchState {
-  const char *src_init;  /* init of source string */
-  const char *src_end;  /* end ('\0') of source string */
-  const char *p_end;  /* end ('\0') of pattern */
+प्रकारव्याख्या संरचना MatchState {
+  स्थिरांक अक्षर *src_init;  /* init of source string */
+  स्थिरांक अक्षर *src_end;  /* end ('\0') of source string */
+  स्थिरांक अक्षर *p_end;  /* end ('\0') of pattern */
   lua_State *L;
-  int matchdepth;  /* control for recursive depth (to avoid C stack overflow) */
-  int level;  /* total number of captures (finished or unfinished) */
-  struct {
-    const char *init;
-    ptrdiff_t len;  /* length or special value (CAP_*) */
+  पूर्णांक matchdepth;  /* control for recursive depth (to avoid C stack overflow) */
+  पूर्णांक level;  /* total number of captures (finished or unfinished) */
+  संरचना {
+    स्थिरांक अक्षर *init;
+    सूचक_भेद_प्रकार len;  /* length or special value (CAP_*) */
   } capture[LUA_MAXCAPTURES];
 } MatchState;
 
 
 /* recursive function */
-static const char *match (MatchState *ms, const char *s, const char *p);
+स्थिर स्थिरांक अक्षर *match (MatchState *ms, स्थिरांक अक्षर *s, स्थिरांक अक्षर *p);
 
 
 /* maximum recursion depth for 'match' */
-#if !defined(MAXCCALLS)
+#जर !defined(MAXCCALLS)
 #define MAXCCALLS	200
 #endif
 
@@ -385,311 +385,311 @@ static const char *match (MatchState *ms, const char *s, const char *p);
 #define SPECIALS	"^$*+?.([%-"
 
 
-static int check_capture (MatchState *ms, int l) {
+स्थिर पूर्णांक check_capture (MatchState *ms, पूर्णांक l) {
   l -= '1';
-  if (l_unlikely(l < 0 || l >= ms->level ||
+  जर (l_unlikely(l < 0 || l >= ms->level ||
                  ms->capture[l].len == CAP_UNFINISHED))
-    return luaL_error(ms->L, "invalid capture index %%%d", l + 1);
-  return l;
+    परत luaL_error(ms->L, "invalid capture index %%%d", l + 1);
+  परत l;
 }
 
 
-static int capture_to_close (MatchState *ms) {
-  int level = ms->level;
-  for (level--; level>=0; level--)
-    if (ms->capture[level].len == CAP_UNFINISHED) return level;
-  return luaL_error(ms->L, "invalid pattern capture");
+स्थिर पूर्णांक capture_to_close (MatchState *ms) {
+  पूर्णांक level = ms->level;
+  साठी (level--; level>=0; level--)
+    जर (ms->capture[level].len == CAP_UNFINISHED) परत level;
+  परत luaL_error(ms->L, "invalid pattern capture");
 }
 
 
-static const char *classend (MatchState *ms, const char *p) {
-  switch (*p++) {
-    case L_ESC: {
-      if (l_unlikely(p == ms->p_end))
+स्थिर स्थिरांक अक्षर *classend (MatchState *ms, स्थिरांक अक्षर *p) {
+  निवड (*p++) {
+    स्थिती L_ESC: {
+      जर (l_unlikely(p == ms->p_end))
         luaL_error(ms->L, "malformed pattern (ends with '%%')");
-      return p+1;
+      परत p+1;
     }
-    case '[': {
-      if (*p == '^') p++;
-      do {  /* look for a ']' */
-        if (l_unlikely(p == ms->p_end))
+    स्थिती '[': {
+      जर (*p == '^') p++;
+      करा {  /* look for a ']' */
+        जर (l_unlikely(p == ms->p_end))
           luaL_error(ms->L, "malformed pattern (missing ']')");
-        if (*(p++) == L_ESC && p < ms->p_end)
+        जर (*(p++) == L_ESC && p < ms->p_end)
           p++;  /* skip escapes (e.g. '%]') */
-      } while (*p != ']');
-      return p+1;
+      } पर्यंत (*p != ']');
+      परत p+1;
     }
-    default: {
-      return p;
+    पूर्वनिर्धारित: {
+      परत p;
     }
   }
 }
 
 
-static int match_class (int c, int cl) {
-  int res;
-  switch (tolower(cl)) {
-    case 'a' : res = isalpha(c); break;
-    case 'c' : res = iscntrl(c); break;
-    case 'd' : res = isdigit(c); break;
-    case 'g' : res = isgraph(c); break;
-    case 'l' : res = islower(c); break;
-    case 'p' : res = ispunct(c); break;
-    case 's' : res = isspace(c); break;
-    case 'u' : res = isupper(c); break;
-    case 'w' : res = isalnum(c); break;
-    case 'x' : res = isxdigit(c); break;
-    case 'z' : res = (c == 0); break;  /* deprecated option */
-    default: return (cl == c);
+स्थिर पूर्णांक match_class (पूर्णांक c, पूर्णांक cl) {
+  पूर्णांक res;
+  निवड (छोटे(cl)) {
+    स्थिती 'a' : res = है_अक्षर(c); थांबा;
+    स्थिती 'c' : res = है_नियंत्रण(c); थांबा;
+    स्थिती 'd' : res = है_अंक(c); थांबा;
+    स्थिती 'g' : res = है_चित्र(c); थांबा;
+    स्थिती 'l' : res = है_छोटा(c); थांबा;
+    स्थिती 'p' : res = है_विराम(c); थांबा;
+    स्थिती 's' : res = है_खाली(c); थांबा;
+    स्थिती 'u' : res = है_बड़ा(c); थांबा;
+    स्थिती 'w' : res = है_अक्षर_अंक(c); थांबा;
+    स्थिती 'x' : res = है_षष्ठादशक(c); थांबा;
+    स्थिती 'z' : res = (c == 0); थांबा;  /* deprecated option */
+    पूर्वनिर्धारित: परत (cl == c);
   }
-  return (islower(cl) ? res : !res);
+  परत (है_छोटा(cl) ? res : !res);
 }
 
 
-static int matchbracketclass (int c, const char *p, const char *ec) {
-  int sig = 1;
-  if (*(p+1) == '^') {
+स्थिर पूर्णांक matchbracketclass (पूर्णांक c, स्थिरांक अक्षर *p, स्थिरांक अक्षर *ec) {
+  पूर्णांक sig = 1;
+  जर (*(p+1) == '^') {
     sig = 0;
     p++;  /* skip the '^' */
   }
-  while (++p < ec) {
-    if (*p == L_ESC) {
+  पर्यंत (++p < ec) {
+    जर (*p == L_ESC) {
       p++;
-      if (match_class(c, cast_uchar(*p)))
-        return sig;
+      जर (match_class(c, cast_uchar(*p)))
+        परत sig;
     }
-    else if ((*(p+1) == '-') && (p+2 < ec)) {
+    अन्यथा जर ((*(p+1) == '-') && (p+2 < ec)) {
       p+=2;
-      if (cast_uchar(*(p-2)) <= c && c <= cast_uchar(*p))
-        return sig;
+      जर (cast_uchar(*(p-2)) <= c && c <= cast_uchar(*p))
+        परत sig;
     }
-    else if (cast_uchar(*p) == c) return sig;
+    अन्यथा जर (cast_uchar(*p) == c) परत sig;
   }
-  return !sig;
+  परत !sig;
 }
 
 
-static int singlematch (MatchState *ms, const char *s, const char *p,
-                        const char *ep) {
-  if (s >= ms->src_end)
-    return 0;
-  else {
-    int c = cast_uchar(*s);
-    switch (*p) {
-      case '.': return 1;  /* matches any char */
-      case L_ESC: return match_class(c, cast_uchar(*(p+1)));
-      case '[': return matchbracketclass(c, p, ep-1);
-      default:  return (cast_uchar(*p) == c);
+स्थिर पूर्णांक singlematch (MatchState *ms, स्थिरांक अक्षर *s, स्थिरांक अक्षर *p,
+                        स्थिरांक अक्षर *ep) {
+  जर (s >= ms->src_end)
+    परत 0;
+  अन्यथा {
+    पूर्णांक c = cast_uchar(*s);
+    निवड (*p) {
+      स्थिती '.': परत 1;  /* matches any char */
+      स्थिती L_ESC: परत match_class(c, cast_uchar(*(p+1)));
+      स्थिती '[': परत matchbracketclass(c, p, ep-1);
+      पूर्वनिर्धारित:  परत (cast_uchar(*p) == c);
     }
   }
 }
 
 
-static const char *matchbalance (MatchState *ms, const char *s,
-                                   const char *p) {
-  if (l_unlikely(p >= ms->p_end - 1))
+स्थिर स्थिरांक अक्षर *matchbalance (MatchState *ms, स्थिरांक अक्षर *s,
+                                   स्थिरांक अक्षर *p) {
+  जर (l_unlikely(p >= ms->p_end - 1))
     luaL_error(ms->L, "malformed pattern (missing arguments to '%%b')");
-  if (*s != *p) return NULL;
-  else {
-    int b = *p;
-    int e = *(p+1);
-    int cont = 1;
-    while (++s < ms->src_end) {
-      if (*s == e) {
-        if (--cont == 0) return s+1;
+  जर (*s != *p) परत रिक्त;
+  अन्यथा {
+    पूर्णांक b = *p;
+    पूर्णांक e = *(p+1);
+    पूर्णांक cont = 1;
+    पर्यंत (++s < ms->src_end) {
+      जर (*s == e) {
+        जर (--cont == 0) परत s+1;
       }
-      else if (*s == b) cont++;
+      अन्यथा जर (*s == b) cont++;
     }
   }
-  return NULL;  /* string ends out of balance */
+  परत रिक्त;  /* string ends out of balance */
 }
 
 
-static const char *max_expand (MatchState *ms, const char *s,
-                                 const char *p, const char *ep) {
-  ptrdiff_t i = 0;  /* counts maximum expand for item */
-  while (singlematch(ms, s + i, p, ep))
+स्थिर स्थिरांक अक्षर *max_expand (MatchState *ms, स्थिरांक अक्षर *s,
+                                 स्थिरांक अक्षर *p, स्थिरांक अक्षर *ep) {
+  सूचक_भेद_प्रकार i = 0;  /* counts maximum expand for item */
+  पर्यंत (singlematch(ms, s + i, p, ep))
     i++;
   /* keeps trying to match with the maximum repetitions */
-  while (i>=0) {
-    const char *res = match(ms, (s+i), ep+1);
-    if (res) return res;
+  पर्यंत (i>=0) {
+    स्थिरांक अक्षर *res = match(ms, (s+i), ep+1);
+    जर (res) परत res;
     i--;  /* else didn't match; reduce 1 repetition to try again */
   }
-  return NULL;
+  परत रिक्त;
 }
 
 
-static const char *min_expand (MatchState *ms, const char *s,
-                                 const char *p, const char *ep) {
-  for (;;) {
-    const char *res = match(ms, s, ep+1);
-    if (res != NULL)
-      return res;
-    else if (singlematch(ms, s, p, ep))
+स्थिर स्थिरांक अक्षर *min_expand (MatchState *ms, स्थिरांक अक्षर *s,
+                                 स्थिरांक अक्षर *p, स्थिरांक अक्षर *ep) {
+  साठी (;;) {
+    स्थिरांक अक्षर *res = match(ms, s, ep+1);
+    जर (res != रिक्त)
+      परत res;
+    अन्यथा जर (singlematch(ms, s, p, ep))
       s++;  /* try with one more repetition */
-    else return NULL;
+    अन्यथा परत रिक्त;
   }
 }
 
 
-static const char *start_capture (MatchState *ms, const char *s,
-                                    const char *p, int what) {
-  const char *res;
-  int level = ms->level;
-  if (level >= LUA_MAXCAPTURES) luaL_error(ms->L, "too many captures");
+स्थिर स्थिरांक अक्षर *start_capture (MatchState *ms, स्थिरांक अक्षर *s,
+                                    स्थिरांक अक्षर *p, पूर्णांक what) {
+  स्थिरांक अक्षर *res;
+  पूर्णांक level = ms->level;
+  जर (level >= LUA_MAXCAPTURES) luaL_error(ms->L, "too many captures");
   ms->capture[level].init = s;
   ms->capture[level].len = what;
   ms->level = level+1;
-  if ((res=match(ms, s, p)) == NULL)  /* match failed? */
+  जर ((res=match(ms, s, p)) == रिक्त)  /* match failed? */
     ms->level--;  /* undo capture */
-  return res;
+  परत res;
 }
 
 
-static const char *end_capture (MatchState *ms, const char *s,
-                                  const char *p) {
-  int l = capture_to_close(ms);
-  const char *res;
+स्थिर स्थिरांक अक्षर *end_capture (MatchState *ms, स्थिरांक अक्षर *s,
+                                  स्थिरांक अक्षर *p) {
+  पूर्णांक l = capture_to_close(ms);
+  स्थिरांक अक्षर *res;
   ms->capture[l].len = s - ms->capture[l].init;  /* close capture */
-  if ((res = match(ms, s, p)) == NULL)  /* match failed? */
+  जर ((res = match(ms, s, p)) == रिक्त)  /* match failed? */
     ms->capture[l].len = CAP_UNFINISHED;  /* undo capture */
-  return res;
+  परत res;
 }
 
 
-static const char *match_capture (MatchState *ms, const char *s, int l) {
-  size_t len;
+स्थिर स्थिरांक अक्षर *match_capture (MatchState *ms, स्थिरांक अक्षर *s, पूर्णांक l) {
+  माप_प्रकार len;
   l = check_capture(ms, l);
   len = cast_sizet(ms->capture[l].len);
-  if ((size_t)(ms->src_end-s) >= len &&
-      memcmp(ms->capture[l].init, s, len) == 0)
-    return s+len;
-  else return NULL;
+  जर ((माप_प्रकार)(ms->src_end-s) >= len &&
+      स_भेद(ms->capture[l].init, s, len) == 0)
+    परत s+len;
+  अन्यथा परत रिक्त;
 }
 
 
-static const char *match (MatchState *ms, const char *s, const char *p) {
-  if (l_unlikely(ms->matchdepth-- == 0))
+स्थिर स्थिरांक अक्षर *match (MatchState *ms, स्थिरांक अक्षर *s, स्थिरांक अक्षर *p) {
+  जर (l_unlikely(ms->matchdepth-- == 0))
     luaL_error(ms->L, "pattern too complex");
   init: /* using goto to optimize tail recursion */
-  if (p != ms->p_end) {  /* end of pattern? */
-    switch (*p) {
-      case '(': {  /* start capture */
-        if (*(p + 1) == ')')  /* position capture? */
+  जर (p != ms->p_end) {  /* end of pattern? */
+    निवड (*p) {
+      स्थिती '(': {  /* start capture */
+        जर (*(p + 1) == ')')  /* position capture? */
           s = start_capture(ms, s, p + 2, CAP_POSITION);
-        else
+        अन्यथा
           s = start_capture(ms, s, p + 1, CAP_UNFINISHED);
-        break;
+        थांबा;
       }
-      case ')': {  /* end capture */
+      स्थिती ')': {  /* end capture */
         s = end_capture(ms, s, p + 1);
-        break;
+        थांबा;
       }
-      case '$': {
-        if ((p + 1) != ms->p_end)  /* is the '$' the last char in pattern? */
-          goto dflt;  /* no; go to default */
-        s = (s == ms->src_end) ? s : NULL;  /* check end of string */
-        break;
+      स्थिती '$': {
+        जर ((p + 1) != ms->p_end)  /* is the '$' the last char in pattern? */
+          जा dflt;  /* no; go to default */
+        s = (s == ms->src_end) ? s : रिक्त;  /* check end of string */
+        थांबा;
       }
-      case L_ESC: {  /* escaped sequences not in the format class[*+?-]? */
-        switch (*(p + 1)) {
-          case 'b': {  /* balanced string? */
+      स्थिती L_ESC: {  /* escaped sequences not in the format class[*+?-]? */
+        निवड (*(p + 1)) {
+          स्थिती 'b': {  /* balanced string? */
             s = matchbalance(ms, s, p + 2);
-            if (s != NULL) {
-              p += 4; goto init;  /* return match(ms, s, p + 4); */
+            जर (s != रिक्त) {
+              p += 4; जा init;  /* return match(ms, s, p + 4); */
             }  /* else fail (s == NULL) */
-            break;
+            थांबा;
           }
-          case 'f': {  /* frontier? */
-            const char *ep; char previous;
+          स्थिती 'f': {  /* frontier? */
+            स्थिरांक अक्षर *ep; अक्षर previous;
             p += 2;
-            if (l_unlikely(*p != '['))
+            जर (l_unlikely(*p != '['))
               luaL_error(ms->L, "missing '[' after '%%f' in pattern");
             ep = classend(ms, p);  /* points to what is next */
             previous = (s == ms->src_init) ? '\0' : *(s - 1);
-            if (!matchbracketclass(cast_uchar(previous), p, ep - 1) &&
+            जर (!matchbracketclass(cast_uchar(previous), p, ep - 1) &&
                matchbracketclass(cast_uchar(*s), p, ep - 1)) {
-              p = ep; goto init;  /* return match(ms, s, ep); */
+              p = ep; जा init;  /* return match(ms, s, ep); */
             }
-            s = NULL;  /* match failed */
-            break;
+            s = रिक्त;  /* match failed */
+            थांबा;
           }
-          case '0': case '1': case '2': case '3':
-          case '4': case '5': case '6': case '7':
-          case '8': case '9': {  /* capture results (%0-%9)? */
+          स्थिती '0': स्थिती '1': स्थिती '2': स्थिती '3':
+          स्थिती '4': स्थिती '5': स्थिती '6': स्थिती '7':
+          स्थिती '8': स्थिती '9': {  /* capture results (%0-%9)? */
             s = match_capture(ms, s, cast_uchar(*(p + 1)));
-            if (s != NULL) {
-              p += 2; goto init;  /* return match(ms, s, p + 2) */
+            जर (s != रिक्त) {
+              p += 2; जा init;  /* return match(ms, s, p + 2) */
             }
-            break;
+            थांबा;
           }
-          default: goto dflt;
+          पूर्वनिर्धारित: जा dflt;
         }
-        break;
+        थांबा;
       }
-      default: dflt: {  /* pattern class plus optional suffix */
-        const char *ep = classend(ms, p);  /* points to optional suffix */
+      पूर्वनिर्धारित: dflt: {  /* pattern class plus optional suffix */
+        स्थिरांक अक्षर *ep = classend(ms, p);  /* points to optional suffix */
         /* does not match at least once? */
-        if (!singlematch(ms, s, p, ep)) {
-          if (*ep == '*' || *ep == '?' || *ep == '-') {  /* accept empty? */
-            p = ep + 1; goto init;  /* return match(ms, s, ep + 1); */
+        जर (!singlematch(ms, s, p, ep)) {
+          जर (*ep == '*' || *ep == '?' || *ep == '-') {  /* accept empty? */
+            p = ep + 1; जा init;  /* return match(ms, s, ep + 1); */
           }
-          else  /* '+' or no suffix */
-            s = NULL;  /* fail */
+          अन्यथा  /* '+' or no suffix */
+            s = रिक्त;  /* fail */
         }
-        else {  /* matched once */
-          switch (*ep) {  /* handle optional suffix */
-            case '?': {  /* optional */
-              const char *res;
-              if ((res = match(ms, s + 1, ep + 1)) != NULL)
+        अन्यथा {  /* matched once */
+          निवड (*ep) {  /* handle optional suffix */
+            स्थिती '?': {  /* optional */
+              स्थिरांक अक्षर *res;
+              जर ((res = match(ms, s + 1, ep + 1)) != रिक्त)
                 s = res;
-              else {
-                p = ep + 1; goto init;  /* else return match(ms, s, ep + 1); */
+              अन्यथा {
+                p = ep + 1; जा init;  /* else return match(ms, s, ep + 1); */
               }
-              break;
+              थांबा;
             }
-            case '+':  /* 1 or more repetitions */
+            स्थिती '+':  /* 1 or more repetitions */
               s++;  /* 1 match already done */
               /* FALLTHROUGH */
-            case '*':  /* 0 or more repetitions */
+            स्थिती '*':  /* 0 or more repetitions */
               s = max_expand(ms, s, p, ep);
-              break;
-            case '-':  /* 0 or more repetitions (minimum) */
+              थांबा;
+            स्थिती '-':  /* 0 or more repetitions (minimum) */
               s = min_expand(ms, s, p, ep);
-              break;
-            default:  /* no suffix */
-              s++; p = ep; goto init;  /* return match(ms, s + 1, ep); */
+              थांबा;
+            पूर्वनिर्धारित:  /* no suffix */
+              s++; p = ep; जा init;  /* return match(ms, s + 1, ep); */
           }
         }
-        break;
+        थांबा;
       }
     }
   }
   ms->matchdepth++;
-  return s;
+  परत s;
 }
 
 
 
-static const char *lmemfind (const char *s1, size_t l1,
-                               const char *s2, size_t l2) {
-  if (l2 == 0) return s1;  /* empty strings are everywhere */
-  else if (l2 > l1) return NULL;  /* avoids a negative 'l1' */
-  else {
-    const char *init;  /* to search for a '*s2' inside 's1' */
+स्थिर स्थिरांक अक्षर *lmemfind (स्थिरांक अक्षर *s1, माप_प्रकार l1,
+                               स्थिरांक अक्षर *s2, माप_प्रकार l2) {
+  जर (l2 == 0) परत s1;  /* empty strings are everywhere */
+  अन्यथा जर (l2 > l1) परत रिक्त;  /* avoids a negative 'l1' */
+  अन्यथा {
+    स्थिरांक अक्षर *init;  /* to search for a '*s2' inside 's1' */
     l2--;  /* 1st char will be checked by 'memchr' */
     l1 = l1-l2;  /* 's2' cannot be found after that */
-    while (l1 > 0 && (init = (const char *)memchr(s1, *s2, l1)) != NULL) {
+    पर्यंत (l1 > 0 && (init = (स्थिरांक अक्षर *)स_प्रथम(s1, *s2, l1)) != रिक्त) {
       init++;   /* 1st char is already checked */
-      if (memcmp(init, s2+1, l2) == 0)
-        return init-1;
-      else {  /* correct 'l1' and 's1' to try again */
+      जर (स_भेद(init, s2+1, l2) == 0)
+        परत init-1;
+      अन्यथा {  /* correct 'l1' and 's1' to try again */
         l1 -= ct_diff2sz(init - s1);
         s1 = init;
       }
     }
-    return NULL;  /* not found */
+    परत रिक्त;  /* not found */
   }
 }
 
@@ -701,23 +701,23 @@ static const char *lmemfind (const char *s1, size_t l1,
 ** its length and put its address in '*cap'. If it is an integer
 ** (a position), push it on the stack and return CAP_POSITION.
 */
-static ptrdiff_t get_onecapture (MatchState *ms, int i, const char *s,
-                              const char *e, const char **cap) {
-  if (i >= ms->level) {
-    if (l_unlikely(i != 0))
+स्थिर सूचक_भेद_प्रकार get_onecapture (MatchState *ms, पूर्णांक i, स्थिरांक अक्षर *s,
+                              स्थिरांक अक्षर *e, स्थिरांक अक्षर **cap) {
+  जर (i >= ms->level) {
+    जर (l_unlikely(i != 0))
       luaL_error(ms->L, "invalid capture index %%%d", i + 1);
     *cap = s;
-    return (e - s);
+    परत (e - s);
   }
-  else {
-    ptrdiff_t capl = ms->capture[i].len;
+  अन्यथा {
+    सूचक_भेद_प्रकार capl = ms->capture[i].len;
     *cap = ms->capture[i].init;
-    if (l_unlikely(capl == CAP_UNFINISHED))
+    जर (l_unlikely(capl == CAP_UNFINISHED))
       luaL_error(ms->L, "unfinished capture");
-    else if (capl == CAP_POSITION)
+    अन्यथा जर (capl == CAP_POSITION)
       lua_pushinteger(ms->L,
           ct_diff2S(ms->capture[i].init - ms->src_init) + 1);
-    return capl;
+    परत capl;
   }
 }
 
@@ -725,43 +725,43 @@ static ptrdiff_t get_onecapture (MatchState *ms, int i, const char *s,
 /*
 ** Push the i-th capture on the stack.
 */
-static void push_onecapture (MatchState *ms, int i, const char *s,
-                                                    const char *e) {
-  const char *cap;
-  ptrdiff_t l = get_onecapture(ms, i, s, e, &cap);
-  if (l != CAP_POSITION)
+स्थिर शून्य ढकला_onecapture (MatchState *ms, पूर्णांक i, स्थिरांक अक्षर *s,
+                                                    स्थिरांक अक्षर *e) {
+  स्थिरांक अक्षर *cap;
+  सूचक_भेद_प्रकार l = get_onecapture(ms, i, s, e, &cap);
+  जर (l != CAP_POSITION)
     lua_pushlstring(ms->L, cap, cast_sizet(l));
   /* else position was already pushed */
 }
 
 
-static int push_captures (MatchState *ms, const char *s, const char *e) {
-  int i;
-  int nlevels = (ms->level == 0 && s) ? 1 : ms->level;
+स्थिर पूर्णांक ढकला_captures (MatchState *ms, स्थिरांक अक्षर *s, स्थिरांक अक्षर *e) {
+  पूर्णांक i;
+  पूर्णांक nlevels = (ms->level == 0 && s) ? 1 : ms->level;
   luaL_checkstack(ms->L, nlevels, "too many captures");
-  for (i = 0; i < nlevels; i++)
-    push_onecapture(ms, i, s, e);
-  return nlevels;  /* number of strings pushed */
+  साठी (i = 0; i < nlevels; i++)
+    ढकला_onecapture(ms, i, s, e);
+  परत nlevels;  /* number of strings pushed */
 }
 
 
 /* check whether pattern has no special characters */
-static int nospecials (const char *p, size_t l) {
-  size_t upto = 0;
-  do {
-    if (strpbrk(p + upto, SPECIALS))
-      return 0;  /* pattern has a special character */
-    upto += strlen(p + upto) + 1;  /* may have more after \0 */
-  } while (upto <= l);
-  return 1;  /* no special chars found */
+स्थिर पूर्णांक nospecials (स्थिरांक अक्षर *p, माप_प्रकार l) {
+  माप_प्रकार upto = 0;
+  करा {
+    जर (strpbrk(p + upto, SPECIALS))
+      परत 0;  /* pattern has a special character */
+    upto += म_माप(p + upto) + 1;  /* may have more after \0 */
+  } पर्यंत (upto <= l);
+  परत 1;  /* no special chars found */
 }
 
 
 /*
 ** Prepare state for matches. These fields are not affected by each match.
 */
-static void prepstate (MatchState *ms, lua_State *L,
-                       const char *s, size_t ls, const char *p, size_t lp) {
+स्थिर शून्य prepstate (MatchState *ms, lua_State *L,
+                       स्थिरांक अक्षर *s, माप_प्रकार ls, स्थिरांक अक्षर *p, माप_प्रकार lp) {
   ms->L = L;
   ms->src_init = s;
   ms->src_end = s + ls;
@@ -773,132 +773,132 @@ static void prepstate (MatchState *ms, lua_State *L,
 ** (Re)prepare state for a match, setting fields that change during
 ** each match.
 */
-static void reprepstate (MatchState *ms) {
+स्थिर शून्य reprepstate (MatchState *ms) {
   ms->matchdepth = MAXCCALLS;
   ms->level = 0;
 }
 
 
-static int str_find_aux (lua_State *L, int find) {
-  size_t ls, lp;
-  const char *s = luaL_checklstring(L, 1, &ls);
-  const char *p = luaL_checklstring(L, 2, &lp);
-  size_t init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
-  if (init > ls) {  /* start after string's end? */
+स्थिर पूर्णांक str_find_aux (lua_State *L, पूर्णांक find) {
+  माप_प्रकार ls, lp;
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &ls);
+  स्थिरांक अक्षर *p = luaL_checklstring(L, 2, &lp);
+  माप_प्रकार init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
+  जर (init > ls) {  /* start after string's end? */
     luaL_pushfail(L);  /* cannot find anything */
-    return 1;
+    परत 1;
   }
   /* explicit request or no special characters? */
-  if (find && (lua_toboolean(L, 4) || nospecials(p, lp))) {
+  जर (find && (lua_toboolean(L, 4) || nospecials(p, lp))) {
     /* do a plain search */
-    const char *s2 = lmemfind(s + init, ls - init, p, lp);
-    if (s2) {
+    स्थिरांक अक्षर *s2 = lmemfind(s + init, ls - init, p, lp);
+    जर (s2) {
       lua_pushinteger(L, ct_diff2S(s2 - s) + 1);
       lua_pushinteger(L, cast_st2S(ct_diff2sz(s2 - s) + lp));
-      return 2;
+      परत 2;
     }
   }
-  else {
+  अन्यथा {
     MatchState ms;
-    const char *s1 = s + init;
-    int anchor = (*p == '^');
-    if (anchor) {
+    स्थिरांक अक्षर *s1 = s + init;
+    पूर्णांक anchor = (*p == '^');
+    जर (anchor) {
       p++; lp--;  /* skip anchor character */
     }
     prepstate(&ms, L, s, ls, p, lp);
-    do {
-      const char *res;
+    करा {
+      स्थिरांक अक्षर *res;
       reprepstate(&ms);
-      if ((res=match(&ms, s1, p)) != NULL) {
-        if (find) {
+      जर ((res=match(&ms, s1, p)) != रिक्त) {
+        जर (find) {
           lua_pushinteger(L, ct_diff2S(s1 - s) + 1);  /* start */
           lua_pushinteger(L, ct_diff2S(res - s));   /* end */
-          return push_captures(&ms, NULL, 0) + 2;
+          परत ढकला_captures(&ms, रिक्त, 0) + 2;
         }
-        else
-          return push_captures(&ms, s1, res);
+        अन्यथा
+          परत ढकला_captures(&ms, s1, res);
       }
-    } while (s1++ < ms.src_end && !anchor);
+    } पर्यंत (s1++ < ms.src_end && !anchor);
   }
   luaL_pushfail(L);  /* not found */
-  return 1;
+  परत 1;
 }
 
 
-static int str_find (lua_State *L) {
-  return str_find_aux(L, 1);
+स्थिर पूर्णांक str_find (lua_State *L) {
+  परत str_find_aux(L, 1);
 }
 
 
-static int str_match (lua_State *L) {
-  return str_find_aux(L, 0);
+स्थिर पूर्णांक str_match (lua_State *L) {
+  परत str_find_aux(L, 0);
 }
 
 
 /* state for 'gmatch' */
-typedef struct GMatchState {
-  const char *src;  /* current position */
-  const char *p;  /* pattern */
-  const char *lastmatch;  /* end of last match */
+प्रकारव्याख्या संरचना GMatchState {
+  स्थिरांक अक्षर *src;  /* current position */
+  स्थिरांक अक्षर *p;  /* pattern */
+  स्थिरांक अक्षर *lastmatch;  /* end of last match */
   MatchState ms;  /* match state */
 } GMatchState;
 
 
-static int gmatch_aux (lua_State *L) {
+स्थिर पूर्णांक gmatch_aux (lua_State *L) {
   GMatchState *gm = (GMatchState *)lua_touserdata(L, lua_upvalueindex(3));
-  const char *src;
+  स्थिरांक अक्षर *src;
   gm->ms.L = L;
-  for (src = gm->src; src <= gm->ms.src_end; src++) {
-    const char *e;
+  साठी (src = gm->src; src <= gm->ms.src_end; src++) {
+    स्थिरांक अक्षर *e;
     reprepstate(&gm->ms);
-    if ((e = match(&gm->ms, src, gm->p)) != NULL && e != gm->lastmatch) {
+    जर ((e = match(&gm->ms, src, gm->p)) != रिक्त && e != gm->lastmatch) {
       gm->src = gm->lastmatch = e;
-      return push_captures(&gm->ms, src, e);
+      परत ढकला_captures(&gm->ms, src, e);
     }
   }
-  return 0;  /* not found */
+  परत 0;  /* not found */
 }
 
 
-static int gmatch (lua_State *L) {
-  size_t ls, lp;
-  const char *s = luaL_checklstring(L, 1, &ls);
-  const char *p = luaL_checklstring(L, 2, &lp);
-  size_t init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
+स्थिर पूर्णांक gmatch (lua_State *L) {
+  माप_प्रकार ls, lp;
+  स्थिरांक अक्षर *s = luaL_checklstring(L, 1, &ls);
+  स्थिरांक अक्षर *p = luaL_checklstring(L, 2, &lp);
+  माप_प्रकार init = posrelatI(luaL_optinteger(L, 3, 1), ls) - 1;
   GMatchState *gm;
   lua_settop(L, 2);  /* keep strings on closure to avoid being collected */
-  gm = (GMatchState *)lua_newuserdatauv(L, sizeof(GMatchState), 0);
-  if (init > ls)  /* start after string's end? */
+  gm = (GMatchState *)lua_newuserdatauv(L, आकार(GMatchState), 0);
+  जर (init > ls)  /* start after string's end? */
     init = ls + 1;  /* avoid overflows in 's + init' */
   prepstate(&gm->ms, L, s, ls, p, lp);
-  gm->src = s + init; gm->p = p; gm->lastmatch = NULL;
+  gm->src = s + init; gm->p = p; gm->lastmatch = रिक्त;
   lua_pushcclosure(L, gmatch_aux, 3);
-  return 1;
+  परत 1;
 }
 
 
-static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
-                                                   const char *e) {
-  size_t l;
+स्थिर शून्य add_s (MatchState *ms, luaL_Buffer *b, स्थिरांक अक्षर *s,
+                                                   स्थिरांक अक्षर *e) {
+  माप_प्रकार l;
   lua_State *L = ms->L;
-  const char *news = lua_tolstring(L, 3, &l);
-  const char *p;
-  while ((p = (char *)memchr(news, L_ESC, l)) != NULL) {
+  स्थिरांक अक्षर *news = lua_tolstring(L, 3, &l);
+  स्थिरांक अक्षर *p;
+  पर्यंत ((p = (अक्षर *)स_प्रथम(news, L_ESC, l)) != रिक्त) {
     luaL_addlstring(b, news, ct_diff2sz(p - news));
     p++;  /* skip ESC */
-    if (*p == L_ESC)  /* '%%' */
+    जर (*p == L_ESC)  /* '%%' */
       luaL_addchar(b, *p);
-    else if (*p == '0')  /* '%0' */
+    अन्यथा जर (*p == '0')  /* '%0' */
         luaL_addlstring(b, s, ct_diff2sz(e - s));
-    else if (isdigit(cast_uchar(*p))) {  /* '%n' */
-      const char *cap;
-      ptrdiff_t resl = get_onecapture(ms, *p - '1', s, e, &cap);
-      if (resl == CAP_POSITION)
+    अन्यथा जर (है_अंक(cast_uchar(*p))) {  /* '%n' */
+      स्थिरांक अक्षर *cap;
+      सूचक_भेद_प्रकार resl = get_onecapture(ms, *p - '1', s, e, &cap);
+      जर (resl == CAP_POSITION)
         luaL_addvalue(b);  /* add position to accumulated result */
-      else
+      अन्यथा
         luaL_addlstring(b, cap, cast_sizet(resl));
     }
-    else
+    अन्यथा
       luaL_error(L, "invalid use of '%c' in replacement string", L_ESC);
     l -= ct_diff2sz(p + 1 - news);
     news = p + 1;
@@ -912,84 +912,84 @@ static void add_s (MatchState *ms, luaL_Buffer *b, const char *s,
 ** Return true if the original string was changed. (Function calls and
 ** table indexing resulting in nil or false do not change the subject.)
 */
-static int add_value (MatchState *ms, luaL_Buffer *b, const char *s,
-                                      const char *e, int tr) {
+स्थिर पूर्णांक add_मूल्य (MatchState *ms, luaL_Buffer *b, स्थिरांक अक्षर *s,
+                                      स्थिरांक अक्षर *e, पूर्णांक tr) {
   lua_State *L = ms->L;
-  switch (tr) {
-    case LUA_TFUNCTION: {  /* call the function */
-      int n;
+  निवड (tr) {
+    स्थिती LUA_TFUNCTION: {  /* call the function */
+      पूर्णांक n;
       lua_pushvalue(L, 3);  /* push the function */
-      n = push_captures(ms, s, e);  /* all captures as arguments */
+      n = ढकला_captures(ms, s, e);  /* all captures as arguments */
       lua_call(L, n, 1);  /* call it */
-      break;
+      थांबा;
     }
-    case LUA_TTABLE: {  /* index the table */
-      push_onecapture(ms, 0, s, e);  /* first capture is the index */
+    स्थिती LUA_TTABLE: {  /* index the table */
+      ढकला_onecapture(ms, 0, s, e);  /* first capture is the index */
       lua_gettable(L, 3);
-      break;
+      थांबा;
     }
-    default: {  /* LUA_TNUMBER or LUA_TSTRING */
+    पूर्वनिर्धारित: {  /* LUA_TNUMBER or LUA_TSTRING */
       add_s(ms, b, s, e);  /* add value to the buffer */
-      return 1;  /* something changed */
+      परत 1;  /* something changed */
     }
   }
-  if (!lua_toboolean(L, -1)) {  /* nil or false? */
-    lua_pop(L, 1);  /* remove value */
+  जर (!lua_toboolean(L, -1)) {  /* nil or false? */
+    lua_काढा(L, 1);  /* remove value */
     luaL_addlstring(b, s, ct_diff2sz(e - s));  /* keep original text */
-    return 0;  /* no changes */
+    परत 0;  /* no changes */
   }
-  else if (l_unlikely(!lua_isstring(L, -1)))
-    return luaL_error(L, "invalid replacement value (a %s)",
+  अन्यथा जर (l_unlikely(!lua_isstring(L, -1)))
+    परत luaL_error(L, "invalid replacement value (a %s)",
                          luaL_typename(L, -1));
-  else {
+  अन्यथा {
     luaL_addvalue(b);  /* add result to accumulator */
-    return 1;  /* something changed */
+    परत 1;  /* something changed */
   }
 }
 
 
-static int str_gsub (lua_State *L) {
-  size_t srcl, lp;
-  const char *src = luaL_checklstring(L, 1, &srcl);  /* subject */
-  const char *p = luaL_checklstring(L, 2, &lp);  /* pattern */
-  const char *lastmatch = NULL;  /* end of last match */
-  int tr = lua_type(L, 3);  /* replacement type */
+स्थिर पूर्णांक str_gsub (lua_State *L) {
+  माप_प्रकार srcl, lp;
+  स्थिरांक अक्षर *src = luaL_checklstring(L, 1, &srcl);  /* subject */
+  स्थिरांक अक्षर *p = luaL_checklstring(L, 2, &lp);  /* pattern */
+  स्थिरांक अक्षर *lastmatch = रिक्त;  /* end of last match */
+  पूर्णांक tr = lua_type(L, 3);  /* replacement type */
   /* max replacements */
   lua_Integer max_s = luaL_optinteger(L, 4, cast_st2S(srcl) + 1);
-  int anchor = (*p == '^');
+  पूर्णांक anchor = (*p == '^');
   lua_Integer n = 0;  /* replacement count */
-  int changed = 0;  /* change flag */
+  पूर्णांक changed = 0;  /* change flag */
   MatchState ms;
   luaL_Buffer b;
   luaL_argexpected(L, tr == LUA_TNUMBER || tr == LUA_TSTRING ||
                    tr == LUA_TFUNCTION || tr == LUA_TTABLE, 3,
                       "string/function/table");
   luaL_buffinit(L, &b);
-  if (anchor) {
+  जर (anchor) {
     p++; lp--;  /* skip anchor character */
   }
   prepstate(&ms, L, src, srcl, p, lp);
-  while (n < max_s) {
-    const char *e;
+  पर्यंत (n < max_s) {
+    स्थिरांक अक्षर *e;
     reprepstate(&ms);  /* (re)prepare state for new match */
-    if ((e = match(&ms, src, p)) != NULL && e != lastmatch) {  /* match? */
+    जर ((e = match(&ms, src, p)) != रिक्त && e != lastmatch) {  /* match? */
       n++;
-      changed = add_value(&ms, &b, src, e, tr) || changed;
+      changed = add_मूल्य(&ms, &b, src, e, tr) || changed;
       src = lastmatch = e;
     }
-    else if (src < ms.src_end)  /* otherwise, skip one character */
+    अन्यथा जर (src < ms.src_end)  /* otherwise, skip one character */
       luaL_addchar(&b, *src++);
-    else break;  /* end of subject */
-    if (anchor) break;
+    अन्यथा थांबा;  /* end of subject */
+    जर (anchor) थांबा;
   }
-  if (!changed)  /* no changes? */
+  जर (!changed)  /* no changes? */
     lua_pushvalue(L, 1);  /* return original string */
-  else {  /* something changed */
+  अन्यथा {  /* something changed */
     luaL_addlstring(&b, src, ct_diff2sz(ms.src_end - src));
     luaL_pushresult(&b);  /* create and return new string */
   }
   lua_pushinteger(L, n);  /* number of substitutions */
-  return 2;
+  परत 2;
 }
 
 /* }====================================================== */
@@ -1002,13 +1002,13 @@ static int str_gsub (lua_State *L) {
 ** =======================================================
 */
 
-#if !defined(lua_number2strx)	/* { */
+#जर !defined(lua_number2strx)	/* { */
 
 /*
 ** Hexadecimal floating-point formatter
 */
 
-#define SIZELENMOD	(sizeof(LUA_NUMBER_FRMLEN)/sizeof(char))
+#define SIZELENMOD	(आकार(LUA_संख्या_FRMLEN)/आकार(अक्षर))
 
 
 /*
@@ -1023,57 +1023,57 @@ static int str_gsub (lua_State *L) {
 /*
 ** Add integer part of 'x' to buffer and return new 'x'
 */
-static lua_Number adddigit (char *buff, unsigned n, lua_Number x) {
-  lua_Number dd = l_mathop(floor)(x);  /* get integer part from 'x' */
-  int d = (int)dd;
+स्थिर lua_संख्या adddigit (अक्षर *buff, अचिन्हित n, lua_संख्या x) {
+  lua_संख्या dd = l_mathop(न्यूनमान)(x);  /* get integer part from 'x' */
+  पूर्णांक d = (पूर्णांक)dd;
   buff[n] = cast_char(d < 10 ? d + '0' : d - 10 + 'a');  /* add to buffer */
-  return x - dd;  /* return what is left */
+  परत x - dd;  /* return what is left */
 }
 
 
-static int num2straux (char *buff, unsigned sz, lua_Number x) {
+स्थिर पूर्णांक num2straux (अक्षर *buff, अचिन्हित sz, lua_संख्या x) {
   /* if 'inf' or 'NaN', format it like '%g' */
-  if (x != x || x == (lua_Number)HUGE_VAL || x == -(lua_Number)HUGE_VAL)
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT, (LUAI_UACNUMBER)x);
-  else if (x == 0) {  /* can be -0... */
+  जर (x != x || x == (lua_संख्या)विशाल_मान || x == -(lua_संख्या)विशाल_मान)
+    परत l_sprintf(buff, sz, LUA_संख्या_FMT, (LUAI_UACNUMBER)x);
+  अन्यथा जर (x == 0) {  /* can be -0... */
     /* create "0" or "-0" followed by exponent */
-    return l_sprintf(buff, sz, LUA_NUMBER_FMT "x0p+0", (LUAI_UACNUMBER)x);
+    परत l_sprintf(buff, sz, LUA_संख्या_FMT "x0p+0", (LUAI_UACNUMBER)x);
   }
-  else {
-    int e;
-    lua_Number m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
-    unsigned n = 0;  /* character count */
-    if (m < 0) {  /* is number negative? */
+  अन्यथा {
+    पूर्णांक e;
+    lua_संख्या m = l_mathop(frexp)(x, &e);  /* 'x' fraction and exponent */
+    अचिन्हित n = 0;  /* character count */
+    जर (m < 0) {  /* is number negative? */
       buff[n++] = '-';  /* add sign */
       m = -m;  /* make it positive */
     }
     buff[n++] = '0'; buff[n++] = 'x';  /* add "0x" */
     m = adddigit(buff, n++, m * (1 << L_NBFD));  /* add first digit */
     e -= L_NBFD;  /* this digit goes before the radix point */
-    if (m > 0) {  /* more digits? */
+    जर (m > 0) {  /* more digits? */
       buff[n++] = lua_getlocaledecpoint();  /* add radix point */
-      do {  /* add as many digits as needed */
+      करा {  /* add as many digits as needed */
         m = adddigit(buff, n++, m * 16);
-      } while (m > 0);
+      } पर्यंत (m > 0);
     }
     n += cast_uint(l_sprintf(buff + n, sz - n, "p%+d", e));  /* add exponent */
     lua_assert(n < sz);
-    return cast_int(n);
+    परत cast_int(n);
   }
 }
 
 
-static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
-                            const char *fmt, lua_Number x) {
-  int n = num2straux(buff, sz, x);
-  if (fmt[SIZELENMOD] == 'A') {
-    int i;
-    for (i = 0; i < n; i++)
-      buff[i] = cast_char(toupper(cast_uchar(buff[i])));
+स्थिर पूर्णांक lua_number2strx (lua_State *L, अक्षर *buff, अचिन्हित sz,
+                            स्थिरांक अक्षर *fmt, lua_संख्या x) {
+  पूर्णांक n = num2straux(buff, sz, x);
+  जर (fmt[SIZELENMOD] == 'A') {
+    पूर्णांक i;
+    साठी (i = 0; i < n; i++)
+      buff[i] = cast_char(बड़े(cast_uchar(buff[i])));
   }
-  else if (l_unlikely(fmt[SIZELENMOD] != 'a'))
-    return luaL_error(L, "modifiers for format '%%a'/'%%A' not implemented");
-  return n;
+  अन्यथा जर (l_unlikely(fmt[SIZELENMOD] != 'a'))
+    परत luaL_error(L, "modifiers for format '%%a'/'%%A' not implemented");
+  परत n;
 }
 
 #endif				/* } */
@@ -1100,7 +1100,7 @@ static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
 
 
 /* valid flags in a format specification */
-#if !defined(L_FMTFLAGSF)
+#जर !defined(L_FMTFLAGSF)
 
 /* valid flags for a, A, e, E, f, F, g, and G conversions */
 #define L_FMTFLAGSF	"-+#0 "
@@ -1129,22 +1129,22 @@ static int lua_number2strx (lua_State *L, char *buff, unsigned sz,
 #define MAX_FORMAT	32
 
 
-static void addquoted (luaL_Buffer *b, const char *s, size_t len) {
+स्थिर शून्य addquoted (luaL_Buffer *b, स्थिरांक अक्षर *s, माप_प्रकार len) {
   luaL_addchar(b, '"');
-  while (len--) {
-    if (*s == '"' || *s == '\\' || *s == '\n') {
+  पर्यंत (len--) {
+    जर (*s == '"' || *s == '\\' || *s == '\n') {
       luaL_addchar(b, '\\');
       luaL_addchar(b, *s);
     }
-    else if (iscntrl(cast_uchar(*s))) {
-      char buff[10];
-      if (!isdigit(cast_uchar(*(s+1))))
-        l_sprintf(buff, sizeof(buff), "\\%d", (int)cast_uchar(*s));
-      else
-        l_sprintf(buff, sizeof(buff), "\\%03d", (int)cast_uchar(*s));
+    अन्यथा जर (है_नियंत्रण(cast_uchar(*s))) {
+      अक्षर buff[10];
+      जर (!है_अंक(cast_uchar(*(s+1))))
+        l_sprintf(buff, आकार(buff), "\\%d", (पूर्णांक)cast_uchar(*s));
+      अन्यथा
+        l_sprintf(buff, आकार(buff), "\\%03d", (पूर्णांक)cast_uchar(*s));
       luaL_addstring(b, buff);
     }
-    else
+    अन्यथा
       luaL_addchar(b, *s);
     s++;
   }
@@ -1158,71 +1158,71 @@ static void addquoted (luaL_Buffer *b, const char *s, size_t len) {
 ** (to preserve precision); inf, -inf, and NaN are handled separately.
 ** (NaN cannot be expressed as a numeral, so we write '(0/0)' for it.)
 */
-static int quotefloat (lua_State *L, char *buff, lua_Number n) {
-  const char *s;  /* for the fixed representations */
-  if (n == (lua_Number)HUGE_VAL)  /* inf? */
+स्थिर पूर्णांक quotefloat (lua_State *L, अक्षर *buff, lua_संख्या n) {
+  स्थिरांक अक्षर *s;  /* for the fixed representations */
+  जर (n == (lua_संख्या)विशाल_मान)  /* inf? */
     s = "1e9999";
-  else if (n == -(lua_Number)HUGE_VAL)  /* -inf? */
+  अन्यथा जर (n == -(lua_संख्या)विशाल_मान)  /* -inf? */
     s = "-1e9999";
-  else if (n != n)  /* NaN? */
+  अन्यथा जर (n != n)  /* NaN? */
     s = "(0/0)";
-  else {  /* format number as hexadecimal */
-    int  nb = lua_number2strx(L, buff, MAX_ITEM,
-                                 "%" LUA_NUMBER_FRMLEN "a", n);
+  अन्यथा {  /* format number as hexadecimal */
+    पूर्णांक  nb = lua_number2strx(L, buff, MAX_ITEM,
+                                 "%" LUA_संख्या_FRMLEN "a", n);
     /* ensures that 'buff' string uses a dot as the radix character */
-    if (memchr(buff, '.', cast_uint(nb)) == NULL) {  /* no dot? */
-      char point = lua_getlocaledecpoint();  /* try locale point */
-      char *ppoint = (char *)memchr(buff, point, cast_uint(nb));
-      if (ppoint) *ppoint = '.';  /* change it to a dot */
+    जर (स_प्रथम(buff, '.', cast_uint(nb)) == रिक्त) {  /* no dot? */
+      अक्षर point = lua_getlocaledecpoint();  /* try locale point */
+      अक्षर *ppoint = (अक्षर *)स_प्रथम(buff, point, cast_uint(nb));
+      जर (ppoint) *ppoint = '.';  /* change it to a dot */
     }
-    return nb;
+    परत nb;
   }
   /* for the fixed representations */
-  return l_sprintf(buff, MAX_ITEM, "%s", s);
+  परत l_sprintf(buff, MAX_ITEM, "%s", s);
 }
 
 
-static void addliteral (lua_State *L, luaL_Buffer *b, int arg) {
-  switch (lua_type(L, arg)) {
-    case LUA_TSTRING: {
-      size_t len;
-      const char *s = lua_tolstring(L, arg, &len);
+स्थिर शून्य addliteral (lua_State *L, luaL_Buffer *b, पूर्णांक arg) {
+  निवड (lua_type(L, arg)) {
+    स्थिती LUA_TSTRING: {
+      माप_प्रकार len;
+      स्थिरांक अक्षर *s = lua_tolstring(L, arg, &len);
       addquoted(b, s, len);
-      break;
+      थांबा;
     }
-    case LUA_TNUMBER: {
-      char *buff = luaL_prepbuffsize(b, MAX_ITEM);
-      int nb;
-      if (!lua_isinteger(L, arg))  /* float? */
+    स्थिती LUA_TNUMBER: {
+      अक्षर *buff = luaL_prepbuffsize(b, MAX_ITEM);
+      पूर्णांक nb;
+      जर (!lua_isinteger(L, arg))  /* float? */
         nb = quotefloat(L, buff, lua_tonumber(L, arg));
-      else {  /* integers */
+      अन्यथा {  /* integers */
         lua_Integer n = lua_tointeger(L, arg);
-        const char *format = (n == LUA_MININTEGER)  /* corner case? */
+        स्थिरांक अक्षर *format = (n == LUA_MININTEGER)  /* corner case? */
                            ? "0x%" LUA_INTEGER_FRMLEN "x"  /* use hex */
                            : LUA_INTEGER_FMT;  /* else use default format */
         nb = l_sprintf(buff, MAX_ITEM, format, (LUAI_UACINT)n);
       }
       luaL_addsize(b, cast_uint(nb));
-      break;
+      थांबा;
     }
-    case LUA_TNIL: case LUA_TBOOLEAN: {
-      luaL_tolstring(L, arg, NULL);
+    स्थिती LUA_TNIL: स्थिती LUA_TBOOLEAN: {
+      luaL_tolstring(L, arg, रिक्त);
       luaL_addvalue(b);
-      break;
+      थांबा;
     }
-    default: {
+    पूर्वनिर्धारित: {
       luaL_argerror(L, arg, "value has no literal form");
     }
   }
 }
 
 
-static const char *get2digits (const char *s) {
-  if (isdigit(cast_uchar(*s))) {
+स्थिर स्थिरांक अक्षर *get2digits (स्थिरांक अक्षर *s) {
+  जर (है_अंक(cast_uchar(*s))) {
     s++;
-    if (isdigit(cast_uchar(*s))) s++;  /* (2 digits at most) */
+    जर (है_अंक(cast_uchar(*s))) s++;  /* (2 digits at most) */
   }
-  return s;
+  परत s;
 }
 
 
@@ -1232,18 +1232,18 @@ static const char *get2digits (const char *s) {
 ** be a valid conversion specifier. 'flags' are the accepted flags;
 ** 'precision' signals whether to accept a precision.
 */
-static void checkformat (lua_State *L, const char *form, const char *flags,
-                                       int precision) {
-  const char *spec = form + 1;  /* skip '%' */
-  spec += strspn(spec, flags);  /* skip flags */
-  if (*spec != '0') {  /* a width cannot start with '0' */
+स्थिर शून्य checkformat (lua_State *L, स्थिरांक अक्षर *form, स्थिरांक अक्षर *flags,
+                                       पूर्णांक precision) {
+  स्थिरांक अक्षर *spec = form + 1;  /* skip '%' */
+  spec += म_अखोज(spec, flags);  /* skip flags */
+  जर (*spec != '0') {  /* a width cannot start with '0' */
     spec = get2digits(spec);  /* skip width */
-    if (*spec == '.' && precision) {
+    जर (*spec == '.' && precision) {
       spec++;
       spec = get2digits(spec);  /* skip precision */
     }
   }
-  if (!isalpha(cast_uchar(*spec)))  /* did not go to the end? */
+  जर (!है_अक्षर(cast_uchar(*spec)))  /* did not go to the end? */
     luaL_error(L, "invalid conversion specification: '%s'", form);
 }
 
@@ -1252,131 +1252,131 @@ static void checkformat (lua_State *L, const char *form, const char *flags,
 ** Get a conversion specification and copy it to 'form'.
 ** Return the address of its last character.
 */
-static const char *getformat (lua_State *L, const char *strfrmt,
-                                            char *form) {
+स्थिर स्थिरांक अक्षर *getformat (lua_State *L, स्थिरांक अक्षर *strfrmt,
+                                            अक्षर *form) {
   /* spans flags, width, and precision ('0' is included as a flag) */
-  size_t len = strspn(strfrmt, L_FMTFLAGSF "123456789.");
+  माप_प्रकार len = म_अखोज(strfrmt, L_FMTFLAGSF "123456789.");
   len++;  /* adds following character (should be the specifier) */
   /* still needs space for '%', '\0', plus a length modifier */
-  if (len >= MAX_FORMAT - 10)
+  जर (len >= MAX_FORMAT - 10)
     luaL_error(L, "invalid format (too long)");
   *(form++) = '%';
-  memcpy(form, strfrmt, len * sizeof(char));
+  स_नकल(form, strfrmt, len * आकार(अक्षर));
   *(form + len) = '\0';
-  return strfrmt + len - 1;
+  परत strfrmt + len - 1;
 }
 
 
 /*
 ** add length modifier into formats
 */
-static void addlenmod (char *form, const char *lenmod) {
-  size_t l = strlen(form);
-  size_t lm = strlen(lenmod);
-  char spec = form[l - 1];
-  strcpy(form + l - 1, lenmod);
+स्थिर शून्य addlenmod (अक्षर *form, स्थिरांक अक्षर *lenmod) {
+  माप_प्रकार l = म_माप(form);
+  माप_प्रकार lm = म_माप(lenmod);
+  अक्षर spec = form[l - 1];
+  म_नकल(form + l - 1, lenmod);
   form[l + lm - 1] = spec;
   form[l + lm] = '\0';
 }
 
 
-static int str_format (lua_State *L) {
-  int top = lua_gettop(L);
-  int arg = 1;
-  size_t sfl;
-  const char *strfrmt = luaL_checklstring(L, arg, &sfl);
-  const char *strfrmt_end = strfrmt+sfl;
-  const char *flags;
+स्थिर पूर्णांक str_format (lua_State *L) {
+  पूर्णांक शीर्ष = lua_gettop(L);
+  पूर्णांक arg = 1;
+  माप_प्रकार sfl;
+  स्थिरांक अक्षर *strfrmt = luaL_checklstring(L, arg, &sfl);
+  स्थिरांक अक्षर *strfrmt_end = strfrmt+sfl;
+  स्थिरांक अक्षर *flags;
   luaL_Buffer b;
   luaL_buffinit(L, &b);
-  while (strfrmt < strfrmt_end) {
-    if (*strfrmt != L_ESC)
+  पर्यंत (strfrmt < strfrmt_end) {
+    जर (*strfrmt != L_ESC)
       luaL_addchar(&b, *strfrmt++);
-    else if (*++strfrmt == L_ESC)
+    अन्यथा जर (*++strfrmt == L_ESC)
       luaL_addchar(&b, *strfrmt++);  /* %% */
-    else { /* format item */
-      char form[MAX_FORMAT];  /* to store the format ('%...') */
-      unsigned maxitem = MAX_ITEM;  /* maximum length for the result */
-      char *buff = luaL_prepbuffsize(&b, maxitem);  /* to put result */
-      int nb = 0;  /* number of bytes in result */
-      if (++arg > top)
-        return luaL_argerror(L, arg, "no value");
+    अन्यथा { /* format item */
+      अक्षर form[MAX_FORMAT];  /* to store the format ('%...') */
+      अचिन्हित maxitem = MAX_ITEM;  /* maximum length for the result */
+      अक्षर *buff = luaL_prepbuffsize(&b, maxitem);  /* to put result */
+      पूर्णांक nb = 0;  /* number of bytes in result */
+      जर (++arg > शीर्ष)
+        परत luaL_argerror(L, arg, "no value");
       strfrmt = getformat(L, strfrmt, form);
-      switch (*strfrmt++) {
-        case 'c': {
+      निवड (*strfrmt++) {
+        स्थिती 'c': {
           checkformat(L, form, L_FMTFLAGSC, 0);
-          nb = l_sprintf(buff, maxitem, form, (int)luaL_checkinteger(L, arg));
-          break;
+          nb = l_sprintf(buff, maxitem, form, (पूर्णांक)luaL_checkinteger(L, arg));
+          थांबा;
         }
-        case 'd': case 'i':
+        स्थिती 'd': स्थिती 'i':
           flags = L_FMTFLAGSI;
-          goto intcase;
-        case 'u':
+          जा intcase;
+        स्थिती 'u':
           flags = L_FMTFLAGSU;
-          goto intcase;
-        case 'o': case 'x': case 'X':
+          जा intcase;
+        स्थिती 'o': स्थिती 'x': स्थिती 'X':
           flags = L_FMTFLAGSX;
          intcase: {
           lua_Integer n = luaL_checkinteger(L, arg);
           checkformat(L, form, flags, 1);
           addlenmod(form, LUA_INTEGER_FRMLEN);
           nb = l_sprintf(buff, maxitem, form, (LUAI_UACINT)n);
-          break;
+          थांबा;
         }
-        case 'a': case 'A':
+        स्थिती 'a': स्थिती 'A':
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_संख्या_FRMLEN);
           nb = lua_number2strx(L, buff, maxitem, form,
                                   luaL_checknumber(L, arg));
-          break;
-        case 'f':
+          थांबा;
+        स्थिती 'f':
           maxitem = MAX_ITEMF;  /* extra space for '%f' */
           buff = luaL_prepbuffsize(&b, maxitem);
           /* FALLTHROUGH */
-        case 'e': case 'E': case 'g': case 'G': {
-          lua_Number n = luaL_checknumber(L, arg);
+        स्थिती 'e': स्थिती 'E': स्थिती 'g': स्थिती 'G': {
+          lua_संख्या n = luaL_checknumber(L, arg);
           checkformat(L, form, L_FMTFLAGSF, 1);
-          addlenmod(form, LUA_NUMBER_FRMLEN);
+          addlenmod(form, LUA_संख्या_FRMLEN);
           nb = l_sprintf(buff, maxitem, form, (LUAI_UACNUMBER)n);
-          break;
+          थांबा;
         }
-        case 'p': {
-          const void *p = lua_topointer(L, arg);
+        स्थिती 'p': {
+          स्थिरांक शून्य *p = lua_topointer(L, arg);
           checkformat(L, form, L_FMTFLAGSC, 0);
-          if (p == NULL) {  /* avoid calling 'printf' with argument NULL */
+          जर (p == रिक्त) {  /* avoid calling 'printf' with argument NULL */
             p = "(null)";  /* result */
-            form[strlen(form) - 1] = 's';  /* format it as a string */
+            form[म_माप(form) - 1] = 's';  /* format it as a string */
           }
           nb = l_sprintf(buff, maxitem, form, p);
-          break;
+          थांबा;
         }
-        case 'q': {
-          if (form[2] != '\0')  /* modifiers? */
-            return luaL_error(L, "specifier '%%q' cannot have modifiers");
+        स्थिती 'q': {
+          जर (form[2] != '\0')  /* modifiers? */
+            परत luaL_error(L, "specifier '%%q' cannot have modifiers");
           addliteral(L, &b, arg);
-          break;
+          थांबा;
         }
-        case 's': {
-          size_t l;
-          const char *s = luaL_tolstring(L, arg, &l);
-          if (form[2] == '\0')  /* no modifiers? */
+        स्थिती 's': {
+          माप_प्रकार l;
+          स्थिरांक अक्षर *s = luaL_tolstring(L, arg, &l);
+          जर (form[2] == '\0')  /* no modifiers? */
             luaL_addvalue(&b);  /* keep entire string */
-          else {
-            luaL_argcheck(L, l == strlen(s), arg, "string contains zeros");
+          अन्यथा {
+            luaL_argcheck(L, l == म_माप(s), arg, "string contains zeros");
             checkformat(L, form, L_FMTFLAGSC, 1);
-            if (strchr(form, '.') == NULL && l >= 100) {
+            जर (म_अक्षर(form, '.') == रिक्त && l >= 100) {
               /* no precision and string is too long to be formatted */
               luaL_addvalue(&b);  /* keep entire string */
             }
-            else {  /* format the string into 'buff' */
+            अन्यथा {  /* format the string into 'buff' */
               nb = l_sprintf(buff, maxitem, form, s);
-              lua_pop(L, 1);  /* remove result from 'luaL_tolstring' */
+              lua_काढा(L, 1);  /* remove result from 'luaL_tolstring' */
             }
           }
-          break;
+          थांबा;
         }
-        default: {  /* also treat cases 'pnLlh' */
-          return luaL_error(L, "invalid conversion '%s' to 'format'", form);
+        पूर्वनिर्धारित: {  /* also treat cases 'pnLlh' */
+          परत luaL_error(L, "invalid conversion '%s' to 'format'", form);
         }
       }
       lua_assert(cast_uint(nb) < maxitem);
@@ -1384,7 +1384,7 @@ static int str_format (lua_State *L) {
     }
   }
   luaL_pushresult(&b);
-  return 1;
+  परत 1;
 }
 
 /* }====================================================== */
@@ -1398,7 +1398,7 @@ static int str_format (lua_State *L) {
 
 
 /* value used for padding */
-#if !defined(LUAL_PACKPADBYTE)
+#जर !defined(LUAL_PACKPADBYTE)
 #define LUAL_PACKPADBYTE		0x00
 #endif
 
@@ -1406,36 +1406,36 @@ static int str_format (lua_State *L) {
 #define MAXINTSIZE	16
 
 /* number of bits in a character */
-#define NB	CHAR_BIT
+#define NB	अक्षर_बिट
 
 /* mask for one character (NB 1's) */
 #define MC	((1 << NB) - 1)
 
 /* size of a lua_Integer */
-#define SZINT	((int)sizeof(lua_Integer))
+#define SZINT	((पूर्णांक)आकार(lua_Integer))
 
 
 /* dummy union to get native endianness */
-static const union {
-  int dummy;
-  char little;  /* true iff machine is little endian */
+स्थिर स्थिरांक संघ {
+  पूर्णांक dummy;
+  अक्षर little;  /* true iff machine is little endian */
 } nativeendian = {1};
 
 
 /*
 ** information to pack/unpack stuff
 */
-typedef struct Header {
+प्रकारव्याख्या संरचना Header {
   lua_State *L;
-  int islittle;
-  unsigned maxalign;
+  पूर्णांक islittle;
+  अचिन्हित maxalign;
 } Header;
 
 
 /*
 ** options for pack/unpack
 */
-typedef enum KOption {
+प्रकारव्याख्या गणना KOption {
   Kint,		/* signed integers */
   Kuint,	/* unsigned integers */
   Kfloat,	/* single-precision floating-point numbers */
@@ -1454,17 +1454,17 @@ typedef enum KOption {
 ** Read an integer numeral from string 'fmt' or return 'df' if
 ** there is no numeral
 */
-static int digit (int c) { return '0' <= c && c <= '9'; }
+स्थिर पूर्णांक digit (पूर्णांक c) { परत '0' <= c && c <= '9'; }
 
-static size_t getnum (const char **fmt, size_t df) {
-  if (!digit(**fmt))  /* no number? */
-    return df;  /* return default value */
-  else {
-    size_t a = 0;
-    do {
+स्थिर माप_प्रकार getnum (स्थिरांक अक्षर **fmt, माप_प्रकार df) {
+  जर (!digit(**fmt))  /* no number? */
+    परत df;  /* return default value */
+  अन्यथा {
+    माप_प्रकार a = 0;
+    करा {
       a = a*10 + cast_uint(*((*fmt)++) - '0');
-    } while (digit(**fmt) && a <= (MAX_SIZE - 9)/10);
-    return a;
+    } पर्यंत (digit(**fmt) && a <= (MAX_SIZE - 9)/10);
+    परत a;
   }
 }
 
@@ -1473,19 +1473,19 @@ static size_t getnum (const char **fmt, size_t df) {
 ** Read an integer numeral and raises an error if it is larger
 ** than the maximum size of integers.
 */
-static unsigned getnumlimit (Header *h, const char **fmt, size_t df) {
-  size_t sz = getnum(fmt, df);
-  if (l_unlikely((sz - 1u) >= MAXINTSIZE))
-    return cast_uint(luaL_error(h->L,
+स्थिर अचिन्हित getnumlimit (Header *h, स्थिरांक अक्षर **fmt, माप_प्रकार df) {
+  माप_प्रकार sz = getnum(fmt, df);
+  जर (l_unlikely((sz - 1u) >= MAXINTSIZE))
+    परत cast_uint(luaL_error(h->L,
                "integral size (%d) out of limits [1,%d]", sz, MAXINTSIZE));
-  return cast_uint(sz);
+  परत cast_uint(sz);
 }
 
 
 /*
 ** Initialize Header
 */
-static void initheader (lua_State *L, Header *h) {
+स्थिर शून्य initheader (lua_State *L, Header *h) {
   h->L = L;
   h->islittle = nativeendian.little;
   h->maxalign = 1;
@@ -1495,47 +1495,47 @@ static void initheader (lua_State *L, Header *h) {
 /*
 ** Read and classify next option. 'size' is filled with option's size.
 */
-static KOption getoption (Header *h, const char **fmt, size_t *size) {
+स्थिर KOption getoption (Header *h, स्थिरांक अक्षर **fmt, माप_प्रकार *size) {
   /* dummy structure to get native alignment requirements */
-  struct cD { char c; union { LUAI_MAXALIGN; } u; };
-  int opt = *((*fmt)++);
+  संरचना cD { अक्षर c; संघ { LUAI_MAXALIGN; } u; };
+  पूर्णांक opt = *((*fmt)++);
   *size = 0;  /* default */
-  switch (opt) {
-    case 'b': *size = sizeof(char); return Kint;
-    case 'B': *size = sizeof(char); return Kuint;
-    case 'h': *size = sizeof(short); return Kint;
-    case 'H': *size = sizeof(short); return Kuint;
-    case 'l': *size = sizeof(long); return Kint;
-    case 'L': *size = sizeof(long); return Kuint;
-    case 'j': *size = sizeof(lua_Integer); return Kint;
-    case 'J': *size = sizeof(lua_Integer); return Kuint;
-    case 'T': *size = sizeof(size_t); return Kuint;
-    case 'f': *size = sizeof(float); return Kfloat;
-    case 'n': *size = sizeof(lua_Number); return Knumber;
-    case 'd': *size = sizeof(double); return Kdouble;
-    case 'i': *size = getnumlimit(h, fmt, sizeof(int)); return Kint;
-    case 'I': *size = getnumlimit(h, fmt, sizeof(int)); return Kuint;
-    case 's': *size = getnumlimit(h, fmt, sizeof(size_t)); return Kstring;
-    case 'c':
+  निवड (opt) {
+    स्थिती 'b': *size = आकार(अक्षर); परत Kint;
+    स्थिती 'B': *size = आकार(अक्षर); परत Kuint;
+    स्थिती 'h': *size = आकार(लघु); परत Kint;
+    स्थिती 'H': *size = आकार(लघु); परत Kuint;
+    स्थिती 'l': *size = आकार(दीर्घ); परत Kint;
+    स्थिती 'L': *size = आकार(दीर्घ); परत Kuint;
+    स्थिती 'j': *size = आकार(lua_Integer); परत Kint;
+    स्थिती 'J': *size = आकार(lua_Integer); परत Kuint;
+    स्थिती 'T': *size = आकार(माप_प्रकार); परत Kuint;
+    स्थिती 'f': *size = आकार(दशांश); परत Kfloat;
+    स्थिती 'n': *size = आकार(lua_संख्या); परत Knumber;
+    स्थिती 'd': *size = आकार(द्विगुण); परत Kdouble;
+    स्थिती 'i': *size = getnumlimit(h, fmt, आकार(पूर्णांक)); परत Kint;
+    स्थिती 'I': *size = getnumlimit(h, fmt, आकार(पूर्णांक)); परत Kuint;
+    स्थिती 's': *size = getnumlimit(h, fmt, आकार(माप_प्रकार)); परत Kstring;
+    स्थिती 'c':
       *size = getnum(fmt, cast_sizet(-1));
-      if (l_unlikely(*size == cast_sizet(-1)))
+      जर (l_unlikely(*size == cast_sizet(-1)))
         luaL_error(h->L, "missing size for format option 'c'");
-      return Kchar;
-    case 'z': return Kzstr;
-    case 'x': *size = 1; return Kpadding;
-    case 'X': return Kpaddalign;
-    case ' ': break;
-    case '<': h->islittle = 1; break;
-    case '>': h->islittle = 0; break;
-    case '=': h->islittle = nativeendian.little; break;
-    case '!': {
-      const size_t maxalign = offsetof(struct cD, u);
+      परत Kchar;
+    स्थिती 'z': परत Kzstr;
+    स्थिती 'x': *size = 1; परत Kpadding;
+    स्थिती 'X': परत Kpaddalign;
+    स्थिती ' ': थांबा;
+    स्थिती '<': h->islittle = 1; थांबा;
+    स्थिती '>': h->islittle = 0; थांबा;
+    स्थिती '=': h->islittle = nativeendian.little; थांबा;
+    स्थिती '!': {
+      स्थिरांक माप_प्रकार maxalign = दुरत्व(संरचना cD, u);
       h->maxalign = getnumlimit(h, fmt, maxalign);
-      break;
+      थांबा;
     }
-    default: luaL_error(h->L, "invalid format option '%c'", opt);
+    पूर्वनिर्धारित: luaL_error(h->L, "invalid format option '%c'", opt);
   }
-  return Knop;
+  परत Knop;
 }
 
 
@@ -1548,30 +1548,30 @@ static KOption getoption (Header *h, const char **fmt, size_t *size) {
 ** the maximum alignment ('maxalign'). Kchar option needs no alignment
 ** despite its size.
 */
-static KOption getdetails (Header *h, size_t totalsize, const char **fmt,
-                           size_t *psize, unsigned *ntoalign) {
+स्थिर KOption getdetails (Header *h, माप_प्रकार totalsize, स्थिरांक अक्षर **fmt,
+                           माप_प्रकार *psize, अचिन्हित *ntoalign) {
   KOption opt = getoption(h, fmt, psize);
-  size_t align = *psize;  /* usually, alignment follows size */
-  if (opt == Kpaddalign) {  /* 'X' gets alignment from following option */
-    if (**fmt == '\0' || getoption(h, fmt, &align) == Kchar || align == 0)
+  माप_प्रकार align = *psize;  /* usually, alignment follows size */
+  जर (opt == Kpaddalign) {  /* 'X' gets alignment from following option */
+    जर (**fmt == '\0' || getoption(h, fmt, &align) == Kchar || align == 0)
       luaL_argerror(h->L, 1, "invalid next option for option 'X'");
   }
-  if (align <= 1 || opt == Kchar)  /* need no alignment? */
+  जर (align <= 1 || opt == Kchar)  /* need no alignment? */
     *ntoalign = 0;
-  else {
-    if (align > h->maxalign)  /* enforce maximum alignment */
+  अन्यथा {
+    जर (align > h->maxalign)  /* enforce maximum alignment */
       align = h->maxalign;
-    if (l_unlikely(!ispow2(align))) {  /* not a power of 2? */
+    जर (l_unlikely(!ispow2(align))) {  /* not a power of 2? */
       *ntoalign = 0;  /* to avoid warnings */
       luaL_argerror(h->L, 1, "format asks for alignment not power of 2");
     }
-    else {
+    अन्यथा {
       /* 'szmoda' = totalsize % align */
-      unsigned szmoda = cast_uint(totalsize & (align - 1));
+      अचिन्हित szmoda = cast_uint(totalsize & (align - 1));
       *ntoalign = cast_uint((align - szmoda) & (align - 1));
     }
   }
-  return opt;
+  परत opt;
 }
 
 
@@ -1581,18 +1581,18 @@ static KOption getdetails (Header *h, size_t totalsize, const char **fmt,
 ** the size of a Lua integer, correcting the extra sign-extension
 ** bytes if necessary (by default they would be zeros).
 */
-static void packint (luaL_Buffer *b, lua_Unsigned n,
-                     int islittle, unsigned size, int neg) {
-  char *buff = luaL_prepbuffsize(b, size);
-  unsigned i;
-  buff[islittle ? 0 : size - 1] = (char)(n & MC);  /* first byte */
-  for (i = 1; i < size; i++) {
+स्थिर शून्य packint (luaL_Buffer *b, lua_Unsigned n,
+                     पूर्णांक islittle, अचिन्हित size, पूर्णांक neg) {
+  अक्षर *buff = luaL_prepbuffsize(b, size);
+  अचिन्हित i;
+  buff[islittle ? 0 : size - 1] = (अक्षर)(n & MC);  /* first byte */
+  साठी (i = 1; i < size; i++) {
     n >>= NB;
-    buff[islittle ? i : size - 1 - i] = (char)(n & MC);
+    buff[islittle ? i : size - 1 - i] = (अक्षर)(n & MC);
   }
-  if (neg && size > SZINT) {  /* negative number need sign extension? */
-    for (i = SZINT; i < size; i++)  /* correct extra bytes */
-      buff[islittle ? i : size - 1 - i] = (char)MC;
+  जर (neg && size > SZINT) {  /* negative number need sign extension? */
+    साठी (i = SZINT; i < size; i++)  /* correct extra bytes */
+      buff[islittle ? i : size - 1 - i] = (अक्षर)MC;
   }
   luaL_addsize(b, size);  /* add result to buffer */
 }
@@ -1602,132 +1602,132 @@ static void packint (luaL_Buffer *b, lua_Unsigned n,
 ** Copy 'size' bytes from 'src' to 'dest', correcting endianness if
 ** given 'islittle' is different from native endianness.
 */
-static void copywithendian (char *dest, const char *src,
-                            unsigned size, int islittle) {
-  if (islittle == nativeendian.little)
-    memcpy(dest, src, size);
-  else {
+स्थिर शून्य copywithendian (अक्षर *dest, स्थिरांक अक्षर *src,
+                            अचिन्हित size, पूर्णांक islittle) {
+  जर (islittle == nativeendian.little)
+    स_नकल(dest, src, size);
+  अन्यथा {
     dest += size - 1;
-    while (size-- != 0)
+    पर्यंत (size-- != 0)
       *(dest--) = *(src++);
   }
 }
 
 
-static int str_pack (lua_State *L) {
+स्थिर पूर्णांक str_pack (lua_State *L) {
   luaL_Buffer b;
   Header h;
-  const char *fmt = luaL_checkstring(L, 1);  /* format string */
-  int arg = 1;  /* current argument to pack */
-  size_t totalsize = 0;  /* accumulate total size of result */
+  स्थिरांक अक्षर *fmt = luaL_checkstring(L, 1);  /* format string */
+  पूर्णांक arg = 1;  /* current argument to pack */
+  माप_प्रकार totalsize = 0;  /* accumulate total size of result */
   initheader(L, &h);
   lua_pushnil(L);  /* mark to separate arguments from string buffer */
   luaL_buffinit(L, &b);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
+  पर्यंत (*fmt != '\0') {
+    अचिन्हित ntoalign;
+    माप_प्रकार size;
     KOption opt = getdetails(&h, totalsize, &fmt, &size, &ntoalign);
     luaL_argcheck(L, size + ntoalign <= MAX_SIZE - totalsize, arg,
                      "result too long");
     totalsize += ntoalign + size;
-    while (ntoalign-- > 0)
+    पर्यंत (ntoalign-- > 0)
      luaL_addchar(&b, LUAL_PACKPADBYTE);  /* fill alignment */
     arg++;
-    switch (opt) {
-      case Kint: {  /* signed integers */
+    निवड (opt) {
+      स्थिती Kint: {  /* signed integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT) {  /* need overflow check? */
+        जर (size < SZINT) {  /* need overflow check? */
           lua_Integer lim = (lua_Integer)1 << ((size * NB) - 1);
           luaL_argcheck(L, -lim <= n && n < lim, arg, "integer overflow");
         }
         packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(size), (n < 0));
-        break;
+        थांबा;
       }
-      case Kuint: {  /* unsigned integers */
+      स्थिती Kuint: {  /* unsigned integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT)  /* need overflow check? */
+        जर (size < SZINT)  /* need overflow check? */
           luaL_argcheck(L, (lua_Unsigned)n < ((lua_Unsigned)1 << (size * NB)),
                            arg, "unsigned overflow");
         packint(&b, (lua_Unsigned)n, h.islittle, cast_uint(size), 0);
-        break;
+        थांबा;
       }
-      case Kfloat: {  /* C float */
-        float f = (float)luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      स्थिती Kfloat: {  /* C float */
+        दशांश f = (दशांश)luaL_checknumber(L, arg);  /* get argument */
+        अक्षर *buff = luaL_prepbuffsize(&b, आकार(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
+        copywithendian(buff, (अक्षर *)&f, आकार(f), h.islittle);
         luaL_addsize(&b, size);
-        break;
+        थांबा;
       }
-      case Knumber: {  /* Lua float */
-        lua_Number f = luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      स्थिती Knumber: {  /* Lua float */
+        lua_संख्या f = luaL_checknumber(L, arg);  /* get argument */
+        अक्षर *buff = luaL_prepbuffsize(&b, आकार(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
+        copywithendian(buff, (अक्षर *)&f, आकार(f), h.islittle);
         luaL_addsize(&b, size);
-        break;
+        थांबा;
       }
-      case Kdouble: {  /* C double */
-        double f = (double)luaL_checknumber(L, arg);  /* get argument */
-        char *buff = luaL_prepbuffsize(&b, sizeof(f));
+      स्थिती Kdouble: {  /* C double */
+        द्विगुण f = (द्विगुण)luaL_checknumber(L, arg);  /* get argument */
+        अक्षर *buff = luaL_prepbuffsize(&b, आकार(f));
         /* move 'f' to final result, correcting endianness if needed */
-        copywithendian(buff, (char *)&f, sizeof(f), h.islittle);
+        copywithendian(buff, (अक्षर *)&f, आकार(f), h.islittle);
         luaL_addsize(&b, size);
-        break;
+        थांबा;
       }
-      case Kchar: {  /* fixed-size string */
-        size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
+      स्थिती Kchar: {  /* fixed-size string */
+        माप_प्रकार len;
+        स्थिरांक अक्षर *s = luaL_checklstring(L, arg, &len);
         luaL_argcheck(L, len <= size, arg, "string longer than given size");
         luaL_addlstring(&b, s, len);  /* add string */
-        if (len < size) {  /* does it need padding? */
-          size_t psize = size - len;  /* pad size */
-          char *buff = luaL_prepbuffsize(&b, psize);
-          memset(buff, LUAL_PACKPADBYTE, psize);
+        जर (len < size) {  /* does it need padding? */
+          माप_प्रकार psize = size - len;  /* pad size */
+          अक्षर *buff = luaL_prepbuffsize(&b, psize);
+          स_रखो(buff, LUAL_PACKPADBYTE, psize);
           luaL_addsize(&b, psize);
         }
-        break;
+        थांबा;
       }
-      case Kstring: {  /* strings with length count */
-        size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
-        luaL_argcheck(L, size >= sizeof(lua_Unsigned) ||
+      स्थिती Kstring: {  /* strings with length count */
+        माप_प्रकार len;
+        स्थिरांक अक्षर *s = luaL_checklstring(L, arg, &len);
+        luaL_argcheck(L, size >= आकार(lua_Unsigned) ||
                          len < ((lua_Unsigned)1 << (size * NB)),
                          arg, "string length does not fit in given size");
         /* pack length */
         packint(&b, (lua_Unsigned)len, h.islittle, cast_uint(size), 0);
         luaL_addlstring(&b, s, len);
         totalsize += len;
-        break;
+        थांबा;
       }
-      case Kzstr: {  /* zero-terminated string */
-        size_t len;
-        const char *s = luaL_checklstring(L, arg, &len);
-        luaL_argcheck(L, strlen(s) == len, arg, "string contains zeros");
+      स्थिती Kzstr: {  /* zero-terminated string */
+        माप_प्रकार len;
+        स्थिरांक अक्षर *s = luaL_checklstring(L, arg, &len);
+        luaL_argcheck(L, म_माप(s) == len, arg, "string contains zeros");
         luaL_addlstring(&b, s, len);
         luaL_addchar(&b, '\0');  /* add zero at the end */
         totalsize += len + 1;
-        break;
+        थांबा;
       }
-      case Kpadding: luaL_addchar(&b, LUAL_PACKPADBYTE);  /* FALLTHROUGH */
-      case Kpaddalign: case Knop:
+      स्थिती Kpadding: luaL_addchar(&b, LUAL_PACKPADBYTE);  /* FALLTHROUGH */
+      स्थिती Kpaddalign: स्थिती Knop:
         arg--;  /* undo increment */
-        break;
+        थांबा;
     }
   }
   luaL_pushresult(&b);
-  return 1;
+  परत 1;
 }
 
 
-static int str_packsize (lua_State *L) {
+स्थिर पूर्णांक str_packsize (lua_State *L) {
   Header h;
-  const char *fmt = luaL_checkstring(L, 1);  /* format string */
-  size_t totalsize = 0;  /* accumulate total size of result */
+  स्थिरांक अक्षर *fmt = luaL_checkstring(L, 1);  /* format string */
+  माप_प्रकार totalsize = 0;  /* accumulate total size of result */
   initheader(L, &h);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
+  पर्यंत (*fmt != '\0') {
+    अचिन्हित ntoalign;
+    माप_प्रकार size;
     KOption opt = getdetails(&h, totalsize, &fmt, &size, &ntoalign);
     luaL_argcheck(L, opt != Kstring && opt != Kzstr, 1,
                      "variable-length format");
@@ -1737,7 +1737,7 @@ static int str_packsize (lua_State *L) {
     totalsize += size;
   }
   lua_pushinteger(L, cast_st2S(totalsize));
-  return 1;
+  परत 1;
 }
 
 
@@ -1749,44 +1749,44 @@ static int str_packsize (lua_State *L) {
 ** it must check the unread bytes to see whether they do not cause an
 ** overflow.
 */
-static lua_Integer unpackint (lua_State *L, const char *str,
-                              int islittle, int size, int issigned) {
+स्थिर lua_Integer unpackint (lua_State *L, स्थिरांक अक्षर *str,
+                              पूर्णांक islittle, पूर्णांक size, पूर्णांक issigned) {
   lua_Unsigned res = 0;
-  int i;
-  int limit = (size  <= SZINT) ? size : SZINT;
-  for (i = limit - 1; i >= 0; i--) {
+  पूर्णांक i;
+  पूर्णांक limit = (size  <= SZINT) ? size : SZINT;
+  साठी (i = limit - 1; i >= 0; i--) {
     res <<= NB;
-    res |= (lua_Unsigned)(unsigned char)str[islittle ? i : size - 1 - i];
+    res |= (lua_Unsigned)(अचिन्हित अक्षर)str[islittle ? i : size - 1 - i];
   }
-  if (size < SZINT) {  /* real size smaller than lua_Integer? */
-    if (issigned) {  /* needs sign extension? */
+  जर (size < SZINT) {  /* real size smaller than lua_Integer? */
+    जर (issigned) {  /* needs sign extension? */
       lua_Unsigned mask = (lua_Unsigned)1 << (size*NB - 1);
       res = ((res ^ mask) - mask);  /* do sign extension */
     }
   }
-  else if (size > SZINT) {  /* must check unread bytes */
-    int mask = (!issigned || (lua_Integer)res >= 0) ? 0 : MC;
-    for (i = limit; i < size; i++) {
-      if (l_unlikely((unsigned char)str[islittle ? i : size - 1 - i] != mask))
+  अन्यथा जर (size > SZINT) {  /* must check unread bytes */
+    पूर्णांक mask = (!issigned || (lua_Integer)res >= 0) ? 0 : MC;
+    साठी (i = limit; i < size; i++) {
+      जर (l_unlikely((अचिन्हित अक्षर)str[islittle ? i : size - 1 - i] != mask))
         luaL_error(L, "%d-byte integer does not fit into Lua Integer", size);
     }
   }
-  return (lua_Integer)res;
+  परत (lua_Integer)res;
 }
 
 
-static int str_unpack (lua_State *L) {
+स्थिर पूर्णांक str_unpack (lua_State *L) {
   Header h;
-  const char *fmt = luaL_checkstring(L, 1);
-  size_t ld;
-  const char *data = luaL_checklstring(L, 2, &ld);
-  size_t pos = posrelatI(luaL_optinteger(L, 3, 1), ld) - 1;
-  int n = 0;  /* number of results */
+  स्थिरांक अक्षर *fmt = luaL_checkstring(L, 1);
+  माप_प्रकार ld;
+  स्थिरांक अक्षर *data = luaL_checklstring(L, 2, &ld);
+  माप_प्रकार pos = posrelatI(luaL_optinteger(L, 3, 1), ld) - 1;
+  पूर्णांक n = 0;  /* number of results */
   luaL_argcheck(L, pos <= ld, 3, "initial position out of string");
   initheader(L, &h);
-  while (*fmt != '\0') {
-    unsigned ntoalign;
-    size_t size;
+  पर्यंत (*fmt != '\0') {
+    अचिन्हित ntoalign;
+    माप_प्रकार size;
     KOption opt = getdetails(&h, pos, &fmt, &size, &ntoalign);
     luaL_argcheck(L, ntoalign + size <= ld - pos, 2,
                     "data string too short");
@@ -1794,66 +1794,66 @@ static int str_unpack (lua_State *L) {
     /* stack space for item + next position */
     luaL_checkstack(L, 2, "too many results");
     n++;
-    switch (opt) {
-      case Kint:
-      case Kuint: {
+    निवड (opt) {
+      स्थिती Kint:
+      स्थिती Kuint: {
         lua_Integer res = unpackint(L, data + pos, h.islittle,
                                        cast_int(size), (opt == Kint));
         lua_pushinteger(L, res);
-        break;
+        थांबा;
       }
-      case Kfloat: {
-        float f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
-        break;
+      स्थिती Kfloat: {
+        दशांश f;
+        copywithendian((अक्षर *)&f, data + pos, आकार(f), h.islittle);
+        lua_pushnumber(L, (lua_संख्या)f);
+        थांबा;
       }
-      case Knumber: {
-        lua_Number f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
+      स्थिती Knumber: {
+        lua_संख्या f;
+        copywithendian((अक्षर *)&f, data + pos, आकार(f), h.islittle);
         lua_pushnumber(L, f);
-        break;
+        थांबा;
       }
-      case Kdouble: {
-        double f;
-        copywithendian((char *)&f, data + pos, sizeof(f), h.islittle);
-        lua_pushnumber(L, (lua_Number)f);
-        break;
+      स्थिती Kdouble: {
+        द्विगुण f;
+        copywithendian((अक्षर *)&f, data + pos, आकार(f), h.islittle);
+        lua_pushnumber(L, (lua_संख्या)f);
+        थांबा;
       }
-      case Kchar: {
+      स्थिती Kchar: {
         lua_pushlstring(L, data + pos, size);
-        break;
+        थांबा;
       }
-      case Kstring: {
+      स्थिती Kstring: {
         lua_Unsigned len = (lua_Unsigned)unpackint(L, data + pos,
                                           h.islittle, cast_int(size), 0);
         luaL_argcheck(L, len <= ld - pos - size, 2, "data string too short");
         lua_pushlstring(L, data + pos + size, cast_sizet(len));
         pos += cast_sizet(len);  /* skip string */
-        break;
+        थांबा;
       }
-      case Kzstr: {
-        size_t len = strlen(data + pos);
+      स्थिती Kzstr: {
+        माप_प्रकार len = म_माप(data + pos);
         luaL_argcheck(L, pos + len < ld, 2,
                          "unfinished string for format 'z'");
         lua_pushlstring(L, data + pos, len);
         pos += len + 1;  /* skip string plus final '\0' */
-        break;
+        थांबा;
       }
-      case Kpaddalign: case Kpadding: case Knop:
+      स्थिती Kpaddalign: स्थिती Kpadding: स्थिती Knop:
         n--;  /* undo increment */
-        break;
+        थांबा;
     }
     pos += size;
   }
   lua_pushinteger(L, cast_st2S(pos) + 1);  /* next position */
-  return n + 1;
+  परत n + 1;
 }
 
 /* }====================================================== */
 
 
-static const luaL_Reg strlib[] = {
+स्थिर स्थिरांक luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
   {"dump", str_dump},
@@ -1871,30 +1871,30 @@ static const luaL_Reg strlib[] = {
   {"pack", str_pack},
   {"packsize", str_packsize},
   {"unpack", str_unpack},
-  {NULL, NULL}
+  {रिक्त, रिक्त}
 };
 
 
-static void createmetatable (lua_State *L) {
+स्थिर शून्य createmetatable (lua_State *L) {
   /* table to be metatable for strings */
   luaL_newlibtable(L, stringmetamethods);
   luaL_setfuncs(L, stringmetamethods, 0);
   lua_pushliteral(L, "");  /* dummy string */
   lua_pushvalue(L, -2);  /* copy table */
   lua_setmetatable(L, -2);  /* set table as metatable for strings */
-  lua_pop(L, 1);  /* pop dummy string */
+  lua_काढा(L, 1);  /* pop dummy string */
   lua_pushvalue(L, -2);  /* get string library */
   lua_setfield(L, -2, "__index");  /* metatable.__index = string */
-  lua_pop(L, 1);  /* pop metatable */
+  lua_काढा(L, 1);  /* pop metatable */
 }
 
 
 /*
 ** Open string library
 */
-LUAMOD_API int luaopen_string (lua_State *L) {
+LUAMOD_API पूर्णांक luaopen_string (lua_State *L) {
   luaL_newlib(L, strlib);
   createmetatable(L);
-  return 1;
+  परत 1;
 }
 

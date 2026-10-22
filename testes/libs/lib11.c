@@ -1,10 +1,10 @@
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
 /* function from lib1.c */
-LUAMOD_API int lib1_export (lua_State *L);
+LUAMOD_API पूर्णांक lib1_export (lua_State *L);
 
-LUAMOD_API int luaopen_lib11 (lua_State *L) {
-  return lib1_export(L);
+LUAMOD_API पूर्णांक luaopen_lib11 (lua_State *L) {
+  परत lib1_export(L);
 }
 
 

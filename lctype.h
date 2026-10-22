@@ -7,7 +7,7 @@
 #ifndef lctype_h
 #define lctype_h
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
 
 /*
@@ -16,12 +16,12 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#जर !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#जर 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
 #define LUA_USE_CTYPE	0
-#else
+#अन्यथा
 /* must use standard C ctype */
 #define LUA_USE_CTYPE	1
 #endif
@@ -29,11 +29,11 @@
 #endif
 
 
-#if !LUA_USE_CTYPE	/* { */
+#जर !LUA_USE_CTYPE	/* { */
 
-#include <limits.h>
+#अन्तर्भाव <limits.h>
 
-#include "llimits.h"
+#अन्तर्भाव "llimits.h"
 
 
 #define ALPHABIT	0
@@ -74,26 +74,26 @@
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(स्थिरांक lu_byte luai_ctype_[अच_अक्षर_उच्च + 2];)
 
 
-#else			/* }{ */
+#अन्यथा			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#अन्तर्भाव <ctype.h>
 
 
-#define lislalpha(c)	(isalpha(c) || (c) == '_')
-#define lislalnum(c)	(isalnum(c) || (c) == '_')
-#define lisdigit(c)	(isdigit(c))
-#define lisspace(c)	(isspace(c))
-#define lisprint(c)	(isprint(c))
-#define lisxdigit(c)	(isxdigit(c))
+#define lislalpha(c)	(है_अक्षर(c) || (c) == '_')
+#define lislalnum(c)	(है_अक्षर_अंक(c) || (c) == '_')
+#define lisdigit(c)	(है_अंक(c))
+#define lisspace(c)	(है_खाली(c))
+#define lisprint(c)	(है_छाप(c))
+#define lisxdigit(c)	(है_षष्ठादशक(c))
 
-#define ltolower(c)	(tolower(c))
+#define ltolower(c)	(छोटे(c))
 
 #endif			/* } */
 

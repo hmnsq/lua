@@ -7,22 +7,22 @@
 #define lcorolib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#include <stdlib.h>
+#अन्तर्भाव <stdlib.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#अन्तर्भाव "lauxlib.h"
+#अन्तर्भाव "lualib.h"
+#अन्तर्भाव "llimits.h"
 
 
-static lua_State *getco (lua_State *L) {
+स्थिर lua_State *getco (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   luaL_argexpected(L, co, 1, "thread");
-  return co;
+  परत co;
 }
 
 
@@ -30,89 +30,89 @@ static lua_State *getco (lua_State *L) {
 ** Resumes a coroutine. Returns the number of results for non-error
 ** cases or -1 for errors.
 */
-static int auxresume (lua_State *L, lua_State *co, int narg) {
-  int status, nres;
-  if (l_unlikely(!lua_checkstack(co, narg))) {
+स्थिर पूर्णांक auxresume (lua_State *L, lua_State *co, पूर्णांक narg) {
+  पूर्णांक status, nres;
+  जर (l_unlikely(!lua_checkstack(co, narg))) {
     lua_pushliteral(L, "too many arguments to resume");
-    return -1;  /* error flag */
+    परत -1;  /* error flag */
   }
   lua_xmove(L, co, narg);
   status = lua_resume(co, L, narg, &nres);
-  if (l_likely(status == LUA_OK || status == LUA_YIELD)) {
-    if (l_unlikely(!lua_checkstack(L, nres + 1))) {
-      lua_pop(co, nres);  /* remove results anyway */
+  जर (l_likely(status == LUA_OK || status == LUA_YIELD)) {
+    जर (l_unlikely(!lua_checkstack(L, nres + 1))) {
+      lua_काढा(co, nres);  /* remove results anyway */
       lua_pushliteral(L, "too many results to resume");
-      return -1;  /* error flag */
+      परत -1;  /* error flag */
     }
     lua_xmove(co, L, nres);  /* move yielded values */
-    return nres;
+    परत nres;
   }
-  else {
+  अन्यथा {
     lua_xmove(co, L, 1);  /* move error message */
-    return -1;  /* error flag */
+    परत -1;  /* error flag */
   }
 }
 
 
-static int luaB_coresume (lua_State *L) {
+स्थिर पूर्णांक luaB_coresume (lua_State *L) {
   lua_State *co = getco(L);
-  int r;
+  पूर्णांक r;
   r = auxresume(L, co, lua_gettop(L) - 1);
-  if (l_unlikely(r < 0)) {
+  जर (l_unlikely(r < 0)) {
     lua_pushboolean(L, 0);
-    lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    lua_घाला(L, -2);
+    परत 2;  /* return false + error message */
   }
-  else {
+  अन्यथा {
     lua_pushboolean(L, 1);
-    lua_insert(L, -(r + 1));
-    return r + 1;  /* return true + 'resume' returns */
+    lua_घाला(L, -(r + 1));
+    परत r + 1;  /* return true + 'resume' returns */
   }
 }
 
 
-static int luaB_auxwrap (lua_State *L) {
+स्थिर पूर्णांक luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
-  int r = auxresume(L, co, lua_gettop(L));
-  if (l_unlikely(r < 0)) {  /* error? */
-    int stat = lua_status(co);
-    if (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
+  पूर्णांक r = auxresume(L, co, lua_gettop(L));
+  जर (l_unlikely(r < 0)) {  /* error? */
+    पूर्णांक stat = lua_status(co);
+    जर (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
       stat = lua_closethread(co, L);  /* close its tbc variables */
-      if (stat == LUA_OK)
-        return 0;  /* nothing to return */
+      जर (stat == LUA_OK)
+        परत 0;  /* nothing to return */
       lua_xmove(co, L, 1);  /* move error message to the caller */
     }
-    if (stat != LUA_ERRMEM &&  /* not a memory error and ... */
+    जर (stat != LUA_ERRMEM &&  /* not a memory error and ... */
         lua_type(L, -1) == LUA_TSTRING) {  /* ... error object is a string? */
       luaL_where(L, 1);  /* add extra info, if available */
-      lua_insert(L, -2);
+      lua_घाला(L, -2);
       lua_concat(L, 2);
     }
-    return lua_error(L);  /* propagate error */
+    परत lua_error(L);  /* propagate error */
   }
-  return r;
+  परत r;
 }
 
 
-static int luaB_cocreate (lua_State *L) {
+स्थिर पूर्णांक luaB_cocreate (lua_State *L) {
   lua_State *NL;
   luaL_checktype(L, 1, LUA_TFUNCTION);
   NL = lua_newthread(L);
   lua_pushvalue(L, 1);  /* move function to top */
   lua_xmove(L, NL, 1);  /* move function from L to NL */
-  return 1;
+  परत 1;
 }
 
 
-static int luaB_cowrap (lua_State *L) {
+स्थिर पूर्णांक luaB_cowrap (lua_State *L) {
   luaB_cocreate(L);
   lua_pushcclosure(L, luaB_auxwrap, 1);
-  return 1;
+  परत 1;
 }
 
 
-static int luaB_yield (lua_State *L) {
-  return lua_yield(L, lua_gettop(L));
+स्थिर पूर्णांक luaB_yield (lua_State *L) {
+  परत lua_yield(L, lua_gettop(L));
 }
 
 
@@ -122,90 +122,90 @@ static int luaB_yield (lua_State *L) {
 #define COS_NORM	3
 
 
-static const char *const statname[] =
+स्थिर स्थिरांक अक्षर *स्थिरांक statname[] =
   {"running", "dead", "suspended", "normal"};
 
 
-static int auxstatus (lua_State *L, lua_State *co) {
-  if (L == co) return COS_RUN;
-  else {
-    switch (lua_status(co)) {
-      case LUA_YIELD:
-        return COS_YIELD;
-      case LUA_OK: {
+स्थिर पूर्णांक auxstatus (lua_State *L, lua_State *co) {
+  जर (L == co) परत COS_RUN;
+  अन्यथा {
+    निवड (lua_status(co)) {
+      स्थिती LUA_YIELD:
+        परत COS_YIELD;
+      स्थिती LUA_OK: {
         lua_Debug ar;
-        if (lua_getstack(co, 0, &ar))  /* does it have frames? */
-          return COS_NORM;  /* it is running */
-        else if (lua_gettop(co) == 0)
-            return COS_DEAD;
-        else
-          return COS_YIELD;  /* initial state */
+        जर (lua_getstack(co, 0, &ar))  /* does it have frames? */
+          परत COS_NORM;  /* it is running */
+        अन्यथा जर (lua_gettop(co) == 0)
+            परत COS_DEAD;
+        अन्यथा
+          परत COS_YIELD;  /* initial state */
       }
-      default:  /* some error occurred */
-        return COS_DEAD;
+      पूर्वनिर्धारित:  /* some error occurred */
+        परत COS_DEAD;
     }
   }
 }
 
 
-static int luaB_costatus (lua_State *L) {
+स्थिर पूर्णांक luaB_costatus (lua_State *L) {
   lua_State *co = getco(L);
   lua_pushstring(L, statname[auxstatus(L, co)]);
-  return 1;
+  परत 1;
 }
 
 
-static lua_State *getoptco (lua_State *L) {
-  return (lua_isnone(L, 1) ? L : getco(L));
+स्थिर lua_State *getoptco (lua_State *L) {
+  परत (lua_isnone(L, 1) ? L : getco(L));
 }
 
 
-static int luaB_yieldable (lua_State *L) {
+स्थिर पूर्णांक luaB_yieldable (lua_State *L) {
   lua_State *co = getoptco(L);
   lua_pushboolean(L, lua_isyieldable(co));
-  return 1;
+  परत 1;
 }
 
 
-static int luaB_corunning (lua_State *L) {
-  int ismain = lua_pushthread(L);
+स्थिर पूर्णांक luaB_corunning (lua_State *L) {
+  पूर्णांक ismain = lua_pushthread(L);
   lua_pushboolean(L, ismain);
-  return 2;
+  परत 2;
 }
 
 
-static int luaB_close (lua_State *L) {
+स्थिर पूर्णांक luaB_close (lua_State *L) {
   lua_State *co = getoptco(L);
-  int status = auxstatus(L, co);
-  switch (status) {
-    case COS_DEAD: case COS_YIELD: {
+  पूर्णांक status = auxstatus(L, co);
+  निवड (status) {
+    स्थिती COS_DEAD: स्थिती COS_YIELD: {
       status = lua_closethread(co, L);
-      if (status == LUA_OK) {
+      जर (status == LUA_OK) {
         lua_pushboolean(L, 1);
-        return 1;
+        परत 1;
       }
-      else {
+      अन्यथा {
         lua_pushboolean(L, 0);
         lua_xmove(co, L, 1);  /* move error message */
-        return 2;
+        परत 2;
       }
     }
-    case COS_NORM:
-      return luaL_error(L, "cannot close a %s coroutine", statname[status]);
-    case COS_RUN:
+    स्थिती COS_NORM:
+      परत luaL_error(L, "cannot close a %s coroutine", statname[status]);
+    स्थिती COS_RUN:
       lua_geti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);  /* get main */
-      if (lua_tothread(L, -1) == co)
-        return luaL_error(L, "cannot close main thread");
+      जर (lua_tothread(L, -1) == co)
+        परत luaL_error(L, "cannot close main thread");
       lua_closethread(co, L);  /* close itself */
       /* previous call does not return *//* FALLTHROUGH */
-    default:
+    पूर्वनिर्धारित:
       lua_assert(0);
-      return 0;
+      परत 0;
   }
 }
 
 
-static const luaL_Reg co_funcs[] = {
+स्थिर स्थिरांक luaL_Reg co_funcs[] = {
   {"create", luaB_cocreate},
   {"resume", luaB_coresume},
   {"running", luaB_corunning},
@@ -214,13 +214,13 @@ static const luaL_Reg co_funcs[] = {
   {"yield", luaB_yield},
   {"isyieldable", luaB_yieldable},
   {"close", luaB_close},
-  {NULL, NULL}
+  {रिक्त, रिक्त}
 };
 
 
 
-LUAMOD_API int luaopen_coroutine (lua_State *L) {
+LUAMOD_API पूर्णांक luaopen_coroutine (lua_State *L) {
   luaL_newlib(L, co_funcs);
-  return 1;
+  परत 1;
 }
 

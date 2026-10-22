@@ -7,9 +7,9 @@
 #ifndef lstring_h
 #define lstring_h
 
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
+#अन्तर्भाव "lgc.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lstate.h"
 
 
 /*
@@ -25,7 +25,7 @@
 ** metamethods, as these strings must be internalized;
 ** #("function") = 8, #("__newindex") = 10.)
 */
-#if !defined(LUAI_MAXSHORTLEN)
+#जर !defined(LUAI_MAXSHORTLEN)
 #define LUAI_MAXSHORTLEN	40
 #endif
 
@@ -35,11 +35,11 @@
 ** itself (including final '\0').
 */
 #define sizestrshr(l)  \
-	(offsetof(TString, contents) + ((l) + 1) * sizeof(char))
+	(दुरत्व(TString, contents) + ((l) + 1) * आकार(अक्षर))
 
 
 #define luaS_newliteral(L, s)	(luaS_newlstr(L, "" s, \
-                                 (sizeof(s)/sizeof(char))-1))
+                                 (आकार(s)/आकार(अक्षर))-1))
 
 
 /*
@@ -54,20 +54,20 @@
 #define eqshrstr(a,b)	check_exp((a)->tt == LUA_VSHRSTR, (a) == (b))
 
 
-LUAI_FUNC unsigned luaS_hashlongstr (TString *ts);
-LUAI_FUNC int luaS_eqstr (TString *a, TString *b);
-LUAI_FUNC void luaS_resize (lua_State *L, int newsize);
-LUAI_FUNC void luaS_clearcache (global_State *g);
-LUAI_FUNC void luaS_init (lua_State *L);
-LUAI_FUNC void luaS_remove (lua_State *L, TString *ts);
-LUAI_FUNC Udata *luaS_newudata (lua_State *L, size_t s,
-                                              unsigned short nuvalue);
-LUAI_FUNC TString *luaS_newlstr (lua_State *L, const char *str, size_t l);
-LUAI_FUNC TString *luaS_new (lua_State *L, const char *str);
-LUAI_FUNC TString *luaS_createlngstrobj (lua_State *L, size_t l);
+LUAI_FUNC अचिन्हित luaS_hashlongstr (TString *ts);
+LUAI_FUNC पूर्णांक luaS_eqstr (TString *a, TString *b);
+LUAI_FUNC शून्य luaS_resize (lua_State *L, पूर्णांक newsize);
+LUAI_FUNC शून्य luaS_clearcache (global_State *g);
+LUAI_FUNC शून्य luaS_init (lua_State *L);
+LUAI_FUNC शून्य luaS_remove (lua_State *L, TString *ts);
+LUAI_FUNC Udata *luaS_newudata (lua_State *L, माप_प्रकार s,
+                                              अचिन्हित लघु nuvalue);
+LUAI_FUNC TString *luaS_newlstr (lua_State *L, स्थिरांक अक्षर *str, माप_प्रकार l);
+LUAI_FUNC TString *luaS_new (lua_State *L, स्थिरांक अक्षर *str);
+LUAI_FUNC TString *luaS_createlngstrobj (lua_State *L, माप_प्रकार l);
 LUAI_FUNC TString *luaS_newextlstr (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUAI_FUNC size_t luaS_sizelngstr (size_t len, int kind);
+		स्थिरांक अक्षर *s, माप_प्रकार len, lua_Alloc falloc, शून्य *ud);
+LUAI_FUNC माप_प्रकार luaS_sizelngstr (माप_प्रकार len, पूर्णांक kind);
 LUAI_FUNC TString *luaS_normstr (lua_State *L, TString *ts);
 
 #endif
