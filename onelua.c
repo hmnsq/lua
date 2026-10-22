@@ -30,7 +30,7 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
+#གལ་སྲིད 0
 #define LUA_USE_LINUX
 #define LUA_USE_MACOSX
 #define LUA_USE_POSIX
@@ -40,7 +40,7 @@
 /*
 ** Other specific features
 */
-#if 0
+#གལ་སྲིད 0
 #define LUA_32BITS
 #define LUA_USE_C89
 #endif
@@ -121,7 +121,7 @@
 #endif
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
+#གལ་སྲིད defined(LUA_DEBUG)
 #include "ltests.c"
 #endif
 

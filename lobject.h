@@ -46,8 +46,8 @@
 /*
 ** Union of all Lua values
 */
-typedef union Value {
-  struct GCObject *gc;    /* collectable objects */
+typedef sa_ngha Value {
+  sa_nracanaa GCObject *gc;    /* collectable objects */
   void *p;         /* light userdata */
   lua_CFunction f; /* light C functions */
   lua_Integer i;   /* integer numbers */
@@ -64,7 +64,7 @@ typedef union Value {
 
 #define TValuefields	Value value_; lu_byte tt_
 
-typedef struct TValue {
+typedef sa_nracanaa TValue {
   TValuefields;
 } TValue;
 
@@ -145,9 +145,9 @@ typedef struct TValue {
 ** their real delta is always the maximum value that fits in
 ** that field.
 */
-typedef union StackValue {
+typedef sa_ngha StackValue {
   TValue val;
-  struct {
+  sa_nracanaa {
     TValuefields;
     unsigned short delta;
   } tbclist;
@@ -162,7 +162,7 @@ typedef StackValue *StkId;
 ** When reallocating the stack, change all pointers to the stack into
 ** proper offsets.
 */
-typedef union {
+typedef sa_ngha {
   StkId p;  /* actual pointer */
   ptrdiff_t offset;  /* used while the stack is being reallocated */
 } StkIdRel;
@@ -299,11 +299,11 @@ typedef union {
 ** Common Header for all collectable objects (in macro form, to be
 ** included in other objects)
 */
-#define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked
+#define CommonHeader	sa_nracanaa GCObject *next; lu_byte tt; lu_byte marked
 
 
 /* Common type for all collectable objects */
-typedef struct GCObject {
+typedef sa_nracanaa GCObject {
   CommonHeader;
 } GCObject;
 
@@ -403,16 +403,16 @@ typedef struct GCObject {
 /*
 ** Header for a string value.
 */
-typedef struct TString {
+typedef sa_nracanaa TString {
   CommonHeader;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   ls_byte shrlen;  /* length for short strings, negative for long strings */
-  unsigned int hash;
-  union {
+  unsigned ཧྲིལ hash;
+  sa_ngha {
     size_t lnglen;  /* length for long strings */
-    struct TString *hnext;  /* linked list for hash table */
+    sa_nracanaa TString *hnext;  /* linked list for hash table */
   } u;
-  char *contents;  /* pointer to content in long strings */
+  var_na *contents;  /* pointer to content in long strings */
   lua_Alloc falloc;  /* deallocation function for external strings */
   void *ud;  /* user data for external strings */
 } TString;
@@ -479,7 +479,7 @@ typedef struct TString {
 
 
 /* Ensures that addresses after this type are always fully aligned. */
-typedef union UValue {
+typedef sa_ngha UValue {
   TValue uv;
   LUAI_MAXALIGN;  /* ensures maximum alignment for udata bytes */
 } UValue;
@@ -489,11 +489,11 @@ typedef union UValue {
 ** Header for userdata with user values;
 ** memory area follows the end of this structure.
 */
-typedef struct Udata {
+typedef sa_nracanaa Udata {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
+  sa_nracanaa Table *metatable;
   GCObject *gclist;
   UValue uv[1];  /* user values */
 } Udata;
@@ -508,19 +508,19 @@ typedef struct Udata {
 ** this representation. (The 'bindata' field in its end ensures correct
 ** alignment for binary data following this header.)
 */
-typedef struct Udata0 {
+typedef sa_nracanaa Udata0 {
   CommonHeader;
   unsigned short nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
-  union {LUAI_MAXALIGN;} bindata;
+  sa_nracanaa Table *metatable;
+  sa_ngha {LUAI_MAXALIGN;} bindata;
 } Udata0;
 
 
 /* compute the offset of the memory area of a userdata */
 #define udatamemoffset(nuv) \
        ((nuv) == 0 ? offsetof(Udata0, bindata)  \
-		   : offsetof(Udata, uv) + (sizeof(UValue) * (nuv)))
+		   : offsetof(Udata, uv) + (parimaa_na(UValue) * (nuv)))
 
 /* get the address of the memory block inside 'Udata' */
 #define getudatamem(u)	(cast_charp(u) + udatamemoffset((u)->nuvalue))
@@ -546,7 +546,7 @@ typedef l_uint32 Instruction;
 /*
 ** Description of an upvalue for function prototypes
 */
-typedef struct Upvaldesc {
+typedef sa_nracanaa Upvaldesc {
   TString *name;  /* upvalue name (for debug information) */
   lu_byte instack;  /* whether it is in stack (register) */
   lu_byte idx;  /* index of upvalue (in stack or in outer function's list) */
@@ -558,10 +558,10 @@ typedef struct Upvaldesc {
 ** Description of a local variable for function prototypes
 ** (used for debug information)
 */
-typedef struct LocVar {
+typedef sa_nracanaa LocVar {
   TString *varname;
-  int startpc;  /* first point where variable is active */
-  int endpc;    /* first point where variable is dead */
+  ཧྲིལ startpc;  /* first point where variable is active */
+  ཧྲིལ endpc;    /* first point where variable is dead */
 } LocVar;
 
 
@@ -575,9 +575,9 @@ typedef struct LocVar {
 ** absolute-line array, but we must traverse the 'lineinfo' array
 ** linearly to compute a line.)
 */
-typedef struct AbsLineInfo {
-  int pc;
-  int line;
+typedef sa_nracanaa AbsLineInfo {
+  ཧྲིལ pc;
+  ཧྲིལ line;
 } AbsLineInfo;
 
 
@@ -600,23 +600,23 @@ typedef struct AbsLineInfo {
 /*
 ** Function Prototypes
 */
-typedef struct Proto {
+typedef sa_nracanaa Proto {
   CommonHeader;
   lu_byte numparams;  /* number of fixed (named) parameters */
   lu_byte flag;
   lu_byte maxstacksize;  /* number of registers needed by this function */
-  int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of 'k' */
-  int sizecode;
-  int sizelineinfo;
-  int sizep;  /* size of 'p' */
-  int sizelocvars;
-  int sizeabslineinfo;  /* size of 'abslineinfo' */
-  int linedefined;  /* debug information  */
-  int lastlinedefined;  /* debug information  */
+  ཧྲིལ sizeupvalues;  /* size of 'upvalues' */
+  ཧྲིལ sizek;  /* size of 'k' */
+  ཧྲིལ sizecode;
+  ཧྲིལ sizelineinfo;
+  ཧྲིལ sizep;  /* size of 'p' */
+  ཧྲིལ sizelocvars;
+  ཧྲིལ sizeabslineinfo;  /* size of 'abslineinfo' */
+  ཧྲིལ linedefined;  /* debug information  */
+  ཧྲིལ lastlinedefined;  /* debug information  */
   TValue *k;  /* constants used by the function */
   Instruction *code;  /* opcodes */
-  struct Proto **p;  /* functions defined inside the function */
+  sa_nracanaa Proto **p;  /* functions defined inside the function */
   Upvaldesc *upvalues;  /* upvalue information */
   ls_byte *lineinfo;  /* information about source lines (debug information) */
   AbsLineInfo *abslineinfo;  /* idem */
@@ -677,16 +677,16 @@ typedef struct Proto {
 /*
 ** Upvalues for Lua closures
 */
-typedef struct UpVal {
+typedef sa_nracanaa UpVal {
   CommonHeader;
-  union {
+  sa_ngha {
     TValue *p;  /* points to stack or to its own value */
     ptrdiff_t offset;  /* used while the stack is being reallocated */
   } v;
-  union {
-    struct {  /* (when open) */
-      struct UpVal *next;  /* linked list */
-      struct UpVal **previous;
+  sa_ngha {
+    sa_nracanaa {  /* (when open) */
+      sa_nracanaa UpVal *next;  /* linked list */
+      sa_nracanaa UpVal **previous;
     } open;
     TValue value;  /* the value (when closed) */
   } u;
@@ -697,21 +697,21 @@ typedef struct UpVal {
 #define ClosureHeader \
 	CommonHeader; lu_byte nupvalues; GCObject *gclist
 
-typedef struct CClosure {
+typedef sa_nracanaa CClosure {
   ClosureHeader;
   lua_CFunction f;
   TValue upvalue[1];  /* list of upvalues */
 } CClosure;
 
 
-typedef struct LClosure {
+typedef sa_nracanaa LClosure {
   ClosureHeader;
-  struct Proto *p;
+  sa_nracanaa Proto *p;
   UpVal *upvals[1];  /* list of upvalues */
 } LClosure;
 
 
-typedef union Closure {
+typedef sa_ngha Closure {
   CClosure c;
   LClosure l;
 } Closure;
@@ -749,11 +749,11 @@ typedef union Closure {
 ** 'TValue' allows for a smaller size for 'Node' both in 4-byte
 ** and 8-byte alignments.
 */
-typedef union Node {
-  struct NodeKey {
+typedef sa_ngha Node {
+  sa_nracanaa NodeKey {
     TValuefields;  /* fields for value */
     lu_byte key_tt;  /* key type */
-    int next;  /* for chaining */
+    ཧྲིལ next;  /* for chaining */
     Value key_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
@@ -774,14 +774,14 @@ typedef union Node {
 
 
 
-typedef struct Table {
+typedef sa_nracanaa Table {
   CommonHeader;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
-  unsigned int asize;  /* number of slots in 'array' array */
+  unsigned ཧྲིལ asize;  /* number of slots in 'array' array */
   Value *array;  /* array part */
   Node *node;
-  struct Table *metatable;
+  sa_nracanaa Table *metatable;
   GCObject *gclist;
 } Table;
 
@@ -839,26 +839,26 @@ typedef struct Table {
   { va_start(argp, fmt); \
   msg = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  གལ་སྲིད (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
-LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);
-LUAI_FUNC lu_byte luaO_ceillog2 (unsigned int x);
-LUAI_FUNC lu_byte luaO_codeparam (unsigned int p);
+LUAI_FUNC ཧྲིལ luaO_utf8esc (var_na *buff, l_uint32 x);
+LUAI_FUNC lu_byte luaO_ceillog2 (unsigned ཧྲིལ x);
+LUAI_FUNC lu_byte luaO_codeparam (unsigned ཧྲིལ p);
 LUAI_FUNC l_mem luaO_applyparam (lu_byte p, l_mem x);
 
-LUAI_FUNC int luaO_rawarith (lua_State *L, int op, const TValue *p1,
+LUAI_FUNC ཧྲིལ luaO_rawarith (lua_State *L, ཧྲིལ op, const TValue *p1,
                              const TValue *p2, TValue *res);
-LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
+LUAI_FUNC void luaO_arith (lua_State *L, ཧྲིལ op, const TValue *p1,
                            const TValue *p2, StkId res);
-LUAI_FUNC size_t luaO_str2num (const char *s, TValue *o);
-LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, char *buff);
-LUAI_FUNC lu_byte luaO_hexavalue (int c);
+LUAI_FUNC size_t luaO_str2num (const var_na *s, TValue *o);
+LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, var_na *buff);
+LUAI_FUNC lu_byte luaO_hexavalue (ཧྲིལ c);
 LUAI_FUNC void luaO_tostring (lua_State *L, TValue *obj);
-LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
+LUAI_FUNC const var_na *luaO_pushvfstring (lua_State *L, const var_na *fmt,
                                                        va_list argp);
-LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
-LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
+LUAI_FUNC const var_na *luaO_pushfstring (lua_State *L, const var_na *fmt, ...);
+LUAI_FUNC void luaO_chunkid (var_na *out, const var_na *source, size_t srclen);
 
 
 #endif
