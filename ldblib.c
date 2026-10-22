@@ -7,25 +7,25 @@
 #define ldblib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#অন্তর্ভাব "lprefix.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#অন্তর্ভাব <stdio.h>
+#অন্তর্ভাব <stdlib.h>
+#অন্তর্ভাব <string.h>
 
-#include "lua.h"
+#অন্তর্ভাব "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#অন্তর্ভাব "lauxlib.h"
+#অন্তর্ভাব "lualib.h"
+#অন্তর্ভাব "llimits.h"
 
 
 /*
 ** The hook table at registry[HOOKKEY] maps threads to their current
 ** hook function.
 */
-static const char *const HOOKKEY = "_HOOKKEY";
+স্থির ধ্রুবক অক্ষর *ধ্রুবক HOOKKEY = "_HOOKKEY";
 
 
 /*
@@ -33,56 +33,56 @@ static const char *const HOOKKEY = "_HOOKKEY";
 ** guarantees about its stack space; any push in L1 must be
 ** checked.
 */
-static void checkstack (lua_State *L, lua_State *L1, int n) {
-  if (l_unlikely(L != L1 && !lua_checkstack(L1, n)))
+স্থির শূন্য checkstack (lua_State *L, lua_State *L1, পূর্ণসংখ্যা n) {
+  যদি (l_unlikely(L != L1 && !lua_checkstack(L1, n)))
     luaL_error(L, "stack overflow");
 }
 
 
-static int db_getregistry (lua_State *L) {
+স্থির পূর্ণসংখ্যা db_getregistry (lua_State *L) {
   lua_pushvalue(L, LUA_REGISTRYINDEX);
-  return 1;
+  ফেরত 1;
 }
 
 
-static int db_getmetatable (lua_State *L) {
+স্থির পূর্ণসংখ্যা db_getmetatable (lua_State *L) {
   luaL_checkany(L, 1);
-  if (!lua_getmetatable(L, 1)) {
+  যদি (!lua_getmetatable(L, 1)) {
     lua_pushnil(L);  /* no metatable */
   }
-  return 1;
+  ফেরত 1;
 }
 
 
-static int db_setmetatable (lua_State *L) {
-  int t = lua_type(L, 2);
+স্থির পূর্ণসংখ্যা db_setmetatable (lua_State *L) {
+  পূর্ণসংখ্যা t = lua_type(L, 2);
   luaL_argexpected(L, t == LUA_TNIL || t == LUA_TTABLE, 2, "nil or table");
   lua_settop(L, 2);
   lua_setmetatable(L, 1);
-  return 1;  /* return 1st argument */
+  ফেরত 1;  /* return 1st argument */
 }
 
 
-static int db_getuservalue (lua_State *L) {
-  int n = (int)luaL_optinteger(L, 2, 1);
-  if (lua_type(L, 1) != LUA_TUSERDATA)
+স্থির পূর্ণসংখ্যা db_getuservalue (lua_State *L) {
+  পূর্ণসংখ্যা n = (পূর্ণসংখ্যা)luaL_optinteger(L, 2, 1);
+  যদি (lua_type(L, 1) != LUA_TUSERDATA)
     luaL_pushfail(L);
-  else if (lua_getiuservalue(L, 1, n) != LUA_TNONE) {
+  অন্যথা যদি (lua_getiuservalue(L, 1, n) != LUA_TNONE) {
     lua_pushboolean(L, 1);
-    return 2;
+    ফেরত 2;
   }
-  return 1;
+  ফেরত 1;
 }
 
 
-static int db_setuservalue (lua_State *L) {
-  int n = (int)luaL_optinteger(L, 3, 1);
+স্থির পূর্ণসংখ্যা db_setuservalue (lua_State *L) {
+  পূর্ণসংখ্যা n = (পূর্ণসংখ্যা)luaL_optinteger(L, 3, 1);
   luaL_checktype(L, 1, LUA_TUSERDATA);
   luaL_checkany(L, 2);
   lua_settop(L, 2);
-  if (!lua_setiuservalue(L, 1, n))
+  যদি (!lua_setiuservalue(L, 1, n))
     luaL_pushfail(L);
-  return 1;
+  ফেরত 1;
 }
 
 
@@ -92,14 +92,14 @@ static int db_setuservalue (lua_State *L) {
 ** 1 if this argument is present (so that functions can skip it to
 ** access their other arguments)
 */
-static lua_State *getthread (lua_State *L, int *arg) {
-  if (lua_isthread(L, 1)) {
+স্থির lua_State *getthread (lua_State *L, পূর্ণসংখ্যা *arg) {
+  যদি (lua_isthread(L, 1)) {
     *arg = 1;
-    return lua_tothread(L, 1);
+    ফেরত lua_tothread(L, 1);
   }
-  else {
+  অন্যথা {
     *arg = 0;
-    return L;  /* function will operate over current thread */
+    ফেরত L;  /* function will operate over current thread */
   }
 }
 
@@ -109,17 +109,17 @@ static lua_State *getthread (lua_State *L, int *arg) {
 ** from 'lua_getinfo' into result table. Key is always a string;
 ** value can be a string, an int, or a boolean.
 */
-static void settabss (lua_State *L, const char *k, const char *v) {
+স্থির শূন্য settabss (lua_State *L, ধ্রুবক অক্ষর *k, ধ্রুবক অক্ষর *v) {
   lua_pushstring(L, v);
   lua_setfield(L, -2, k);
 }
 
-static void settabsi (lua_State *L, const char *k, int v) {
+স্থির শূন্য settabsi (lua_State *L, ধ্রুবক অক্ষর *k, পূর্ণসংখ্যা v) {
   lua_pushinteger(L, v);
   lua_setfield(L, -2, k);
 }
 
-static void settabsb (lua_State *L, const char *k, int v) {
+স্থির শূন্য settabsb (lua_State *L, ধ্রুবক অক্ষর *k, পূর্ণসংখ্যা v) {
   lua_pushboolean(L, v);
   lua_setfield(L, -2, k);
 }
@@ -132,10 +132,10 @@ static void settabsb (lua_State *L, const char *k, int v) {
 ** 'lua_getinfo' on top of the result table so that it can call
 ** 'lua_setfield'.
 */
-static void treatstackoption (lua_State *L, lua_State *L1, const char *fname) {
-  if (L == L1)
+স্থির শূন্য treatstackoption (lua_State *L, lua_State *L1, ধ্রুবক অক্ষর *fname) {
+  যদি (L == L1)
     lua_rotate(L, -2, 1);  /* exchange object and table */
-  else
+  অন্যথা
     lua_xmove(L1, L, 1);  /* move object to the "main" stack */
   lua_setfield(L, -2, fname);  /* put object into table */
 }
@@ -147,28 +147,28 @@ static void treatstackoption (lua_State *L, lua_State *L1, const char *fname) {
 ** two optional outputs (function and line table) from function
 ** 'lua_getinfo'.
 */
-static int db_getinfo (lua_State *L) {
+স্থির পূর্ণসংখ্যা db_getinfo (lua_State *L) {
   lua_Debug ar;
-  int arg;
+  পূর্ণসংখ্যা arg;
   lua_State *L1 = getthread(L, &arg);
-  const char *options = luaL_optstring(L, arg+2, "flnSrtu");
+  ধ্রুবক অক্ষর *options = luaL_optstring(L, arg+2, "flnSrtu");
   checkstack(L, L1, 3);
   luaL_argcheck(L, options[0] != '>', arg + 2, "invalid option '>'");
-  if (lua_isfunction(L, arg + 1)) {  /* info about a function? */
+  যদি (lua_isfunction(L, arg + 1)) {  /* info about a function? */
     options = lua_pushfstring(L, ">%s", options);  /* add '>' to 'options' */
     lua_pushvalue(L, arg + 1);  /* move function to 'L1' stack */
     lua_xmove(L, L1, 1);
   }
-  else {  /* stack level */
-    if (!lua_getstack(L1, (int)luaL_checkinteger(L, arg + 1), &ar)) {
+  অন্যথা {  /* stack level */
+    যদি (!lua_getstack(L1, (পূর্ণসংখ্যা)luaL_checkinteger(L, arg + 1), &ar)) {
       luaL_pushfail(L);  /* level out of range */
-      return 1;
+      ফেরত 1;
     }
   }
-  if (!lua_getinfo(L1, options, &ar))
-    return luaL_argerror(L, arg+2, "invalid option");
+  যদি (!lua_getinfo(L1, options, &ar))
+    ফেরত luaL_argerror(L, arg+2, "invalid option");
   lua_newtable(L);  /* table to collect results */
-  if (strchr(options, 'S')) {
+  যদি (strchr(options, 'S')) {
     lua_pushlstring(L, ar.source, ar.srclen);
     lua_setfield(L, -2, "source");
     settabss(L, "short_src", ar.short_src);
@@ -176,108 +176,108 @@ static int db_getinfo (lua_State *L) {
     settabsi(L, "lastlinedefined", ar.lastlinedefined);
     settabss(L, "what", ar.what);
   }
-  if (strchr(options, 'l'))
+  যদি (strchr(options, 'l'))
     settabsi(L, "currentline", ar.currentline);
-  if (strchr(options, 'u')) {
+  যদি (strchr(options, 'u')) {
     settabsi(L, "nups", ar.nups);
     settabsi(L, "nparams", ar.nparams);
     settabsb(L, "isvararg", ar.isvararg);
   }
-  if (strchr(options, 'n')) {
+  যদি (strchr(options, 'n')) {
     settabss(L, "name", ar.name);
     settabss(L, "namewhat", ar.namewhat);
   }
-  if (strchr(options, 'r')) {
+  যদি (strchr(options, 'r')) {
     settabsi(L, "ftransfer", ar.ftransfer);
     settabsi(L, "ntransfer", ar.ntransfer);
   }
-  if (strchr(options, 't')) {
+  যদি (strchr(options, 't')) {
     settabsb(L, "istailcall", ar.istailcall);
     settabsi(L, "extraargs", ar.extraargs);
   }
-  if (strchr(options, 'L'))
+  যদি (strchr(options, 'L'))
     treatstackoption(L, L1, "activelines");
-  if (strchr(options, 'f'))
+  যদি (strchr(options, 'f'))
     treatstackoption(L, L1, "func");
-  return 1;  /* return table */
+  ফেরত 1;  /* return table */
 }
 
 
-static int db_getlocal (lua_State *L) {
-  int arg;
+স্থির পূর্ণসংখ্যা db_getlocal (lua_State *L) {
+  পূর্ণসংখ্যা arg;
   lua_State *L1 = getthread(L, &arg);
-  int nvar = (int)luaL_checkinteger(L, arg + 2);  /* local-variable index */
-  if (lua_isfunction(L, arg + 1)) {  /* function argument? */
+  পূর্ণসংখ্যা nvar = (পূর্ণসংখ্যা)luaL_checkinteger(L, arg + 2);  /* local-variable index */
+  যদি (lua_isfunction(L, arg + 1)) {  /* function argument? */
     lua_pushvalue(L, arg + 1);  /* push function */
-    lua_pushstring(L, lua_getlocal(L, NULL, nvar));  /* push local name */
-    return 1;  /* return only name (there is no value) */
+    lua_pushstring(L, lua_getlocal(L, ফাঁকা, nvar));  /* push local name */
+    ফেরত 1;  /* return only name (there is no value) */
   }
-  else {  /* stack-level argument */
+  অন্যথা {  /* stack-level argument */
     lua_Debug ar;
-    const char *name;
-    int level = (int)luaL_checkinteger(L, arg + 1);
-    if (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
-      return luaL_argerror(L, arg+1, "level out of range");
+    ধ্রুবক অক্ষর *name;
+    পূর্ণসংখ্যা level = (পূর্ণসংখ্যা)luaL_checkinteger(L, arg + 1);
+    যদি (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
+      ফেরত luaL_argerror(L, arg+1, "level out of range");
     checkstack(L, L1, 1);
     name = lua_getlocal(L1, &ar, nvar);
-    if (name) {
+    যদি (name) {
       lua_xmove(L1, L, 1);  /* move local value */
       lua_pushstring(L, name);  /* push name */
       lua_rotate(L, -2, 1);  /* re-order */
-      return 2;
+      ফেরত 2;
     }
-    else {
+    অন্যথা {
       luaL_pushfail(L);  /* no name (nor value) */
-      return 1;
+      ফেরত 1;
     }
   }
 }
 
 
-static int db_setlocal (lua_State *L) {
-  int arg;
-  const char *name;
+স্থির পূর্ণসংখ্যা db_setlocal (lua_State *L) {
+  পূর্ণসংখ্যা arg;
+  ধ্রুবক অক্ষর *name;
   lua_State *L1 = getthread(L, &arg);
   lua_Debug ar;
-  int level = (int)luaL_checkinteger(L, arg + 1);
-  int nvar = (int)luaL_checkinteger(L, arg + 2);
-  if (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
-    return luaL_argerror(L, arg+1, "level out of range");
+  পূর্ণসংখ্যা level = (পূর্ণসংখ্যা)luaL_checkinteger(L, arg + 1);
+  পূর্ণসংখ্যা nvar = (পূর্ণসংখ্যা)luaL_checkinteger(L, arg + 2);
+  যদি (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
+    ফেরত luaL_argerror(L, arg+1, "level out of range");
   luaL_checkany(L, arg+3);
   lua_settop(L, arg+3);
   checkstack(L, L1, 1);
   lua_xmove(L, L1, 1);
   name = lua_setlocal(L1, &ar, nvar);
-  if (name == NULL)
-    lua_pop(L1, 1);  /* pop value (if not popped by 'lua_setlocal') */
+  যদি (name == ফাঁকা)
+    lua_বের_করো(L1, 1);  /* pop value (if not popped by 'lua_setlocal') */
   lua_pushstring(L, name);
-  return 1;
+  ফেরত 1;
 }
 
 
 /*
 ** get (if 'get' is true) or set an upvalue from a closure
 */
-static int auxupvalue (lua_State *L, int get) {
-  const char *name;
-  int n = (int)luaL_checkinteger(L, 2);  /* upvalue index */
+স্থির পূর্ণসংখ্যা auxupvalue (lua_State *L, পূর্ণসংখ্যা get) {
+  ধ্রুবক অক্ষর *name;
+  পূর্ণসংখ্যা n = (পূর্ণসংখ্যা)luaL_checkinteger(L, 2);  /* upvalue index */
   luaL_checktype(L, 1, LUA_TFUNCTION);  /* closure */
   name = get ? lua_getupvalue(L, 1, n) : lua_setupvalue(L, 1, n);
-  if (name == NULL) return 0;
+  যদি (name == ফাঁকা) ফেরত 0;
   lua_pushstring(L, name);
-  lua_insert(L, -(get+1));  /* no-op if get is false */
-  return get + 1;
+  lua_ঢোকাও(L, -(get+1));  /* no-op if get is false */
+  ফেরত get + 1;
 }
 
 
-static int db_getupvalue (lua_State *L) {
-  return auxupvalue(L, 1);
+স্থির পূর্ণসংখ্যা db_getupvalue (lua_State *L) {
+  ফেরত auxupvalue(L, 1);
 }
 
 
-static int db_setupvalue (lua_State *L) {
+স্থির পূর্ণসংখ্যা db_setupvalue (lua_State *L) {
   luaL_checkany(L, 3);
-  return auxupvalue(L, 0);
+  ফেরত auxupvalue(L, 0);
 }
 
 
@@ -285,37 +285,37 @@ static int db_setupvalue (lua_State *L) {
 ** Check whether a given upvalue from a given closure exists and
 ** returns its index
 */
-static void *checkupval (lua_State *L, int argf, int argnup, int *pnup) {
-  void *id;
-  int nup = (int)luaL_checkinteger(L, argnup);  /* upvalue index */
+স্থির শূন্য *checkupval (lua_State *L, পূর্ণসংখ্যা argf, পূর্ণসংখ্যা argnup, পূর্ণসংখ্যা *pnup) {
+  শূন্য *id;
+  পূর্ণসংখ্যা nup = (পূর্ণসংখ্যা)luaL_checkinteger(L, argnup);  /* upvalue index */
   luaL_checktype(L, argf, LUA_TFUNCTION);  /* closure */
   id = lua_upvalueid(L, argf, nup);
-  if (pnup) {
-    luaL_argcheck(L, id != NULL, argnup, "invalid upvalue index");
+  যদি (pnup) {
+    luaL_argcheck(L, id != ফাঁকা, argnup, "invalid upvalue index");
     *pnup = nup;
   }
-  return id;
+  ফেরত id;
 }
 
 
-static int db_upvalueid (lua_State *L) {
-  void *id = checkupval(L, 1, 2, NULL);
-  if (id != NULL)
+স্থির পূর্ণসংখ্যা db_upvalueid (lua_State *L) {
+  শূন্য *id = checkupval(L, 1, 2, ফাঁকা);
+  যদি (id != ফাঁকা)
     lua_pushlightuserdata(L, id);
-  else
+  অন্যথা
     luaL_pushfail(L);
-  return 1;
+  ফেরত 1;
 }
 
 
-static int db_upvaluejoin (lua_State *L) {
-  int n1, n2;
+স্থির পূর্ণসংখ্যা db_upvaluejoin (lua_State *L) {
+  পূর্ণসংখ্যা n1, n2;
   checkupval(L, 1, 2, &n1);
   checkupval(L, 3, 4, &n2);
   luaL_argcheck(L, !lua_iscfunction(L, 1), 1, "Lua function expected");
   luaL_argcheck(L, !lua_iscfunction(L, 3), 3, "Lua function expected");
   lua_upvaluejoin(L, 1, n1, 3, n2);
-  return 0;
+  ফেরত 0;
 }
 
 
@@ -323,16 +323,16 @@ static int db_upvaluejoin (lua_State *L) {
 ** Call hook function registered at hook table for the current
 ** thread (if there is one)
 */
-static void hookf (lua_State *L, lua_Debug *ar) {
-  static const char *const hooknames[] =
+স্থির শূন্য hookf (lua_State *L, lua_Debug *ar) {
+  স্থির ধ্রুবক অক্ষর *ধ্রুবক hooknames[] =
     {"call", "return", "line", "count", "tail call"};
   lua_getfield(L, LUA_REGISTRYINDEX, HOOKKEY);
   lua_pushthread(L);
-  if (lua_rawget(L, -2) == LUA_TFUNCTION) {  /* is there a hook function? */
-    lua_pushstring(L, hooknames[(int)ar->event]);  /* push event name */
-    if (ar->currentline >= 0)
+  যদি (lua_rawget(L, -2) == LUA_TFUNCTION) {  /* is there a hook function? */
+    lua_pushstring(L, hooknames[(পূর্ণসংখ্যা)ar->event]);  /* push event name */
+    যদি (ar->currentline >= 0)
       lua_pushinteger(L, ar->currentline);  /* push current line */
-    else lua_pushnil(L);
+    অন্যথা lua_pushnil(L);
     lua_assert(lua_getinfo(L, "lS", ar));
     lua_call(L, 2, 0);  /* call hook function */
   }
@@ -342,44 +342,44 @@ static void hookf (lua_State *L, lua_Debug *ar) {
 /*
 ** Convert a string mask (for 'sethook') into a bit mask
 */
-static int makemask (const char *smask, int count) {
-  int mask = 0;
-  if (strchr(smask, 'c')) mask |= LUA_MASKCALL;
-  if (strchr(smask, 'r')) mask |= LUA_MASKRET;
-  if (strchr(smask, 'l')) mask |= LUA_MASKLINE;
-  if (count > 0) mask |= LUA_MASKCOUNT;
-  return mask;
+স্থির পূর্ণসংখ্যা makemask (ধ্রুবক অক্ষর *smask, পূর্ণসংখ্যা গুনতি) {
+  পূর্ণসংখ্যা mask = 0;
+  যদি (strchr(smask, 'c')) mask |= LUA_MASKCALL;
+  যদি (strchr(smask, 'r')) mask |= LUA_MASKRET;
+  যদি (strchr(smask, 'l')) mask |= LUA_MASKLINE;
+  যদি (গুনতি > 0) mask |= LUA_MASKCOUNT;
+  ফেরত mask;
 }
 
 
 /*
 ** Convert a bit mask (for 'gethook') into a string mask
 */
-static char *unmakemask (int mask, char *smask) {
-  int i = 0;
-  if (mask & LUA_MASKCALL) smask[i++] = 'c';
-  if (mask & LUA_MASKRET) smask[i++] = 'r';
-  if (mask & LUA_MASKLINE) smask[i++] = 'l';
+স্থির অক্ষর *unmakemask (পূর্ণসংখ্যা mask, অক্ষর *smask) {
+  পূর্ণসংখ্যা i = 0;
+  যদি (mask & LUA_MASKCALL) smask[i++] = 'c';
+  যদি (mask & LUA_MASKRET) smask[i++] = 'r';
+  যদি (mask & LUA_MASKLINE) smask[i++] = 'l';
   smask[i] = '\0';
-  return smask;
+  ফেরত smask;
 }
 
 
-static int db_sethook (lua_State *L) {
-  int arg, mask, count;
+স্থির পূর্ণসংখ্যা db_sethook (lua_State *L) {
+  পূর্ণসংখ্যা arg, mask, গুনতি;
   lua_Hook func;
   lua_State *L1 = getthread(L, &arg);
-  if (lua_isnoneornil(L, arg+1)) {  /* no hook? */
+  যদি (lua_isnoneornil(L, arg+1)) {  /* no hook? */
     lua_settop(L, arg+1);
-    func = NULL; mask = 0; count = 0;  /* turn off hooks */
+    func = ফাঁকা; mask = 0; গুনতি = 0;  /* turn off hooks */
   }
-  else {
-    const char *smask = luaL_checkstring(L, arg+2);
+  অন্যথা {
+    ধ্রুবক অক্ষর *smask = luaL_checkstring(L, arg+2);
     luaL_checktype(L, arg+1, LUA_TFUNCTION);
-    count = (int)luaL_optinteger(L, arg + 3, 0);
-    func = hookf; mask = makemask(smask, count);
+    গুনতি = (পূর্ণসংখ্যা)luaL_optinteger(L, arg + 3, 0);
+    func = hookf; mask = makemask(smask, গুনতি);
   }
-  if (!luaL_getsubtable(L, LUA_REGISTRYINDEX, HOOKKEY)) {
+  যদি (!luaL_getsubtable(L, LUA_REGISTRYINDEX, HOOKKEY)) {
     /* table just created; initialize it */
     lua_pushliteral(L, "k");
     lua_setfield(L, -2, "__mode");  /** hooktable.__mode = "k" */
@@ -390,24 +390,24 @@ static int db_sethook (lua_State *L) {
   lua_pushthread(L1); lua_xmove(L1, L, 1);  /* key (thread) */
   lua_pushvalue(L, arg + 1);  /* value (hook function) */
   lua_rawset(L, -3);  /* hooktable[L1] = new Lua hook */
-  lua_sethook(L1, func, mask, count);
-  return 0;
+  lua_sethook(L1, func, mask, গুনতি);
+  ফেরত 0;
 }
 
 
-static int db_gethook (lua_State *L) {
-  int arg;
+স্থির পূর্ণসংখ্যা db_gethook (lua_State *L) {
+  পূর্ণসংখ্যা arg;
   lua_State *L1 = getthread(L, &arg);
-  char buff[5];
-  int mask = lua_gethookmask(L1);
+  অক্ষর buff[5];
+  পূর্ণসংখ্যা mask = lua_gethookmask(L1);
   lua_Hook hook = lua_gethook(L1);
-  if (hook == NULL) {  /* no hook? */
+  যদি (hook == ফাঁকা) {  /* no hook? */
     luaL_pushfail(L);
-    return 1;
+    ফেরত 1;
   }
-  else if (hook != hookf)  /* external hook? */
+  অন্যথা যদি (hook != hookf)  /* external hook? */
     lua_pushliteral(L, "external hook");
-  else {  /* hook table must exist */
+  অন্যথা {  /* hook table must exist */
     lua_getfield(L, LUA_REGISTRYINDEX, HOOKKEY);
     checkstack(L, L1, 1);
     lua_pushthread(L1); lua_xmove(L1, L, 1);
@@ -416,40 +416,40 @@ static int db_gethook (lua_State *L) {
   }
   lua_pushstring(L, unmakemask(mask, buff));  /* 2nd result = mask */
   lua_pushinteger(L, lua_gethookcount(L1));  /* 3rd result = count */
-  return 3;
+  ফেরত 3;
 }
 
 
-static int db_debug (lua_State *L) {
-  for (;;) {
-    char buffer[250];
+স্থির পূর্ণসংখ্যা db_debug (lua_State *L) {
+  জন্য (;;) {
+    অক্ষর বাফার[250];
     lua_writestringerror("%s", "lua_debug> ");
-    if (fgets(buffer, sizeof(buffer), stdin) == NULL ||
-        strcmp(buffer, "cont\n") == 0)
-      return 0;
-    if (luaL_loadbufferx(L, buffer, strlen(buffer), "=(debug command)", "t") ||
+    যদি (fgets(বাফার, আকার(বাফার), stdin) == ফাঁকা ||
+        strcmp(বাফার, "cont\n") == 0)
+      ফেরত 0;
+    যদি (luaL_loadbufferx(L, বাফার, strlen(বাফার), "=(debug command)", "t") ||
         lua_pcall(L, 0, 0, 0))
-      lua_writestringerror("%s\n", luaL_tolstring(L, -1, NULL));
+      lua_writestringerror("%s\n", luaL_tolstring(L, -1, ফাঁকা));
     lua_settop(L, 0);  /* remove eventual returns */
   }
 }
 
 
-static int db_traceback (lua_State *L) {
-  int arg;
+স্থির পূর্ণসংখ্যা db_traceback (lua_State *L) {
+  পূর্ণসংখ্যা arg;
   lua_State *L1 = getthread(L, &arg);
-  const char *msg = lua_tostring(L, arg + 1);
-  if (msg == NULL && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
+  ধ্রুবক অক্ষর *বার্তা = lua_tostring(L, arg + 1);
+  যদি (বার্তা == ফাঁকা && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
     lua_pushvalue(L, arg + 1);  /* return it untouched */
-  else {
-    int level = (int)luaL_optinteger(L, arg + 2, (L == L1) ? 1 : 0);
-    luaL_traceback(L, L1, msg, level);
+  অন্যথা {
+    পূর্ণসংখ্যা level = (পূর্ণসংখ্যা)luaL_optinteger(L, arg + 2, (L == L1) ? 1 : 0);
+    luaL_traceback(L, L1, বার্তা, level);
   }
-  return 1;
+  ফেরত 1;
 }
 
 
-static const luaL_Reg dblib[] = {
+স্থির ধ্রুবক luaL_Reg dblib[] = {
   {"debug", db_debug},
   {"getuservalue", db_getuservalue},
   {"gethook", db_gethook},
@@ -466,12 +466,12 @@ static const luaL_Reg dblib[] = {
   {"setmetatable", db_setmetatable},
   {"setupvalue", db_setupvalue},
   {"traceback", db_traceback},
-  {NULL, NULL}
+  {ফাঁকা, ফাঁকা}
 };
 
 
-LUAMOD_API int luaopen_debug (lua_State *L) {
+LUAMOD_API পূর্ণসংখ্যা luaopen_debug (lua_State *L) {
   luaL_newlib(L, dblib);
-  return 1;
+  ফেরত 1;
 }
 

@@ -8,15 +8,15 @@
 #define ltm_h
 
 
-#include "lobject.h"
+#অন্তর্ভাব "lobject.h"
 
 
 /*
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER TM" and "ORDER OP"
 */
-typedef enum {
-  TM_INDEX,
+প্রকারলেখ গণনা {
+  TM_সূচক,
   TM_NEWINDEX,
   TM_GC,
   TM_MODE,
@@ -60,46 +60,46 @@ typedef enum {
 */
 #define notm(tm)	ttisnil(tm)
 
-#define checknoTM(mt,e)	((mt) == NULL || (mt)->flags & (1u<<(e)))
+#define checknoTM(mt,e)	((mt) == ফাঁকা || (mt)->flags & (1u<<(e)))
 
 #define gfasttm(g,mt,e)  \
-  (checknoTM(mt, e) ? NULL : luaT_gettm(mt, e, (g)->tmname[e]))
+  (checknoTM(mt, e) ? ফাঁকা : luaT_gettm(mt, e, (g)->tmname[e]))
 
 #define fasttm(l,mt,e)	gfasttm(G(l), mt, e)
 
 #define ttypename(x)	luaT_typenames_[(x) + 1]
 
-LUAI_DDEC(const char *const luaT_typenames_[LUA_TOTALTYPES];)
+LUAI_DDEC(ধ্রুবক অক্ষর *ধ্রুবক luaT_typenames_[LUA_TOTALTYPES];)
 
 
-LUAI_FUNC const char *luaT_objtypename (lua_State *L, const TValue *o);
+LUAI_FUNC ধ্রুবক অক্ষর *luaT_objtypename (lua_State *L, ধ্রুবক TValue *o);
 
-LUAI_FUNC const TValue *luaT_gettm (Table *events, TMS event, TString *ename);
-LUAI_FUNC const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o,
+LUAI_FUNC ধ্রুবক TValue *luaT_gettm (Table *events, TMS event, TString *ename);
+LUAI_FUNC ধ্রুবক TValue *luaT_gettmbyobj (lua_State *L, ধ্রুবক TValue *o,
                                                        TMS event);
-LUAI_FUNC void luaT_init (lua_State *L);
+LUAI_FUNC শূন্য luaT_init (lua_State *L);
 
-LUAI_FUNC void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
-                            const TValue *p2, const TValue *p3);
-LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, const TValue *f,
-                               const TValue *p1, const TValue *p2, StkId p3);
-LUAI_FUNC void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
+LUAI_FUNC শূন্য luaT_callTM (lua_State *L, ধ্রুবক TValue *f, ধ্রুবক TValue *p1,
+                            ধ্রুবক TValue *p2, ধ্রুবক TValue *p3);
+LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, ধ্রুবক TValue *f,
+                               ধ্রুবক TValue *p1, ধ্রুবক TValue *p2, StkId p3);
+LUAI_FUNC শূন্য luaT_trybinTM (lua_State *L, ধ্রুবক TValue *p1, ধ্রুবক TValue *p2,
                               StkId res, TMS event);
-LUAI_FUNC void luaT_tryconcatTM (lua_State *L);
-LUAI_FUNC void luaT_trybinassocTM (lua_State *L, const TValue *p1,
-       const TValue *p2, int inv, StkId res, TMS event);
-LUAI_FUNC void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                               int inv, StkId res, TMS event);
-LUAI_FUNC int luaT_callorderTM (lua_State *L, const TValue *p1,
-                                const TValue *p2, TMS event);
-LUAI_FUNC int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                                 int inv, int isfloat, TMS event);
+LUAI_FUNC শূন্য luaT_tryconcatTM (lua_State *L);
+LUAI_FUNC শূন্য luaT_trybinassocTM (lua_State *L, ধ্রুবক TValue *p1,
+       ধ্রুবক TValue *p2, পূর্ণসংখ্যা inv, StkId res, TMS event);
+LUAI_FUNC শূন্য luaT_trybiniTM (lua_State *L, ধ্রুবক TValue *p1, lua_Integer i2,
+                               পূর্ণসংখ্যা inv, StkId res, TMS event);
+LUAI_FUNC পূর্ণসংখ্যা luaT_callorderTM (lua_State *L, ধ্রুবক TValue *p1,
+                                ধ্রুবক TValue *p2, TMS event);
+LUAI_FUNC পূর্ণসংখ্যা luaT_callorderiTM (lua_State *L, ধ্রুবক TValue *p1, পূর্ণসংখ্যা v2,
+                                 পূর্ণসংখ্যা inv, পূর্ণসংখ্যা isfloat, TMS event);
 
-LUAI_FUNC void luaT_adjustvarargs (lua_State *L, struct CallInfo *ci,
-                                                 const Proto *p);
-LUAI_FUNC void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
-LUAI_FUNC void luaT_getvarargs (lua_State *L, struct CallInfo *ci, StkId where,
-                                              int wanted, int vatab);
+LUAI_FUNC শূন্য luaT_adjustvarargs (lua_State *L, কাঠামো CallInfo *ci,
+                                                 ধ্রুবক Proto *p);
+LUAI_FUNC শূন্য luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
+LUAI_FUNC শূন্য luaT_getvarargs (lua_State *L, কাঠামো CallInfo *ci, StkId where,
+                                              পূর্ণসংখ্যা wanted, পূর্ণসংখ্যা vatab);
 
 
 #endif

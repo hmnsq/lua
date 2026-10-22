@@ -7,9 +7,9 @@
 #ifndef lstring_h
 #define lstring_h
 
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
+#অন্তর্ভাব "lgc.h"
+#অন্তর্ভাব "lobject.h"
+#অন্তর্ভাব "lstate.h"
 
 
 /*
@@ -25,7 +25,7 @@
 ** metamethods, as these strings must be internalized;
 ** #("function") = 8, #("__newindex") = 10.)
 */
-#if !defined(LUAI_MAXSHORTLEN)
+#যদি !defined(LUAI_MAXSHORTLEN)
 #define LUAI_MAXSHORTLEN	40
 #endif
 
@@ -35,11 +35,11 @@
 ** itself (including final '\0').
 */
 #define sizestrshr(l)  \
-	(offsetof(TString, contents) + ((l) + 1) * sizeof(char))
+	(offsetof(TString, contents) + ((l) + 1) * আকার(অক্ষর))
 
 
 #define luaS_newliteral(L, s)	(luaS_newlstr(L, "" s, \
-                                 (sizeof(s)/sizeof(char))-1))
+                                 (আকার(s)/আকার(অক্ষর))-1))
 
 
 /*
@@ -55,19 +55,19 @@
 
 
 LUAI_FUNC unsigned luaS_hashlongstr (TString *ts);
-LUAI_FUNC int luaS_eqstr (TString *a, TString *b);
-LUAI_FUNC void luaS_resize (lua_State *L, int newsize);
-LUAI_FUNC void luaS_clearcache (global_State *g);
-LUAI_FUNC void luaS_init (lua_State *L);
-LUAI_FUNC void luaS_remove (lua_State *L, TString *ts);
+LUAI_FUNC পূর্ণসংখ্যা luaS_eqstr (TString *a, TString *b);
+LUAI_FUNC শূন্য luaS_resize (lua_State *L, পূর্ণসংখ্যা newsize);
+LUAI_FUNC শূন্য luaS_clearcache (global_State *g);
+LUAI_FUNC শূন্য luaS_init (lua_State *L);
+LUAI_FUNC শূন্য luaS_remove (lua_State *L, TString *ts);
 LUAI_FUNC Udata *luaS_newudata (lua_State *L, size_t s,
                                               unsigned short nuvalue);
-LUAI_FUNC TString *luaS_newlstr (lua_State *L, const char *str, size_t l);
-LUAI_FUNC TString *luaS_new (lua_State *L, const char *str);
+LUAI_FUNC TString *luaS_newlstr (lua_State *L, ধ্রুবক অক্ষর *str, size_t l);
+LUAI_FUNC TString *luaS_new (lua_State *L, ধ্রুবক অক্ষর *str);
 LUAI_FUNC TString *luaS_createlngstrobj (lua_State *L, size_t l);
 LUAI_FUNC TString *luaS_newextlstr (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUAI_FUNC size_t luaS_sizelngstr (size_t len, int kind);
+		ধ্রুবক অক্ষর *s, size_t len, lua_Alloc falloc, শূন্য *ud);
+LUAI_FUNC size_t luaS_sizelngstr (size_t len, পূর্ণসংখ্যা kind);
 LUAI_FUNC TString *luaS_normstr (lua_State *L, TString *ts);
 
 #endif

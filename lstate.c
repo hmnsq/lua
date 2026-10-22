@@ -7,25 +7,25 @@
 #define lstate_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#অন্তর্ভাব "lprefix.h"
 
 
-#include <stddef.h>
-#include <string.h>
+#অন্তর্ভাব <stddef.h>
+#অন্তর্ভাব <string.h>
 
-#include "lua.h"
+#অন্তর্ভাব "lua.h"
 
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "llex.h"
-#include "lmem.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
+#অন্তর্ভাব "lapi.h"
+#অন্তর্ভাব "ldebug.h"
+#অন্তর্ভাব "ldo.h"
+#অন্তর্ভাব "lfunc.h"
+#অন্তর্ভাব "lgc.h"
+#অন্তর্ভাব "llex.h"
+#অন্তর্ভাব "lmem.h"
+#অন্তর্ভাব "lstate.h"
+#অন্তর্ভাব "lstring.h"
+#অন্তর্ভাব "ltable.h"
+#অন্তর্ভাব "ltm.h"
 
 
 
@@ -36,20 +36,20 @@
 ** these macros allow user-specific actions when a thread is
 ** created/deleted
 */
-#if !defined(luai_userstateopen)
-#define luai_userstateopen(L)		((void)L)
+#যদি !defined(luai_userstateopen)
+#define luai_userstateopen(L)		((শূন্য)L)
 #endif
 
-#if !defined(luai_userstateclose)
-#define luai_userstateclose(L)		((void)L)
+#যদি !defined(luai_userstateclose)
+#define luai_userstateclose(L)		((শূন্য)L)
 #endif
 
-#if !defined(luai_userstatethread)
-#define luai_userstatethread(L,L1)	((void)L)
+#যদি !defined(luai_userstatethread)
+#define luai_userstatethread(L,L1)	((শূন্য)L)
 #endif
 
-#if !defined(luai_userstatefree)
-#define luai_userstatefree(L,L1)	((void)L)
+#যদি !defined(luai_userstatefree)
+#define luai_userstatefree(L,L1)	((শূন্য)L)
 #endif
 
 
@@ -58,44 +58,44 @@
 ** objects (GCtotalobjs - GCdebt) invariant and avoiding overflows in
 ** 'GCtotalobjs'.
 */
-void luaE_setdebt (global_State *g, l_mem debt) {
+শূন্য luaE_setdebt (global_State *g, l_mem debt) {
   l_mem tb = gettotalbytes(g);
   lua_assert(tb > 0);
-  if (debt > MAX_LMEM - tb)
+  যদি (debt > MAX_LMEM - tb)
     debt = MAX_LMEM - tb;  /* will make GCtotalbytes == MAX_LMEM */
   g->GCtotalbytes = tb + debt;
   g->GCdebt = debt;
 }
 
 
-CallInfo *luaE_extendCI (lua_State *L, int err) {
+CallInfo *luaE_extendCI (lua_State *L, পূর্ণসংখ্যা err) {
   CallInfo *ci;
-  ci = luaM_reallocvector(L, NULL, 0, 1, CallInfo);
-  if (l_unlikely(ci == NULL)) {  /* allocation failed? */
-    if (err)
+  ci = luaM_reallocvector(L, ফাঁকা, 0, 1, CallInfo);
+  যদি (l_unlikely(ci == ফাঁকা)) {  /* allocation failed? */
+    যদি (err)
       luaM_error(L);  /* raise the error */
-    return NULL;  /* else only report it */
+    ফেরত ফাঁকা;  /* else only report it */
   }
-  ci->next = L->ci->next;
+  ci->পরবর্তী = L->ci->পরবর্তী;
   ci->previous = L->ci;
-  L->ci->next = ci;
-  if (ci->next)
-    ci->next->previous = ci;
+  L->ci->পরবর্তী = ci;
+  যদি (ci->পরবর্তী)
+    ci->পরবর্তী->previous = ci;
   ci->u.l.trap = 0;
   L->nci++;
-  return ci;
+  ফেরত ci;
 }
 
 
 /*
 ** free all CallInfo structures not in use by a thread
 */
-static void freeCI (lua_State *L) {
+স্থির শূন্য freeCI (lua_State *L) {
   CallInfo *ci = L->ci;
-  CallInfo *next = ci->next;
-  ci->next = NULL;
-  while ((ci = next) != NULL) {
-    next = ci->next;
+  CallInfo *পরবর্তী = ci->পরবর্তী;
+  ci->পরবর্তী = ফাঁকা;
+  যখন ((ci = পরবর্তী) != ফাঁকা) {
+    পরবর্তী = ci->পরবর্তী;
     luaM_free(L, ci);
     L->nci--;
   }
@@ -106,19 +106,19 @@ static void freeCI (lua_State *L) {
 ** free half of the CallInfo structures not in use by a thread,
 ** keeping the first one.
 */
-void luaE_shrinkCI (lua_State *L) {
-  CallInfo *ci = L->ci->next;  /* first free CallInfo */
-  CallInfo *next;
-  if (ci == NULL)
-    return;  /* no extra elements */
-  while ((next = ci->next) != NULL) {  /* two extra elements? */
-    CallInfo *next2 = next->next;  /* next's next */
-    ci->next = next2;  /* remove next from the list */
+শূন্য luaE_shrinkCI (lua_State *L) {
+  CallInfo *ci = L->ci->পরবর্তী;  /* first free CallInfo */
+  CallInfo *পরবর্তী;
+  যদি (ci == ফাঁকা)
+    ফেরত;  /* no extra elements */
+  যখন ((পরবর্তী = ci->পরবর্তী) != ফাঁকা) {  /* two extra elements? */
+    CallInfo *next2 = পরবর্তী->পরবর্তী;  /* next's next */
+    ci->পরবর্তী = next2;  /* remove next from the list */
     L->nci--;
-    luaM_free(L, next);  /* free next */
-    if (next2 == NULL)
-      break;  /* no more elements */
-    else {
+    luaM_free(L, পরবর্তী);  /* free next */
+    যদি (next2 == ফাঁকা)
+      বিরতি;  /* no more elements */
+    অন্যথা {
       next2->previous = ci;
       ci = next2;  /* continue */
     }
@@ -133,62 +133,62 @@ void luaE_shrinkCI (lua_State *L) {
 ** not much larger, does not report an error (to allow overflow
 ** handling to work).
 */
-void luaE_checkcstack (lua_State *L) {
-  if (getCcalls(L) == LUAI_MAXCCALLS)
+শূন্য luaE_checkcstack (lua_State *L) {
+  যদি (getCcalls(L) == LUAI_MAXCCALLS)
     luaG_runerror(L, "C stack overflow");
-  else if (getCcalls(L) >= (LUAI_MAXCCALLS / 10 * 11))
+  অন্যথা যদি (getCcalls(L) >= (LUAI_MAXCCALLS / 10 * 11))
     luaD_errerr(L);  /* error while handling stack error */
 }
 
 
-LUAI_FUNC void luaE_incCstack (lua_State *L) {
+LUAI_FUNC শূন্য luaE_incCstack (lua_State *L) {
   L->nCcalls++;
-  if (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS))
+  যদি (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS))
     luaE_checkcstack(L);
 }
 
 
-static void resetCI (lua_State *L) {
+স্থির শূন্য resetCI (lua_State *L) {
   CallInfo *ci = L->ci = &L->base_ci;
-  ci->func.p = L->stack.p;
+  ci->func.p = L->স্তূপ.p;
   setnilvalue2s(ci->func.p);  /* 'function' entry for basic 'ci' */
-  ci->top.p = ci->func.p + 1 + LUA_MINSTACK;  /* +1 for 'function' entry */
-  ci->u.c.k = NULL;
+  ci->শীর্ষ.p = ci->func.p + 1 + LUA_MINSTACK;  /* +1 for 'function' entry */
+  ci->u.c.k = ফাঁকা;
   ci->callstatus = CIST_C;
   L->status = LUA_OK;
   L->errfunc = 0;  /* stack unwind can "throw away" the error function */
 }
 
 
-static void stack_init (lua_State *L1, lua_State *L) {
-  int i;
+স্থির শূন্য স্তূপ_init (lua_State *L1, lua_State *L) {
+  পূর্ণসংখ্যা i;
   /* initialize stack array */
-  L1->stack.p = luaM_newvector(L, BASIC_STACK_SIZE + EXTRA_STACK, StackValue);
-  L1->tbclist.p = L1->stack.p;
-  for (i = 0; i < BASIC_STACK_SIZE + EXTRA_STACK; i++)
-    setnilvalue2s(L1->stack.p + i);  /* erase new stack */
-  L1->stack_last.p = L1->stack.p + BASIC_STACK_SIZE;
+  L1->স্তূপ.p = luaM_newvector(L, BASIC_স্তূপ_আকার + EXTRA_স্তূপ, স্তূপ_মান);
+  L1->tbclist.p = L1->স্তূপ.p;
+  জন্য (i = 0; i < BASIC_স্তূপ_আকার + EXTRA_স্তূপ; i++)
+    setnilvalue2s(L1->স্তূপ.p + i);  /* erase new stack */
+  L1->স্তূপ_last.p = L1->স্তূপ.p + BASIC_স্তূপ_আকার;
   /* initialize first ci */
   resetCI(L1);
-  L1->top.p = L1->stack.p + 1;  /* +1 for 'function' entry */
+  L1->শীর্ষ.p = L1->স্তূপ.p + 1;  /* +1 for 'function' entry */
 }
 
 
-static void freestack (lua_State *L) {
-  if (L->stack.p == NULL)
-    return;  /* stack not completely built yet */
+স্থির শূন্য freestack (lua_State *L) {
+  যদি (L->স্তূপ.p == ফাঁকা)
+    ফেরত;  /* stack not completely built yet */
   L->ci = &L->base_ci;  /* free the entire 'ci' list */
   freeCI(L);
   lua_assert(L->nci == 0);
   /* free stack */
-  luaM_freearray(L, L->stack.p, cast_sizet(stacksize(L) + EXTRA_STACK));
+  luaM_freearray(L, L->স্তূপ.p, cast_sizet(stacksize(L) + EXTRA_স্তূপ));
 }
 
 
 /*
 ** Create registry table and its predefined values
 */
-static void init_registry (lua_State *L, global_State *g) {
+স্থির শূন্য init_registry (lua_State *L, global_State *g) {
   /* create registry */
   TValue aux;
   Table *registry = luaH_new(L);
@@ -209,10 +209,10 @@ static void init_registry (lua_State *L, global_State *g) {
 /*
 ** open parts of the state that may cause memory-allocation errors.
 */
-static void f_luaopen (lua_State *L, void *ud) {
+স্থির শূন্য f_luaopen (lua_State *L, শূন্য *ud) {
   global_State *g = G(L);
   UNUSED(ud);
-  stack_init(L, L);  /* init stack */
+  স্তূপ_init(L, L);  /* init stack */
   init_registry(L, g);
   luaS_init(L);
   luaT_init(L);
@@ -227,51 +227,51 @@ static void f_luaopen (lua_State *L, void *ud) {
 ** preinitialize a thread with consistent values without allocating
 ** any memory (to avoid errors)
 */
-static void preinit_thread (lua_State *L, global_State *g) {
+স্থির শূন্য preinit_thread (lua_State *L, global_State *g) {
   G(L) = g;
-  L->stack.p = NULL;
-  L->ci = NULL;
+  L->স্তূপ.p = ফাঁকা;
+  L->ci = ফাঁকা;
   L->nci = 0;
   L->twups = L;  /* thread has no upvalues */
   L->nCcalls = 0;
-  L->errorJmp = NULL;
-  L->hook = NULL;
+  L->errorJmp = ফাঁকা;
+  L->hook = ফাঁকা;
   L->hookmask = 0;
   L->basehookcount = 0;
   L->allowhook = 1;
   resethookcount(L);
-  L->openupval = NULL;
+  L->openupval = ফাঁকা;
   L->status = LUA_OK;
   L->errfunc = 0;
   L->oldpc = 0;
-  L->base_ci.previous = L->base_ci.next = NULL;
+  L->base_ci.previous = L->base_ci.পরবর্তী = ফাঁকা;
 }
 
 
 lu_mem luaE_threadsize (lua_State *L) {
-  lu_mem sz = cast(lu_mem, sizeof(LX))
-            + cast_uint(L->nci) * sizeof(CallInfo);
-  if (L->stack.p != NULL)
-    sz += cast_uint(stacksize(L) + EXTRA_STACK) * sizeof(StackValue);
-  return sz;
+  lu_mem sz = cast(lu_mem, আকার(LX))
+            + cast_uint(L->nci) * আকার(CallInfo);
+  যদি (L->স্তূপ.p != ফাঁকা)
+    sz += cast_uint(stacksize(L) + EXTRA_স্তূপ) * আকার(স্তূপ_মান);
+  ফেরত sz;
 }
 
 
-static void close_state (lua_State *L) {
+স্থির শূন্য close_state (lua_State *L) {
   global_State *g = G(L);
-  if (!completestate(g))  /* closing a partially built state? */
+  যদি (!completestate(g))  /* closing a partially built state? */
     luaC_freeallobjects(L);  /* just collect its objects */
-  else {  /* closing a fully built state */
+  অন্যথা {  /* closing a fully built state */
     resetCI(L);
     luaD_closeprotected(L, 1, LUA_OK);  /* close all upvalues */
-    L->top.p = L->stack.p + 1;  /* empty the stack to run finalizers */
+    L->শীর্ষ.p = L->স্তূপ.p + 1;  /* empty the stack to run finalizers */
     luaC_freeallobjects(L);  /* collect all objects */
     luai_userstateclose(L);
   }
-  luaM_freearray(L, G(L)->strt.hash, cast_sizet(G(L)->strt.size));
+  luaM_freearray(L, G(L)->strt.hash, cast_sizet(G(L)->strt.আকার_2));
   freestack(L);
-  lua_assert(gettotalbytes(g) == sizeof(global_State));
-  (*g->frealloc)(g->ud, g, sizeof(global_State), 0);  /* free main block */
+  lua_assert(gettotalbytes(g) == আকার(global_State));
+  (*g->frealloc)(g->ud, g, আকার(global_State), 0);  /* free main block */
 }
 
 
@@ -282,11 +282,11 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
   lua_lock(L);
   luaC_checkGC(L);
   /* create new thread */
-  o = luaC_newobjdt(L, LUA_TTHREAD, sizeof(LX), offsetof(LX, l));
+  o = luaC_newobjdt(L, LUA_TTHREAD, আকার(LX), offsetof(LX, l));
   L1 = gco2th(o);
   /* anchor it on L stack */
-  setthvalue2s(L, L->top.p, L1);
-  api_incr_top(L);
+  setthvalue2s(L, L->শীর্ষ.p, L1);
+  api_incr_শীর্ষ(L);
   preinit_thread(L1, g);
   L1->hookmask = L->hookmask;
   L1->basehookcount = L->basehookcount;
@@ -296,16 +296,16 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
   memcpy(lua_getextraspace(L1), lua_getextraspace(mainthread(g)),
          LUA_EXTRASPACE);
   luai_userstatethread(L, L1);
-  stack_init(L1, L);  /* init stack */
+  স্তূপ_init(L1, L);  /* init stack */
   lua_unlock(L);
-  return L1;
+  ফেরত L1;
 }
 
 
-void luaE_freethread (lua_State *L, lua_State *L1) {
+শূন্য luaE_freethread (lua_State *L, lua_State *L1) {
   LX *l = fromstate(L1);
-  luaF_closeupval(L1, L1->stack.p);  /* close all upvalues */
-  lua_assert(L1->openupval == NULL);
+  luaF_closeupval(L1, L1->স্তূপ.p);  /* close all upvalues */
+  lua_assert(L1->openupval == ফাঁকা);
   luai_userstatefree(L, L1);
   freestack(L1);
   luaM_free(L, l);
@@ -314,15 +314,15 @@ void luaE_freethread (lua_State *L, lua_State *L1) {
 
 TStatus luaE_resetthread (lua_State *L, TStatus status) {
   resetCI(L);
-  if (status == LUA_YIELD)
+  যদি (status == LUA_YIELD)
     status = LUA_OK;
   status = luaD_closeprotected(L, 1, status);
-  if (status != LUA_OK)  /* errors? */
-    luaD_seterrorobj(L, status, L->stack.p + 1);
-  else  /* keep in the stack only the fake function-entry for basic ci */
-    L->top.p = L->stack.p + 1;
-  luaD_reallocstack(L, cast_int(L->ci->top.p - L->stack.p), 0);
-  return status;
+  যদি (status != LUA_OK)  /* errors? */
+    luaD_seterrorobj(L, status, L->স্তূপ.p + 1);
+  অন্যথা  /* keep in the stack only the fake function-entry for basic ci */
+    L->শীর্ষ.p = L->স্তূপ.p + 1;
+  luaD_reallocstack(L, cast_int(L->ci->শীর্ষ.p - L->স্তূপ.p), 0);
+  ফেরত status;
 }
 
 
@@ -334,64 +334,64 @@ TStatus luaE_resetthread (lua_State *L, TStatus status) {
 ** control goes directly back to the first call to lua_closethread (not
 ** to the second), to properly return it.
 */
-static void resetthread_aux (lua_State *L, void *ud) {
+স্থির শূন্য resetthread_aux (lua_State *L, শূন্য *ud) {
   TStatus status = *cast(TStatus*, ud);
   status = luaE_resetthread(L, status);
-  if (status != LUA_OK)
+  যদি (status != LUA_OK)
     luaD_throw(L, status);
 }
 
 
-LUA_API int lua_closethread (lua_State *L, lua_State *from) {
+LUA_API পূর্ণসংখ্যা lua_closethread (lua_State *L, lua_State *from) {
   TStatus status;
   lua_lock(L);
   L->nCcalls = (from) ? getCcalls(from) : 0;
   status = luaD_rawrunprotected(L, resetthread_aux, &L->status);
   /* stack has error message iff there was an error */
-  lua_assert(L->top.p == L->stack.p + (status == LUA_OK ? 1 : 2));
-  if (L == from)  /* closing itself? */
+  lua_assert(L->শীর্ষ.p == L->স্তূপ.p + (status == LUA_OK ? 1 : 2));
+  যদি (L == from)  /* closing itself? */
     luaD_throwbaselevel(L, status);
   lua_unlock(L);
-  return APIstatus(status);
+  ফেরত APIstatus(status);
 }
 
 
-LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, unsigned seed) {
-  int i;
+LUA_API lua_State *lua_newstate (lua_Alloc f, শূন্য *ud, unsigned seed) {
+  পূর্ণসংখ্যা i;
   lua_State *L;
   global_State *g = cast(global_State*,
-                       (*f)(ud, NULL, LUA_TTHREAD, sizeof(global_State)));
-  if (g == NULL) return NULL;
+                       (*f)(ud, ফাঁকা, LUA_TTHREAD, আকার(global_State)));
+  যদি (g == ফাঁকা) ফেরত ফাঁকা;
   L = &g->mainth.l;
   L->tt = LUA_VTHREAD;
   g->currentwhite = bitmask(WHITE0BIT);
   L->marked = luaC_white(g);
   preinit_thread(L, g);
   g->allgc = obj2gco(L);  /* by now, only object is the main thread */
-  L->next = NULL;
+  L->পরবর্তী = ফাঁকা;
   incnny(L);  /* main thread is always non yieldable */
   g->frealloc = f;
   g->ud = ud;
-  g->warnf = NULL;
-  g->ud_warn = NULL;
+  g->warnf = ফাঁকা;
+  g->ud_warn = ফাঁকা;
   g->seed = seed;
   g->gcstp = GCSTPGC;  /* no GC while building state */
-  g->strt.size = g->strt.nuse = 0;
-  g->strt.hash = NULL;
+  g->strt.আকার_2 = g->strt.nuse = 0;
+  g->strt.hash = ফাঁকা;
   setnilvalue(&g->l_registry);
-  g->panic = NULL;
+  g->panic = ফাঁকা;
   g->gcstate = GCSpause;
   g->gckind = KGC_INC;
   g->gcstopem = 0;
   g->gcemergency = 0;
-  g->finobj = g->tobefnz = g->fixedgc = NULL;
-  g->firstold1 = g->survival = g->old1 = g->reallyold = NULL;
-  g->finobjsur = g->finobjold1 = g->finobjrold = NULL;
-  g->sweepgc = NULL;
-  g->gray = g->grayagain = NULL;
-  g->weak = g->ephemeron = g->allweak = NULL;
-  g->twups = NULL;
-  g->GCtotalbytes = sizeof(global_State);
+  g->finobj = g->tobefnz = g->fixedgc = ফাঁকা;
+  g->firstold1 = g->survival = g->old1 = g->reallyold = ফাঁকা;
+  g->finobjsur = g->finobjold1 = g->finobjrold = ফাঁকা;
+  g->sweepgc = ফাঁকা;
+  g->gray = g->grayagain = ফাঁকা;
+  g->weak = g->ephemeron = g->allweak = ফাঁকা;
+  g->twups = ফাঁকা;
+  g->GCtotalbytes = আকার(global_State);
   g->GCmarked = 0;
   g->GCdebt = 0;
   setivalue(&g->nilvalue, 0);  /* to signal that state is not yet built */
@@ -401,43 +401,43 @@ LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, unsigned seed) {
   setgcparam(g, MINORMUL, LUAI_GENMINORMUL);
   setgcparam(g, MINORMAJOR, LUAI_MINORMAJOR);
   setgcparam(g, MAJORMINOR, LUAI_MAJORMINOR);
-  for (i=0; i < LUA_NUMTYPES; i++) g->mt[i] = NULL;
-  if (luaD_rawrunprotected(L, f_luaopen, NULL) != LUA_OK) {
+  জন্য (i=0; i < LUA_NUMTYPES; i++) g->mt[i] = ফাঁকা;
+  যদি (luaD_rawrunprotected(L, f_luaopen, ফাঁকা) != LUA_OK) {
     /* memory allocation error: free partial state */
     close_state(L);
-    L = NULL;
+    L = ফাঁকা;
   }
-  return L;
+  ফেরত L;
 }
 
 
-LUA_API void lua_close (lua_State *L) {
+LUA_API শূন্য lua_close (lua_State *L) {
   lua_lock(L);
   L = mainthread(G(L));  /* only the main thread can be closed */
   close_state(L);
 }
 
 
-void luaE_warning (lua_State *L, const char *msg, int tocont) {
+শূন্য luaE_warning (lua_State *L, ধ্রুবক অক্ষর *বার্তা, পূর্ণসংখ্যা tocont) {
   lua_WarnFunction wf = G(L)->warnf;
-  if (wf != NULL)
-    wf(G(L)->ud_warn, msg, tocont);
+  যদি (wf != ফাঁকা)
+    wf(G(L)->ud_warn, বার্তা, tocont);
 }
 
 
 /*
 ** Generate a warning from an error message
 */
-void luaE_warnerror (lua_State *L, const char *where) {
-  TValue *errobj = s2v(L->top.p - 1);  /* error object */
-  const char *msg = (ttisstring(errobj))
+শূন্য luaE_warnerror (lua_State *L, ধ্রুবক অক্ষর *where) {
+  TValue *errobj = s2v(L->শীর্ষ.p - 1);  /* error object */
+  ধ্রুবক অক্ষর *বার্তা = (ttisstring(errobj))
                   ? getstr(tsvalue(errobj))
                   : "error object is not a string";
   /* produce warning "error in %s (%s)" (where, msg) */
   luaE_warning(L, "error in ", 1);
   luaE_warning(L, where, 1);
   luaE_warning(L, " (", 1);
-  luaE_warning(L, msg, 1);
+  luaE_warning(L, বার্তা, 1);
   luaE_warning(L, ")", 0);
 }
 

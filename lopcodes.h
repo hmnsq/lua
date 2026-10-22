@@ -7,8 +7,8 @@
 #ifndef lopcodes_h
 #define lopcodes_h
 
-#include "llimits.h"
-#include "lobject.h"
+#অন্তর্ভাব "llimits.h"
+#অন্তর্ভাব "lobject.h"
 
 
 /*===========================================================================
@@ -33,31 +33,31 @@ isJ                           sJ (signed)(25)            |   Op(7)     |
 
 
 /* basic instruction formats */
-enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
+গণনা OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 
 
 /*
 ** size and position of opcode arguments.
 */
-#define SIZE_C		8
-#define SIZE_vC		10
-#define SIZE_B		8
-#define SIZE_vB		6
-#define SIZE_Bx		(SIZE_C + SIZE_B + 1)
-#define SIZE_A		8
-#define SIZE_Ax		(SIZE_Bx + SIZE_A)
-#define SIZE_sJ		(SIZE_Bx + SIZE_A)
+#define আকার_C		8
+#define আকার_v_C		10
+#define আকার_B		8
+#define আকার_v_B		6
+#define আকার_Bx		(আকার_C + আকার_B + 1)
+#define আকার_A		8
+#define আকার_Ax		(আকার_Bx + আকার_A)
+#define আকার_s_J		(আকার_Bx + আকার_A)
 
-#define SIZE_OP		7
+#define আকার_OP		7
 
 #define POS_OP		0
 
-#define POS_A		(POS_OP + SIZE_OP)
-#define POS_k		(POS_A + SIZE_A)
+#define POS_A		(POS_OP + আকার_OP)
+#define POS_k		(POS_A + আকার_A)
 #define POS_B		(POS_k + 1)
 #define POS_vB		(POS_k + 1)
-#define POS_C		(POS_B + SIZE_B)
-#define POS_vC		(POS_vB + SIZE_vB)
+#define POS_C		(POS_B + আকার_B)
+#define POS_vC		(POS_vB + আকার_v_B)
 
 #define POS_Bx		POS_k
 
@@ -79,35 +79,35 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 #define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
-#define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
+#যদি L_INTHASBITS(আকার_Bx)
+#define MAXARG_Bx	((1<<আকার_Bx)-1)
+#অন্যথা
 #define MAXARG_Bx	INT_MAX
 #endif
 
 #define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#if L_INTHASBITS(SIZE_Ax)
-#define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
+#যদি L_INTHASBITS(আকার_Ax)
+#define MAXARG_Ax	((1<<আকার_Ax)-1)
+#অন্যথা
 #define MAXARG_Ax	INT_MAX
 #endif
 
-#if L_INTHASBITS(SIZE_sJ)
-#define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
+#যদি L_INTHASBITS(আকার_s_J)
+#define MAXARG_sJ	((1 << আকার_s_J) - 1)
+#অন্যথা
 #define MAXARG_sJ	INT_MAX
 #endif
 
 #define OFFSET_sJ	(MAXARG_sJ >> 1)
 
 
-#define MAXARG_A	((1<<SIZE_A)-1)
-#define MAXARG_B	((1<<SIZE_B)-1)
-#define MAXARG_vB	((1<<SIZE_vB)-1)
-#define MAXARG_C	((1<<SIZE_C)-1)
-#define MAXARG_vC	((1<<SIZE_vC)-1)
+#define MAXARG_A	((1<<আকার_A)-1)
+#define MAXARG_B	((1<<আকার_B)-1)
+#define MAXARG_vB	((1<<আকার_v_B)-1)
+#define MAXARG_C	((1<<আকার_C)-1)
+#define MAXARG_vC	((1<<আকার_v_C)-1)
 #define OFFSET_sC	(MAXARG_C >> 1)
 
 #define int2sC(i)	((i) + OFFSET_sC)
@@ -124,54 +124,54 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** the following macros help to manipulate instructions
 */
 
-#define GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(SIZE_OP,0)))
-#define SET_OPCODE(i,o)	((i) = (((i)&MASK0(SIZE_OP,POS_OP)) | \
-		((cast_Inst(o)<<POS_OP)&MASK1(SIZE_OP,POS_OP))))
+#define GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(আকার_OP,0)))
+#define SET_OPCODE(i,o)	((i) = (((i)&MASK0(আকার_OP,POS_OP)) | \
+		((cast_Inst(o)<<POS_OP)&MASK1(আকার_OP,POS_OP))))
 
 #define checkopm(i,m)	(getOpMode(GET_OPCODE(i)) == m)
 
 
-#define getarg(i,pos,size)	(cast_int(((i)>>(pos)) & MASK1(size,0)))
-#define setarg(i,v,pos,size)	((i) = (((i)&MASK0(size,pos)) | \
-                ((cast_Inst(v)<<pos)&MASK1(size,pos))))
+#define getarg(i,pos,আকার_2)	(cast_int(((i)>>(pos)) & MASK1(আকার_2,0)))
+#define setarg(i,v,pos,আকার_2)	((i) = (((i)&MASK0(আকার_2,pos)) | \
+                ((cast_Inst(v)<<pos)&MASK1(আকার_2,pos))))
 
-#define GETARG_A(i)	getarg(i, POS_A, SIZE_A)
-#define SETARG_A(i,v)	setarg(i, v, POS_A, SIZE_A)
+#define GETARG_A(i)	getarg(i, POS_A, আকার_A)
+#define SETARG_A(i,v)	setarg(i, v, POS_A, আকার_A)
 
 #define GETARG_B(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_B, SIZE_B))
+	check_exp(checkopm(i, iABC), getarg(i, POS_B, আকার_B))
 #define GETARG_vB(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, SIZE_vB))
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, আকার_v_B))
 #define GETARG_sB(i)	sC2int(GETARG_B(i))
-#define SETARG_B(i,v)	setarg(i, v, POS_B, SIZE_B)
-#define SETARG_vB(i,v)	setarg(i, v, POS_vB, SIZE_vB)
+#define SETARG_B(i,v)	setarg(i, v, POS_B, আকার_B)
+#define SETARG_vB(i,v)	setarg(i, v, POS_vB, আকার_v_B)
 
 #define GETARG_C(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_C, SIZE_C))
+	check_exp(checkopm(i, iABC), getarg(i, POS_C, আকার_C))
 #define GETARG_vC(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, SIZE_vC))
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, আকার_v_C))
 #define GETARG_sC(i)	sC2int(GETARG_C(i))
-#define SETARG_C(i,v)	setarg(i, v, POS_C, SIZE_C)
-#define SETARG_vC(i,v)	setarg(i, v, POS_vC, SIZE_vC)
+#define SETARG_C(i,v)	setarg(i, v, POS_C, আকার_C)
+#define SETARG_vC(i,v)	setarg(i, v, POS_vC, আকার_v_C)
 
 #define TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
 #define GETARG_k(i)	getarg(i, POS_k, 1)
 #define SETARG_k(i,v)	setarg(i, v, POS_k, 1)
 
-#define GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, SIZE_Bx))
-#define SETARG_Bx(i,v)	setarg(i, v, POS_Bx, SIZE_Bx)
+#define GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, আকার_Bx))
+#define SETARG_Bx(i,v)	setarg(i, v, POS_Bx, আকার_Bx)
 
-#define GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, SIZE_Ax))
-#define SETARG_Ax(i,v)	setarg(i, v, POS_Ax, SIZE_Ax)
+#define GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, আকার_Ax))
+#define SETARG_Ax(i,v)	setarg(i, v, POS_Ax, আকার_Ax)
 
 #define GETARG_sBx(i)  \
-	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, SIZE_Bx) - OFFSET_sBx)
+	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, আকার_Bx) - OFFSET_sBx)
 #define SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+OFFSET_sBx))
 
 #define GETARG_sJ(i)  \
-	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, SIZE_sJ) - OFFSET_sJ)
+	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, আকার_s_J) - OFFSET_sJ)
 #define SETARG_sJ(i,j) \
-	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, SIZE_sJ)
+	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, আকার_s_J)
 
 
 #define CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
@@ -198,7 +198,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
+#যদি !defined(MAXINDEXRK)  /* (for debugging only) */
 #define MAXINDEXRK	MAXARG_B
 #endif
 
@@ -228,7 +228,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** See "Notes" below for more information about some instructions.
 */
 
-typedef enum {
+প্রকারলেখ গণনা {
 /*----------------------------------------------------------------------
   name		args	description
 ------------------------------------------------------------------------*/
@@ -348,7 +348,7 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 } OpCode;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#define অঙ্ক_OPCODES	((পূর্ণসংখ্যা)(OP_EXTRAARG) + 1)
 
 
 
@@ -422,9 +422,9 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 ** bit 7: instruction is an MM instruction (call a metamethod)
 */
 
-LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
+LUAI_DDEC(ধ্রুবক lu_byte luaP_opmodes[অঙ্ক_OPCODES];)
 
-#define getOpMode(m)	(cast(enum OpMode, luaP_opmodes[m] & 7))
+#define getOpMode(m)	(cast(গণনা OpMode, luaP_opmodes[m] & 7))
 #define testAMode(m)	(luaP_opmodes[m] & (1 << 3))
 #define testTMode(m)	(luaP_opmodes[m] & (1 << 4))
 #define testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
@@ -438,7 +438,7 @@ LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC পূর্ণসংখ্যা luaP_isIT (Instruction i);
 
 
 #endif
