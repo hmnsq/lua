@@ -198,7 +198,7 @@
 #define LUAI_GCMUL      200
 
 /* How many bytes to allocate before next GC step */
-#define LUAI_GCSTEPSIZE	(200 * sizeof(Table))
+#define LUAI_GCSTEPSIZE	(200 * parimaa_na(Table))
 
 
 #define setgcparam(g,p,v)  (g->gcparams[LUA_GCP##p] = luaO_codeparam(v))
@@ -223,17 +223,17 @@
 ** GC cycle on every opportunity)
 */
 
-#if !defined(HARDMEMTESTS)
+#ᬬᬾᬦ᭄ !defined(HARDMEMTESTS)
 #define condchangemem(L,pre,pos,emg)	((void)0)
-#else
+#ᬮᬶᬬ
 #define condchangemem(L,pre,pos,emg)  \
-	{ if (gcrunning(G(L))) { pre; luaC_fullgc(L, emg); pos; } }
+	{ ᬬᬾᬦ᭄ (gcrunning(G(L))) { pre; luaC_fullgc(L, emg); pos; } }
 #endif
 
 #define luaC_condGC(L,pre,pos) \
-	{ if (G(L)->GCdebt <= 0)  \
+	{ ᬬᬾᬦ᭄ (G(L)->GCdebt <= 0)  \
 	  { pre; luaC_step(L); condchangemem(L,{},{},0); pos;} \
-	  else condchangemem(L,pre,pos,0); }
+	  ᬮᬶᬬ condchangemem(L,pre,pos,0); }
 
 /* more often than not, 'pre'/'pos' are empty */
 #define luaC_checkGC(L)		luaC_condGC(L,(void)0,(void)0)
@@ -255,15 +255,15 @@
 LUAI_FUNC void luaC_fix (lua_State *L, GCObject *o);
 LUAI_FUNC void luaC_freeallobjects (lua_State *L);
 LUAI_FUNC void luaC_step (lua_State *L);
-LUAI_FUNC void luaC_runtilstate (lua_State *L, int state, int fast);
-LUAI_FUNC void luaC_fullgc (lua_State *L, int isemergency);
+LUAI_FUNC void luaC_runtilstate (lua_State *L, puur_naa_nka state, puur_naa_nka fast);
+LUAI_FUNC void luaC_fullgc (lua_State *L, puur_naa_nka isemergency);
 LUAI_FUNC GCObject *luaC_newobj (lua_State *L, lu_byte tt, size_t sz);
 LUAI_FUNC GCObject *luaC_newobjdt (lua_State *L, lu_byte tt, size_t sz,
                                                  size_t offset);
 LUAI_FUNC void luaC_barrier_ (lua_State *L, GCObject *o, GCObject *v);
 LUAI_FUNC void luaC_barrierback_ (lua_State *L, GCObject *o);
 LUAI_FUNC void luaC_checkfinalizer (lua_State *L, GCObject *o, Table *mt);
-LUAI_FUNC void luaC_changemode (lua_State *L, int newmode);
+LUAI_FUNC void luaC_changemode (lua_State *L, puur_naa_nka newmode);
 
 
 #endif
