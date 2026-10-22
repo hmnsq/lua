@@ -9,16 +9,16 @@
 #undef vmcase
 #undef vmbreak
 
-#define vmdispatch(x)     goto *disptab[x];
+#define vmdispatch(x)     गच्छ *disptab[x];
 
 #define vmcase(l)     L_##l:
 
 #define vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
 
 
-static const void *const disptab[NUM_OPCODES] = {
+स्थिर अचर शून्य *अचर disptab[अङ्क_OPCODES] = {
 
-#if 0
+#यदि 0
 ** you can update the following list with this command:
 **
 **  sed -n '/^OP_/!d; s/OP_/\&\&L_OP_/ ; s/,.*/,/ ; s/\/.*// ; p'  lopcodes.h

@@ -8,14 +8,14 @@
 #define ltm_h
 
 
-#include "lobject.h"
+#अन्तर्भाव "lobject.h"
 
 
 /*
 * WARNING: if you change the order of this enumeration,
 * grep "ORDER TM" and "ORDER OP"
 */
-typedef enum {
+प्रकारनिर्देश गणना {
   TM_INDEX,
   TM_NEWINDEX,
   TM_GC,
@@ -58,48 +58,48 @@ typedef enum {
 ** Test whether there is no tagmethod.
 ** (Because tagmethods use raw accesses, the result may be an "empty" nil.)
 */
-#define notm(tm)	ttisnil(tm)
+#define notm(पंचांग)	ttisnil(पंचांग)
 
-#define checknoTM(mt,e)	((mt) == NULL || (mt)->flags & (1u<<(e)))
+#define checknoTM(mt,e)	((mt) == रिक्त || (mt)->flags & (1u<<(e)))
 
 #define gfasttm(g,mt,e)  \
-  (checknoTM(mt, e) ? NULL : luaT_gettm(mt, e, (g)->tmname[e]))
+  (checknoTM(mt, e) ? रिक्त : luaT_gettm(mt, e, (g)->tmname[e]))
 
 #define fasttm(l,mt,e)	gfasttm(G(l), mt, e)
 
 #define ttypename(x)	luaT_typenames_[(x) + 1]
 
-LUAI_DDEC(const char *const luaT_typenames_[LUA_TOTALTYPES];)
+LUAI_DDEC(अचर वर्ण *अचर luaT_typenames_[LUA_TOTALTYPES];)
 
 
-LUAI_FUNC const char *luaT_objtypename (lua_State *L, const TValue *o);
+LUAI_FUNC अचर वर्ण *luaT_objtypename (lua_State *L, अचर TValue *o);
 
-LUAI_FUNC const TValue *luaT_gettm (Table *events, TMS event, TString *ename);
-LUAI_FUNC const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o,
+LUAI_FUNC अचर TValue *luaT_gettm (Table *events, TMS event, TString *ename);
+LUAI_FUNC अचर TValue *luaT_gettmbyobj (lua_State *L, अचर TValue *o,
                                                        TMS event);
-LUAI_FUNC void luaT_init (lua_State *L);
+LUAI_FUNC शून्य luaT_init (lua_State *L);
 
-LUAI_FUNC void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
-                            const TValue *p2, const TValue *p3);
-LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, const TValue *f,
-                               const TValue *p1, const TValue *p2, StkId p3);
-LUAI_FUNC void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
+LUAI_FUNC शून्य luaT_callTM (lua_State *L, अचर TValue *f, अचर TValue *p1,
+                            अचर TValue *p2, अचर TValue *p3);
+LUAI_FUNC lu_byte luaT_callTMres (lua_State *L, अचर TValue *f,
+                               अचर TValue *p1, अचर TValue *p2, StkId p3);
+LUAI_FUNC शून्य luaT_trybinTM (lua_State *L, अचर TValue *p1, अचर TValue *p2,
                               StkId res, TMS event);
-LUAI_FUNC void luaT_tryconcatTM (lua_State *L);
-LUAI_FUNC void luaT_trybinassocTM (lua_State *L, const TValue *p1,
-       const TValue *p2, int inv, StkId res, TMS event);
-LUAI_FUNC void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                               int inv, StkId res, TMS event);
-LUAI_FUNC int luaT_callorderTM (lua_State *L, const TValue *p1,
-                                const TValue *p2, TMS event);
-LUAI_FUNC int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                                 int inv, int isfloat, TMS event);
+LUAI_FUNC शून्य luaT_tryconcatTM (lua_State *L);
+LUAI_FUNC शून्य luaT_trybinassocTM (lua_State *L, अचर TValue *p1,
+       अचर TValue *p2, पूर्णाङ्क inv, StkId res, TMS event);
+LUAI_FUNC शून्य luaT_trybiniTM (lua_State *L, अचर TValue *p1, lua_Integer i2,
+                               पूर्णाङ्क inv, StkId res, TMS event);
+LUAI_FUNC पूर्णाङ्क luaT_callorderTM (lua_State *L, अचर TValue *p1,
+                                अचर TValue *p2, TMS event);
+LUAI_FUNC पूर्णाङ्क luaT_callorderiTM (lua_State *L, अचर TValue *p1, पूर्णाङ्क v2,
+                                 पूर्णाङ्क inv, पूर्णाङ्क isfloat, TMS event);
 
-LUAI_FUNC void luaT_adjustvarargs (lua_State *L, struct CallInfo *ci,
-                                                 const Proto *p);
-LUAI_FUNC void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
-LUAI_FUNC void luaT_getvarargs (lua_State *L, struct CallInfo *ci, StkId where,
-                                              int wanted, int vatab);
+LUAI_FUNC शून्य luaT_adjustvarargs (lua_State *L, संरचना CallInfo *ci,
+                                                 अचर Proto *p);
+LUAI_FUNC शून्य luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
+LUAI_FUNC शून्य luaT_getvarargs (lua_State *L, संरचना CallInfo *ci, StkId where,
+                                              पूर्णाङ्क wanted, पूर्णाङ्क vatab);
 
 
 #endif

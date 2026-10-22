@@ -11,18 +11,18 @@
 #define loadlib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#अन्तर्भाव "lauxlib.h"
+#अन्तर्भाव "lualib.h"
+#अन्तर्भाव "llimits.h"
 
 
 /*
@@ -31,11 +31,11 @@
 ** LUA_LSUBSEP is the character that replaces dots in submodule names
 ** when searching for a Lua loader.
 */
-#if !defined(LUA_CSUBSEP)
+#यदि !defined(LUA_CSUBSEP)
 #define LUA_CSUBSEP		LUA_DIRSEP
 #endif
 
-#if !defined(LUA_LSUBSEP)
+#यदि !defined(LUA_LSUBSEP)
 #define LUA_LSUBSEP		LUA_DIRSEP
 #endif
 
@@ -51,12 +51,12 @@
 ** key for table in the registry that keeps handles
 ** for all loaded C libraries
 */
-static const char *const CLIBS = "_CLIBS";
+स्थिर अचर वर्ण *अचर CLIBS = "_CLIBS";
 
 #define LIB_FAIL	"open"
 
 
-#define setprogdir(L)           ((void)0)
+#define setprogdir(L)           ((शून्य)0)
 
 
 /* cast void* to a Lua function */
@@ -70,7 +70,7 @@ static const char *const CLIBS = "_CLIBS";
 /*
 ** unload library 'lib'
 */
-static void lsys_unloadlib (void *lib);
+स्थिर शून्य lsys_unloadlib (शून्य *lib);
 
 /*
 ** load C library in file 'path'. If 'seeglb', load with all names in
@@ -78,19 +78,19 @@ static void lsys_unloadlib (void *lib);
 ** Returns the library; in case of error, returns NULL plus an
 ** error string in the stack.
 */
-static void *lsys_load (lua_State *L, const char *path, int seeglb);
+स्थिर शून्य *lsys_load (lua_State *L, अचर वर्ण *path, पूर्णाङ्क seeglb);
 
 /*
 ** Try to find a function named 'sym' in library 'lib'.
 ** Returns the function; in case of error, returns NULL plus an
 ** error string in the stack.
 */
-static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym);
+स्थिर lua_CFunction lsys_sym (lua_State *L, शून्य *lib, अचर वर्ण *sym);
 
 
 
 
-#if defined(LUA_USE_DLOPEN)	/* { */
+#यदि defined(LUA_USE_DLOPEN)	/* { */
 /*
 ** {========================================================================
 ** This is an implementation of loadlib based on the dlfcn interface,
@@ -98,47 +98,47 @@ static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym);
 ** =========================================================================
 */
 
-#include <dlfcn.h>
+#अन्तर्भाव <dlfcn.h>
 
 
-static void lsys_unloadlib (void *lib) {
+स्थिर शून्य lsys_unloadlib (शून्य *lib) {
   dlclose(lib);
 }
 
 
-static void *lsys_load (lua_State *L, const char *path, int seeglb) {
-  void *lib = dlopen(path, RTLD_NOW | (seeglb ? RTLD_GLOBAL : RTLD_LOCAL));
-  if (l_unlikely(lib == NULL))
+स्थिर शून्य *lsys_load (lua_State *L, अचर वर्ण *path, पूर्णाङ्क seeglb) {
+  शून्य *lib = dlopen(path, RTLD_NOW | (seeglb ? RTLD_GLOBAL : RTLD_LOCAL));
+  यदि (l_unlikely(lib == रिक्त))
     lua_pushstring(L, dlerror());
-  return lib;
+  फर्काऊ lib;
 }
 
 
-static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
+स्थिर lua_CFunction lsys_sym (lua_State *L, शून्य *lib, अचर वर्ण *sym) {
   lua_CFunction f = cast_Lfunc(dlsym(lib, sym));
-  if (l_unlikely(f == NULL))
+  यदि (l_unlikely(f == रिक्त))
     lua_pushstring(L, dlerror());
-  return f;
+  फर्काऊ f;
 }
 
 /* }====================================================== */
 
 
 
-#elif defined(LUA_DL_DLL)	/* }{ */
+#अथवायदि defined(LUA_DL_DLL)	/* }{ */
 /*
 ** {======================================================================
 ** This is an implementation of loadlib for Windows using native functions.
 ** =======================================================================
 */
 
-#include <windows.h>
+#अन्तर्भाव <windows.h>
 
 
 /*
 ** optional flags for LoadLibraryEx
 */
-#if !defined(LUA_LLE_FLAGS)
+#यदि !defined(LUA_LLE_FLAGS)
 #define LUA_LLE_FLAGS	0
 #endif
 
@@ -150,14 +150,14 @@ static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
 ** Replace in the path (on the top of the stack) any occurrence
 ** of LUA_EXEC_DIR with the executable's path.
 */
-static void setprogdir (lua_State *L) {
-  char buff[MAX_PATH + 1];
-  char *lb;
-  DWORD nsize = sizeof(buff)/sizeof(char);
-  DWORD n = GetModuleFileNameA(NULL, buff, nsize);  /* get exec. name */
-  if (n == 0 || n == nsize || (lb = strrchr(buff, '\\')) == NULL)
+स्थिर शून्य setprogdir (lua_State *L) {
+  वर्ण buff[MAX_PATH + 1];
+  वर्ण *lb;
+  DWORD nsize = परिमाण(buff)/परिमाण(वर्ण);
+  DWORD n = GetModuleFileNameA(रिक्त, buff, nsize);  /* get exec. name */
+  यदि (n == 0 || n == nsize || (lb = म_खोजप(buff, '\\')) == रिक्त)
     luaL_error(L, "unable to get ModuleFileName");
-  else {
+  अन्यथा {
     *lb = '\0';  /* cut name on the last '\\' to get the path */
     luaL_gsub(L, lua_tostring(L, -1), LUA_EXEC_DIR, buff);
     lua_remove(L, -2);  /* remove original string */
@@ -167,39 +167,39 @@ static void setprogdir (lua_State *L) {
 
 
 
-static void pusherror (lua_State *L) {
-  int error = GetLastError();
-  char buffer[128];
-  if (FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
-      NULL, error, 0, buffer, sizeof(buffer)/sizeof(char), NULL))
+स्थिर शून्य pusherror (lua_State *L) {
+  पूर्णाङ्क error = GetLastError();
+  वर्ण buffer[128];
+  यदि (FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
+      रिक्त, error, 0, buffer, परिमाण(buffer)/परिमाण(वर्ण), रिक्त))
     lua_pushstring(L, buffer);
-  else
+  अन्यथा
     lua_pushfstring(L, "system error %d\n", error);
 }
 
-static void lsys_unloadlib (void *lib) {
+स्थिर शून्य lsys_unloadlib (शून्य *lib) {
   FreeLibrary((HMODULE)lib);
 }
 
 
-static void *lsys_load (lua_State *L, const char *path, int seeglb) {
-  HMODULE lib = LoadLibraryExA(path, NULL, LUA_LLE_FLAGS);
-  (void)(seeglb);  /* not used: symbols are 'global' by default */
-  if (lib == NULL) pusherror(L);
-  return lib;
+स्थिर शून्य *lsys_load (lua_State *L, अचर वर्ण *path, पूर्णाङ्क seeglb) {
+  HMODULE lib = LoadLibraryExA(path, रिक्त, LUA_LLE_FLAGS);
+  (शून्य)(seeglb);  /* not used: symbols are 'global' by default */
+  यदि (lib == रिक्त) pusherror(L);
+  फर्काऊ lib;
 }
 
 
-static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
+स्थिर lua_CFunction lsys_sym (lua_State *L, शून्य *lib, अचर वर्ण *sym) {
   lua_CFunction f = cast_Lfunc(GetProcAddress((HMODULE)lib, sym));
-  if (f == NULL) pusherror(L);
-  return f;
+  यदि (f == रिक्त) pusherror(L);
+  फर्काऊ f;
 }
 
 /* }====================================================== */
 
 
-#else				/* }{ */
+#अन्यथा				/* }{ */
 /*
 ** {======================================================
 ** Fallback for other systems
@@ -213,22 +213,22 @@ static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
 #define DLMSG	"dynamic libraries not enabled; check your Lua installation"
 
 
-static void lsys_unloadlib (void *lib) {
-  (void)(lib);  /* not used */
+स्थिर शून्य lsys_unloadlib (शून्य *lib) {
+  (शून्य)(lib);  /* not used */
 }
 
 
-static void *lsys_load (lua_State *L, const char *path, int seeglb) {
-  (void)(path); (void)(seeglb);  /* not used */
+स्थिर शून्य *lsys_load (lua_State *L, अचर वर्ण *path, पूर्णाङ्क seeglb) {
+  (शून्य)(path); (शून्य)(seeglb);  /* not used */
   lua_pushliteral(L, DLMSG);
-  return NULL;
+  फर्काऊ रिक्त;
 }
 
 
-static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
-  (void)(lib); (void)(sym);  /* not used */
+स्थिर lua_CFunction lsys_sym (lua_State *L, शून्य *lib, अचर वर्ण *sym) {
+  (शून्य)(lib); (शून्य)(sym);  /* not used */
   lua_pushliteral(L, DLMSG);
-  return NULL;
+  फर्काऊ रिक्त;
 }
 
 /* }====================================================== */
@@ -245,11 +245,11 @@ static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
 ** LUA_PATH_VAR and LUA_CPATH_VAR are the names of the environment
 ** variables that Lua check to set its paths.
 */
-#if !defined(LUA_PATH_VAR)
+#यदि !defined(LUA_PATH_VAR)
 #define LUA_PATH_VAR    "LUA_PATH"
 #endif
 
-#if !defined(LUA_CPATH_VAR)
+#यदि !defined(LUA_CPATH_VAR)
 #define LUA_CPATH_VAR   "LUA_CPATH"
 #endif
 
@@ -258,12 +258,12 @@ static lua_CFunction lsys_sym (lua_State *L, void *lib, const char *sym) {
 /*
 ** return registry.LUA_NOENV as a boolean
 */
-static int noenv (lua_State *L) {
-  int b;
+स्थिर पूर्णाङ्क noenv (lua_State *L) {
+  पूर्णाङ्क b;
   lua_getfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
   b = lua_toboolean(L, -1);
-  lua_pop(L, 1);  /* remove value */
-  return b;
+  lua_झिक(L, 1);  /* remove value */
+  फर्काऊ b;
 }
 
 
@@ -271,28 +271,28 @@ static int noenv (lua_State *L) {
 ** Set a path. (If using the default path, assume it is a string
 ** literal in C and create it as an external string.)
 */
-static void setpath (lua_State *L, const char *fieldname,
-                                   const char *envname,
-                                   const char *dft) {
-  const char *dftmark;
-  const char *nver = lua_pushfstring(L, "%s%s", envname, LUA_VERSUFFIX);
-  const char *path = getenv(nver);  /* try versioned name */
-  if (path == NULL)  /* no versioned environment variable? */
-    path = getenv(envname);  /* try unversioned name */
-  if (path == NULL || noenv(L))  /* no environment variable? */
-    lua_pushexternalstring(L, dft, strlen(dft), NULL, NULL);  /* use default */
-  else if ((dftmark = strstr(path, LUA_PATH_SEP LUA_PATH_SEP)) == NULL)
+स्थिर शून्य setpath (lua_State *L, अचर वर्ण *fieldname,
+                                   अचर वर्ण *envname,
+                                   अचर वर्ण *dft) {
+  अचर वर्ण *dftmark;
+  अचर वर्ण *nver = lua_pushfstring(L, "%s%s", envname, LUA_VERSUFFIX);
+  अचर वर्ण *path = दो_पर्या(nver);  /* try versioned name */
+  यदि (path == रिक्त)  /* no versioned environment variable? */
+    path = दो_पर्या(envname);  /* try unversioned name */
+  यदि (path == रिक्त || noenv(L))  /* no environment variable? */
+    lua_pushexternalstring(L, dft, म_माप(dft), रिक्त, रिक्त);  /* use default */
+  अन्यथा यदि ((dftmark = म_माला(path, LUA_PATH_SEP LUA_PATH_SEP)) == रिक्त)
     lua_pushstring(L, path);  /* nothing to change */
-  else {  /* path contains a ";;": insert default path in its place */
-    size_t len = strlen(path);
+  अन्यथा {  /* path contains a ";;": insert default path in its place */
+    माप_प्रकार len = म_माप(path);
     luaL_Buffer b;
     luaL_buffinit(L, &b);
-    if (path < dftmark) {  /* is there a prefix before ';;'? */
+    यदि (path < dftmark) {  /* is there a prefix before ';;'? */
       luaL_addlstring(&b, path, ct_diff2sz(dftmark - path));  /* add it */
       luaL_addchar(&b, *LUA_PATH_SEP);
     }
     luaL_addstring(&b, dft);  /* add default */
-    if (dftmark < path + len - 2) {  /* is there a suffix after ';;'? */
+    यदि (dftmark < path + len - 2) {  /* is there a suffix after ';;'? */
       luaL_addchar(&b, *LUA_PATH_SEP);
       luaL_addlstring(&b, dftmark + 2, ct_diff2sz((path + len - 2) - dftmark));
     }
@@ -300,7 +300,7 @@ static void setpath (lua_State *L, const char *fieldname,
   }
   setprogdir(L);
   lua_setfield(L, -3, fieldname);  /* package[fieldname] = path value */
-  lua_pop(L, 1);  /* pop versioned variable name ('nver') */
+  lua_झिक(L, 1);  /* pop versioned variable name ('nver') */
 }
 
 /* }================================================================== */
@@ -319,13 +319,13 @@ static void setpath (lua_State *L, const char *fieldname,
 /*
 ** return registry.CLIBS[path]
 */
-static void *checkclib (lua_State *L, const char *path) {
-  void *plib;
+स्थिर शून्य *checkclib (lua_State *L, अचर वर्ण *path) {
+  शून्य *plib;
   lua_getfield(L, LUA_REGISTRYINDEX, CLIBS);
   lua_getfield(L, -1, path);
   plib = lua_touserdata(L, -1);  /* plib = CLIBS[path] */
-  lua_pop(L, 2);  /* pop CLIBS table and 'plib' */
-  return plib;
+  lua_झिक(L, 2);  /* pop CLIBS table and 'plib' */
+  फर्काऊ plib;
 }
 
 
@@ -333,21 +333,21 @@ static void *checkclib (lua_State *L, const char *path) {
 ** Deallocate function for library strings.
 ** Unload the DLL associated with the string being deallocated.
 */
-static void *freelib (void *ud, void *ptr, size_t osize, size_t nsize) {
+स्थिर शून्य *freelib (शून्य *ud, शून्य *ptr, माप_प्रकार osize, माप_प्रकार nsize) {
   /* string itself is irrelevant and static */
-  (void)ptr; (void)osize; (void)nsize;
+  (शून्य)ptr; (शून्य)osize; (शून्य)nsize;
   lsys_unloadlib(ud);  /* unload library represented by the string */
-  return NULL;
+  फर्काऊ रिक्त;
 }
 
 
 /*
 ** Create a library string that, when deallocated, will unload 'plib'
 */
-static void createlibstr (lua_State *L, void *plib) {
+स्थिर शून्य createlibstr (lua_State *L, शून्य *plib) {
   /* common content for all library strings */
-  static const char dummy[] = "01234567890";
-  lua_pushexternalstring(L, dummy, sizeof(dummy) - 1, freelib, plib);
+  स्थिर अचर वर्ण dummy[] = "01234567890";
+  lua_pushexternalstring(L, dummy, परिमाण(dummy) - 1, freelib, plib);
 }
 
 
@@ -356,13 +356,13 @@ static void createlibstr (lua_State *L, void *plib) {
 ** Also create a reference to strlib, so that the library string will
 ** only be collected when registry.CLIBS is collected.
 */
-static void addtoclib (lua_State *L, const char *path, void *plib) {
+स्थिर शून्य addtoclib (lua_State *L, अचर वर्ण *path, शून्य *plib) {
   lua_getfield(L, LUA_REGISTRYINDEX, CLIBS);
   lua_pushlightuserdata(L, plib);
   lua_setfield(L, -2, path);  /* CLIBS[path] = plib */
   createlibstr(L, plib);
   luaL_ref(L, -2);  /* keep library string in CLIBS */
-  lua_pop(L, 1);  /* pop CLIBS table */
+  lua_झिक(L, 1);  /* pop CLIBS table */
 }
 
 
@@ -381,38 +381,38 @@ static void addtoclib (lua_State *L, const char *path, void *plib) {
 ** Return 0 with 'true' or a function in the stack; in case of
 ** errors, return an error code with an error message in the stack.
 */
-static int lookforfunc (lua_State *L, const char *path, const char *sym) {
-  void *reg = checkclib(L, path);  /* check loaded C libraries */
-  if (reg == NULL) {  /* must load library? */
+स्थिर पूर्णाङ्क lookforfunc (lua_State *L, अचर वर्ण *path, अचर वर्ण *sym) {
+  शून्य *reg = checkclib(L, path);  /* check loaded C libraries */
+  यदि (reg == रिक्त) {  /* must load library? */
     reg = lsys_load(L, path, *sym == '*');  /* global symbols if 'sym'=='*' */
-    if (reg == NULL) return ERRLIB;  /* unable to load library */
+    यदि (reg == रिक्त) फर्काऊ ERRLIB;  /* unable to load library */
     addtoclib(L, path, reg);
   }
-  if (*sym == '*') {  /* loading only library (no function)? */
+  यदि (*sym == '*') {  /* loading only library (no function)? */
     lua_pushboolean(L, 1);  /* return 'true' */
-    return 0;  /* no errors */
+    फर्काऊ 0;  /* no errors */
   }
-  else {
+  अन्यथा {
     lua_CFunction f = lsys_sym(L, reg, sym);
-    if (f == NULL)
-      return ERRFUNC;  /* unable to find function */
+    यदि (f == रिक्त)
+      फर्काऊ ERRFUNC;  /* unable to find function */
     lua_pushcfunction(L, f);  /* else create new function */
-    return 0;  /* no errors */
+    फर्काऊ 0;  /* no errors */
   }
 }
 
 
-static int ll_loadlib (lua_State *L) {
-  const char *path = luaL_checkstring(L, 1);
-  const char *init = luaL_checkstring(L, 2);
-  int stat = lookforfunc(L, path, init);
-  if (l_likely(stat == 0))  /* no errors? */
-    return 1;  /* return the loaded function */
-  else {  /* error; error message is on stack top */
+स्थिर पूर्णाङ्क ll_loadlib (lua_State *L) {
+  अचर वर्ण *path = luaL_checkstring(L, 1);
+  अचर वर्ण *init = luaL_checkstring(L, 2);
+  पूर्णाङ्क stat = lookforfunc(L, path, init);
+  यदि (l_likely(stat == 0))  /* no errors? */
+    फर्काऊ 1;  /* return the loaded function */
+  अन्यथा {  /* error; error message is on stack top */
     luaL_pushfail(L);
-    lua_insert(L, -2);
+    lua_घुसाउ(L, -2);
     lua_pushstring(L, (stat == ERRLIB) ?  LIB_FAIL : "init");
-    return 3;  /* return fail, error message, and where */
+    फर्काऊ 3;  /* return fail, error message, and where */
   }
 }
 
@@ -425,11 +425,11 @@ static int ll_loadlib (lua_State *L) {
 */
 
 
-static int readable (const char *filename) {
-  FILE *f = fopen(filename, "r");  /* try to open file */
-  if (f == NULL) return 0;  /* open failed */
-  fclose(f);
-  return 1;
+स्थिर पूर्णाङ्क readable (अचर वर्ण *filename) {
+  खाता *f = ख_खोलो(filename, "r");  /* try to open file */
+  यदि (f == रिक्त) फर्काऊ 0;  /* open failed */
+  ख_बंद(f);
+  फर्काऊ 1;
 }
 
 
@@ -438,21 +438,21 @@ static int readable (const char *filename) {
 ** the ending ';' to '\0' to create a zero-terminated string. Return
 ** NULL when list ends.
 */
-static const char *getnextfilename (char **path, char *end) {
-  char *sep;
-  char *name = *path;
-  if (name == end)
-    return NULL;  /* no more names */
-  else if (*name == '\0') {  /* from previous iteration? */
+स्थिर अचर वर्ण *getnextfilename (वर्ण **path, वर्ण *end) {
+  वर्ण *sep;
+  वर्ण *name = *path;
+  यदि (name == end)
+    फर्काऊ रिक्त;  /* no more names */
+  अन्यथा यदि (*name == '\0') {  /* from previous iteration? */
     *name = *LUA_PATH_SEP;  /* restore separator */
     name++;  /* skip it */
   }
-  sep = strchr(name, *LUA_PATH_SEP);  /* find next separator */
-  if (sep == NULL)  /* separator not found? */
+  sep = म_अक्षर(name, *LUA_PATH_SEP);  /* find next separator */
+  यदि (sep == रिक्त)  /* separator not found? */
     sep = end;  /* name goes until the end */
   *sep = '\0';  /* finish file name */
   *path = sep;  /* will start next search from here */
-  return name;
+  फर्काऊ name;
 }
 
 
@@ -462,7 +462,7 @@ static const char *getnextfilename (char **path, char *end) {
 ** no file 'blabla.so'
 **	no file 'blublu.so'
 */
-static void pusherrornotfound (lua_State *L, const char *path) {
+स्थिर शून्य pusherrornotfound (lua_State *L, अचर वर्ण *path) {
   luaL_Buffer b;
   luaL_buffinit(L, &b);
   luaL_addstring(&b, "no file '");
@@ -472,16 +472,16 @@ static void pusherrornotfound (lua_State *L, const char *path) {
 }
 
 
-static const char *searchpath (lua_State *L, const char *name,
-                                             const char *path,
-                                             const char *sep,
-                                             const char *dirsep) {
+स्थिर अचर वर्ण *searchpath (lua_State *L, अचर वर्ण *name,
+                                             अचर वर्ण *path,
+                                             अचर वर्ण *sep,
+                                             अचर वर्ण *dirsep) {
   luaL_Buffer buff;
-  char *pathname;  /* path with name inserted */
-  char *endpathname;  /* its end */
-  const char *filename;
+  वर्ण *pathname;  /* path with name inserted */
+  वर्ण *endpathname;  /* its end */
+  अचर वर्ण *filename;
   /* separator is non-empty and appears in 'name'? */
-  if (*sep != '\0' && strchr(name, *sep) != NULL)
+  यदि (*sep != '\0' && म_अक्षर(name, *sep) != रिक्त)
     name = luaL_gsub(L, name, sep, dirsep);  /* replace it by 'dirsep' */
   luaL_buffinit(L, &buff);
   /* add path to the buffer, replacing marks ('?') with the file name */
@@ -489,59 +489,59 @@ static const char *searchpath (lua_State *L, const char *name,
   luaL_addchar(&buff, '\0');
   pathname = luaL_buffaddr(&buff);  /* writable list of file names */
   endpathname = pathname + luaL_bufflen(&buff) - 1;
-  while ((filename = getnextfilename(&pathname, endpathname)) != NULL) {
-    if (readable(filename))  /* does file exist and is readable? */
-      return lua_pushstring(L, filename);  /* save and return name */
+  जबसम्म ((filename = getnextfilename(&pathname, endpathname)) != रिक्त) {
+    यदि (readable(filename))  /* does file exist and is readable? */
+      फर्काऊ lua_pushstring(L, filename);  /* save and return name */
   }
   luaL_pushresult(&buff);  /* push path to create error message */
   pusherrornotfound(L, lua_tostring(L, -1));  /* create error message */
-  return NULL;  /* not found */
+  फर्काऊ रिक्त;  /* not found */
 }
 
 
-static int ll_searchpath (lua_State *L) {
-  const char *f = searchpath(L, luaL_checkstring(L, 1),
+स्थिर पूर्णाङ्क ll_searchpath (lua_State *L) {
+  अचर वर्ण *f = searchpath(L, luaL_checkstring(L, 1),
                                 luaL_checkstring(L, 2),
                                 luaL_optstring(L, 3, "."),
                                 luaL_optstring(L, 4, LUA_DIRSEP));
-  if (f != NULL) return 1;
-  else {  /* error message is on top of the stack */
+  यदि (f != रिक्त) फर्काऊ 1;
+  अन्यथा {  /* error message is on top of the stack */
     luaL_pushfail(L);
-    lua_insert(L, -2);
-    return 2;  /* return fail + error message */
+    lua_घुसाउ(L, -2);
+    फर्काऊ 2;  /* return fail + error message */
   }
 }
 
 
-static const char *findfile (lua_State *L, const char *name,
-                                           const char *pname,
-                                           const char *dirsep) {
-  const char *path;
+स्थिर अचर वर्ण *findfile (lua_State *L, अचर वर्ण *name,
+                                           अचर वर्ण *pname,
+                                           अचर वर्ण *dirsep) {
+  अचर वर्ण *path;
   lua_getfield(L, lua_upvalueindex(1), pname);
   path = lua_tostring(L, -1);
-  if (l_unlikely(path == NULL))
+  यदि (l_unlikely(path == रिक्त))
     luaL_error(L, "'package.%s' must be a string", pname);
-  return searchpath(L, name, path, ".", dirsep);
+  फर्काऊ searchpath(L, name, path, ".", dirsep);
 }
 
 
-static int checkload (lua_State *L, int stat, const char *filename) {
-  if (l_likely(stat)) {  /* module loaded successfully? */
+स्थिर पूर्णाङ्क checkload (lua_State *L, पूर्णाङ्क stat, अचर वर्ण *filename) {
+  यदि (l_likely(stat)) {  /* module loaded successfully? */
     lua_pushstring(L, filename);  /* will be 2nd argument to module */
-    return 2;  /* return open function and file name */
+    फर्काऊ 2;  /* return open function and file name */
   }
-  else
-    return luaL_error(L, "error loading module '%s' from file '%s':\n\t%s",
+  अन्यथा
+    फर्काऊ luaL_error(L, "error loading module '%s' from file '%s':\n\t%s",
                           lua_tostring(L, 1), filename, lua_tostring(L, -1));
 }
 
 
-static int searcher_Lua (lua_State *L) {
-  const char *filename;
-  const char *name = luaL_checkstring(L, 1);
+स्थिर पूर्णाङ्क searcher_Lua (lua_State *L) {
+  अचर वर्ण *filename;
+  अचर वर्ण *name = luaL_checkstring(L, 1);
   filename = findfile(L, name, "path", LUA_LSUBSEP);
-  if (filename == NULL) return 1;  /* module not found in this path */
-  return checkload(L, (luaL_loadfilex(L, filename, "bt") == LUA_OK), filename);
+  यदि (filename == रिक्त) फर्काऊ 1;  /* module not found in this path */
+  फर्काऊ checkload(L, (luaL_loadfilex(L, filename, "bt") == LUA_OK), filename);
 }
 
 
@@ -553,109 +553,109 @@ static int searcher_Lua (lua_State *L) {
 ** fails, it also tries "luaopen_Y".) If there is no ignore mark,
 ** look for a function named "luaopen_modname".
 */
-static int loadfunc (lua_State *L, const char *filename, const char *modname) {
-  const char *openfunc;
-  const char *mark;
+स्थिर पूर्णाङ्क loadfunc (lua_State *L, अचर वर्ण *filename, अचर वर्ण *modname) {
+  अचर वर्ण *openfunc;
+  अचर वर्ण *mark;
   modname = luaL_gsub(L, modname, ".", LUA_OFSEP);
-  mark = strchr(modname, *LUA_IGMARK);
-  if (mark) {
-    int stat;
+  mark = म_अक्षर(modname, *LUA_IGMARK);
+  यदि (mark) {
+    पूर्णाङ्क stat;
     openfunc = lua_pushlstring(L, modname, ct_diff2sz(mark - modname));
     openfunc = lua_pushfstring(L, LUA_POF"%s", openfunc);
     stat = lookforfunc(L, filename, openfunc);
-    if (stat != ERRFUNC) return stat;
+    यदि (stat != ERRFUNC) फर्काऊ stat;
     modname = mark + 1;  /* else go ahead and try old-style name */
   }
   openfunc = lua_pushfstring(L, LUA_POF"%s", modname);
-  return lookforfunc(L, filename, openfunc);
+  फर्काऊ lookforfunc(L, filename, openfunc);
 }
 
 
-static int searcher_C (lua_State *L) {
-  const char *name = luaL_checkstring(L, 1);
-  const char *filename = findfile(L, name, "cpath", LUA_CSUBSEP);
-  if (filename == NULL) return 1;  /* module not found in this path */
-  return checkload(L, (loadfunc(L, filename, name) == 0), filename);
+स्थिर पूर्णाङ्क searcher_C (lua_State *L) {
+  अचर वर्ण *name = luaL_checkstring(L, 1);
+  अचर वर्ण *filename = findfile(L, name, "cpath", LUA_CSUBSEP);
+  यदि (filename == रिक्त) फर्काऊ 1;  /* module not found in this path */
+  फर्काऊ checkload(L, (loadfunc(L, filename, name) == 0), filename);
 }
 
 
-static int searcher_Croot (lua_State *L) {
-  const char *filename;
-  const char *name = luaL_checkstring(L, 1);
-  const char *p = strchr(name, '.');
-  int stat;
-  if (p == NULL) return 0;  /* is root */
+स्थिर पूर्णाङ्क searcher_Croot (lua_State *L) {
+  अचर वर्ण *filename;
+  अचर वर्ण *name = luaL_checkstring(L, 1);
+  अचर वर्ण *p = म_अक्षर(name, '.');
+  पूर्णाङ्क stat;
+  यदि (p == रिक्त) फर्काऊ 0;  /* is root */
   lua_pushlstring(L, name, ct_diff2sz(p - name));
   filename = findfile(L, lua_tostring(L, -1), "cpath", LUA_CSUBSEP);
-  if (filename == NULL) return 1;  /* root not found */
-  if ((stat = loadfunc(L, filename, name)) != 0) {
-    if (stat != ERRFUNC)
-      return checkload(L, 0, filename);  /* real error */
-    else {  /* open function not found */
+  यदि (filename == रिक्त) फर्काऊ 1;  /* root not found */
+  यदि ((stat = loadfunc(L, filename, name)) != 0) {
+    यदि (stat != ERRFUNC)
+      फर्काऊ checkload(L, 0, filename);  /* real error */
+    अन्यथा {  /* open function not found */
       lua_pushfstring(L, "no module '%s' in file '%s'", name, filename);
-      return 1;
+      फर्काऊ 1;
     }
   }
   lua_pushstring(L, filename);  /* will be 2nd argument to module */
-  return 2;
+  फर्काऊ 2;
 }
 
 
-static int searcher_preload (lua_State *L) {
-  const char *name = luaL_checkstring(L, 1);
+स्थिर पूर्णाङ्क searcher_preload (lua_State *L) {
+  अचर वर्ण *name = luaL_checkstring(L, 1);
   lua_getfield(L, LUA_REGISTRYINDEX, LUA_PRELOAD_TABLE);
-  if (lua_getfield(L, -1, name) == LUA_TNIL) {  /* not found? */
+  यदि (lua_getfield(L, -1, name) == LUA_TNIL) {  /* not found? */
     lua_pushfstring(L, "no field package.preload['%s']", name);
-    return 1;
+    फर्काऊ 1;
   }
-  else {
+  अन्यथा {
     lua_pushliteral(L, ":preload:");
-    return 2;
+    फर्काऊ 2;
   }
 }
 
 
-static void findloader (lua_State *L, const char *name) {
-  int i;
-  luaL_Buffer msg;  /* to build error message */
+स्थिर शून्य findloader (lua_State *L, अचर वर्ण *name) {
+  पूर्णाङ्क i;
+  luaL_Buffer सन्देश;  /* to build error message */
   /* push 'package.searchers' to index 3 in the stack */
-  if (l_unlikely(lua_getfield(L, lua_upvalueindex(1), "searchers")
+  यदि (l_unlikely(lua_getfield(L, lua_upvalueindex(1), "searchers")
                  != LUA_TTABLE))
     luaL_error(L, "'package.searchers' must be a table");
-  luaL_buffinit(L, &msg);
-  luaL_addstring(&msg, "\n\t");  /* error-message prefix for first message */
+  luaL_buffinit(L, &सन्देश);
+  luaL_addstring(&सन्देश, "\n\t");  /* error-message prefix for first message */
   /*  iterate over available searchers to find a loader */
-  for (i = 1; ; i++) {
-    if (l_unlikely(lua_rawgeti(L, 3, i) == LUA_TNIL)) {  /* no more searchers? */
-      lua_pop(L, 1);  /* remove nil */
-      luaL_buffsub(&msg, 2);  /* remove last prefix */
-      luaL_pushresult(&msg);  /* create error message */
+  लागि (i = 1; ; i++) {
+    यदि (l_unlikely(lua_rawgeti(L, 3, i) == LUA_TNIL)) {  /* no more searchers? */
+      lua_झिक(L, 1);  /* remove nil */
+      luaL_buffsub(&सन्देश, 2);  /* remove last prefix */
+      luaL_pushresult(&सन्देश);  /* create error message */
       luaL_error(L, "module '%s' not found:%s", name, lua_tostring(L, -1));
     }
     lua_pushstring(L, name);
     lua_call(L, 1, 2);  /* call it */
-    if (lua_isfunction(L, -2))  /* did it find a loader? */
-      return;  /* module loader found */
-    else if (lua_isstring(L, -2)) {  /* searcher returned error message? */
-      lua_pop(L, 1);  /* remove extra return */
-      luaL_addvalue(&msg);  /* concatenate error message */
-      luaL_addstring(&msg, "\n\t");  /* prefix for next message */
+    यदि (lua_isfunction(L, -2))  /* did it find a loader? */
+      फर्काऊ;  /* module loader found */
+    अन्यथा यदि (lua_isstring(L, -2)) {  /* searcher returned error message? */
+      lua_झिक(L, 1);  /* remove extra return */
+      luaL_addvalue(&सन्देश);  /* concatenate error message */
+      luaL_addstring(&सन्देश, "\n\t");  /* prefix for next message */
     }
-    else  /* no error message */
-      lua_pop(L, 2);  /* remove both returns */
+    अन्यथा  /* no error message */
+      lua_झिक(L, 2);  /* remove both returns */
   }
 }
 
 
-static int ll_require (lua_State *L) {
-  const char *name = luaL_checkstring(L, 1);
+स्थिर पूर्णाङ्क ll_require (lua_State *L) {
+  अचर वर्ण *name = luaL_checkstring(L, 1);
   lua_settop(L, 1);  /* LOADED table will be at index 2 */
   lua_getfield(L, LUA_REGISTRYINDEX, LUA_LOADED_TABLE);
   lua_getfield(L, 2, name);  /* LOADED[name] */
-  if (lua_toboolean(L, -1))  /* is it there? */
-    return 1;  /* package is already loaded */
+  यदि (lua_toboolean(L, -1))  /* is it there? */
+    फर्काऊ 1;  /* package is already loaded */
   /* else must load package */
-  lua_pop(L, 1);  /* remove 'getfield' result */
+  lua_झिक(L, 1);  /* remove 'getfield' result */
   findloader(L, name);
   lua_rotate(L, -2, 1);  /* function <-> loader data */
   lua_pushvalue(L, 1);  /* name is 1st argument to module loader */
@@ -663,17 +663,17 @@ static int ll_require (lua_State *L) {
   /* stack: ...; loader data; loader function; mod. name; loader data */
   lua_call(L, 2, 1);  /* run loader to load module */
   /* stack: ...; loader data; result from loader */
-  if (!lua_isnil(L, -1))  /* non-nil return? */
+  यदि (!lua_isnil(L, -1))  /* non-nil return? */
     lua_setfield(L, 2, name);  /* LOADED[name] = returned value */
-  else
-    lua_pop(L, 1);  /* pop nil */
-  if (lua_getfield(L, 2, name) == LUA_TNIL) {   /* module set no value? */
+  अन्यथा
+    lua_झिक(L, 1);  /* pop nil */
+  यदि (lua_getfield(L, 2, name) == LUA_TNIL) {   /* module set no value? */
     lua_pushboolean(L, 1);  /* use true as result */
     lua_copy(L, -1, -2);  /* replace loader result */
     lua_setfield(L, 2, name);  /* LOADED[name] = true */
   }
   lua_rotate(L, -2, 1);  /* loader data <-> module result  */
-  return 2;  /* return module result and loader data */
+  फर्काऊ 2;  /* return module result and loader data */
 }
 
 /* }====================================================== */
@@ -681,38 +681,38 @@ static int ll_require (lua_State *L) {
 
 
 
-static const luaL_Reg pk_funcs[] = {
+स्थिर अचर luaL_Reg pk_funcs[] = {
   {"loadlib", ll_loadlib},
   {"searchpath", ll_searchpath},
   /* placeholders */
-  {"preload", NULL},
-  {"cpath", NULL},
-  {"path", NULL},
-  {"searchers", NULL},
-  {"loaded", NULL},
-  {NULL, NULL}
+  {"preload", रिक्त},
+  {"cpath", रिक्त},
+  {"path", रिक्त},
+  {"searchers", रिक्त},
+  {"loaded", रिक्त},
+  {रिक्त, रिक्त}
 };
 
 
-static const luaL_Reg ll_funcs[] = {
+स्थिर अचर luaL_Reg ll_funcs[] = {
   {"require", ll_require},
-  {NULL, NULL}
+  {रिक्त, रिक्त}
 };
 
 
-static void createsearcherstable (lua_State *L) {
-  static const lua_CFunction searchers[] = {
+स्थिर शून्य createsearcherstable (lua_State *L) {
+  स्थिर अचर lua_CFunction searchers[] = {
     searcher_preload,
     searcher_Lua,
     searcher_C,
     searcher_Croot,
-    NULL
+    रिक्त
   };
-  int i;
+  पूर्णाङ्क i;
   /* create 'searchers' table */
-  lua_createtable(L, sizeof(searchers)/sizeof(searchers[0]) - 1, 0);
+  lua_createtable(L, परिमाण(searchers)/परिमाण(searchers[0]) - 1, 0);
   /* fill it with predefined searchers */
-  for (i=0; searchers[i] != NULL; i++) {
+  लागि (i=0; searchers[i] != रिक्त; i++) {
     lua_pushvalue(L, -2);  /* set 'package' as upvalue for all searchers */
     lua_pushcclosure(L, searchers[i], 1);
     lua_rawseti(L, -2, i+1);
@@ -721,9 +721,9 @@ static void createsearcherstable (lua_State *L) {
 }
 
 
-LUAMOD_API int luaopen_package (lua_State *L) {
+LUAMOD_API पूर्णाङ्क luaopen_package (lua_State *L) {
   luaL_getsubtable(L, LUA_REGISTRYINDEX, CLIBS);  /* create CLIBS table */
-  lua_pop(L, 1);  /* will not use it now */
+  lua_झिक(L, 1);  /* will not use it now */
   luaL_newlib(L, pk_funcs);  /* create 'package' table */
   createsearcherstable(L);
   /* set paths */
@@ -742,7 +742,7 @@ LUAMOD_API int luaopen_package (lua_State *L) {
   lua_pushglobaltable(L);
   lua_pushvalue(L, -2);  /* set 'package' as upvalue for next lib */
   luaL_setfuncs(L, ll_funcs, 1);  /* open lib into global table */
-  lua_pop(L, 1);  /* pop global table */
-  return 1;  /* return 'package' table */
+  lua_झिक(L, 1);  /* pop global table */
+  फर्काऊ 1;  /* return 'package' table */
 }
 

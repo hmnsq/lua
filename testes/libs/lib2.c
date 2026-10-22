@@ -1,23 +1,23 @@
-#include "lua.h"
-#include "lauxlib.h"
+#अन्तर्भाव "lua.h"
+#अन्तर्भाव "lauxlib.h"
 
-static int id (lua_State *L) {
-  return lua_gettop(L);
+स्थिर पूर्णाङ्क id (lua_State *L) {
+  फर्काऊ lua_gettop(L);
 }
 
 
-static const struct luaL_Reg funcs[] = {
+स्थिर अचर संरचना luaL_Reg funcs[] = {
   {"id", id},
-  {NULL, NULL}
+  {रिक्त, रिक्त}
 };
 
 
-LUAMOD_API int luaopen_lib2 (lua_State *L) {
+LUAMOD_API पूर्णाङ्क luaopen_lib2 (lua_State *L) {
   lua_settop(L, 2);
   lua_setglobal(L, "y");  /* y gets 2nd parameter */
   lua_setglobal(L, "x");  /* x gets 1st parameter */
   luaL_newlib(L, funcs);
-  return 1;
+  फर्काऊ 1;
 }
 
 
