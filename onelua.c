@@ -30,7 +30,7 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
+#אם 0
 #define LUA_USE_LINUX
 #define LUA_USE_MACOSX
 #define LUA_USE_POSIX
@@ -40,7 +40,7 @@
 /*
 ** Other specific features
 */
-#if 0
+#אם 0
 #define LUA_32BITS
 #define LUA_USE_C89
 #endif
@@ -48,89 +48,89 @@
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#ضمن <assert.h>
+#ضمن <ctype.h>
+#ضمن <errno.h>
+#ضمن <float.h>
+#ضمن <limits.h>
+#ضمن <locale.h>
+#ضمن <math.h>
+#ضمن <setjmp.h>
+#ضمن <signal.h>
+#ضمن <stdarg.h>
+#ضمن <stddef.h>
+#ضمن <stdio.h>
+#ضمن <stdlib.h>
+#ضمن <string.h>
+#ضمن <time.h>
 
 /* setup for luaconf.h */
 #define LUA_CORE
 #define LUA_LIB
 
-#include "luaconf.h"
+#ضمن "luaconf.h"
 
 /* do not export internal symbols */
 #undef LUAI_FUNC
 #undef LUAI_DDEC
 #undef LUAI_DDEF
-#define LUAI_FUNC	static
+#define LUAI_FUNC	ساكن
 #define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#define LUAI_DDEF	ساكن
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#ضمن "lzio.c"
+#ضمن "lctype.c"
+#ضمن "lopcodes.c"
+#ضمن "lmem.c"
+#ضمن "lundump.c"
+#ضمن "ldump.c"
+#ضمن "lstate.c"
+#ضمن "lgc.c"
+#ضمن "llex.c"
+#ضمن "lcode.c"
+#ضمن "lparser.c"
+#ضمن "ldebug.c"
+#ضمن "lfunc.c"
+#ضمن "lobject.c"
+#ضمن "ltm.c"
+#ضمن "lstring.c"
+#ضمن "ltable.c"
+#ضمن "ldo.c"
+#ضمن "lvm.c"
+#ضمن "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#ضمن "lauxlib.c"
 
 /* standard library  -- not used by luac */
 #ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
+#ضمن "lbaselib.c"
+#ضمن "lcorolib.c"
+#ضمن "ldblib.c"
+#ضمن "liolib.c"
+#ضمن "lmathlib.c"
+#ضمن "loadlib.c"
+#ضمن "loslib.c"
+#ضمن "lstrlib.c"
+#ضمن "ltablib.c"
+#ضمن "lutf8lib.c"
+#ضمن "linit.c"
 #endif
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
+#אם defined(LUA_DEBUG)
+#ضمن "ltests.c"
 #endif
 
 /* lua */
 #ifdef MAKE_LUA
-#include "lua.c"
+#ضمن "lua.c"
 #endif
 
 /* luac */
 #ifdef MAKE_LUAC
-#include "luac.c"
+#ضمن "luac.c"
 #endif

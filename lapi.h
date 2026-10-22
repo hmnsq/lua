@@ -8,15 +8,15 @@
 #define lapi_h
 
 
-#include "llimits.h"
-#include "lstate.h"
+#ضمن "llimits.h"
+#ضمن "lstate.h"
 
 
-#if defined(LUA_USE_APICHECK)
-#include <assert.h>
-#define api_check(l,e,msg)	assert(e)
-#else	/* for testing */
-#define api_check(l,e,msg)	((void)(l), lua_assert((e) && msg))
+#אם defined(LUA_USE_APICHECK)
+#ضمن <assert.h>
+#define api_check(l,e,msg)	أكد(e)
+#אחרת	/* for testing */
+#define api_check(l,e,msg)	((فراغ)(l), lua_assert((e) && msg))
 #endif
 
 
@@ -30,9 +30,9 @@
 ** macros that are executed whenever program enters the Lua core
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
-#if !defined(lua_lock)
-#define lua_lock(L)	((void) 0)
-#define lua_unlock(L)	((void) 0)
+#אם !defined(lua_lock)
+#define lua_lock(L)	((فراغ) 0)
+#define lua_unlock(L)	((فراغ) 0)
 #endif
 
 
@@ -43,7 +43,7 @@
 ** increases its stack space ('L->ci->top.p').
 */
 #define adjustresults(L,nres) \
-    { if ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
+    { אם ((nres) <= LUA_MULTRET && L->ci->top.p < L->top.p) \
 	L->ci->top.p = L->top.p; }
 
 

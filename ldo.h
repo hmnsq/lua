@@ -8,10 +8,10 @@
 #define ldo_h
 
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lzio.h"
+#ضمن "llimits.h"
+#ضمن "lobject.h"
+#ضمن "lstate.h"
+#ضمن "lzio.h"
 
 
 /*
@@ -24,21 +24,21 @@
 ** at every check.
 */
 
-#if !defined(HARDSTACKTESTS)
-#define condmovestack(L,pre,pos)	((void)0)
-#else
+#אם !defined(HARDSTACKTESTS)
+#define condmovestack(L,pre,pos)	((فراغ)0)
+#אחרת
 /* realloc stack keeping its size */
 #define condmovestack(L,pre,pos)  \
-  { int sz_ = stacksize(L); pre; luaD_reallocstack((L), sz_, 0); pos; }
+  { صحيح sz_ = stacksize(L); pre; luaD_reallocstack((L), sz_, 0); pos; }
 #endif
 
 #define luaD_checkstackaux(L,n,pre,pos)  \
-	if (l_unlikely(L->stack_last.p - L->top.p <= (n))) \
+	אם (l_unlikely(L->stack_last.p - L->top.p <= (n))) \
 	  { pre; luaD_growstack(L, n, 1); pos; } \
-	else { condmovestack(L,pre,pos); }
+	אחרת { condmovestack(L,pre,pos); }
 
 /* In general, 'pre'/'pos' are empty (nothing to save) */
-#define luaD_checkstack(L,n)	luaD_checkstackaux(L,n,(void)0,(void)0)
+#define luaD_checkstack(L,n)	luaD_checkstackaux(L,n,(فراغ)0,(فراغ)0)
 
 
 
@@ -59,41 +59,41 @@
 ** fit in a 16-bit unsigned integer. It must also be compatible with
 ** the size of the C stack.)
 */
-#if !defined(LUAI_MAXCCALLS)
+#אם !defined(LUAI_MAXCCALLS)
 #define LUAI_MAXCCALLS		200
 #endif
 
 
 /* type of protected functions, to be ran by 'runprotected' */
-typedef void (*Pfunc) (lua_State *L, void *ud);
+تعريفنوع فراغ (*Pfunc) (lua_State *L, فراغ *ud);
 
 LUAI_FUNC l_noret luaD_errerr (lua_State *L);
-LUAI_FUNC void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop);
+LUAI_FUNC فراغ luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop);
 LUAI_FUNC TStatus luaD_protectedparser (lua_State *L, ZIO *z,
-                                                  const char *name,
-                                                  const char *mode);
-LUAI_FUNC void luaD_hook (lua_State *L, int event, int line,
-                                        int fTransfer, int nTransfer);
-LUAI_FUNC void luaD_hookcall (lua_State *L, CallInfo *ci);
-LUAI_FUNC int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
-                                              int narg1, int delta);
-LUAI_FUNC CallInfo *luaD_precall (lua_State *L, StkId func, int nResults);
-LUAI_FUNC void luaD_call (lua_State *L, StkId func, int nResults);
-LUAI_FUNC void luaD_callnoyield (lua_State *L, StkId func, int nResults);
+                                                  ثابت حرف *name,
+                                                  ثابت حرف *mode);
+LUAI_FUNC فراغ luaD_hook (lua_State *L, صحيح event, صحيح line,
+                                        صحيح fTransfer, صحيح nTransfer);
+LUAI_FUNC فراغ luaD_hookcall (lua_State *L, CallInfo *ci);
+LUAI_FUNC صحيح luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
+                                              صحيح narg1, صحيح delta);
+LUAI_FUNC CallInfo *luaD_precall (lua_State *L, StkId func, صحيح nResults);
+LUAI_FUNC فراغ luaD_call (lua_State *L, StkId func, صحيح nResults);
+LUAI_FUNC فراغ luaD_callnoyield (lua_State *L, StkId func, صحيح nResults);
 LUAI_FUNC TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level,
                                                      TStatus status);
-LUAI_FUNC TStatus luaD_pcall (lua_State *L, Pfunc func, void *u,
+LUAI_FUNC TStatus luaD_pcall (lua_State *L, Pfunc func, فراغ *u,
                                         ptrdiff_t oldtop, ptrdiff_t ef);
-LUAI_FUNC void luaD_poscall (lua_State *L, CallInfo *ci, int nres);
-LUAI_FUNC int luaD_reallocstack (lua_State *L, int newsize, int raiseerror);
-LUAI_FUNC int luaD_growstack (lua_State *L, int n, int raiseerror);
-LUAI_FUNC void luaD_shrinkstack (lua_State *L);
-LUAI_FUNC int luaD_checkminstack (lua_State *L);
-LUAI_FUNC void luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj);
+LUAI_FUNC فراغ luaD_poscall (lua_State *L, CallInfo *ci, صحيح nres);
+LUAI_FUNC صحيح luaD_reallocstack (lua_State *L, صحيح newsize, صحيح raiseerror);
+LUAI_FUNC صحيح luaD_growstack (lua_State *L, صحيح n, صحيح raiseerror);
+LUAI_FUNC فراغ luaD_shrinkstack (lua_State *L);
+LUAI_FUNC صحيح luaD_checkminstack (lua_State *L);
+LUAI_FUNC فراغ luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj);
 
 LUAI_FUNC l_noret luaD_throw (lua_State *L, TStatus errcode);
 LUAI_FUNC l_noret luaD_throwbaselevel (lua_State *L, TStatus errcode);
-LUAI_FUNC TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud);
+LUAI_FUNC TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, فراغ *ud);
 
 #endif
 

@@ -7,22 +7,22 @@
 #define lcorolib_c
 #define LUA_LIB
 
-#include "lprefix.h"
+#ضمن "lprefix.h"
 
 
-#include <stdlib.h>
+#ضمن <stdlib.h>
 
-#include "lua.h"
+#ضمن "lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ضمن "lauxlib.h"
+#ضمن "lualib.h"
+#ضمن "llimits.h"
 
 
-static lua_State *getco (lua_State *L) {
+ساكن lua_State *getco (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   luaL_argexpected(L, co, 1, "thread");
-  return co;
+  החזר co;
 }
 
 
@@ -30,89 +30,89 @@ static lua_State *getco (lua_State *L) {
 ** Resumes a coroutine. Returns the number of results for non-error
 ** cases or -1 for errors.
 */
-static int auxresume (lua_State *L, lua_State *co, int narg) {
-  int status, nres;
-  if (l_unlikely(!lua_checkstack(co, narg))) {
+ساكن صحيح auxresume (lua_State *L, lua_State *co, صحيح narg) {
+  صحيح status, nres;
+  אם (l_unlikely(!lua_checkstack(co, narg))) {
     lua_pushliteral(L, "too many arguments to resume");
-    return -1;  /* error flag */
+    החזר -1;  /* error flag */
   }
   lua_xmove(L, co, narg);
   status = lua_resume(co, L, narg, &nres);
-  if (l_likely(status == LUA_OK || status == LUA_YIELD)) {
-    if (l_unlikely(!lua_checkstack(L, nres + 1))) {
+  אם (l_likely(status == LUA_OK || status == LUA_YIELD)) {
+    אם (l_unlikely(!lua_checkstack(L, nres + 1))) {
       lua_pop(co, nres);  /* remove results anyway */
       lua_pushliteral(L, "too many results to resume");
-      return -1;  /* error flag */
+      החזר -1;  /* error flag */
     }
     lua_xmove(co, L, nres);  /* move yielded values */
-    return nres;
+    החזר nres;
   }
-  else {
+  אחרת {
     lua_xmove(co, L, 1);  /* move error message */
-    return -1;  /* error flag */
+    החזר -1;  /* error flag */
   }
 }
 
 
-static int luaB_coresume (lua_State *L) {
+ساكن صحيح luaB_coresume (lua_State *L) {
   lua_State *co = getco(L);
-  int r;
+  صحيح r;
   r = auxresume(L, co, lua_gettop(L) - 1);
-  if (l_unlikely(r < 0)) {
+  אם (l_unlikely(r < 0)) {
     lua_pushboolean(L, 0);
     lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    החזר 2;  /* return false + error message */
   }
-  else {
+  אחרת {
     lua_pushboolean(L, 1);
     lua_insert(L, -(r + 1));
-    return r + 1;  /* return true + 'resume' returns */
+    החזר r + 1;  /* return true + 'resume' returns */
   }
 }
 
 
-static int luaB_auxwrap (lua_State *L) {
+ساكن صحيح luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
-  int r = auxresume(L, co, lua_gettop(L));
-  if (l_unlikely(r < 0)) {  /* error? */
-    int stat = lua_status(co);
-    if (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
+  صحيح r = auxresume(L, co, lua_gettop(L));
+  אם (l_unlikely(r < 0)) {  /* error? */
+    صحيح stat = lua_status(co);
+    אם (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
       stat = lua_closethread(co, L);  /* close its tbc variables */
-      if (stat == LUA_OK)
-        return 0;  /* nothing to return */
+      אם (stat == LUA_OK)
+        החזר 0;  /* nothing to return */
       lua_xmove(co, L, 1);  /* move error message to the caller */
     }
-    if (stat != LUA_ERRMEM &&  /* not a memory error and ... */
+    אם (stat != LUA_ERRMEM &&  /* not a memory error and ... */
         lua_type(L, -1) == LUA_TSTRING) {  /* ... error object is a string? */
       luaL_where(L, 1);  /* add extra info, if available */
       lua_insert(L, -2);
       lua_concat(L, 2);
     }
-    return lua_error(L);  /* propagate error */
+    החזר lua_error(L);  /* propagate error */
   }
-  return r;
+  החזר r;
 }
 
 
-static int luaB_cocreate (lua_State *L) {
+ساكن صحيح luaB_cocreate (lua_State *L) {
   lua_State *NL;
   luaL_checktype(L, 1, LUA_TFUNCTION);
   NL = lua_newthread(L);
   lua_pushvalue(L, 1);  /* move function to top */
   lua_xmove(L, NL, 1);  /* move function from L to NL */
-  return 1;
+  החזר 1;
 }
 
 
-static int luaB_cowrap (lua_State *L) {
+ساكن صحيح luaB_cowrap (lua_State *L) {
   luaB_cocreate(L);
   lua_pushcclosure(L, luaB_auxwrap, 1);
-  return 1;
+  החזר 1;
 }
 
 
-static int luaB_yield (lua_State *L) {
-  return lua_yield(L, lua_gettop(L));
+ساكن صحيح luaB_yield (lua_State *L) {
+  החזר lua_yield(L, lua_gettop(L));
 }
 
 
@@ -122,90 +122,90 @@ static int luaB_yield (lua_State *L) {
 #define COS_NORM	3
 
 
-static const char *const statname[] =
+ساكن ثابت حرف *ثابت statname[] =
   {"running", "dead", "suspended", "normal"};
 
 
-static int auxstatus (lua_State *L, lua_State *co) {
-  if (L == co) return COS_RUN;
-  else {
-    switch (lua_status(co)) {
-      case LUA_YIELD:
-        return COS_YIELD;
-      case LUA_OK: {
+ساكن صحيح auxstatus (lua_State *L, lua_State *co) {
+  אם (L == co) החזר COS_RUN;
+  אחרת {
+    بدل (lua_status(co)) {
+      حالة LUA_YIELD:
+        החזר COS_YIELD;
+      حالة LUA_OK: {
         lua_Debug ar;
-        if (lua_getstack(co, 0, &ar))  /* does it have frames? */
-          return COS_NORM;  /* it is running */
-        else if (lua_gettop(co) == 0)
-            return COS_DEAD;
-        else
-          return COS_YIELD;  /* initial state */
+        אם (lua_getstack(co, 0, &ar))  /* does it have frames? */
+          החזר COS_NORM;  /* it is running */
+        אחרת אם (lua_gettop(co) == 0)
+            החזר COS_DEAD;
+        אחרת
+          החזר COS_YIELD;  /* initial state */
       }
-      default:  /* some error occurred */
-        return COS_DEAD;
+      افتراضي:  /* some error occurred */
+        החזר COS_DEAD;
     }
   }
 }
 
 
-static int luaB_costatus (lua_State *L) {
+ساكن صحيح luaB_costatus (lua_State *L) {
   lua_State *co = getco(L);
   lua_pushstring(L, statname[auxstatus(L, co)]);
-  return 1;
+  החזר 1;
 }
 
 
-static lua_State *getoptco (lua_State *L) {
-  return (lua_isnone(L, 1) ? L : getco(L));
+ساكن lua_State *getoptco (lua_State *L) {
+  החזר (lua_isnone(L, 1) ? L : getco(L));
 }
 
 
-static int luaB_yieldable (lua_State *L) {
+ساكن صحيح luaB_yieldable (lua_State *L) {
   lua_State *co = getoptco(L);
   lua_pushboolean(L, lua_isyieldable(co));
-  return 1;
+  החזר 1;
 }
 
 
-static int luaB_corunning (lua_State *L) {
-  int ismain = lua_pushthread(L);
+ساكن صحيح luaB_corunning (lua_State *L) {
+  صحيح ismain = lua_pushthread(L);
   lua_pushboolean(L, ismain);
-  return 2;
+  החזר 2;
 }
 
 
-static int luaB_close (lua_State *L) {
+ساكن صحيح luaB_close (lua_State *L) {
   lua_State *co = getoptco(L);
-  int status = auxstatus(L, co);
-  switch (status) {
-    case COS_DEAD: case COS_YIELD: {
+  صحيح status = auxstatus(L, co);
+  بدل (status) {
+    حالة COS_DEAD: حالة COS_YIELD: {
       status = lua_closethread(co, L);
-      if (status == LUA_OK) {
+      אם (status == LUA_OK) {
         lua_pushboolean(L, 1);
-        return 1;
+        החזר 1;
       }
-      else {
+      אחרת {
         lua_pushboolean(L, 0);
         lua_xmove(co, L, 1);  /* move error message */
-        return 2;
+        החזר 2;
       }
     }
-    case COS_NORM:
-      return luaL_error(L, "cannot close a %s coroutine", statname[status]);
-    case COS_RUN:
+    حالة COS_NORM:
+      החזר luaL_error(L, "cannot close a %s coroutine", statname[status]);
+    حالة COS_RUN:
       lua_geti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);  /* get main */
-      if (lua_tothread(L, -1) == co)
-        return luaL_error(L, "cannot close main thread");
+      אם (lua_tothread(L, -1) == co)
+        החזר luaL_error(L, "cannot close main thread");
       lua_closethread(co, L);  /* close itself */
       /* previous call does not return *//* FALLTHROUGH */
-    default:
+    افتراضي:
       lua_assert(0);
-      return 0;
+      החזר 0;
   }
 }
 
 
-static const luaL_Reg co_funcs[] = {
+ساكن ثابت luaL_Reg co_funcs[] = {
   {"create", luaB_cocreate},
   {"resume", luaB_coresume},
   {"running", luaB_corunning},
@@ -214,13 +214,13 @@ static const luaL_Reg co_funcs[] = {
   {"yield", luaB_yield},
   {"isyieldable", luaB_yieldable},
   {"close", luaB_close},
-  {NULL, NULL}
+  {عدم, عدم}
 };
 
 
 
-LUAMOD_API int luaopen_coroutine (lua_State *L) {
+LUAMOD_API صحيح luaopen_coroutine (lua_State *L) {
   luaL_newlib(L, co_funcs);
-  return 1;
+  החזר 1;
 }
 
