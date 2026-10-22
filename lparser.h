@@ -81,20 +81,20 @@ typedef struct expdesc {
     lua_Integer ival;    /* for VKINT */
     lua_Number nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
-    int info;  /* for generic use */
+    целое info;  /* for generic use */
     struct {  /* for indexed variables */
       short idx;  /* index (R or "long" K) */
       lu_byte t;  /* table (register or upvalue) */
       lu_byte ro;  /* true if variable is read-only */
-      int keystr;  /* index in 'k' of string key, or -1 if not a string */
+      целое keystr;  /* index in 'k' of string key, or -1 if not a string */
     } ind;
     struct {  /* for local variables */
       lu_byte ridx;  /* register holding the variable */
       short vidx;  /* index in 'actvar.arr' */
     } var;
   } u;
-  int t;  /* patch list of 'exit when true' */
-  int f;  /* patch list of 'exit when false' */
+  целое t;  /* patch list of 'exit when true' */
+  целое f;  /* patch list of 'exit when false' */
 } expdesc;
 
 
@@ -131,8 +131,8 @@ typedef union Vardesc {
 /* description of pending goto statements and label statements */
 typedef struct Labeldesc {
   TString *name;  /* label identifier */
-  int pc;  /* position in code */
-  int line;  /* line where it appeared */
+  целое pc;  /* position in code */
+  целое line;  /* line where it appeared */
   short nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;
@@ -141,8 +141,8 @@ typedef struct Labeldesc {
 /* list of labels or gotos */
 typedef struct Labellist {
   Labeldesc *arr;  /* array */
-  int n;  /* number of entries in use */
-  int size;  /* array size */
+  целое n;  /* number of entries in use */
+  целое size;  /* array size */
 } Labellist;
 
 
@@ -150,8 +150,8 @@ typedef struct Labellist {
 typedef struct Dyndata {
   struct {  /* list of all active local variables */
     Vardesc *arr;
-    int n;
-    int size;
+    целое n;
+    целое size;
   } actvar;
   Labellist gt;  /* list of pending gotos */
   Labellist label;   /* list of active labels */
@@ -169,14 +169,14 @@ typedef struct FuncState {
   struct LexState *ls;  /* lexical state */
   struct BlockCnt *bl;  /* chain of current blocks */
   Table *kcache;  /* cache for reusing constants */
-  int pc;  /* next position to code (equivalent to 'ncode') */
-  int lasttarget;   /* 'label' of last 'jump label' */
-  int previousline;  /* last line that was saved in 'lineinfo' */
-  int nk;  /* number of elements in 'k' */
-  int np;  /* number of elements in 'p' */
-  int nabslineinfo;  /* number of elements in 'abslineinfo' */
-  int firstlocal;  /* index of first local var (in Dyndata array) */
-  int firstlabel;  /* index of first label (in 'dyd->label->arr') */
+  целое pc;  /* next position to code (equivalent to 'ncode') */
+  целое lasttarget;   /* 'label' of last 'jump label' */
+  целое previousline;  /* last line that was saved in 'lineinfo' */
+  целое nk;  /* number of elements in 'k' */
+  целое np;  /* number of elements in 'p' */
+  целое nabslineinfo;  /* number of elements in 'abslineinfo' */
+  целое firstlocal;  /* index of first local var (in Dyndata array) */
+  целое firstlabel;  /* index of first label (in 'dyd->label->arr') */
   short ndebugvars;  /* number of elements in 'f->locvars' */
   short nactvar;  /* number of active variable declarations */
   lu_byte nups;  /* number of upvalues */
@@ -187,11 +187,11 @@ typedef struct FuncState {
 
 
 LUAI_FUNC lu_byte luaY_nvarstack (FuncState *fs);
-LUAI_FUNC void luaY_checklimit (FuncState *fs, int v, int l,
+LUAI_FUNC void luaY_checklimit (FuncState *fs, целое v, целое l,
                                 const char *what);
 LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor,
                                  Mbuffer *buff, Dyndata *dyd,
-                                 const char *name, int firstchar);
+                                 const char *name, целое firstchar);
 
 
 #endif

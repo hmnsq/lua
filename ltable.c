@@ -67,7 +67,7 @@ typedef union {
 ** MAXABITS is the largest integer such that 2^MAXABITS fits in an
 ** unsigned int.
 */
-#define MAXABITS	(l_numbits(int) - 1)
+#define MAXABITS	(l_numbits(целое) - 1)
 
 
 /*
@@ -144,10 +144,10 @@ static const TValue absentkey = {ABSTKEYCONSTANT};
 */
 static Node *hashint (const Table *t, lua_Integer i) {
   lua_Unsigned ui = l_castS2U(i);
-  if (ui <= cast_uint(INT_MAX))
-    return gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
-  else
-    return hashmod(t, ui);
+  если (ui <= cast_uint(INT_MAX))
+    вернуть gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
+  иначе
+    вернуть hashmod(t, ui);
 }
 
 
@@ -164,18 +164,18 @@ static Node *hashint (const Table *t, lua_Integer i) {
 ** adding 'i'; the use of '~u' (instead of '-u') avoids problems with
 ** INT_MIN.
 */
-#if !defined(l_hashfloat)
+#если !defined(l_hashfloat)
 static unsigned l_hashfloat (lua_Number n) {
-  int i;
+  целое i;
   lua_Integer ni;
   n = l_mathop(frexp)(n, &i) * -cast_num(INT_MIN);
-  if (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
+  если (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
     lua_assert(luai_numisnan(n) || l_mathop(fabs)(n) == cast_num(HUGE_VAL));
-    return 0;
+    вернуть 0;
   }
-  else {  /* normal case */
-    unsigned int u = cast_uint(i) + cast_uint(ni);
-    return (u <= cast_uint(INT_MAX) ? u : ~u);
+  иначе {  /* normal case */
+    unsigned целое u = cast_uint(i) + cast_uint(ni);
+    вернуть (u <= cast_uint(INT_MAX) ? u : ~u);
   }
 }
 #endif
@@ -189,35 +189,35 @@ static Node *mainpositionTV (const Table *t, const TValue *key) {
   switch (ttypetag(key)) {
     case LUA_VNUMINT: {
       lua_Integer i = ivalue(key);
-      return hashint(t, i);
+      вернуть hashint(t, i);
     }
     case LUA_VNUMFLT: {
       lua_Number n = fltvalue(key);
-      return hashmod(t, l_hashfloat(n));
+      вернуть hashmod(t, l_hashfloat(n));
     }
     case LUA_VSHRSTR: {
       TString *ts = tsvalue(key);
-      return hashstr(t, ts);
+      вернуть hashstr(t, ts);
     }
     case LUA_VLNGSTR: {
       TString *ts = tsvalue(key);
-      return hashpow2(t, luaS_hashlongstr(ts));
+      вернуть hashpow2(t, luaS_hashlongstr(ts));
     }
     case LUA_VFALSE:
-      return hashboolean(t, 0);
+      вернуть hashboolean(t, 0);
     case LUA_VTRUE:
-      return hashboolean(t, 1);
+      вернуть hashboolean(t, 1);
     case LUA_VLIGHTUSERDATA: {
       void *p = pvalue(key);
-      return hashpointer(t, p);
+      вернуть hashpointer(t, p);
     }
     case LUA_VLCF: {
       lua_CFunction f = fvalue(key);
-      return hashpointer(t, f);
+      вернуть hashpointer(t, f);
     }
     default: {
       GCObject *o = gcvalue(key);
-      return hashpointer(t, o);
+      вернуть hashpointer(t, o);
     }
   }
 }
@@ -226,7 +226,7 @@ static Node *mainpositionTV (const Table *t, const TValue *key) {
 l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
   TValue key;
   getnodekey(cast(lua_State *, NULL), &key, nd);
-  return mainpositionTV(t, &key);
+  вернуть mainpositionTV(t, &key);
 }
 
 
@@ -249,35 +249,35 @@ l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
 ** anything.  (In particular, 'next' will return some other valid item
 ** on the table or nil.)
 */
-static int equalkey (const TValue *k1, const Node *n2, int deadok) {
-  if (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
-    if (keyisshrstr(n2) && ttislngstring(k1)) {
+static целое equalkey (const TValue *k1, const Node *n2, целое deadok) {
+  если (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
+    если (keyisshrstr(n2) && ttislngstring(k1)) {
       /* an external string can be equal to a short-string key */
-      return luaS_eqstr(tsvalue(k1), keystrval(n2));
+      вернуть luaS_eqstr(tsvalue(k1), keystrval(n2));
     }
-    else if (deadok && keyisdead(n2) && iscollectable(k1)) {
+    иначе если (deadok && keyisdead(n2) && iscollectable(k1)) {
       /* a collectable value can be equal to a dead key */
-      return gcvalue(k1) == gcvalueraw(keyval(n2));
+      вернуть gcvalue(k1) == gcvalueraw(keyval(n2));
    }
-   else
-     return 0;  /* otherwise, different variants cannot be equal */
+   иначе
+     вернуть 0;  /* otherwise, different variants cannot be equal */
   }
-  else {  /* equal variants */
+  иначе {  /* equal variants */
     switch (keytt(n2)) {
       case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE:
-        return 1;
+        вернуть 1;
       case LUA_VNUMINT:
-        return (ivalue(k1) == keyival(n2));
+        вернуть (ivalue(k1) == keyival(n2));
       case LUA_VNUMFLT:
-        return luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
+        вернуть luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
       case LUA_VLIGHTUSERDATA:
-        return pvalue(k1) == pvalueraw(keyval(n2));
+        вернуть pvalue(k1) == pvalueraw(keyval(n2));
       case LUA_VLCF:
-        return fvalue(k1) == fvalueraw(keyval(n2));
+        вернуть fvalue(k1) == fvalueraw(keyval(n2));
       case ctb(LUA_VLNGSTR):
-        return luaS_eqstr(tsvalue(k1), keystrval(n2));
+        вернуть luaS_eqstr(tsvalue(k1), keystrval(n2));
       default:
-        return gcvalue(k1) == gcvalueraw(keyval(n2));
+        вернуть gcvalue(k1) == gcvalueraw(keyval(n2));
     }
   }
 }
@@ -288,15 +288,15 @@ static int equalkey (const TValue *k1, const Node *n2, int deadok) {
 ** which may be in array part, nor for floats with integral values.)
 ** See explanation about 'deadok' in function 'equalkey'.
 */
-static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
+static const TValue *getgeneric (Table *t, const TValue *key, целое deadok) {
   Node *n = mainpositionTV(t, key);
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (equalkey(key, n, deadok))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+  для (;;) {  /* check whether 'key' is somewhere in the chain */
+    если (equalkey(key, n, deadok))
+      вернуть gval(n);  /* that's it */
+    иначе {
+      целое nx = gnext(n);
+      если (nx == 0)
+        вернуть &absentkey;  /* not found */
       n += nx;
     }
   }
@@ -308,7 +308,7 @@ static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
 ** the range [1, limit].
 */
 static unsigned checkrange (lua_Integer k, unsigned limit) {
-  return (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
+  вернуть (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
 }
 
 
@@ -331,7 +331,7 @@ static unsigned checkrange (lua_Integer k, unsigned limit) {
 ** index there, or zero.
 */
 static unsigned keyinarray (Table *t, const TValue *key) {
-  return (ttisinteger(key)) ? ikeyinarray(t, ivalue(key)) : 0;
+  вернуть (ttisinteger(key)) ? ikeyinarray(t, ivalue(key)) : 0;
 }
 
 
@@ -342,42 +342,42 @@ static unsigned keyinarray (Table *t, const TValue *key) {
 */
 static unsigned findindex (lua_State *L, Table *t, TValue *key,
                                unsigned asize) {
-  unsigned int i;
-  if (ttisnil(key)) return 0;  /* first iteration */
+  unsigned целое i;
+  если (ttisnil(key)) вернуть 0;  /* first iteration */
   i = keyinarray(t, key);
-  if (i != 0)  /* is 'key' inside array part? */
-    return i;  /* yes; that's the index */
-  else {
+  если (i != 0)  /* is 'key' inside array part? */
+    вернуть i;  /* yes; that's the index */
+  иначе {
     const TValue *n = getgeneric(t, key, 1);
-    if (l_unlikely(isabstkey(n)))
+    если (l_unlikely(isabstkey(n)))
       luaG_runerror(L, "invalid key to 'next'");  /* key not found */
     i = cast_uint(nodefromval(n) - gnode(t, 0));  /* key index in hash table */
     /* hash elements are numbered after array ones */
-    return (i + 1) + asize;
+    вернуть (i + 1) + asize;
   }
 }
 
 
-int luaH_next (lua_State *L, Table *t, StkId key) {
-  unsigned int asize = t->asize;
-  unsigned int i = findindex(L, t, s2v(key), asize);  /* find original key */
-  for (; i < asize; i++) {  /* try first array part */
+целое luaH_next (lua_State *L, Table *t, StkId key) {
+  unsigned целое asize = t->asize;
+  unsigned целое i = findindex(L, t, s2v(key), asize);  /* find original key */
+  для (; i < asize; i++) {  /* try first array part */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
+    если (!tagisempty(tag)) {  /* a non-empty entry? */
       setivalue(s2v(key), cast_int(i) + 1);
       farr2val(t, i, tag, s2v(key + 1));
-      return 1;
+      вернуть 1;
     }
   }
-  for (i -= asize; i < sizenode(t); i++) {  /* hash part */
-    if (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
+  для (i -= asize; i < sizenode(t); i++) {  /* hash part */
+    если (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
       Node *n = gnode(t, i);
       getnodekey(L, s2v(key), n);
       setobj2s(L, key + 1, gval(n));
-      return 1;
+      вернуть 1;
     }
   }
-  return 0;  /* no more elements */
+  вернуть 0;  /* no more elements */
 }
 
 
@@ -386,12 +386,12 @@ int luaH_next (lua_State *L, Table *t, StkId key) {
 
 /* 'node' size in bytes */
 static size_t sizehash (Table *t) {
-  return cast_sizet(sizenode(t)) * sizeof(Node) + extraLastfree(t);
+  вернуть cast_sizet(sizenode(t)) * sizeof(Node) + extraLastfree(t);
 }
 
 
 static void freehash (lua_State *L, Table *t) {
-  if (!isdummy(t)) {
+  если (!isdummy(t)) {
     /* get pointer to the beginning of Node array */
     char *arr = cast_charp(t->node) - extraLastfree(t);
     luaM_freearray(L, arr, sizehash(t));
@@ -405,7 +405,7 @@ static void freehash (lua_State *L, Table *t) {
 ** ==============================================================
 */
 
-static int insertkey (Table *t, const TValue *key, TValue *value);
+static целое insertkey (Table *t, const TValue *key, TValue *value);
 static void newcheckedkey (Table *t, const TValue *key, TValue *value);
 
 
@@ -421,7 +421,7 @@ static void newcheckedkey (Table *t, const TValue *key, TValue *value);
 typedef struct {
   unsigned total;
   unsigned na;
-  int deleted;
+  целое deleted;
   unsigned nums[MAXABITS + 1];
 } Counters;
 
@@ -444,41 +444,41 @@ typedef struct {
 ** return the optimal size for the array part.
 */
 static unsigned computesizes (Counters *ct) {
-  int i;
-  unsigned int twotoi;  /* 2^i (candidate for optimal size) */
-  unsigned int a = 0;  /* number of elements smaller than 2^i */
-  unsigned int na = 0;  /* number of elements to go to array part */
-  unsigned int optimal = 0;  /* optimal size for array part */
+  целое i;
+  unsigned целое twotoi;  /* 2^i (candidate for optimal size) */
+  unsigned целое a = 0;  /* number of elements smaller than 2^i */
+  unsigned целое na = 0;  /* number of elements to go to array part */
+  unsigned целое optimal = 0;  /* optimal size for array part */
   /* traverse slices while 'twotoi' does not overflow and total of array
      indices still can satisfy 'arrayXhash' against the array size */
-  for (i = 0, twotoi = 1;
+  для (i = 0, twotoi = 1;
        twotoi > 0 && arrayXhash(twotoi, ct->na);
        i++, twotoi *= 2) {
     unsigned nums = ct->nums[i];
     a += nums;
-    if (nums > 0 &&  /* grows array only if it gets more elements... */
+    если (nums > 0 &&  /* grows array only if it gets more elements... */
         arrayXhash(twotoi, a)) {  /* ...while using "less memory" */
       optimal = twotoi;  /* optimal size (till now) */
       na = a;  /* all elements up to 'optimal' will go to array part */
     }
   }
   ct->na = na;
-  return optimal;
+  вернуть optimal;
 }
 
 
 static void countint (lua_Integer key, Counters *ct) {
-  unsigned int k = arrayindex(key);
-  if (k != 0) {  /* is 'key' an array index? */
+  unsigned целое k = arrayindex(key);
+  если (k != 0) {  /* is 'key' an array index? */
     ct->nums[luaO_ceillog2(k)]++;  /* count as such */
     ct->na++;
   }
 }
 
 
-l_sinline int arraykeyisempty (const Table *t, unsigned key) {
-  int tag = *getArrTag(t, key - 1);
-  return tagisempty(tag);
+l_sinline целое arraykeyisempty (const Table *t, unsigned key) {
+  целое tag = *getArrTag(t, key - 1);
+  вернуть tagisempty(tag);
 }
 
 
@@ -486,23 +486,23 @@ l_sinline int arraykeyisempty (const Table *t, unsigned key) {
 ** Count keys in array part of table 't'.
 */
 static void numusearray (const Table *t, Counters *ct) {
-  int lg;
-  unsigned int ttlg;  /* 2^lg */
-  unsigned int ause = 0;  /* summation of 'nums' */
-  unsigned int i = 1;  /* index to traverse all array keys */
-  unsigned int asize = t->asize;
+  целое lg;
+  unsigned целое ttlg;  /* 2^lg */
+  unsigned целое ause = 0;  /* summation of 'nums' */
+  unsigned целое i = 1;  /* index to traverse all array keys */
+  unsigned целое asize = t->asize;
   /* traverse each slice */
-  for (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
-    unsigned int lc = 0;  /* counter */
-    unsigned int lim = ttlg;
-    if (lim > asize) {
+  для (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
+    unsigned целое lc = 0;  /* counter */
+    unsigned целое lim = ttlg;
+    если (lim > asize) {
       lim = asize;  /* adjust upper limit */
-      if (i > lim)
+      если (i > lim)
         break;  /* no more elements to count */
     }
     /* count elements in range (2^(lg - 1), 2^lg] */
-    for (; i <= lim; i++) {
-      if (!arraykeyisempty(t, i))
+    для (; i <= lim; i++) {
+      если (!arraykeyisempty(t, i))
         lc++;
     }
     ct->nums[lg] += lc;
@@ -521,15 +521,15 @@ static void numusearray (const Table *t, Counters *ct) {
 static void numusehash (const Table *t, Counters *ct) {
   unsigned i = sizenode(t);
   unsigned total = 0;
-  while (i--) {
+  пока (i--) {
     Node *n = &t->node[i];
-    if (isempty(gval(n))) {
+    если (isempty(gval(n))) {
       lua_assert(!keyisnil(n));  /* entry was deleted; key cannot be nil */
       ct->deleted = 1;
     }
-    else {
+    иначе {
       total++;
-      if (keyisinteger(n))
+      если (keyisinteger(n))
         countint(keyival(n), ct);
     }
   }
@@ -541,11 +541,11 @@ static void numusehash (const Table *t, Counters *ct) {
 ** Convert an "abstract size" (number of slots in an array) to
 ** "concrete size" (number of bytes in the array).
 */
-static size_t concretesize (unsigned int size) {
-  if (size == 0)
-    return 0;
-  else  /* space for the two arrays plus an unsigned in between */
-    return size * (sizeof(Value) + 1) + sizeof(unsigned);
+static size_t concretesize (unsigned целое size) {
+  если (size == 0)
+    вернуть 0;
+  иначе  /* space for the two arrays plus an unsigned in between */
+    вернуть size * (sizeof(Value) + 1) + sizeof(unsigned);
 }
 
 
@@ -563,21 +563,21 @@ static size_t concretesize (unsigned int size) {
 static Value *resizearray (lua_State *L , Table *t,
                                unsigned oldasize,
                                unsigned newasize) {
-  if (oldasize == newasize)
-    return t->array;  /* nothing to be done */
-  else if (newasize == 0) {  /* erasing array? */
+  если (oldasize == newasize)
+    вернуть t->array;  /* nothing to be done */
+  иначе если (newasize == 0) {  /* erasing array? */
     Value *op = t->array - oldasize;  /* original array's real address */
     luaM_freemem(L, op, concretesize(oldasize));  /* free it */
-    return NULL;
+    вернуть NULL;
   }
-  else {
+  иначе {
     size_t newasizeb = concretesize(newasize);
     Value *np = cast(Value *,
                   luaM_reallocvector(L, NULL, 0, newasizeb, lu_byte));
-    if (np == NULL)  /* allocation error? */
-      return NULL;
+    если (np == NULL)  /* allocation error? */
+      вернуть NULL;
     np += newasize;  /* shift pointer to the end of value segment */
-    if (oldasize > 0) {
+    если (oldasize > 0) {
       /* move common elements to new position */
       size_t oldasizeb = concretesize(oldasize);
       Value *op = t->array;  /* original array */
@@ -587,7 +587,7 @@ static Value *resizearray (lua_State *L , Table *t,
       memcpy(np - tomove, op - tomove, tomoveb);
       luaM_freemem(L, op - oldasize, oldasizeb);  /* free old block */
     }
-    return np;
+    вернуть np;
   }
 }
 
@@ -600,20 +600,20 @@ static Value *resizearray (lua_State *L , Table *t,
 ** overflow.
 */
 static void setnodevector (lua_State *L, Table *t, unsigned size) {
-  if (size == 0) {  /* no elements to hash part? */
+  если (size == 0) {  /* no elements to hash part? */
     t->node = cast(Node *, dummynode);  /* use common 'dummynode' */
     t->lsizenode = 0;
     setdummy(t);  /* signal that it is using dummy node */
   }
-  else {
-    int i;
-    int lsize = luaO_ceillog2(size);
-    if (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
+  иначе {
+    целое i;
+    целое lsize = luaO_ceillog2(size);
+    если (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
       luaG_runerror(L, "table overflow");
     size = twoto(lsize);
-    if (lsize < LIMFORLAST)  /* no 'lastfree' field? */
+    если (lsize < LIMFORLAST)  /* no 'lastfree' field? */
       t->node = luaM_newvector(L, size, Node);
-    else {
+    иначе {
       size_t bsize = size * sizeof(Node) + sizeof(Limbox);
       char *node = luaM_newblock(L, bsize);
       t->node = cast(Node *, node + sizeof(Limbox));
@@ -621,7 +621,7 @@ static void setnodevector (lua_State *L, Table *t, unsigned size) {
     }
     t->lsizenode = cast_byte(lsize);
     setnodummy(t);
-    for (i = 0; i < cast_int(size); i++) {
+    для (i = 0; i < cast_int(size); i++) {
       Node *n = gnode(t, i);
       gnext(n) = 0;
       setnilkey(n);
@@ -637,9 +637,9 @@ static void setnodevector (lua_State *L, Table *t, unsigned size) {
 static void reinserthash (lua_State *L, Table *ot, Table *t) {
   unsigned j;
   unsigned size = sizenode(ot);
-  for (j = 0; j < size; j++) {
+  для (j = 0; j < size; j++) {
     Node *old = gnode(ot, j);
-    if (!isempty(gval(old))) {
+    если (!isempty(gval(old))) {
       /* doesn't need barrier/invalidate cache, as entry was
          already present in the table */
       TValue k;
@@ -658,7 +658,7 @@ static void reinserthash (lua_State *L, Table *ot, Table *t) {
 static void exchangehashpart (Table *t1, Table *t2) {
   lu_byte lsizenode = t1->lsizenode;
   Node *node = t1->node;
-  int bitdummy1 = t1->flags & BITDUMMY;
+  целое bitdummy1 = t1->flags & BITDUMMY;
   t1->lsizenode = t2->lsizenode;
   t1->node = t2->node;
   t1->flags = cast_byte((t1->flags & NOTBITDUMMY) | (t2->flags & BITDUMMY));
@@ -675,9 +675,9 @@ static void exchangehashpart (Table *t1, Table *t2) {
 static void reinsertOldSlice (Table *t, unsigned oldasize,
                                         unsigned newasize) {
   unsigned i;
-  for (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
+  для (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
+    если (!tagisempty(tag)) {  /* a non-empty entry? */
       TValue key, aux;
       setivalue(&key, l_castU2S(i) + 1);  /* make the key */
       farr2val(t, i, tag, &aux);  /* copy value into 'aux' */
@@ -691,7 +691,7 @@ static void reinsertOldSlice (Table *t, unsigned oldasize,
 ** Clear new slice of the array.
 */
 static void clearNewSlice (Table *t, unsigned oldasize, unsigned newasize) {
-  for (; oldasize < newasize; oldasize++)
+  для (; oldasize < newasize; oldasize++)
     *getArrTag(t, oldasize) = LUA_VEMPTY;
 }
 
@@ -717,12 +717,12 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   Table newt;  /* to keep the new hash part */
   unsigned oldasize = t->asize;
   Value *newarray;
-  if (newasize > MAXASIZE)
+  если (newasize > MAXASIZE)
     luaG_runerror(L, "table overflow");
   /* create new hash part with appropriate size into 'newt' */
   newt.flags = 0;
   setnodevector(L, &newt, nhsize);
-  if (newasize < oldasize) {  /* will array shrink? */
+  если (newasize < oldasize) {  /* will array shrink? */
     /* re-insert into the new hash the elements from vanishing slice */
     exchangehashpart(t, &newt);  /* pretend table has new hash */
     reinsertOldSlice(t, oldasize, newasize);
@@ -730,7 +730,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   }
   /* allocate new array */
   newarray = resizearray(L, t, oldasize, newasize);
-  if (l_unlikely(newarray == NULL && newasize > 0)) {  /* allocation failed? */
+  если (l_unlikely(newarray == NULL && newasize > 0)) {  /* allocation failed? */
     freehash(L, &newt);  /* release new hash part */
     luaM_error(L);  /* raise error (with array unchanged) */
   }
@@ -738,7 +738,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   exchangehashpart(t, &newt);  /* 't' has the new hash ('newt' has the old) */
   t->array = newarray;  /* set new array part */
   t->asize = newasize;
-  if (newarray != NULL)
+  если (newarray != NULL)
     *lenhint(t) = newasize / 2u;  /* set an initial hint */
   clearNewSlice(t, oldasize, newasize);
   /* re-insert elements from old hash part into new parts */
@@ -747,7 +747,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
 }
 
 
-void luaH_resizearray (lua_State *L, Table *t, unsigned int nasize) {
+void luaH_resizearray (lua_State *L, Table *t, unsigned целое nasize) {
   unsigned nsize = allocsizenode(t);
   luaH_resize(L, t, nasize, nsize);
 }
@@ -764,24 +764,24 @@ static void rehash (lua_State *L, Table *t, const TValue *ek) {
   unsigned i;
   unsigned nsize;  /* size for the hash part */
   /* reset counts */
-  for (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
+  для (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
   ct.na = 0;
   ct.deleted = 0;
   ct.total = 1;  /* count extra key */
-  if (ttisinteger(ek))
+  если (ttisinteger(ek))
     countint(ivalue(ek), &ct);  /* extra key may go to array */
   numusehash(t, &ct);  /* count keys in hash part */
-  if (ct.na == 0) {
+  если (ct.na == 0) {
     /* no new keys to enter array part; keep it with the same size */
     asize = t->asize;
   }
-  else {  /* compute best size for array part */
+  иначе {  /* compute best size for array part */
     numusearray(t, &ct);  /* count keys in array part */
     asize = computesizes(&ct);  /* compute new size for array part */
   }
   /* all keys not in the array part go to the hash part */
   nsize = ct.total - ct.na;
-  if (ct.deleted) {  /* table has deleted entries? */
+  если (ct.deleted) {  /* table has deleted entries? */
     /* insertion-deletion-insertion: give hash some extra size to
        avoid repeated resizings */
     nsize += nsize >> 2;
@@ -803,15 +803,15 @@ Table *luaH_new (lua_State *L) {
   t->array = NULL;
   t->asize = 0;
   setnodevector(L, t, 0);
-  return t;
+  вернуть t;
 }
 
 
 lu_mem luaH_size (Table *t) {
   lu_mem sz = cast(lu_mem, sizeof(Table)) + concretesize(t->asize);
-  if (!isdummy(t))
+  если (!isdummy(t))
     sz += sizehash(t);
-  return sz;
+  вернуть sz;
 }
 
 
@@ -826,23 +826,23 @@ void luaH_free (lua_State *L, Table *t) {
 
 
 static Node *getfreepos (Table *t) {
-  if (haslastfree(t)) {  /* does it have 'lastfree' information? */
+  если (haslastfree(t)) {  /* does it have 'lastfree' information? */
     /* look for a spot before 'lastfree', updating 'lastfree' */
-    while (getlastfree(t) > t->node) {
+    пока (getlastfree(t) > t->node) {
       Node *free = --getlastfree(t);
-      if (keyisnil(free))
-        return free;
+      если (keyisnil(free))
+        вернуть free;
     }
   }
-  else {  /* no 'lastfree' information */
+  иначе {  /* no 'lastfree' information */
     unsigned i = sizenode(t);
-    while (i--) {  /* do a linear search */
+    пока (i--) {  /* do a linear search */
       Node *free = gnode(t, i);
-      if (keyisnil(free))
-        return free;
+      если (keyisnil(free))
+        вернуть free;
     }
   }
-  return NULL;  /* could not find a free place */
+  вернуть NULL;  /* could not find a free place */
 }
 
 
@@ -855,34 +855,34 @@ static Node *getfreepos (Table *t) {
 ** its main position), new key goes to an empty position. Return 0 if
 ** could not insert key (could not find a free space).
 */
-static int insertkey (Table *t, const TValue *key, TValue *value) {
+static целое insertkey (Table *t, const TValue *key, TValue *value) {
   Node *mp = mainpositionTV(t, key);
   /* table cannot already contain the key */
   lua_assert(isabstkey(getgeneric(t, key, 0)));
-  if (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
+  если (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
     Node *othern;
     Node *f = getfreepos(t);  /* get a free place */
-    if (f == NULL)  /* cannot find a free place? */
-      return 0;
+    если (f == NULL)  /* cannot find a free place? */
+      вернуть 0;
     lua_assert(!isdummy(t));
     othern = mainpositionfromnode(t, mp);
-    if (othern != mp) {  /* is colliding node out of its main position? */
+    если (othern != mp) {  /* is colliding node out of its main position? */
       /* yes; move colliding node into free position */
-      while (othern + gnext(othern) != mp)  /* find previous */
+      пока (othern + gnext(othern) != mp)  /* find previous */
         othern += gnext(othern);
       gnext(othern) = cast_int(f - othern);  /* rechain to point to 'f' */
       *f = *mp;  /* copy colliding node into free pos. (mp->next also goes) */
-      if (gnext(mp) != 0) {
+      если (gnext(mp) != 0) {
         gnext(f) += cast_int(mp - f);  /* correct 'next' */
         gnext(mp) = 0;  /* now 'mp' is free */
       }
       setempty(gval(mp));
     }
-    else {  /* colliding node is in its own main position */
+    иначе {  /* colliding node is in its own main position */
       /* new node will go into free position */
-      if (gnext(mp) != 0)
+      если (gnext(mp) != 0)
         gnext(f) = cast_int((mp + gnext(mp)) - f);  /* chain new position */
-      else lua_assert(gnext(f) == 0);
+      иначе lua_assert(gnext(f) == 0);
       gnext(mp) = cast_int(f - mp);
       mp = f;
     }
@@ -890,7 +890,7 @@ static int insertkey (Table *t, const TValue *key, TValue *value) {
   setnodekey(mp, key);
   lua_assert(isempty(gval(mp)));
   setobj2t(cast(lua_State *, 0), gval(mp), value);
-  return 1;
+  вернуть 1;
 }
 
 
@@ -900,10 +900,10 @@ static int insertkey (Table *t, const TValue *key, TValue *value) {
 */
 static void newcheckedkey (Table *t, const TValue *key, TValue *value) {
   unsigned i = keyinarray(t, key);
-  if (i > 0)  /* is key in the array part? */
+  если (i > 0)  /* is key in the array part? */
     obj2arr(t, i - 1, value);  /* set value in the array */
-  else {
-    int done = insertkey(t, key, value);  /* insert key in the hash part */
+  иначе {
+    целое done = insertkey(t, key, value);  /* insert key in the hash part */
     lua_assert(done);  /* it cannot fail */
     cast(void, done);  /* to avoid warnings */
   }
@@ -912,9 +912,9 @@ static void newcheckedkey (Table *t, const TValue *key, TValue *value) {
 
 static void luaH_newkey (lua_State *L, Table *t, const TValue *key,
                                                  TValue *value) {
-  if (!ttisnil(value)) {  /* do not insert nil values */
-    int done = insertkey(t, key, value);
-    if (!done) {  /* could not find a free place? */
+  если (!ttisnil(value)) {  /* do not insert nil values */
+    целое done = insertkey(t, key, value);
+    если (!done) {  /* could not find a free place? */
       rehash(L, t, key);  /* grow table */
       newcheckedkey(t, key, value);  /* insert key in grown table */
     }
@@ -928,43 +928,43 @@ static void luaH_newkey (lua_State *L, Table *t, const TValue *key,
 static const TValue *getintfromhash (Table *t, lua_Integer key) {
   Node *n = hashint(t, key);
   lua_assert(!ikeyinarray(t, key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisinteger(n) && keyival(n) == key)
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0) break;
+  для (;;) {  /* check whether 'key' is somewhere in the chain */
+    если (keyisinteger(n) && keyival(n) == key)
+      вернуть gval(n);  /* that's it */
+    иначе {
+      целое nx = gnext(n);
+      если (nx == 0) break;
       n += nx;
     }
   }
-  return &absentkey;
+  вернуть &absentkey;
 }
 
 
-static int hashkeyisempty (Table *t, lua_Unsigned key) {
+static целое hashkeyisempty (Table *t, lua_Unsigned key) {
   const TValue *val = getintfromhash(t, l_castU2S(key));
-  return isempty(val);
+  вернуть isempty(val);
 }
 
 
 static lu_byte finishnodeget (const TValue *val, TValue *res) {
-  if (!ttisnil(val)) {
+  если (!ttisnil(val)) {
     setobj(((lua_State*)NULL), res, val);
   }
-  return ttypetag(val);
+  вернуть ttypetag(val);
 }
 
 
 lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res) {
   unsigned k = ikeyinarray(t, key);
-  if (k > 0) {
+  если (k > 0) {
     lu_byte tag = *getArrTag(t, k - 1);
-    if (!tagisempty(tag))
+    если (!tagisempty(tag))
       farr2val(t, k - 1, tag, res);
-    return tag;
+    вернуть tag;
   }
-  else
-    return finishnodeget(getintfromhash(t, key), res);
+  иначе
+    вернуть finishnodeget(getintfromhash(t, key), res);
 }
 
 
@@ -974,13 +974,13 @@ lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res) {
 const TValue *luaH_Hgetshortstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);
   lua_assert(strisshr(key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisshrstr(n) && eqshrstr(keystrval(n), key))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+  для (;;) {  /* check whether 'key' is somewhere in the chain */
+    если (keyisshrstr(n) && eqshrstr(keystrval(n), key))
+      вернуть gval(n);  /* that's it */
+    иначе {
+      целое nx = gnext(n);
+      если (nx == 0)
+        вернуть &absentkey;  /* not found */
       n += nx;
     }
   }
@@ -988,7 +988,7 @@ const TValue *luaH_Hgetshortstr (Table *t, TString *key) {
 
 
 lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(luaH_Hgetshortstr(t, key), res);
+  вернуть finishnodeget(luaH_Hgetshortstr(t, key), res);
 }
 
 
@@ -996,20 +996,20 @@ static const TValue *Hgetlongstr (Table *t, TString *key) {
   TValue ko;
   lua_assert(!strisshr(key));
   setsvalue(cast(lua_State *, NULL), &ko, key);
-  return getgeneric(t, &ko, 0);  /* for long strings, use generic case */
+  вернуть getgeneric(t, &ko, 0);  /* for long strings, use generic case */
 }
 
 
 static const TValue *Hgetstr (Table *t, TString *key) {
-  if (strisshr(key))
-    return luaH_Hgetshortstr(t, key);
-  else
-    return Hgetlongstr(t, key);
+  если (strisshr(key))
+    вернуть luaH_Hgetshortstr(t, key);
+  иначе
+    вернуть Hgetlongstr(t, key);
 }
 
 
 lu_byte luaH_getstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(Hgetstr(t, key), res);
+  вернуть finishnodeget(Hgetstr(t, key), res);
 }
 
 
@@ -1023,21 +1023,21 @@ lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
       slot = luaH_Hgetshortstr(t, tsvalue(key));
       break;
     case LUA_VNUMINT:
-      return luaH_getint(t, ivalue(key), res);
+      вернуть luaH_getint(t, ivalue(key), res);
     case LUA_VNIL:
       slot = &absentkey;
       break;
     case LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return luaH_getint(t, k, res);  /* use specialized version */
+      если (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
+        вернуть luaH_getint(t, k, res);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
     default:
       slot = getgeneric(t, key, 0);
       break;
   }
-  return finishnodeget(slot, res);
+  вернуть finishnodeget(slot, res);
 }
 
 
@@ -1045,44 +1045,44 @@ lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
 ** When a 'pset' cannot be completed, this function returns an encoding
 ** of its result, to be used by 'luaH_finishset'.
 */
-static int retpsetcode (Table *t, const TValue *slot) {
-  if (isabstkey(slot))
-    return HNOTFOUND;  /* no slot with that key */
-  else  /* return node encoded */
-    return cast_int((cast(Node*, slot) - t->node)) + HFIRSTNODE;
+static целое retpsetcode (Table *t, const TValue *slot) {
+  если (isabstkey(slot))
+    вернуть HNOTFOUND;  /* no slot with that key */
+  иначе  /* return node encoded */
+    вернуть cast_int((cast(Node*, slot) - t->node)) + HFIRSTNODE;
 }
 
 
-static int finishnodeset (Table *t, const TValue *slot, TValue *val) {
-  if (!ttisnil(slot)) {
+static целое finishnodeset (Table *t, const TValue *slot, TValue *val) {
+  если (!ttisnil(slot)) {
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return HOK;  /* success */
+    вернуть HOK;  /* success */
   }
-  else
-    return retpsetcode(t, slot);
+  иначе
+    вернуть retpsetcode(t, slot);
 }
 
 
-static int rawfinishnodeset (const TValue *slot, TValue *val) {
-  if (isabstkey(slot))
-    return 0;  /* no slot with that key */
-  else {
+static целое rawfinishnodeset (const TValue *slot, TValue *val) {
+  если (isabstkey(slot))
+    вернуть 0;  /* no slot with that key */
+  иначе {
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return 1;  /* success */
+    вернуть 1;  /* success */
   }
 }
 
 
-int luaH_psetint (Table *t, lua_Integer key, TValue *val) {
+целое luaH_psetint (Table *t, lua_Integer key, TValue *val) {
   lua_assert(!ikeyinarray(t, key));
-  return finishnodeset(t, getintfromhash(t, key), val);
+  вернуть finishnodeset(t, getintfromhash(t, key), val);
 }
 
 
-static int psetint (Table *t, lua_Integer key, TValue *val) {
-  int hres;
+static целое psetint (Table *t, lua_Integer key, TValue *val) {
+  целое hres;
   luaH_fastseti(t, key, val, hres);
-  return hres;
+  вернуть hres;
 }
 
 
@@ -1094,53 +1094,53 @@ static int psetint (Table *t, lua_Integer key, TValue *val) {
 ** it is not old/black, and it already has space for the key.
 */
 
-int luaH_psetshortstr (Table *t, TString *key, TValue *val) {
+целое luaH_psetshortstr (Table *t, TString *key, TValue *val) {
   const TValue *slot = luaH_Hgetshortstr(t, key);
-  if (!ttisnil(slot)) {  /* key already has a value? (all too common) */
+  если (!ttisnil(slot)) {  /* key already has a value? (all too common) */
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);  /* update it */
-    return HOK;  /* done */
+    вернуть HOK;  /* done */
   }
-  else if (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
-    if (ttisnil(val))  /* new value is nil? */
-      return HOK;  /* done (value is already nil/absent) */
-    if (isabstkey(slot) &&  /* key is absent? */
+  иначе если (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
+    если (ttisnil(val))  /* new value is nil? */
+      вернуть HOK;  /* done (value is already nil/absent) */
+    если (isabstkey(slot) &&  /* key is absent? */
        !(isblack(t) && iswhite(key))) {  /* and don't need barrier? */
       TValue tk;  /* key as a TValue */
       setsvalue(cast(lua_State *, NULL), &tk, key);
-      if (insertkey(t, &tk, val)) {  /* insert key, if there is space */
+      если (insertkey(t, &tk, val)) {  /* insert key, if there is space */
         invalidateTMcache(t);
-        return HOK;
+        вернуть HOK;
       }
     }
   }
   /* Else, either table has new-index metamethod, or it needs barrier,
      or it needs to rehash for the new key. In any of these cases, the
      operation cannot be completed here. Return a code for the caller. */
-  return retpsetcode(t, slot);
+  вернуть retpsetcode(t, slot);
 }
 
 
-int luaH_psetstr (Table *t, TString *key, TValue *val) {
-  if (strisshr(key))
-    return luaH_psetshortstr(t, key, val);
-  else
-    return finishnodeset(t, Hgetlongstr(t, key), val);
+целое luaH_psetstr (Table *t, TString *key, TValue *val) {
+  если (strisshr(key))
+    вернуть luaH_psetshortstr(t, key, val);
+  иначе
+    вернуть finishnodeset(t, Hgetlongstr(t, key), val);
 }
 
 
-int luaH_pset (Table *t, const TValue *key, TValue *val) {
+целое luaH_pset (Table *t, const TValue *key, TValue *val) {
   switch (ttypetag(key)) {
-    case LUA_VSHRSTR: return luaH_psetshortstr(t, tsvalue(key), val);
-    case LUA_VNUMINT: return psetint(t, ivalue(key), val);
-    case LUA_VNIL: return HNOTFOUND;
+    case LUA_VSHRSTR: вернуть luaH_psetshortstr(t, tsvalue(key), val);
+    case LUA_VNUMINT: вернуть psetint(t, ivalue(key), val);
+    case LUA_VNIL: вернуть HNOTFOUND;
     case LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return psetint(t, k, val);  /* use specialized version */
+      если (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
+        вернуть psetint(t, k, val);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
     default:
-      return finishnodeset(t, getgeneric(t, key, 0), val);
+      вернуть finishnodeset(t, getgeneric(t, key, 0), val);
   }
 }
 
@@ -1151,37 +1151,37 @@ int luaH_pset (Table *t, const TValue *key, TValue *val) {
 ** GC barrier and invalidate the TM cache.
 */
 void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                    TValue *value, int hres) {
+                                    TValue *value, целое hres) {
   lua_assert(hres != HOK);
-  if (hres == HNOTFOUND) {
+  если (hres == HNOTFOUND) {
     TValue aux;
     const TValue *actk = key;  /* actual key to insert */
-    if (l_unlikely(ttisnil(key)))
+    если (l_unlikely(ttisnil(key)))
       luaG_runerror(L, "table index is nil");
-    else if (ttisfloat(key)) {
+    иначе если (ttisfloat(key)) {
       lua_Number f = fltvalue(key);
       lua_Integer k;
-      if (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
+      если (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
         setivalue(&aux, k);
         actk = &aux;  /* use the integer as the key */
       }
-      else if (l_unlikely(luai_numisnan(f)))
+      иначе если (l_unlikely(luai_numisnan(f)))
         luaG_runerror(L, "table index is NaN");
     }
-    else if (isextstr(key)) {  /* external string? */
+    иначе если (isextstr(key)) {  /* external string? */
       /* If string is short, must internalize it to be used as table key */
       TString *ts = luaS_normstr(L, tsvalue(key));
       setsvalue2s(L, L->top.p++, ts);  /* anchor 'ts' (EXTRA_STACK) */
       luaH_newkey(L, t, s2v(L->top.p - 1), value);
       L->top.p--;
-      return;
+      вернуть;
     }
     luaH_newkey(L, t, actk, value);
   }
-  else if (hres > 0) {  /* regular Node? */
+  иначе если (hres > 0) {  /* regular Node? */
     setobj2t(L, gval(gnode(t, hres - HFIRSTNODE)), value);
   }
-  else {  /* array entry */
+  иначе {  /* array entry */
     hres = ~hres;  /* real index */
     obj2arr(t, cast_uint(hres), value);
   }
@@ -1193,8 +1193,8 @@ void luaH_finishset (lua_State *L, Table *t, const TValue *key,
 ** barrier and invalidate the TM cache.
 */
 void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
-  int hres = luaH_pset(t, key, value);
-  if (hres != HOK)
+  целое hres = luaH_pset(t, key, value);
+  если (hres != HOK)
     luaH_finishset(L, t, key, value, hres);
 }
 
@@ -1205,11 +1205,11 @@ void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
 */
 void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
   unsigned ik = ikeyinarray(t, key);
-  if (ik > 0)
+  если (ik > 0)
     obj2arr(t, ik - 1, value);
-  else {
-    int ok = rawfinishnodeset(getintfromhash(t, key), value);
-    if (!ok) {
+  иначе {
+    целое ok = rawfinishnodeset(getintfromhash(t, key), value);
+    если (!ok) {
       TValue k;
       setivalue(&k, key);
       luaH_newkey(L, t, &k, value);
@@ -1239,43 +1239,43 @@ void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
 static lua_Unsigned hash_search (lua_State *L, Table *t, unsigned asize) {
   lua_Unsigned i = asize + 1;  /* caller ensures t[i] is present */
   unsigned rnd = G(L)->seed;
-  int n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
+  целое n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
   unsigned mask = (1u << n) - 1;  /* 11...111 with the width of 'asize' */
   unsigned incr = (rnd & mask) + 1;  /* first increment (at least 1) */
   lua_Unsigned j = (incr <= l_castS2U(LUA_MAXINTEGER) - i) ? i + incr : i + 1;
   rnd >>= n;  /* used 'n' bits from 'rnd' */
-  while (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
+  пока (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
     i = j;  /* 'i' is a present index */
-    if (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
+    если (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
       j = j*2 + (rnd & 1);  /* try again with 2j or 2j+1 */
       rnd >>= 1;
     }
-    else {
+    иначе {
       j = LUA_MAXINTEGER;
-      if (hashkeyisempty(t, j))  /* t[j] not present? */
+      если (hashkeyisempty(t, j))  /* t[j] not present? */
         break;  /* 'j' now is an absent index */
-      else  /* weird case */
-        return j;  /* well, max integer is a boundary... */
+      иначе  /* weird case */
+        вернуть j;  /* well, max integer is a boundary... */
     }
   }
   /* i < j  &&  t[i] present  &&  t[j] absent */
-  while (j - i > 1u) {  /* do a binary search between them */
+  пока (j - i > 1u) {  /* do a binary search between them */
     lua_Unsigned m = (i + j) / 2;
-    if (hashkeyisempty(t, m)) j = m;
-    else i = m;
+    если (hashkeyisempty(t, m)) j = m;
+    иначе i = m;
   }
-  return i;
+  вернуть i;
 }
 
 
-static unsigned int binsearch (Table *array, unsigned int i, unsigned int j) {
+static unsigned целое binsearch (Table *array, unsigned целое i, unsigned целое j) {
   lua_assert(i <= j);
-  while (j - i > 1u) {  /* binary search */
-    unsigned int m = (i + j) / 2;
-    if (arraykeyisempty(array, m)) j = m;
-    else i = m;
+  пока (j - i > 1u) {  /* binary search */
+    unsigned целое m = (i + j) / 2;
+    если (arraykeyisempty(array, m)) j = m;
+    иначе i = m;
   }
-  return i;
+  вернуть i;
 }
 
 
@@ -1283,7 +1283,7 @@ static unsigned int binsearch (Table *array, unsigned int i, unsigned int j) {
 static lua_Unsigned newhint (Table *t, unsigned hint) {
   lua_assert(hint <= t->asize);
   *lenhint(t) = hint;
-  return hint;
+  вернуть hint;
 }
 
 
@@ -1300,34 +1300,34 @@ static lua_Unsigned newhint (Table *t, unsigned hint) {
 */
 lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   unsigned asize = t->asize;
-  if (asize > 0) {  /* is there an array part? */
+  если (asize > 0) {  /* is there an array part? */
     const unsigned maxvicinity = 4;
     unsigned limit = *lenhint(t);  /* start with the hint */
-    if (limit == 0)
+    если (limit == 0)
       limit = 1;  /* make limit a valid index in the array */
-    if (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
+    если (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
       /* there must be a border before 'limit' */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit > 1; i++) {
+      для (i = 0; i < maxvicinity && limit > 1; i++) {
         limit--;
-        if (!arraykeyisempty(t, limit))
-          return newhint(t, limit);  /* 'limit' is a border */
+        если (!arraykeyisempty(t, limit))
+          вернуть newhint(t, limit);  /* 'limit' is a border */
       }
       /* t[limit] still empty; search for a border in [0, limit) */
-      return newhint(t, binsearch(t, 0, limit));
+      вернуть newhint(t, binsearch(t, 0, limit));
     }
-    else {  /* 'limit' is present in table; look for a border after it */
+    иначе {  /* 'limit' is present in table; look for a border after it */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit < asize; i++) {
+      для (i = 0; i < maxvicinity && limit < asize; i++) {
         limit++;
-        if (arraykeyisempty(t, limit))
-          return newhint(t, limit - 1);  /* 'limit - 1' is a border */
+        если (arraykeyisempty(t, limit))
+          вернуть newhint(t, limit - 1);  /* 'limit - 1' is a border */
       }
-      if (arraykeyisempty(t, asize)) {  /* last element empty? */
+      если (arraykeyisempty(t, asize)) {  /* last element empty? */
         /* t[limit] not empty; search for a border in [limit, asize) */
-        return newhint(t, binsearch(t, limit, asize));
+        вернуть newhint(t, binsearch(t, limit, asize));
       }
     }
     /* last element non empty; set a hint to speed up finding that again */
@@ -1336,20 +1336,20 @@ lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   }
   /* no array part or t[asize] is not empty; check the hash part */
   lua_assert(asize == 0 || !arraykeyisempty(t, asize));
-  if (isdummy(t) || hashkeyisempty(t, asize + 1))
-    return asize;  /* 'asize + 1' is empty */
-  else  /* 'asize + 1' is also non empty */
-    return hash_search(L, t, asize);
+  если (isdummy(t) || hashkeyisempty(t, asize + 1))
+    вернуть asize;  /* 'asize + 1' is empty */
+  иначе  /* 'asize + 1' is also non empty */
+    вернуть hash_search(L, t, asize);
 }
 
 
 
-#if defined(LUA_DEBUG)
+#если defined(LUA_DEBUG)
 
 /* export this function for the test library */
 
 Node *luaH_mainposition (const Table *t, const TValue *key) {
-  return mainpositionTV(t, key);
+  вернуть mainpositionTV(t, key);
 }
 
 #endif

@@ -36,19 +36,19 @@
 ** these macros allow user-specific actions when a thread is
 ** created/deleted
 */
-#if !defined(luai_userstateopen)
+#если !defined(luai_userstateopen)
 #define luai_userstateopen(L)		((void)L)
 #endif
 
-#if !defined(luai_userstateclose)
+#если !defined(luai_userstateclose)
 #define luai_userstateclose(L)		((void)L)
 #endif
 
-#if !defined(luai_userstatethread)
+#если !defined(luai_userstatethread)
 #define luai_userstatethread(L,L1)	((void)L)
 #endif
 
-#if !defined(luai_userstatefree)
+#если !defined(luai_userstatefree)
 #define luai_userstatefree(L,L1)	((void)L)
 #endif
 
@@ -61,29 +61,29 @@
 void luaE_setdebt (global_State *g, l_mem debt) {
   l_mem tb = gettotalbytes(g);
   lua_assert(tb > 0);
-  if (debt > MAX_LMEM - tb)
+  если (debt > MAX_LMEM - tb)
     debt = MAX_LMEM - tb;  /* will make GCtotalbytes == MAX_LMEM */
   g->GCtotalbytes = tb + debt;
   g->GCdebt = debt;
 }
 
 
-CallInfo *luaE_extendCI (lua_State *L, int err) {
+CallInfo *luaE_extendCI (lua_State *L, целое err) {
   CallInfo *ci;
   ci = luaM_reallocvector(L, NULL, 0, 1, CallInfo);
-  if (l_unlikely(ci == NULL)) {  /* allocation failed? */
-    if (err)
+  если (l_unlikely(ci == NULL)) {  /* allocation failed? */
+    если (err)
       luaM_error(L);  /* raise the error */
-    return NULL;  /* else only report it */
+    вернуть NULL;  /* else only report it */
   }
   ci->next = L->ci->next;
   ci->previous = L->ci;
   L->ci->next = ci;
-  if (ci->next)
+  если (ci->next)
     ci->next->previous = ci;
   ci->u.l.trap = 0;
   L->nci++;
-  return ci;
+  вернуть ci;
 }
 
 
@@ -94,7 +94,7 @@ static void freeCI (lua_State *L) {
   CallInfo *ci = L->ci;
   CallInfo *next = ci->next;
   ci->next = NULL;
-  while ((ci = next) != NULL) {
+  пока ((ci = next) != NULL) {
     next = ci->next;
     luaM_free(L, ci);
     L->nci--;
@@ -109,16 +109,16 @@ static void freeCI (lua_State *L) {
 void luaE_shrinkCI (lua_State *L) {
   CallInfo *ci = L->ci->next;  /* first free CallInfo */
   CallInfo *next;
-  if (ci == NULL)
-    return;  /* no extra elements */
-  while ((next = ci->next) != NULL) {  /* two extra elements? */
+  если (ci == NULL)
+    вернуть;  /* no extra elements */
+  пока ((next = ci->next) != NULL) {  /* two extra elements? */
     CallInfo *next2 = next->next;  /* next's next */
     ci->next = next2;  /* remove next from the list */
     L->nci--;
     luaM_free(L, next);  /* free next */
-    if (next2 == NULL)
+    если (next2 == NULL)
       break;  /* no more elements */
-    else {
+    иначе {
       next2->previous = ci;
       ci = next2;  /* continue */
     }
@@ -134,16 +134,16 @@ void luaE_shrinkCI (lua_State *L) {
 ** handling to work).
 */
 void luaE_checkcstack (lua_State *L) {
-  if (getCcalls(L) == LUAI_MAXCCALLS)
+  если (getCcalls(L) == LUAI_MAXCCALLS)
     luaG_runerror(L, "C stack overflow");
-  else if (getCcalls(L) >= (LUAI_MAXCCALLS / 10 * 11))
+  иначе если (getCcalls(L) >= (LUAI_MAXCCALLS / 10 * 11))
     luaD_errerr(L);  /* error while handling stack error */
 }
 
 
 LUAI_FUNC void luaE_incCstack (lua_State *L) {
   L->nCcalls++;
-  if (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS))
+  если (l_unlikely(getCcalls(L) >= LUAI_MAXCCALLS))
     luaE_checkcstack(L);
 }
 
@@ -161,11 +161,11 @@ static void resetCI (lua_State *L) {
 
 
 static void stack_init (lua_State *L1, lua_State *L) {
-  int i;
+  целое i;
   /* initialize stack array */
   L1->stack.p = luaM_newvector(L, BASIC_STACK_SIZE + EXTRA_STACK, StackValue);
   L1->tbclist.p = L1->stack.p;
-  for (i = 0; i < BASIC_STACK_SIZE + EXTRA_STACK; i++)
+  для (i = 0; i < BASIC_STACK_SIZE + EXTRA_STACK; i++)
     setnilvalue2s(L1->stack.p + i);  /* erase new stack */
   L1->stack_last.p = L1->stack.p + BASIC_STACK_SIZE;
   /* initialize first ci */
@@ -175,8 +175,8 @@ static void stack_init (lua_State *L1, lua_State *L) {
 
 
 static void freestack (lua_State *L) {
-  if (L->stack.p == NULL)
-    return;  /* stack not completely built yet */
+  если (L->stack.p == NULL)
+    вернуть;  /* stack not completely built yet */
   L->ci = &L->base_ci;  /* free the entire 'ci' list */
   freeCI(L);
   lua_assert(L->nci == 0);
@@ -251,17 +251,17 @@ static void preinit_thread (lua_State *L, global_State *g) {
 lu_mem luaE_threadsize (lua_State *L) {
   lu_mem sz = cast(lu_mem, sizeof(LX))
             + cast_uint(L->nci) * sizeof(CallInfo);
-  if (L->stack.p != NULL)
+  если (L->stack.p != NULL)
     sz += cast_uint(stacksize(L) + EXTRA_STACK) * sizeof(StackValue);
-  return sz;
+  вернуть sz;
 }
 
 
 static void close_state (lua_State *L) {
   global_State *g = G(L);
-  if (!completestate(g))  /* closing a partially built state? */
+  если (!completestate(g))  /* closing a partially built state? */
     luaC_freeallobjects(L);  /* just collect its objects */
-  else {  /* closing a fully built state */
+  иначе {  /* closing a fully built state */
     resetCI(L);
     luaD_closeprotected(L, 1, LUA_OK);  /* close all upvalues */
     L->top.p = L->stack.p + 1;  /* empty the stack to run finalizers */
@@ -298,7 +298,7 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
   luai_userstatethread(L, L1);
   stack_init(L1, L);  /* init stack */
   lua_unlock(L);
-  return L1;
+  вернуть L1;
 }
 
 
@@ -314,15 +314,15 @@ void luaE_freethread (lua_State *L, lua_State *L1) {
 
 TStatus luaE_resetthread (lua_State *L, TStatus status) {
   resetCI(L);
-  if (status == LUA_YIELD)
+  если (status == LUA_YIELD)
     status = LUA_OK;
   status = luaD_closeprotected(L, 1, status);
-  if (status != LUA_OK)  /* errors? */
+  если (status != LUA_OK)  /* errors? */
     luaD_seterrorobj(L, status, L->stack.p + 1);
-  else  /* keep in the stack only the fake function-entry for basic ci */
+  иначе  /* keep in the stack only the fake function-entry for basic ci */
     L->top.p = L->stack.p + 1;
   luaD_reallocstack(L, cast_int(L->ci->top.p - L->stack.p), 0);
-  return status;
+  вернуть status;
 }
 
 
@@ -337,31 +337,31 @@ TStatus luaE_resetthread (lua_State *L, TStatus status) {
 static void resetthread_aux (lua_State *L, void *ud) {
   TStatus status = *cast(TStatus*, ud);
   status = luaE_resetthread(L, status);
-  if (status != LUA_OK)
+  если (status != LUA_OK)
     luaD_throw(L, status);
 }
 
 
-LUA_API int lua_closethread (lua_State *L, lua_State *from) {
+LUA_API целое lua_closethread (lua_State *L, lua_State *from) {
   TStatus status;
   lua_lock(L);
   L->nCcalls = (from) ? getCcalls(from) : 0;
   status = luaD_rawrunprotected(L, resetthread_aux, &L->status);
   /* stack has error message iff there was an error */
   lua_assert(L->top.p == L->stack.p + (status == LUA_OK ? 1 : 2));
-  if (L == from)  /* closing itself? */
+  если (L == from)  /* closing itself? */
     luaD_throwbaselevel(L, status);
   lua_unlock(L);
-  return APIstatus(status);
+  вернуть APIstatus(status);
 }
 
 
 LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, unsigned seed) {
-  int i;
+  целое i;
   lua_State *L;
   global_State *g = cast(global_State*,
                        (*f)(ud, NULL, LUA_TTHREAD, sizeof(global_State)));
-  if (g == NULL) return NULL;
+  если (g == NULL) вернуть NULL;
   L = &g->mainth.l;
   L->tt = LUA_VTHREAD;
   g->currentwhite = bitmask(WHITE0BIT);
@@ -401,13 +401,13 @@ LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, unsigned seed) {
   setgcparam(g, MINORMUL, LUAI_GENMINORMUL);
   setgcparam(g, MINORMAJOR, LUAI_MINORMAJOR);
   setgcparam(g, MAJORMINOR, LUAI_MAJORMINOR);
-  for (i=0; i < LUA_NUMTYPES; i++) g->mt[i] = NULL;
-  if (luaD_rawrunprotected(L, f_luaopen, NULL) != LUA_OK) {
+  для (i=0; i < LUA_NUMTYPES; i++) g->mt[i] = NULL;
+  если (luaD_rawrunprotected(L, f_luaopen, NULL) != LUA_OK) {
     /* memory allocation error: free partial state */
     close_state(L);
     L = NULL;
   }
-  return L;
+  вернуть L;
 }
 
 
@@ -418,9 +418,9 @@ LUA_API void lua_close (lua_State *L) {
 }
 
 
-void luaE_warning (lua_State *L, const char *msg, int tocont) {
+void luaE_warning (lua_State *L, const char *msg, целое tocont) {
   lua_WarnFunction wf = G(L)->warnf;
-  if (wf != NULL)
+  если (wf != NULL)
     wf(G(L)->ud_warn, msg, tocont);
 }
 
