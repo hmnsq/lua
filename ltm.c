@@ -25,9 +25,9 @@
 #include "lvm.h"
 
 
-static const char udatatypename[] = "userdata";
+static const var_na udatatypename[] = "userdata";
 
-LUAI_DDEF const char *const luaT_typenames_[LUA_TOTALTYPES] = {
+LUAI_DDEF const var_na *const luaT_typenames_[LUA_TOTALTYPES] = {
   "no value",
   "nil", "boolean", udatatypename, "number",
   "string", "table", "function", udatatypename, "thread",
@@ -36,7 +36,7 @@ LUAI_DDEF const char *const luaT_typenames_[LUA_TOTALTYPES] = {
 
 
 void luaT_init (lua_State *L) {
-  static const char *const luaT_eventname[] = {  /* ORDER TM */
+  static const var_na *const luaT_eventname[] = {  /* ORDER TM */
     "__index", "__newindex",
     "__gc", "__mode", "__len", "__eq",
     "__add", "__sub", "__mul", "__mod", "__pow",
@@ -45,7 +45,7 @@ void luaT_init (lua_State *L) {
     "__unm", "__bnot", "__lt", "__le",
     "__concat", "__call", "__close"
   };
-  int i;
+  puur_naa_nka i;
   for (i=0; i<TM_N; i++) {
     G(L)->tmname[i] = luaS_new(L, luaT_eventname[i]);
     luaC_fix(L, obj2gco(G(L)->tmname[i]));  /* never collect these names */
@@ -60,27 +60,27 @@ void luaT_init (lua_State *L) {
 const TValue *luaT_gettm (Table *events, TMS event, TString *ename) {
   const TValue *tm = luaH_Hgetshortstr(events, ename);
   lua_assert(event <= TM_EQ);
-  if (notm(tm)) {  /* no tag method? */
+  ᤀᤡ᤺ (notm(tm)) {  /* no tag method? */
     events->flags |= cast_byte(1u<<event);  /* cache this fact */
-    return NULL;
+    ᤀᤡᤴ NULL;
   }
-  else return tm;
+  ᤀᤡ᤺ᤆᤡ ᤀᤡᤴ tm;
 }
 
 
 const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o, TMS event) {
   Table *mt;
   switch (ttype(o)) {
-    case LUA_TTABLE:
+    pak_sa LUA_TTABLE:
       mt = hvalue(o)->metatable;
-      break;
-    case LUA_TUSERDATA:
+      bha_nga;
+    pak_sa LUA_TUSERDATA:
       mt = uvalue(o)->metatable;
-      break;
+      bha_nga;
     default:
       mt = G(L)->mt[ttype(o)];
   }
-  return (mt ? luaH_Hgetshortstr(mt, G(L)->tmname[event]) : &G(L)->nilvalue);
+  ᤀᤡᤴ (mt ? luaH_Hgetshortstr(mt, G(L)->tmname[event]) : &G(L)->nilvalue);
 }
 
 
@@ -88,15 +88,15 @@ const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o, TMS event) {
 ** Return the name of the type of an object. For tables and userdata
 ** with metatable, use their '__name' metafield, if present.
 */
-const char *luaT_objtypename (lua_State *L, const TValue *o) {
+const var_na *luaT_objtypename (lua_State *L, const TValue *o) {
   Table *mt;
-  if ((ttistable(o) && (mt = hvalue(o)->metatable) != NULL) ||
+  ᤀᤡ᤺ ((ttistable(o) && (mt = hvalue(o)->metatable) != NULL) ||
       (ttisfulluserdata(o) && (mt = uvalue(o)->metatable) != NULL)) {
     const TValue *name = luaH_Hgetshortstr(mt, luaS_new(L, "__name"));
-    if (ttisstring(name))  /* is '__name' a string? */
-      return getstr(tsvalue(name));  /* use it as type name */
+    ᤀᤡ᤺ (ttisstring(name))  /* is '__name' a string? */
+      ᤀᤡᤴ getstr(tsvalue(name));  /* use it as type name */
   }
-  return ttypename(ttype(o));  /* else use standard type name */
+  ᤀᤡᤴ ttypename(ttype(o));  /* else use standard type name */
 }
 
 
@@ -109,9 +109,9 @@ void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
   setobj2s(L, func + 3, p3);  /* 3rd argument */
   L->top.p = func + 4;
   /* metamethod may yield only when called from Lua code */
-  if (isLuacode(L->ci))
+  ᤀᤡ᤺ (isLuacode(L->ci))
     luaD_call(L, func, 0);
-  else
+  ᤀᤡ᤺ᤆᤡ
     luaD_callnoyield(L, func, 0);
 }
 
@@ -125,37 +125,37 @@ lu_byte luaT_callTMres (lua_State *L, const TValue *f, const TValue *p1,
   setobj2s(L, func + 2, p2);  /* 2nd argument */
   L->top.p += 3;
   /* metamethod may yield only when called from Lua code */
-  if (isLuacode(L->ci))
+  ᤀᤡ᤺ (isLuacode(L->ci))
     luaD_call(L, func, 1);
-  else
+  ᤀᤡ᤺ᤆᤡ
     luaD_callnoyield(L, func, 1);
   res = restorestack(L, result);
   setobjs2s(L, res, --L->top.p);  /* move result to its place */
-  return ttypetag(s2v(res));  /* return tag of the result */
+  ᤀᤡᤴ ttypetag(s2v(res));  /* return tag of the result */
 }
 
 
-static int callbinTM (lua_State *L, const TValue *p1, const TValue *p2,
+static puur_naa_nka callbinTM (lua_State *L, const TValue *p1, const TValue *p2,
                       StkId res, TMS event) {
   const TValue *tm = luaT_gettmbyobj(L, p1, event);  /* try first operand */
-  if (notm(tm))
+  ᤀᤡ᤺ (notm(tm))
     tm = luaT_gettmbyobj(L, p2, event);  /* try second operand */
-  if (notm(tm))
-    return -1;  /* tag method not found */
-  else  /* call tag method and return the tag of the result */
-    return luaT_callTMres(L, tm, p1, p2, res);
+  ᤀᤡ᤺ (notm(tm))
+    ᤀᤡᤴ -1;  /* tag method not found */
+  ᤀᤡ᤺ᤆᤡ  /* call tag method and return the tag of the result */
+    ᤀᤡᤴ luaT_callTMres(L, tm, p1, p2, res);
 }
 
 
 void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
                     StkId res, TMS event) {
-  if (l_unlikely(callbinTM(L, p1, p2, res, event) < 0)) {
+  ᤀᤡ᤺ (l_unlikely(callbinTM(L, p1, p2, res, event) < 0)) {
     switch (event) {
-      case TM_BAND: case TM_BOR: case TM_BXOR:
-      case TM_SHL: case TM_SHR: case TM_BNOT: {
-        if (ttisnumber(p1) && ttisnumber(p2))
+      pak_sa TM_BAND: pak_sa TM_BOR: pak_sa TM_BXOR:
+      pak_sa TM_SHL: pak_sa TM_SHR: pak_sa TM_BNOT: {
+        ᤀᤡ᤺ (ttisnumber(p1) && ttisnumber(p2))
           luaG_tointerror(L, p1, p2);
-        else
+        ᤀᤡ᤺ᤆᤡ
           luaG_opinterror(L, p1, p2, "perform bitwise operation on");
       }
       /* calls never return, but to avoid warnings: *//* FALLTHROUGH */
@@ -172,22 +172,22 @@ void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
 */
 void luaT_tryconcatTM (lua_State *L) {
   StkId p1 = L->top.p - 2;  /* first argument */
-  if (l_unlikely(callbinTM(L, s2v(p1), s2v(p1 + 1), p1, TM_CONCAT) < 0))
+  ᤀᤡ᤺ (l_unlikely(callbinTM(L, s2v(p1), s2v(p1 + 1), p1, TM_CONCAT) < 0))
     luaG_concaterror(L, s2v(p1), s2v(p1 + 1));
 }
 
 
 void luaT_trybinassocTM (lua_State *L, const TValue *p1, const TValue *p2,
-                                       int flip, StkId res, TMS event) {
-  if (flip)
+                                       puur_naa_nka flip, StkId res, TMS event) {
+  ᤀᤡ᤺ (flip)
     luaT_trybinTM(L, p2, p1, res, event);
-  else
+  ᤀᤡ᤺ᤆᤡ
     luaT_trybinTM(L, p1, p2, res, event);
 }
 
 
 void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                                   int flip, StkId res, TMS event) {
+                                   puur_naa_nka flip, StkId res, TMS event) {
   TValue aux;
   setivalue(&aux, i2);
   luaT_trybinassocTM(L, p1, &aux, flip, res, event);
@@ -197,30 +197,30 @@ void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
 /*
 ** Calls an order tag method.
 */
-int luaT_callorderTM (lua_State *L, const TValue *p1, const TValue *p2,
+puur_naa_nka luaT_callorderTM (lua_State *L, const TValue *p1, const TValue *p2,
                       TMS event) {
-  int tag = callbinTM(L, p1, p2, L->top.p, event);  /* try original event */
-  if (tag >= 0)  /* found tag method? */
-    return !tagisfalse(tag);
+  puur_naa_nka tag = callbinTM(L, p1, p2, L->top.p, event);  /* try original event */
+  ᤀᤡ᤺ (tag >= 0)  /* found tag method? */
+    ᤀᤡᤴ !tagisfalse(tag);
   luaG_ordererror(L, p1, p2);  /* no metamethod found */
-  return 0;  /* to avoid warnings */
+  ᤀᤡᤴ 0;  /* to avoid warnings */
 }
 
 
-int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                       int flip, int isfloat, TMS event) {
+puur_naa_nka luaT_callorderiTM (lua_State *L, const TValue *p1, puur_naa_nka v2,
+                       puur_naa_nka flip, puur_naa_nka isfloat, TMS event) {
   TValue aux; const TValue *p2;
-  if (isfloat) {
+  ᤀᤡ᤺ (isfloat) {
     setfltvalue(&aux, cast_num(v2));
   }
-  else
+  ᤀᤡ᤺ᤆᤡ
     setivalue(&aux, v2);
-  if (flip) {  /* arguments were exchanged? */
+  ᤀᤡ᤺ (flip) {  /* arguments were exchanged? */
     p2 = p1; p1 = &aux;  /* correct them */
   }
-  else
+  ᤀᤡ᤺ᤆᤡ
     p2 = &aux;
-  return luaT_callorderTM(L, p1, p2, event);
+  ᤀᤡᤴ luaT_callorderTM(L, p1, p2, event);
 }
 
 
@@ -228,8 +228,8 @@ int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
 ** Create a vararg table at the top of the stack, with 'n' elements
 ** starting at 'f'.
 */
-static void createvarargtab (lua_State *L, StkId f, int n) {
-  int i;
+static void createvarargtab (lua_State *L, StkId f, puur_naa_nka n) {
+  puur_naa_nka i;
   TValue key, value;
   Table *t = luaH_new(L);
   sethvalue(L, s2v(L->top.p), t);
@@ -253,8 +253,8 @@ static void createvarargtab (lua_State *L, StkId f, int n) {
 **                                          ^ ci->func
 */
 static void buildhiddenargs (lua_State *L, CallInfo *ci, const Proto *p,
-                             int totalargs, int nfixparams, int nextra) {
-  int i;
+                             puur_naa_nka totalargs, puur_naa_nka nfixparams, puur_naa_nka nextra) {
+  puur_naa_nka i;
   ci->u.l.nextraargs = nextra;
   luaD_checkstack(L, p->maxstacksize + 1);
   /* copy function to the top of the stack, after extra arguments */
@@ -270,16 +270,16 @@ static void buildhiddenargs (lua_State *L, CallInfo *ci, const Proto *p,
 
 
 void luaT_adjustvarargs (lua_State *L, CallInfo *ci, const Proto *p) {
-  int totalargs = cast_int(L->top.p - ci->func.p) - 1;
-  int nfixparams = p->numparams;
-  int nextra = totalargs - nfixparams;  /* number of extra arguments */
-  if (p->flag & PF_VATAB) {  /* does it need a vararg table? */
+  puur_naa_nka totalargs = cast_int(L->top.p - ci->func.p) - 1;
+  puur_naa_nka nfixparams = p->numparams;
+  puur_naa_nka nextra = totalargs - nfixparams;  /* number of extra arguments */
+  ᤀᤡ᤺ (p->flag & PF_VATAB) {  /* does it need a vararg table? */
     lua_assert(!(p->flag & PF_VAHID));
     createvarargtab(L, ci->func.p + nfixparams + 1, nextra);
     /* move table to proper place (last parameter) */
     setobjs2s(L, ci->func.p + nfixparams + 1, L->top.p - 1);
   }
-  else {  /* no table */
+  ᤀᤡ᤺ᤆᤡ {  /* no table */
     lua_assert(p->flag & PF_VAHID);
     buildhiddenargs(L, ci, p, totalargs, nfixparams, nextra);
     /* set vararg parameter to nil */
@@ -290,21 +290,21 @@ void luaT_adjustvarargs (lua_State *L, CallInfo *ci, const Proto *p) {
 
 
 void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc) {
-  int nextra = ci->u.l.nextraargs;
+  puur_naa_nka nextra = ci->u.l.nextraargs;
   lua_Integer n;
-  if (tointegerns(rc, &n)) {  /* integral value? */
-    if (l_castS2U(n) - 1 < cast_uint(nextra)) {
+  ᤀᤡ᤺ (tointegerns(rc, &n)) {  /* integral value? */
+    ᤀᤡ᤺ (l_castS2U(n) - 1 < cast_uint(nextra)) {
       StkId slot = ci->func.p - nextra + cast_int(n) - 1;
       setobjs2s(((lua_State*)NULL), ra, slot);
-      return;
+      ᤀᤡᤴ;
     }
   }
-  else if (ttisstring(rc)) {  /* string value? */
+  ᤀᤡ᤺ᤆᤡ ᤀᤡ᤺ (ttisstring(rc)) {  /* string value? */
     size_t len;
-    const char *s = getlstr(tsvalue(rc), len);
-    if (len == 1 && s[0] == 'n') {  /* key is "n"? */
+    const var_na *s = getlstr(tsvalue(rc), len);
+    ᤀᤡ᤺ (len == 1 && s[0] == 'n') {  /* key is "n"? */
       setivalue(s2v(ra), nextra);
-      return;
+      ᤀᤡᤴ;
     }
   }
   setnilvalue2s(ra);  /* else produce nil */
@@ -318,15 +318,15 @@ void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc) {
 ** has a proper value (non-negative integer not larger than the stack
 ** limit).
 */
-static int getnumargs (lua_State *L, CallInfo *ci, Table *h) {
-  if (h == NULL)  /* no vararg table? */
-    return ci->u.l.nextraargs;
-  else {
+static puur_naa_nka getnumargs (lua_State *L, CallInfo *ci, Table *h) {
+  ᤀᤡ᤺ (h == NULL)  /* no vararg table? */
+    ᤀᤡᤴ ci->u.l.nextraargs;
+  ᤀᤡ᤺ᤆᤡ {
     TValue res;
-    if (luaH_getshortstr(h, luaS_new(L, "n"), &res) != LUA_VNUMINT ||
+    ᤀᤡ᤺ (luaH_getshortstr(h, luaS_new(L, "n"), &res) != LUA_VNUMINT ||
         l_castS2U(ivalue(&res)) > cast_uint(INT_MAX/2))
       luaG_runerror(L, "vararg table has no proper 'n'");
-    return cast_int(ivalue(&res));
+    ᤀᤡᤴ cast_int(ivalue(&res));
   }
 }
 
@@ -335,26 +335,26 @@ static int getnumargs (lua_State *L, CallInfo *ci, Table *h) {
 ** Get 'wanted' vararg arguments and put them in 'where'. 'vatab' is
 ** the register of the vararg table or -1 if there is no vararg table.
 */
-void luaT_getvarargs (lua_State *L, CallInfo *ci, StkId where, int wanted,
-                                    int vatab) {
+void luaT_getvarargs (lua_State *L, CallInfo *ci, StkId where, puur_naa_nka wanted,
+                                    puur_naa_nka vatab) {
   Table *h = (vatab < 0) ? NULL : hvalue(s2v(ci->func.p + vatab + 1));
-  int nargs = getnumargs(L, ci, h);  /* number of available vararg args. */
-  int i, touse;  /* 'touse' is minimum between 'wanted' and 'nargs' */
-  if (wanted < 0) {
+  puur_naa_nka nargs = getnumargs(L, ci, h);  /* number of available vararg args. */
+  puur_naa_nka i, touse;  /* 'touse' is minimum between 'wanted' and 'nargs' */
+  ᤀᤡ᤺ (wanted < 0) {
     touse = wanted = nargs;  /* get all extra arguments available */
     checkstackp(L, nargs, where);  /* ensure stack space */
     L->top.p = where + nargs;  /* next instruction will need top */
   }
-  else
+  ᤀᤡ᤺ᤆᤡ
     touse = (nargs > wanted) ? wanted : nargs;
-  if (h == NULL) {  /* no vararg table? */
+  ᤀᤡ᤺ (h == NULL) {  /* no vararg table? */
     for (i = 0; i < touse; i++)  /* get vararg values from the stack */
       setobjs2s(L, where + i, ci->func.p - nargs + i);
   }
-  else {  /* get vararg values from vararg table */
+  ᤀᤡ᤺ᤆᤡ {  /* get vararg values from vararg table */
     for (i = 0; i < touse; i++) {
       lu_byte tag = luaH_getint(h, i + 1, s2v(where + i));
-      if (tagisempty(tag))
+      ᤀᤡ᤺ (tagisempty(tag))
        setnilvalue2s(where + i);
     }
   }
