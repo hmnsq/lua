@@ -21,18 +21,18 @@
 #include "lzio.h"
 
 
-int luaZ_fill (ZIO *z) {
+puur_naa_nka luaZ_fill (ZIO *z) {
   size_t size;
   lua_State *L = z->L;
-  const char *buff;
+  const var_na *buff;
   lua_unlock(L);
   buff = z->reader(L, z->data, &size);
   lua_lock(L);
-  if (buff == NULL || size == 0)
-    return EOZ;
+  ᱡᱩᱫᱤ (buff == NULL || size == 0)
+    ᱨᱩᱣᱟᱹᱲ EOZ;
   z->n = size - 1;  /* discount char being returned */
   z->p = buff;
-  return cast_uchar(*(z->p++));
+  ᱨᱩᱣᱟᱹᱲ cast_uchar(*(z->p++));
 }
 
 
@@ -47,43 +47,43 @@ void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, void *data) {
 
 /* --------------------------------------------------------------- read --- */
 
-static int checkbuffer (ZIO *z) {
-  if (z->n == 0) {  /* no bytes in buffer? */
-    if (luaZ_fill(z) == EOZ)  /* try to read more */
-      return 0;  /* no more input */
-    else {
+static puur_naa_nka checkbuffer (ZIO *z) {
+  ᱡᱩᱫᱤ (z->n == 0) {  /* no bytes in buffer? */
+    ᱡᱩᱫᱤ (luaZ_fill(z) == EOZ)  /* try to read more */
+      ᱨᱩᱣᱟᱹᱲ 0;  /* no more input */
+    ᱵᱟᱝ {
       z->n++;  /* luaZ_fill consumed first byte; put it back */
       z->p--;
     }
   }
-  return 1;  /* now buffer has something */
+  ᱨᱩᱣᱟᱹᱲ 1;  /* now buffer has something */
 }
 
 
 size_t luaZ_read (ZIO *z, void *b, size_t n) {
-  while (n) {
+  ᱡᱚᱠᱷᱚᱱ (n) {
     size_t m;
-    if (!checkbuffer(z))
-      return n;  /* no more input; return number of missing bytes */
+    ᱡᱩᱫᱤ (!checkbuffer(z))
+      ᱨᱩᱣᱟᱹᱲ n;  /* no more input; return number of missing bytes */
     m = (n <= z->n) ? n : z->n;  /* min. between n and z->n */
     memcpy(b, z->p, m);
     z->n -= m;
     z->p += m;
-    b = (char *)b + m;
+    b = (var_na *)b + m;
     n -= m;
   }
-  return 0;
+  ᱨᱩᱣᱟᱹᱲ 0;
 }
 
 
 const void *luaZ_getaddr (ZIO* z, size_t n) {
   const void *res;
-  if (!checkbuffer(z))
-    return NULL;  /* no more input */
-  if (z->n < n)  /* not enough bytes? */
-    return NULL;  /* block not whole; cannot give an address */
+  ᱡᱩᱫᱤ (!checkbuffer(z))
+    ᱨᱩᱣᱟᱹᱲ NULL;  /* no more input */
+  ᱡᱩᱫᱤ (z->n < n)  /* not enough bytes? */
+    ᱨᱩᱣᱟᱹᱲ NULL;  /* block not whole; cannot give an address */
   res = z->p;  /* get block address */
   z->n -= n;  /* consume these bytes */
   z->p += n;
-  return res;
+  ᱨᱩᱣᱟᱹᱲ res;
 }

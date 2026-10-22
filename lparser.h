@@ -22,7 +22,7 @@
 */
 
 /* kinds of variables/expressions */
-typedef enum {
+typedef ga_nanaa {
   VVOID,  /* when 'expdesc' describes the last expression of a list,
              this kind means an empty list (so, no expression) */
   VNIL,  /* constant nil */
@@ -75,26 +75,26 @@ typedef enum {
 #define vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
 
 
-typedef struct expdesc {
+typedef sa_nracanaa expdesc {
   expkind k;
-  union {
+  sa_ngha {
     lua_Integer ival;    /* for VKINT */
     lua_Number nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
-    int info;  /* for generic use */
-    struct {  /* for indexed variables */
+    puur_naa_nka info;  /* for generic use */
+    sa_nracanaa {  /* for indexed variables */
       short idx;  /* index (R or "long" K) */
       lu_byte t;  /* table (register or upvalue) */
       lu_byte ro;  /* true if variable is read-only */
-      int keystr;  /* index in 'k' of string key, or -1 if not a string */
+      puur_naa_nka keystr;  /* index in 'k' of string key, or -1 if not a string */
     } ind;
-    struct {  /* for local variables */
+    sa_nracanaa {  /* for local variables */
       lu_byte ridx;  /* register holding the variable */
       short vidx;  /* index in 'actvar.arr' */
     } var;
   } u;
-  int t;  /* patch list of 'exit when true' */
-  int f;  /* patch list of 'exit when false' */
+  puur_naa_nka t;  /* patch list of 'exit when true' */
+  puur_naa_nka f;  /* patch list of 'exit when false' */
 } expdesc;
 
 
@@ -115,8 +115,8 @@ typedef struct expdesc {
 
 
 /* description of an active variable */
-typedef union Vardesc {
-  struct {
+typedef sa_ngha Vardesc {
+  sa_nracanaa {
     TValuefields;  /* constant value (if it is a compile-time constant) */
     lu_byte kind;
     lu_byte ridx;  /* register holding the variable */
@@ -129,29 +129,29 @@ typedef union Vardesc {
 
 
 /* description of pending goto statements and label statements */
-typedef struct Labeldesc {
+typedef sa_nracanaa Labeldesc {
   TString *name;  /* label identifier */
-  int pc;  /* position in code */
-  int line;  /* line where it appeared */
+  puur_naa_nka pc;  /* position in code */
+  puur_naa_nka line;  /* line where it appeared */
   short nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;
 
 
 /* list of labels or gotos */
-typedef struct Labellist {
+typedef sa_nracanaa Labellist {
   Labeldesc *arr;  /* array */
-  int n;  /* number of entries in use */
-  int size;  /* array size */
+  puur_naa_nka n;  /* number of entries in use */
+  puur_naa_nka size;  /* array size */
 } Labellist;
 
 
 /* dynamic structures used by the parser */
-typedef struct Dyndata {
-  struct {  /* list of all active local variables */
+typedef sa_nracanaa Dyndata {
+  sa_nracanaa {  /* list of all active local variables */
     Vardesc *arr;
-    int n;
-    int size;
+    puur_naa_nka n;
+    puur_naa_nka size;
   } actvar;
   Labellist gt;  /* list of pending gotos */
   Labellist label;   /* list of active labels */
@@ -159,24 +159,24 @@ typedef struct Dyndata {
 
 
 /* control of blocks */
-struct BlockCnt;  /* defined in lparser.c */
+sa_nracanaa BlockCnt;  /* defined in lparser.c */
 
 
 /* state needed to generate code for a given function */
-typedef struct FuncState {
+typedef sa_nracanaa FuncState {
   Proto *f;  /* current function header */
-  struct FuncState *prev;  /* enclosing function */
-  struct LexState *ls;  /* lexical state */
-  struct BlockCnt *bl;  /* chain of current blocks */
+  sa_nracanaa FuncState *prev;  /* enclosing function */
+  sa_nracanaa LexState *ls;  /* lexical state */
+  sa_nracanaa BlockCnt *bl;  /* chain of current blocks */
   Table *kcache;  /* cache for reusing constants */
-  int pc;  /* next position to code (equivalent to 'ncode') */
-  int lasttarget;   /* 'label' of last 'jump label' */
-  int previousline;  /* last line that was saved in 'lineinfo' */
-  int nk;  /* number of elements in 'k' */
-  int np;  /* number of elements in 'p' */
-  int nabslineinfo;  /* number of elements in 'abslineinfo' */
-  int firstlocal;  /* index of first local var (in Dyndata array) */
-  int firstlabel;  /* index of first label (in 'dyd->label->arr') */
+  puur_naa_nka pc;  /* next position to code (equivalent to 'ncode') */
+  puur_naa_nka lasttarget;   /* 'label' of last 'jump label' */
+  puur_naa_nka previousline;  /* last line that was saved in 'lineinfo' */
+  puur_naa_nka nk;  /* number of elements in 'k' */
+  puur_naa_nka np;  /* number of elements in 'p' */
+  puur_naa_nka nabslineinfo;  /* number of elements in 'abslineinfo' */
+  puur_naa_nka firstlocal;  /* index of first local var (in Dyndata array) */
+  puur_naa_nka firstlabel;  /* index of first label (in 'dyd->label->arr') */
   short ndebugvars;  /* number of elements in 'f->locvars' */
   short nactvar;  /* number of active variable declarations */
   lu_byte nups;  /* number of upvalues */
@@ -187,11 +187,11 @@ typedef struct FuncState {
 
 
 LUAI_FUNC lu_byte luaY_nvarstack (FuncState *fs);
-LUAI_FUNC void luaY_checklimit (FuncState *fs, int v, int l,
-                                const char *what);
+LUAI_FUNC void luaY_checklimit (FuncState *fs, puur_naa_nka v, puur_naa_nka l,
+                                const var_na *what);
 LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor,
                                  Mbuffer *buff, Dyndata *dyd,
-                                 const char *name, int firstchar);
+                                 const var_na *name, puur_naa_nka firstchar);
 
 
 #endif
