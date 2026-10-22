@@ -8,25 +8,25 @@
 #ifndef lzio_h
 #define lzio_h
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lmem.h"
+#अन्तर्भाव "lmem.h"
 
 
 #define EOZ	(-1)			/* end of stream */
 
-typedef struct Zio ZIO;
+प्रकारनिर्देश संरचना Zio ZIO;
 
 #define zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
 
 
-typedef struct Mbuffer {
-  char *buffer;
+प्रकारनिर्देश संरचना Mbuffer {
+  वर्ण *buffer;
   size_t n;
   size_t buffsize;
 } Mbuffer;
 
-#define luaZ_initbuffer(L, buff) ((buff)->buffer = NULL, (buff)->buffsize = 0)
+#define luaZ_initbuffer(L, buff) ((buff)->buffer = रिक्त, (buff)->buffsize = 0)
 
 #define luaZ_buffer(buff)	((buff)->buffer)
 #define luaZ_sizebuffer(buff)	((buff)->buffsize)
@@ -44,24 +44,24 @@ typedef struct Mbuffer {
 #define luaZ_freebuffer(L, buff)	luaZ_resizebuffer(L, buff, 0)
 
 
-LUAI_FUNC void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
-                                        void *data);
-LUAI_FUNC size_t luaZ_read (ZIO* z, void *b, size_t n);	/* read next n bytes */
+LUAI_FUNC शून्य luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
+                                        शून्य *data);
+LUAI_FUNC size_t luaZ_read (ZIO* z, शून्य *b, size_t n);	/* read next n bytes */
 
-LUAI_FUNC const void *luaZ_getaddr (ZIO* z, size_t n);
+LUAI_FUNC ध्रुव शून्य *luaZ_getaddr (ZIO* z, size_t n);
 
 
 /* --------- Private Part ------------------ */
 
-struct Zio {
+संरचना Zio {
   size_t n;			/* bytes still unread */
-  const char *p;		/* current position in buffer */
+  ध्रुव वर्ण *p;		/* current position in buffer */
   lua_Reader reader;		/* reader function */
-  void *data;			/* additional data */
+  शून्य *data;			/* additional data */
   lua_State *L;			/* Lua state (for reader) */
 };
 
 
-LUAI_FUNC int luaZ_fill (ZIO *z);
+LUAI_FUNC पूर्णाङ्क luaZ_fill (ZIO *z);
 
 #endif
