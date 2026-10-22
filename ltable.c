@@ -67,7 +67,7 @@ typedef union {
 ** MAXABITS is the largest integer such that 2^MAXABITS fits in an
 ** unsigned int.
 */
-#define MAXABITS	(l_numbits(int) - 1)
+#define MAXABITS	(l_numbits(số_nguyên) - 1)
 
 
 /*
@@ -144,10 +144,10 @@ static const TValue absentkey = {ABSTKEYCONSTANT};
 */
 static Node *hashint (const Table *t, lua_Integer i) {
   lua_Unsigned ui = l_castS2U(i);
-  if (ui <= cast_uint(INT_MAX))
-    return gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
-  else
-    return hashmod(t, ui);
+  nếu (ui <= cast_uint(INT_MAX))
+    trả_về gnode(t, cast_int(ui) % cast_int((sizenode(t)-1) | 1));
+  không_thì
+    trả_về hashmod(t, ui);
 }
 
 
@@ -164,18 +164,18 @@ static Node *hashint (const Table *t, lua_Integer i) {
 ** adding 'i'; the use of '~u' (instead of '-u') avoids problems with
 ** INT_MIN.
 */
-#if !defined(l_hashfloat)
+#nếu !defined(l_hashfloat)
 static unsigned l_hashfloat (lua_Number n) {
-  int i;
+  số_nguyên i;
   lua_Integer ni;
   n = l_mathop(frexp)(n, &i) * -cast_num(INT_MIN);
-  if (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
+  nếu (!lua_numbertointeger(n, &ni)) {  /* is 'n' inf/-inf/NaN? */
     lua_assert(luai_numisnan(n) || l_mathop(fabs)(n) == cast_num(HUGE_VAL));
-    return 0;
+    trả_về 0;
   }
-  else {  /* normal case */
-    unsigned int u = cast_uint(i) + cast_uint(ni);
-    return (u <= cast_uint(INT_MAX) ? u : ~u);
+  không_thì {  /* normal case */
+    unsigned số_nguyên u = cast_uint(i) + cast_uint(ni);
+    trả_về (u <= cast_uint(INT_MAX) ? u : ~u);
   }
 }
 #endif
@@ -189,35 +189,35 @@ static Node *mainpositionTV (const Table *t, const TValue *key) {
   switch (ttypetag(key)) {
     case LUA_VNUMINT: {
       lua_Integer i = ivalue(key);
-      return hashint(t, i);
+      trả_về hashint(t, i);
     }
     case LUA_VNUMFLT: {
       lua_Number n = fltvalue(key);
-      return hashmod(t, l_hashfloat(n));
+      trả_về hashmod(t, l_hashfloat(n));
     }
     case LUA_VSHRSTR: {
       TString *ts = tsvalue(key);
-      return hashstr(t, ts);
+      trả_về hashstr(t, ts);
     }
     case LUA_VLNGSTR: {
       TString *ts = tsvalue(key);
-      return hashpow2(t, luaS_hashlongstr(ts));
+      trả_về hashpow2(t, luaS_hashlongstr(ts));
     }
     case LUA_VFALSE:
-      return hashboolean(t, 0);
+      trả_về hashboolean(t, 0);
     case LUA_VTRUE:
-      return hashboolean(t, 1);
+      trả_về hashboolean(t, 1);
     case LUA_VLIGHTUSERDATA: {
       void *p = pvalue(key);
-      return hashpointer(t, p);
+      trả_về hashpointer(t, p);
     }
     case LUA_VLCF: {
       lua_CFunction f = fvalue(key);
-      return hashpointer(t, f);
+      trả_về hashpointer(t, f);
     }
     default: {
       GCObject *o = gcvalue(key);
-      return hashpointer(t, o);
+      trả_về hashpointer(t, o);
     }
   }
 }
@@ -226,7 +226,7 @@ static Node *mainpositionTV (const Table *t, const TValue *key) {
 l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
   TValue key;
   getnodekey(cast(lua_State *, NULL), &key, nd);
-  return mainpositionTV(t, &key);
+  trả_về mainpositionTV(t, &key);
 }
 
 
@@ -249,35 +249,35 @@ l_sinline Node *mainpositionfromnode (const Table *t, Node *nd) {
 ** anything.  (In particular, 'next' will return some other valid item
 ** on the table or nil.)
 */
-static int equalkey (const TValue *k1, const Node *n2, int deadok) {
-  if (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
-    if (keyisshrstr(n2) && ttislngstring(k1)) {
+static số_nguyên equalkey (const TValue *k1, const Node *n2, số_nguyên deadok) {
+  nếu (rawtt(k1) != keytt(n2)) {  /* not the same variants? */
+    nếu (keyisshrstr(n2) && ttislngstring(k1)) {
       /* an external string can be equal to a short-string key */
-      return luaS_eqstr(tsvalue(k1), keystrval(n2));
+      trả_về luaS_eqstr(tsvalue(k1), keystrval(n2));
     }
-    else if (deadok && keyisdead(n2) && iscollectable(k1)) {
+    không_thì nếu (deadok && keyisdead(n2) && iscollectable(k1)) {
       /* a collectable value can be equal to a dead key */
-      return gcvalue(k1) == gcvalueraw(keyval(n2));
+      trả_về gcvalue(k1) == gcvalueraw(keyval(n2));
    }
-   else
-     return 0;  /* otherwise, different variants cannot be equal */
+   không_thì
+     trả_về 0;  /* otherwise, different variants cannot be equal */
   }
-  else {  /* equal variants */
+  không_thì {  /* equal variants */
     switch (keytt(n2)) {
       case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE:
-        return 1;
+        trả_về 1;
       case LUA_VNUMINT:
-        return (ivalue(k1) == keyival(n2));
+        trả_về (ivalue(k1) == keyival(n2));
       case LUA_VNUMFLT:
-        return luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
+        trả_về luai_numeq(fltvalue(k1), fltvalueraw(keyval(n2)));
       case LUA_VLIGHTUSERDATA:
-        return pvalue(k1) == pvalueraw(keyval(n2));
+        trả_về pvalue(k1) == pvalueraw(keyval(n2));
       case LUA_VLCF:
-        return fvalue(k1) == fvalueraw(keyval(n2));
+        trả_về fvalue(k1) == fvalueraw(keyval(n2));
       case ctb(LUA_VLNGSTR):
-        return luaS_eqstr(tsvalue(k1), keystrval(n2));
+        trả_về luaS_eqstr(tsvalue(k1), keystrval(n2));
       default:
-        return gcvalue(k1) == gcvalueraw(keyval(n2));
+        trả_về gcvalue(k1) == gcvalueraw(keyval(n2));
     }
   }
 }
@@ -288,15 +288,15 @@ static int equalkey (const TValue *k1, const Node *n2, int deadok) {
 ** which may be in array part, nor for floats with integral values.)
 ** See explanation about 'deadok' in function 'equalkey'.
 */
-static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
+static const TValue *getgeneric (Table *t, const TValue *key, số_nguyên deadok) {
   Node *n = mainpositionTV(t, key);
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (equalkey(key, n, deadok))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+  cho (;;) {  /* check whether 'key' is somewhere in the chain */
+    nếu (equalkey(key, n, deadok))
+      trả_về gval(n);  /* that's it */
+    không_thì {
+      số_nguyên nx = gnext(n);
+      nếu (nx == 0)
+        trả_về &absentkey;  /* not found */
       n += nx;
     }
   }
@@ -308,7 +308,7 @@ static const TValue *getgeneric (Table *t, const TValue *key, int deadok) {
 ** the range [1, limit].
 */
 static unsigned checkrange (lua_Integer k, unsigned limit) {
-  return (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
+  trả_về (l_castS2U(k) - 1u < limit) ? cast_uint(k) : 0;
 }
 
 
@@ -331,7 +331,7 @@ static unsigned checkrange (lua_Integer k, unsigned limit) {
 ** index there, or zero.
 */
 static unsigned keyinarray (Table *t, const TValue *key) {
-  return (ttisinteger(key)) ? ikeyinarray(t, ivalue(key)) : 0;
+  trả_về (ttisinteger(key)) ? ikeyinarray(t, ivalue(key)) : 0;
 }
 
 
@@ -342,42 +342,42 @@ static unsigned keyinarray (Table *t, const TValue *key) {
 */
 static unsigned findindex (lua_State *L, Table *t, TValue *key,
                                unsigned asize) {
-  unsigned int i;
-  if (ttisnil(key)) return 0;  /* first iteration */
+  unsigned số_nguyên i;
+  nếu (ttisnil(key)) trả_về 0;  /* first iteration */
   i = keyinarray(t, key);
-  if (i != 0)  /* is 'key' inside array part? */
-    return i;  /* yes; that's the index */
-  else {
+  nếu (i != 0)  /* is 'key' inside array part? */
+    trả_về i;  /* yes; that's the index */
+  không_thì {
     const TValue *n = getgeneric(t, key, 1);
-    if (l_unlikely(isabstkey(n)))
+    nếu (l_unlikely(isabstkey(n)))
       luaG_runerror(L, "invalid key to 'next'");  /* key not found */
     i = cast_uint(nodefromval(n) - gnode(t, 0));  /* key index in hash table */
     /* hash elements are numbered after array ones */
-    return (i + 1) + asize;
+    trả_về (i + 1) + asize;
   }
 }
 
 
-int luaH_next (lua_State *L, Table *t, StkId key) {
-  unsigned int asize = t->asize;
-  unsigned int i = findindex(L, t, s2v(key), asize);  /* find original key */
-  for (; i < asize; i++) {  /* try first array part */
+số_nguyên luaH_next (lua_State *L, Table *t, StkId key) {
+  unsigned số_nguyên asize = t->asize;
+  unsigned số_nguyên i = findindex(L, t, s2v(key), asize);  /* find original key */
+  cho (; i < asize; i++) {  /* try first array part */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
+    nếu (!tagisempty(tag)) {  /* a non-empty entry? */
       setivalue(s2v(key), cast_int(i) + 1);
       farr2val(t, i, tag, s2v(key + 1));
-      return 1;
+      trả_về 1;
     }
   }
-  for (i -= asize; i < sizenode(t); i++) {  /* hash part */
-    if (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
+  cho (i -= asize; i < sizenode(t); i++) {  /* hash part */
+    nếu (!isempty(gval(gnode(t, i)))) {  /* a non-empty entry? */
       Node *n = gnode(t, i);
       getnodekey(L, s2v(key), n);
       setobj2s(L, key + 1, gval(n));
-      return 1;
+      trả_về 1;
     }
   }
-  return 0;  /* no more elements */
+  trả_về 0;  /* no more elements */
 }
 
 
@@ -386,12 +386,12 @@ int luaH_next (lua_State *L, Table *t, StkId key) {
 
 /* 'node' size in bytes */
 static size_t sizehash (Table *t) {
-  return cast_sizet(sizenode(t)) * sizeof(Node) + extraLastfree(t);
+  trả_về cast_sizet(sizenode(t)) * sizeof(Node) + extraLastfree(t);
 }
 
 
 static void freehash (lua_State *L, Table *t) {
-  if (!isdummy(t)) {
+  nếu (!isdummy(t)) {
     /* get pointer to the beginning of Node array */
     char *arr = cast_charp(t->node) - extraLastfree(t);
     luaM_freearray(L, arr, sizehash(t));
@@ -405,7 +405,7 @@ static void freehash (lua_State *L, Table *t) {
 ** ==============================================================
 */
 
-static int insertkey (Table *t, const TValue *key, TValue *value);
+static số_nguyên insertkey (Table *t, const TValue *key, TValue *value);
 static void newcheckedkey (Table *t, const TValue *key, TValue *value);
 
 
@@ -421,7 +421,7 @@ static void newcheckedkey (Table *t, const TValue *key, TValue *value);
 typedef struct {
   unsigned total;
   unsigned na;
-  int deleted;
+  số_nguyên deleted;
   unsigned nums[MAXABITS + 1];
 } Counters;
 
@@ -444,41 +444,41 @@ typedef struct {
 ** return the optimal size for the array part.
 */
 static unsigned computesizes (Counters *ct) {
-  int i;
-  unsigned int twotoi;  /* 2^i (candidate for optimal size) */
-  unsigned int a = 0;  /* number of elements smaller than 2^i */
-  unsigned int na = 0;  /* number of elements to go to array part */
-  unsigned int optimal = 0;  /* optimal size for array part */
+  số_nguyên i;
+  unsigned số_nguyên twotoi;  /* 2^i (candidate for optimal size) */
+  unsigned số_nguyên a = 0;  /* number of elements smaller than 2^i */
+  unsigned số_nguyên na = 0;  /* number of elements to go to array part */
+  unsigned số_nguyên optimal = 0;  /* optimal size for array part */
   /* traverse slices while 'twotoi' does not overflow and total of array
      indices still can satisfy 'arrayXhash' against the array size */
-  for (i = 0, twotoi = 1;
+  cho (i = 0, twotoi = 1;
        twotoi > 0 && arrayXhash(twotoi, ct->na);
        i++, twotoi *= 2) {
     unsigned nums = ct->nums[i];
     a += nums;
-    if (nums > 0 &&  /* grows array only if it gets more elements... */
+    nếu (nums > 0 &&  /* grows array only if it gets more elements... */
         arrayXhash(twotoi, a)) {  /* ...while using "less memory" */
       optimal = twotoi;  /* optimal size (till now) */
       na = a;  /* all elements up to 'optimal' will go to array part */
     }
   }
   ct->na = na;
-  return optimal;
+  trả_về optimal;
 }
 
 
 static void countint (lua_Integer key, Counters *ct) {
-  unsigned int k = arrayindex(key);
-  if (k != 0) {  /* is 'key' an array index? */
+  unsigned số_nguyên k = arrayindex(key);
+  nếu (k != 0) {  /* is 'key' an array index? */
     ct->nums[luaO_ceillog2(k)]++;  /* count as such */
     ct->na++;
   }
 }
 
 
-l_sinline int arraykeyisempty (const Table *t, unsigned key) {
-  int tag = *getArrTag(t, key - 1);
-  return tagisempty(tag);
+l_sinline số_nguyên arraykeyisempty (const Table *t, unsigned key) {
+  số_nguyên tag = *getArrTag(t, key - 1);
+  trả_về tagisempty(tag);
 }
 
 
@@ -486,23 +486,23 @@ l_sinline int arraykeyisempty (const Table *t, unsigned key) {
 ** Count keys in array part of table 't'.
 */
 static void numusearray (const Table *t, Counters *ct) {
-  int lg;
-  unsigned int ttlg;  /* 2^lg */
-  unsigned int ause = 0;  /* summation of 'nums' */
-  unsigned int i = 1;  /* index to traverse all array keys */
-  unsigned int asize = t->asize;
+  số_nguyên lg;
+  unsigned số_nguyên ttlg;  /* 2^lg */
+  unsigned số_nguyên ause = 0;  /* summation of 'nums' */
+  unsigned số_nguyên i = 1;  /* index to traverse all array keys */
+  unsigned số_nguyên asize = t->asize;
   /* traverse each slice */
-  for (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
-    unsigned int lc = 0;  /* counter */
-    unsigned int lim = ttlg;
-    if (lim > asize) {
+  cho (lg = 0, ttlg = 1; lg <= MAXABITS; lg++, ttlg *= 2) {
+    unsigned số_nguyên lc = 0;  /* counter */
+    unsigned số_nguyên lim = ttlg;
+    nếu (lim > asize) {
       lim = asize;  /* adjust upper limit */
-      if (i > lim)
+      nếu (i > lim)
         break;  /* no more elements to count */
     }
     /* count elements in range (2^(lg - 1), 2^lg] */
-    for (; i <= lim; i++) {
-      if (!arraykeyisempty(t, i))
+    cho (; i <= lim; i++) {
+      nếu (!arraykeyisempty(t, i))
         lc++;
     }
     ct->nums[lg] += lc;
@@ -521,15 +521,15 @@ static void numusearray (const Table *t, Counters *ct) {
 static void numusehash (const Table *t, Counters *ct) {
   unsigned i = sizenode(t);
   unsigned total = 0;
-  while (i--) {
+  trong_khi (i--) {
     Node *n = &t->node[i];
-    if (isempty(gval(n))) {
+    nếu (isempty(gval(n))) {
       lua_assert(!keyisnil(n));  /* entry was deleted; key cannot be nil */
       ct->deleted = 1;
     }
-    else {
+    không_thì {
       total++;
-      if (keyisinteger(n))
+      nếu (keyisinteger(n))
         countint(keyival(n), ct);
     }
   }
@@ -541,11 +541,11 @@ static void numusehash (const Table *t, Counters *ct) {
 ** Convert an "abstract size" (number of slots in an array) to
 ** "concrete size" (number of bytes in the array).
 */
-static size_t concretesize (unsigned int size) {
-  if (size == 0)
-    return 0;
-  else  /* space for the two arrays plus an unsigned in between */
-    return size * (sizeof(Value) + 1) + sizeof(unsigned);
+static size_t concretesize (unsigned số_nguyên size) {
+  nếu (size == 0)
+    trả_về 0;
+  không_thì  /* space for the two arrays plus an unsigned in between */
+    trả_về size * (sizeof(Value) + 1) + sizeof(unsigned);
 }
 
 
@@ -563,21 +563,21 @@ static size_t concretesize (unsigned int size) {
 static Value *resizearray (lua_State *L , Table *t,
                                unsigned oldasize,
                                unsigned newasize) {
-  if (oldasize == newasize)
-    return t->array;  /* nothing to be done */
-  else if (newasize == 0) {  /* erasing array? */
+  nếu (oldasize == newasize)
+    trả_về t->array;  /* nothing to be done */
+  không_thì nếu (newasize == 0) {  /* erasing array? */
     Value *op = t->array - oldasize;  /* original array's real address */
     luaM_freemem(L, op, concretesize(oldasize));  /* free it */
-    return NULL;
+    trả_về NULL;
   }
-  else {
+  không_thì {
     size_t newasizeb = concretesize(newasize);
     Value *np = cast(Value *,
                   luaM_reallocvector(L, NULL, 0, newasizeb, lu_byte));
-    if (np == NULL)  /* allocation error? */
-      return NULL;
+    nếu (np == NULL)  /* allocation error? */
+      trả_về NULL;
     np += newasize;  /* shift pointer to the end of value segment */
-    if (oldasize > 0) {
+    nếu (oldasize > 0) {
       /* move common elements to new position */
       size_t oldasizeb = concretesize(oldasize);
       Value *op = t->array;  /* original array */
@@ -587,7 +587,7 @@ static Value *resizearray (lua_State *L , Table *t,
       memcpy(np - tomove, op - tomove, tomoveb);
       luaM_freemem(L, op - oldasize, oldasizeb);  /* free old block */
     }
-    return np;
+    trả_về np;
   }
 }
 
@@ -600,20 +600,20 @@ static Value *resizearray (lua_State *L , Table *t,
 ** overflow.
 */
 static void setnodevector (lua_State *L, Table *t, unsigned size) {
-  if (size == 0) {  /* no elements to hash part? */
+  nếu (size == 0) {  /* no elements to hash part? */
     t->node = cast(Node *, dummynode);  /* use common 'dummynode' */
     t->lsizenode = 0;
     setdummy(t);  /* signal that it is using dummy node */
   }
-  else {
-    int i;
-    int lsize = luaO_ceillog2(size);
-    if (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
+  không_thì {
+    số_nguyên i;
+    số_nguyên lsize = luaO_ceillog2(size);
+    nếu (lsize > MAXHBITS || (1 << lsize) > MAXHSIZE)
       luaG_runerror(L, "table overflow");
     size = twoto(lsize);
-    if (lsize < LIMFORLAST)  /* no 'lastfree' field? */
+    nếu (lsize < LIMFORLAST)  /* no 'lastfree' field? */
       t->node = luaM_newvector(L, size, Node);
-    else {
+    không_thì {
       size_t bsize = size * sizeof(Node) + sizeof(Limbox);
       char *node = luaM_newblock(L, bsize);
       t->node = cast(Node *, node + sizeof(Limbox));
@@ -621,7 +621,7 @@ static void setnodevector (lua_State *L, Table *t, unsigned size) {
     }
     t->lsizenode = cast_byte(lsize);
     setnodummy(t);
-    for (i = 0; i < cast_int(size); i++) {
+    cho (i = 0; i < cast_int(size); i++) {
       Node *n = gnode(t, i);
       gnext(n) = 0;
       setnilkey(n);
@@ -637,9 +637,9 @@ static void setnodevector (lua_State *L, Table *t, unsigned size) {
 static void reinserthash (lua_State *L, Table *ot, Table *t) {
   unsigned j;
   unsigned size = sizenode(ot);
-  for (j = 0; j < size; j++) {
+  cho (j = 0; j < size; j++) {
     Node *old = gnode(ot, j);
-    if (!isempty(gval(old))) {
+    nếu (!isempty(gval(old))) {
       /* doesn't need barrier/invalidate cache, as entry was
          already present in the table */
       TValue k;
@@ -658,7 +658,7 @@ static void reinserthash (lua_State *L, Table *ot, Table *t) {
 static void exchangehashpart (Table *t1, Table *t2) {
   lu_byte lsizenode = t1->lsizenode;
   Node *node = t1->node;
-  int bitdummy1 = t1->flags & BITDUMMY;
+  số_nguyên bitdummy1 = t1->flags & BITDUMMY;
   t1->lsizenode = t2->lsizenode;
   t1->node = t2->node;
   t1->flags = cast_byte((t1->flags & NOTBITDUMMY) | (t2->flags & BITDUMMY));
@@ -675,9 +675,9 @@ static void exchangehashpart (Table *t1, Table *t2) {
 static void reinsertOldSlice (Table *t, unsigned oldasize,
                                         unsigned newasize) {
   unsigned i;
-  for (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
+  cho (i = newasize; i < oldasize; i++) {  /* traverse vanishing slice */
     lu_byte tag = *getArrTag(t, i);
-    if (!tagisempty(tag)) {  /* a non-empty entry? */
+    nếu (!tagisempty(tag)) {  /* a non-empty entry? */
       TValue key, aux;
       setivalue(&key, l_castU2S(i) + 1);  /* make the key */
       farr2val(t, i, tag, &aux);  /* copy value into 'aux' */
@@ -691,7 +691,7 @@ static void reinsertOldSlice (Table *t, unsigned oldasize,
 ** Clear new slice of the array.
 */
 static void clearNewSlice (Table *t, unsigned oldasize, unsigned newasize) {
-  for (; oldasize < newasize; oldasize++)
+  cho (; oldasize < newasize; oldasize++)
     *getArrTag(t, oldasize) = LUA_VEMPTY;
 }
 
@@ -717,12 +717,12 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   Table newt;  /* to keep the new hash part */
   unsigned oldasize = t->asize;
   Value *newarray;
-  if (newasize > MAXASIZE)
+  nếu (newasize > MAXASIZE)
     luaG_runerror(L, "table overflow");
   /* create new hash part with appropriate size into 'newt' */
   newt.flags = 0;
   setnodevector(L, &newt, nhsize);
-  if (newasize < oldasize) {  /* will array shrink? */
+  nếu (newasize < oldasize) {  /* will array shrink? */
     /* re-insert into the new hash the elements from vanishing slice */
     exchangehashpart(t, &newt);  /* pretend table has new hash */
     reinsertOldSlice(t, oldasize, newasize);
@@ -730,7 +730,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   }
   /* allocate new array */
   newarray = resizearray(L, t, oldasize, newasize);
-  if (l_unlikely(newarray == NULL && newasize > 0)) {  /* allocation failed? */
+  nếu (l_unlikely(newarray == NULL && newasize > 0)) {  /* allocation failed? */
     freehash(L, &newt);  /* release new hash part */
     luaM_error(L);  /* raise error (with array unchanged) */
   }
@@ -738,7 +738,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
   exchangehashpart(t, &newt);  /* 't' has the new hash ('newt' has the old) */
   t->array = newarray;  /* set new array part */
   t->asize = newasize;
-  if (newarray != NULL)
+  nếu (newarray != NULL)
     *lenhint(t) = newasize / 2u;  /* set an initial hint */
   clearNewSlice(t, oldasize, newasize);
   /* re-insert elements from old hash part into new parts */
@@ -747,7 +747,7 @@ void luaH_resize (lua_State *L, Table *t, unsigned newasize,
 }
 
 
-void luaH_resizearray (lua_State *L, Table *t, unsigned int nasize) {
+void luaH_resizearray (lua_State *L, Table *t, unsigned số_nguyên nasize) {
   unsigned nsize = allocsizenode(t);
   luaH_resize(L, t, nasize, nsize);
 }
@@ -764,24 +764,24 @@ static void rehash (lua_State *L, Table *t, const TValue *ek) {
   unsigned i;
   unsigned nsize;  /* size for the hash part */
   /* reset counts */
-  for (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
+  cho (i = 0; i <= MAXABITS; i++) ct.nums[i] = 0;
   ct.na = 0;
   ct.deleted = 0;
   ct.total = 1;  /* count extra key */
-  if (ttisinteger(ek))
+  nếu (ttisinteger(ek))
     countint(ivalue(ek), &ct);  /* extra key may go to array */
   numusehash(t, &ct);  /* count keys in hash part */
-  if (ct.na == 0) {
+  nếu (ct.na == 0) {
     /* no new keys to enter array part; keep it with the same size */
     asize = t->asize;
   }
-  else {  /* compute best size for array part */
+  không_thì {  /* compute best size for array part */
     numusearray(t, &ct);  /* count keys in array part */
     asize = computesizes(&ct);  /* compute new size for array part */
   }
   /* all keys not in the array part go to the hash part */
   nsize = ct.total - ct.na;
-  if (ct.deleted) {  /* table has deleted entries? */
+  nếu (ct.deleted) {  /* table has deleted entries? */
     /* insertion-deletion-insertion: give hash some extra size to
        avoid repeated resizings */
     nsize += nsize >> 2;
@@ -803,15 +803,15 @@ Table *luaH_new (lua_State *L) {
   t->array = NULL;
   t->asize = 0;
   setnodevector(L, t, 0);
-  return t;
+  trả_về t;
 }
 
 
 lu_mem luaH_size (Table *t) {
   lu_mem sz = cast(lu_mem, sizeof(Table)) + concretesize(t->asize);
-  if (!isdummy(t))
+  nếu (!isdummy(t))
     sz += sizehash(t);
-  return sz;
+  trả_về sz;
 }
 
 
@@ -826,23 +826,23 @@ void luaH_free (lua_State *L, Table *t) {
 
 
 static Node *getfreepos (Table *t) {
-  if (haslastfree(t)) {  /* does it have 'lastfree' information? */
+  nếu (haslastfree(t)) {  /* does it have 'lastfree' information? */
     /* look for a spot before 'lastfree', updating 'lastfree' */
-    while (getlastfree(t) > t->node) {
+    trong_khi (getlastfree(t) > t->node) {
       Node *free = --getlastfree(t);
-      if (keyisnil(free))
-        return free;
+      nếu (keyisnil(free))
+        trả_về free;
     }
   }
-  else {  /* no 'lastfree' information */
+  không_thì {  /* no 'lastfree' information */
     unsigned i = sizenode(t);
-    while (i--) {  /* do a linear search */
+    trong_khi (i--) {  /* do a linear search */
       Node *free = gnode(t, i);
-      if (keyisnil(free))
-        return free;
+      nếu (keyisnil(free))
+        trả_về free;
     }
   }
-  return NULL;  /* could not find a free place */
+  trả_về NULL;  /* could not find a free place */
 }
 
 
@@ -855,34 +855,34 @@ static Node *getfreepos (Table *t) {
 ** its main position), new key goes to an empty position. Return 0 if
 ** could not insert key (could not find a free space).
 */
-static int insertkey (Table *t, const TValue *key, TValue *value) {
+static số_nguyên insertkey (Table *t, const TValue *key, TValue *value) {
   Node *mp = mainpositionTV(t, key);
   /* table cannot already contain the key */
   lua_assert(isabstkey(getgeneric(t, key, 0)));
-  if (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
+  nếu (!isempty(gval(mp)) || isdummy(t)) {  /* main position is taken? */
     Node *othern;
     Node *f = getfreepos(t);  /* get a free place */
-    if (f == NULL)  /* cannot find a free place? */
-      return 0;
+    nếu (f == NULL)  /* cannot find a free place? */
+      trả_về 0;
     lua_assert(!isdummy(t));
     othern = mainpositionfromnode(t, mp);
-    if (othern != mp) {  /* is colliding node out of its main position? */
+    nếu (othern != mp) {  /* is colliding node out of its main position? */
       /* yes; move colliding node into free position */
-      while (othern + gnext(othern) != mp)  /* find previous */
+      trong_khi (othern + gnext(othern) != mp)  /* find previous */
         othern += gnext(othern);
       gnext(othern) = cast_int(f - othern);  /* rechain to point to 'f' */
       *f = *mp;  /* copy colliding node into free pos. (mp->next also goes) */
-      if (gnext(mp) != 0) {
+      nếu (gnext(mp) != 0) {
         gnext(f) += cast_int(mp - f);  /* correct 'next' */
         gnext(mp) = 0;  /* now 'mp' is free */
       }
       setempty(gval(mp));
     }
-    else {  /* colliding node is in its own main position */
+    không_thì {  /* colliding node is in its own main position */
       /* new node will go into free position */
-      if (gnext(mp) != 0)
+      nếu (gnext(mp) != 0)
         gnext(f) = cast_int((mp + gnext(mp)) - f);  /* chain new position */
-      else lua_assert(gnext(f) == 0);
+      không_thì lua_assert(gnext(f) == 0);
       gnext(mp) = cast_int(f - mp);
       mp = f;
     }
@@ -890,7 +890,7 @@ static int insertkey (Table *t, const TValue *key, TValue *value) {
   setnodekey(mp, key);
   lua_assert(isempty(gval(mp)));
   setobj2t(cast(lua_State *, 0), gval(mp), value);
-  return 1;
+  trả_về 1;
 }
 
 
@@ -900,10 +900,10 @@ static int insertkey (Table *t, const TValue *key, TValue *value) {
 */
 static void newcheckedkey (Table *t, const TValue *key, TValue *value) {
   unsigned i = keyinarray(t, key);
-  if (i > 0)  /* is key in the array part? */
+  nếu (i > 0)  /* is key in the array part? */
     obj2arr(t, i - 1, value);  /* set value in the array */
-  else {
-    int done = insertkey(t, key, value);  /* insert key in the hash part */
+  không_thì {
+    số_nguyên done = insertkey(t, key, value);  /* insert key in the hash part */
     lua_assert(done);  /* it cannot fail */
     cast(void, done);  /* to avoid warnings */
   }
@@ -912,9 +912,9 @@ static void newcheckedkey (Table *t, const TValue *key, TValue *value) {
 
 static void luaH_newkey (lua_State *L, Table *t, const TValue *key,
                                                  TValue *value) {
-  if (!ttisnil(value)) {  /* do not insert nil values */
-    int done = insertkey(t, key, value);
-    if (!done) {  /* could not find a free place? */
+  nếu (!ttisnil(value)) {  /* do not insert nil values */
+    số_nguyên done = insertkey(t, key, value);
+    nếu (!done) {  /* could not find a free place? */
       rehash(L, t, key);  /* grow table */
       newcheckedkey(t, key, value);  /* insert key in grown table */
     }
@@ -928,43 +928,43 @@ static void luaH_newkey (lua_State *L, Table *t, const TValue *key,
 static const TValue *getintfromhash (Table *t, lua_Integer key) {
   Node *n = hashint(t, key);
   lua_assert(!ikeyinarray(t, key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisinteger(n) && keyival(n) == key)
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0) break;
+  cho (;;) {  /* check whether 'key' is somewhere in the chain */
+    nếu (keyisinteger(n) && keyival(n) == key)
+      trả_về gval(n);  /* that's it */
+    không_thì {
+      số_nguyên nx = gnext(n);
+      nếu (nx == 0) break;
       n += nx;
     }
   }
-  return &absentkey;
+  trả_về &absentkey;
 }
 
 
-static int hashkeyisempty (Table *t, lua_Unsigned key) {
+static số_nguyên hashkeyisempty (Table *t, lua_Unsigned key) {
   const TValue *val = getintfromhash(t, l_castU2S(key));
-  return isempty(val);
+  trả_về isempty(val);
 }
 
 
 static lu_byte finishnodeget (const TValue *val, TValue *res) {
-  if (!ttisnil(val)) {
+  nếu (!ttisnil(val)) {
     setobj(((lua_State*)NULL), res, val);
   }
-  return ttypetag(val);
+  trả_về ttypetag(val);
 }
 
 
 lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res) {
   unsigned k = ikeyinarray(t, key);
-  if (k > 0) {
+  nếu (k > 0) {
     lu_byte tag = *getArrTag(t, k - 1);
-    if (!tagisempty(tag))
+    nếu (!tagisempty(tag))
       farr2val(t, k - 1, tag, res);
-    return tag;
+    trả_về tag;
   }
-  else
-    return finishnodeget(getintfromhash(t, key), res);
+  không_thì
+    trả_về finishnodeget(getintfromhash(t, key), res);
 }
 
 
@@ -974,13 +974,13 @@ lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res) {
 const TValue *luaH_Hgetshortstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);
   lua_assert(strisshr(key));
-  for (;;) {  /* check whether 'key' is somewhere in the chain */
-    if (keyisshrstr(n) && eqshrstr(keystrval(n), key))
-      return gval(n);  /* that's it */
-    else {
-      int nx = gnext(n);
-      if (nx == 0)
-        return &absentkey;  /* not found */
+  cho (;;) {  /* check whether 'key' is somewhere in the chain */
+    nếu (keyisshrstr(n) && eqshrstr(keystrval(n), key))
+      trả_về gval(n);  /* that's it */
+    không_thì {
+      số_nguyên nx = gnext(n);
+      nếu (nx == 0)
+        trả_về &absentkey;  /* not found */
       n += nx;
     }
   }
@@ -988,7 +988,7 @@ const TValue *luaH_Hgetshortstr (Table *t, TString *key) {
 
 
 lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(luaH_Hgetshortstr(t, key), res);
+  trả_về finishnodeget(luaH_Hgetshortstr(t, key), res);
 }
 
 
@@ -996,20 +996,20 @@ static const TValue *Hgetlongstr (Table *t, TString *key) {
   TValue ko;
   lua_assert(!strisshr(key));
   setsvalue(cast(lua_State *, NULL), &ko, key);
-  return getgeneric(t, &ko, 0);  /* for long strings, use generic case */
+  trả_về getgeneric(t, &ko, 0);  /* for long strings, use generic case */
 }
 
 
 static const TValue *Hgetstr (Table *t, TString *key) {
-  if (strisshr(key))
-    return luaH_Hgetshortstr(t, key);
-  else
-    return Hgetlongstr(t, key);
+  nếu (strisshr(key))
+    trả_về luaH_Hgetshortstr(t, key);
+  không_thì
+    trả_về Hgetlongstr(t, key);
 }
 
 
 lu_byte luaH_getstr (Table *t, TString *key, TValue *res) {
-  return finishnodeget(Hgetstr(t, key), res);
+  trả_về finishnodeget(Hgetstr(t, key), res);
 }
 
 
@@ -1023,21 +1023,21 @@ lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
       slot = luaH_Hgetshortstr(t, tsvalue(key));
       break;
     case LUA_VNUMINT:
-      return luaH_getint(t, ivalue(key), res);
+      trả_về luaH_getint(t, ivalue(key), res);
     case LUA_VNIL:
       slot = &absentkey;
       break;
     case LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return luaH_getint(t, k, res);  /* use specialized version */
+      nếu (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
+        trả_về luaH_getint(t, k, res);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
     default:
       slot = getgeneric(t, key, 0);
       break;
   }
-  return finishnodeget(slot, res);
+  trả_về finishnodeget(slot, res);
 }
 
 
@@ -1045,44 +1045,44 @@ lu_byte luaH_get (Table *t, const TValue *key, TValue *res) {
 ** When a 'pset' cannot be completed, this function returns an encoding
 ** of its result, to be used by 'luaH_finishset'.
 */
-static int retpsetcode (Table *t, const TValue *slot) {
-  if (isabstkey(slot))
-    return HNOTFOUND;  /* no slot with that key */
-  else  /* return node encoded */
-    return cast_int((cast(Node*, slot) - t->node)) + HFIRSTNODE;
+static số_nguyên retpsetcode (Table *t, const TValue *slot) {
+  nếu (isabstkey(slot))
+    trả_về HNOTFOUND;  /* no slot with that key */
+  không_thì  /* return node encoded */
+    trả_về cast_int((cast(Node*, slot) - t->node)) + HFIRSTNODE;
 }
 
 
-static int finishnodeset (Table *t, const TValue *slot, TValue *val) {
-  if (!ttisnil(slot)) {
+static số_nguyên finishnodeset (Table *t, const TValue *slot, TValue *val) {
+  nếu (!ttisnil(slot)) {
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return HOK;  /* success */
+    trả_về HOK;  /* success */
   }
-  else
-    return retpsetcode(t, slot);
+  không_thì
+    trả_về retpsetcode(t, slot);
 }
 
 
-static int rawfinishnodeset (const TValue *slot, TValue *val) {
-  if (isabstkey(slot))
-    return 0;  /* no slot with that key */
-  else {
+static số_nguyên rawfinishnodeset (const TValue *slot, TValue *val) {
+  nếu (isabstkey(slot))
+    trả_về 0;  /* no slot with that key */
+  không_thì {
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);
-    return 1;  /* success */
+    trả_về 1;  /* success */
   }
 }
 
 
-int luaH_psetint (Table *t, lua_Integer key, TValue *val) {
+số_nguyên luaH_psetint (Table *t, lua_Integer key, TValue *val) {
   lua_assert(!ikeyinarray(t, key));
-  return finishnodeset(t, getintfromhash(t, key), val);
+  trả_về finishnodeset(t, getintfromhash(t, key), val);
 }
 
 
-static int psetint (Table *t, lua_Integer key, TValue *val) {
-  int hres;
+static số_nguyên psetint (Table *t, lua_Integer key, TValue *val) {
+  số_nguyên hres;
   luaH_fastseti(t, key, val, hres);
-  return hres;
+  trả_về hres;
 }
 
 
@@ -1094,53 +1094,53 @@ static int psetint (Table *t, lua_Integer key, TValue *val) {
 ** it is not old/black, and it already has space for the key.
 */
 
-int luaH_psetshortstr (Table *t, TString *key, TValue *val) {
+số_nguyên luaH_psetshortstr (Table *t, TString *key, TValue *val) {
   const TValue *slot = luaH_Hgetshortstr(t, key);
-  if (!ttisnil(slot)) {  /* key already has a value? (all too common) */
+  nếu (!ttisnil(slot)) {  /* key already has a value? (all too common) */
     setobj(((lua_State*)NULL), cast(TValue*, slot), val);  /* update it */
-    return HOK;  /* done */
+    trả_về HOK;  /* done */
   }
-  else if (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
-    if (ttisnil(val))  /* new value is nil? */
-      return HOK;  /* done (value is already nil/absent) */
-    if (isabstkey(slot) &&  /* key is absent? */
+  không_thì nếu (checknoTM(t->metatable, TM_NEWINDEX)) {  /* no metamethod? */
+    nếu (ttisnil(val))  /* new value is nil? */
+      trả_về HOK;  /* done (value is already nil/absent) */
+    nếu (isabstkey(slot) &&  /* key is absent? */
        !(isblack(t) && iswhite(key))) {  /* and don't need barrier? */
       TValue tk;  /* key as a TValue */
       setsvalue(cast(lua_State *, NULL), &tk, key);
-      if (insertkey(t, &tk, val)) {  /* insert key, if there is space */
+      nếu (insertkey(t, &tk, val)) {  /* insert key, if there is space */
         invalidateTMcache(t);
-        return HOK;
+        trả_về HOK;
       }
     }
   }
   /* Else, either table has new-index metamethod, or it needs barrier,
      or it needs to rehash for the new key. In any of these cases, the
      operation cannot be completed here. Return a code for the caller. */
-  return retpsetcode(t, slot);
+  trả_về retpsetcode(t, slot);
 }
 
 
-int luaH_psetstr (Table *t, TString *key, TValue *val) {
-  if (strisshr(key))
-    return luaH_psetshortstr(t, key, val);
-  else
-    return finishnodeset(t, Hgetlongstr(t, key), val);
+số_nguyên luaH_psetstr (Table *t, TString *key, TValue *val) {
+  nếu (strisshr(key))
+    trả_về luaH_psetshortstr(t, key, val);
+  không_thì
+    trả_về finishnodeset(t, Hgetlongstr(t, key), val);
 }
 
 
-int luaH_pset (Table *t, const TValue *key, TValue *val) {
+số_nguyên luaH_pset (Table *t, const TValue *key, TValue *val) {
   switch (ttypetag(key)) {
-    case LUA_VSHRSTR: return luaH_psetshortstr(t, tsvalue(key), val);
-    case LUA_VNUMINT: return psetint(t, ivalue(key), val);
-    case LUA_VNIL: return HNOTFOUND;
+    case LUA_VSHRSTR: trả_về luaH_psetshortstr(t, tsvalue(key), val);
+    case LUA_VNUMINT: trả_về psetint(t, ivalue(key), val);
+    case LUA_VNIL: trả_về HNOTFOUND;
     case LUA_VNUMFLT: {
       lua_Integer k;
-      if (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
-        return psetint(t, k, val);  /* use specialized version */
+      nếu (luaV_flttointeger(fltvalue(key), &k, F2Ieq)) /* integral index? */
+        trả_về psetint(t, k, val);  /* use specialized version */
       /* else... */
     }  /* FALLTHROUGH */
     default:
-      return finishnodeset(t, getgeneric(t, key, 0), val);
+      trả_về finishnodeset(t, getgeneric(t, key, 0), val);
   }
 }
 
@@ -1151,37 +1151,37 @@ int luaH_pset (Table *t, const TValue *key, TValue *val) {
 ** GC barrier and invalidate the TM cache.
 */
 void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                    TValue *value, int hres) {
+                                    TValue *value, số_nguyên hres) {
   lua_assert(hres != HOK);
-  if (hres == HNOTFOUND) {
+  nếu (hres == HNOTFOUND) {
     TValue aux;
     const TValue *actk = key;  /* actual key to insert */
-    if (l_unlikely(ttisnil(key)))
+    nếu (l_unlikely(ttisnil(key)))
       luaG_runerror(L, "table index is nil");
-    else if (ttisfloat(key)) {
+    không_thì nếu (ttisfloat(key)) {
       lua_Number f = fltvalue(key);
       lua_Integer k;
-      if (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
+      nếu (luaV_flttointeger(f, &k, F2Ieq)) {  /* is key equal to an integer? */
         setivalue(&aux, k);
         actk = &aux;  /* use the integer as the key */
       }
-      else if (l_unlikely(luai_numisnan(f)))
+      không_thì nếu (l_unlikely(luai_numisnan(f)))
         luaG_runerror(L, "table index is NaN");
     }
-    else if (isextstr(key)) {  /* external string? */
+    không_thì nếu (isextstr(key)) {  /* external string? */
       /* If string is short, must internalize it to be used as table key */
       TString *ts = luaS_normstr(L, tsvalue(key));
       setsvalue2s(L, L->top.p++, ts);  /* anchor 'ts' (EXTRA_STACK) */
       luaH_newkey(L, t, s2v(L->top.p - 1), value);
       L->top.p--;
-      return;
+      trả_về;
     }
     luaH_newkey(L, t, actk, value);
   }
-  else if (hres > 0) {  /* regular Node? */
+  không_thì nếu (hres > 0) {  /* regular Node? */
     setobj2t(L, gval(gnode(t, hres - HFIRSTNODE)), value);
   }
-  else {  /* array entry */
+  không_thì {  /* array entry */
     hres = ~hres;  /* real index */
     obj2arr(t, cast_uint(hres), value);
   }
@@ -1193,8 +1193,8 @@ void luaH_finishset (lua_State *L, Table *t, const TValue *key,
 ** barrier and invalidate the TM cache.
 */
 void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
-  int hres = luaH_pset(t, key, value);
-  if (hres != HOK)
+  số_nguyên hres = luaH_pset(t, key, value);
+  nếu (hres != HOK)
     luaH_finishset(L, t, key, value, hres);
 }
 
@@ -1205,11 +1205,11 @@ void luaH_set (lua_State *L, Table *t, const TValue *key, TValue *value) {
 */
 void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
   unsigned ik = ikeyinarray(t, key);
-  if (ik > 0)
+  nếu (ik > 0)
     obj2arr(t, ik - 1, value);
-  else {
-    int ok = rawfinishnodeset(getintfromhash(t, key), value);
-    if (!ok) {
+  không_thì {
+    số_nguyên ok = rawfinishnodeset(getintfromhash(t, key), value);
+    nếu (!ok) {
       TValue k;
       setivalue(&k, key);
       luaH_newkey(L, t, &k, value);
@@ -1239,43 +1239,43 @@ void luaH_setint (lua_State *L, Table *t, lua_Integer key, TValue *value) {
 static lua_Unsigned hash_search (lua_State *L, Table *t, unsigned asize) {
   lua_Unsigned i = asize + 1;  /* caller ensures t[i] is present */
   unsigned rnd = G(L)->seed;
-  int n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
+  số_nguyên n = (asize > 0) ? luaO_ceillog2(asize) : 0;  /* width of 'asize' */
   unsigned mask = (1u << n) - 1;  /* 11...111 with the width of 'asize' */
   unsigned incr = (rnd & mask) + 1;  /* first increment (at least 1) */
   lua_Unsigned j = (incr <= l_castS2U(LUA_MAXINTEGER) - i) ? i + incr : i + 1;
   rnd >>= n;  /* used 'n' bits from 'rnd' */
-  while (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
+  trong_khi (!hashkeyisempty(t, j)) {  /* repeat until an absent t[j] */
     i = j;  /* 'i' is a present index */
-    if (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
+    nếu (j <= l_castS2U(LUA_MAXINTEGER)/2 - 1) {
       j = j*2 + (rnd & 1);  /* try again with 2j or 2j+1 */
       rnd >>= 1;
     }
-    else {
+    không_thì {
       j = LUA_MAXINTEGER;
-      if (hashkeyisempty(t, j))  /* t[j] not present? */
+      nếu (hashkeyisempty(t, j))  /* t[j] not present? */
         break;  /* 'j' now is an absent index */
-      else  /* weird case */
-        return j;  /* well, max integer is a boundary... */
+      không_thì  /* weird case */
+        trả_về j;  /* well, max integer is a boundary... */
     }
   }
   /* i < j  &&  t[i] present  &&  t[j] absent */
-  while (j - i > 1u) {  /* do a binary search between them */
+  trong_khi (j - i > 1u) {  /* do a binary search between them */
     lua_Unsigned m = (i + j) / 2;
-    if (hashkeyisempty(t, m)) j = m;
-    else i = m;
+    nếu (hashkeyisempty(t, m)) j = m;
+    không_thì i = m;
   }
-  return i;
+  trả_về i;
 }
 
 
-static unsigned int binsearch (Table *array, unsigned int i, unsigned int j) {
+static unsigned số_nguyên binsearch (Table *array, unsigned số_nguyên i, unsigned số_nguyên j) {
   lua_assert(i <= j);
-  while (j - i > 1u) {  /* binary search */
-    unsigned int m = (i + j) / 2;
-    if (arraykeyisempty(array, m)) j = m;
-    else i = m;
+  trong_khi (j - i > 1u) {  /* binary search */
+    unsigned số_nguyên m = (i + j) / 2;
+    nếu (arraykeyisempty(array, m)) j = m;
+    không_thì i = m;
   }
-  return i;
+  trả_về i;
 }
 
 
@@ -1283,7 +1283,7 @@ static unsigned int binsearch (Table *array, unsigned int i, unsigned int j) {
 static lua_Unsigned newhint (Table *t, unsigned hint) {
   lua_assert(hint <= t->asize);
   *lenhint(t) = hint;
-  return hint;
+  trả_về hint;
 }
 
 
@@ -1300,34 +1300,34 @@ static lua_Unsigned newhint (Table *t, unsigned hint) {
 */
 lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   unsigned asize = t->asize;
-  if (asize > 0) {  /* is there an array part? */
+  nếu (asize > 0) {  /* is there an array part? */
     const unsigned maxvicinity = 4;
     unsigned limit = *lenhint(t);  /* start with the hint */
-    if (limit == 0)
+    nếu (limit == 0)
       limit = 1;  /* make limit a valid index in the array */
-    if (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
+    nếu (arraykeyisempty(t, limit)) {  /* t[limit] empty? */
       /* there must be a border before 'limit' */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit > 1; i++) {
+      cho (i = 0; i < maxvicinity && limit > 1; i++) {
         limit--;
-        if (!arraykeyisempty(t, limit))
-          return newhint(t, limit);  /* 'limit' is a border */
+        nếu (!arraykeyisempty(t, limit))
+          trả_về newhint(t, limit);  /* 'limit' is a border */
       }
       /* t[limit] still empty; search for a border in [0, limit) */
-      return newhint(t, binsearch(t, 0, limit));
+      trả_về newhint(t, binsearch(t, 0, limit));
     }
-    else {  /* 'limit' is present in table; look for a border after it */
+    không_thì {  /* 'limit' is present in table; look for a border after it */
       unsigned i;
       /* look for a border in the vicinity of the hint */
-      for (i = 0; i < maxvicinity && limit < asize; i++) {
+      cho (i = 0; i < maxvicinity && limit < asize; i++) {
         limit++;
-        if (arraykeyisempty(t, limit))
-          return newhint(t, limit - 1);  /* 'limit - 1' is a border */
+        nếu (arraykeyisempty(t, limit))
+          trả_về newhint(t, limit - 1);  /* 'limit - 1' is a border */
       }
-      if (arraykeyisempty(t, asize)) {  /* last element empty? */
+      nếu (arraykeyisempty(t, asize)) {  /* last element empty? */
         /* t[limit] not empty; search for a border in [limit, asize) */
-        return newhint(t, binsearch(t, limit, asize));
+        trả_về newhint(t, binsearch(t, limit, asize));
       }
     }
     /* last element non empty; set a hint to speed up finding that again */
@@ -1336,20 +1336,20 @@ lua_Unsigned luaH_getn (lua_State *L, Table *t) {
   }
   /* no array part or t[asize] is not empty; check the hash part */
   lua_assert(asize == 0 || !arraykeyisempty(t, asize));
-  if (isdummy(t) || hashkeyisempty(t, asize + 1))
-    return asize;  /* 'asize + 1' is empty */
-  else  /* 'asize + 1' is also non empty */
-    return hash_search(L, t, asize);
+  nếu (isdummy(t) || hashkeyisempty(t, asize + 1))
+    trả_về asize;  /* 'asize + 1' is empty */
+  không_thì  /* 'asize + 1' is also non empty */
+    trả_về hash_search(L, t, asize);
 }
 
 
 
-#if defined(LUA_DEBUG)
+#nếu defined(LUA_DEBUG)
 
 /* export this function for the test library */
 
 Node *luaH_mainposition (const Table *t, const TValue *key) {
-  return mainpositionTV(t, key);
+  trả_về mainpositionTV(t, key);
 }
 
 #endif

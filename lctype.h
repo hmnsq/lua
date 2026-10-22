@@ -16,12 +16,12 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#nếu !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#nếu 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
 #define LUA_USE_CTYPE	0
-#else
+#không_thì
 /* must use standard C ctype */
 #define LUA_USE_CTYPE	1
 #endif
@@ -29,7 +29,7 @@
 #endif
 
 
-#if !LUA_USE_CTYPE	/* { */
+#nếu !LUA_USE_CTYPE	/* { */
 
 #include <limits.h>
 
@@ -77,7 +77,7 @@
 LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
 
 
-#else			/* }{ */
+#không_thì			/* }{ */
 
 /*
 ** use standard C ctypes

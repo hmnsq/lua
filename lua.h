@@ -103,12 +103,12 @@ typedef LUA_KCONTEXT lua_KContext;
 /*
 ** Type for C functions registered with Lua
 */
-typedef int (*lua_CFunction) (lua_State *L);
+typedef số_nguyên (*lua_CFunction) (lua_State *L);
 
 /*
 ** Type for continuation functions
 */
-typedef int (*lua_KFunction) (lua_State *L, int status, lua_KContext ctx);
+typedef số_nguyên (*lua_KFunction) (lua_State *L, số_nguyên status, lua_KContext ctx);
 
 
 /*
@@ -116,7 +116,7 @@ typedef int (*lua_KFunction) (lua_State *L, int status, lua_KContext ctx);
 */
 typedef const char * (*lua_Reader) (lua_State *L, void *ud, size_t *sz);
 
-typedef int (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
+typedef số_nguyên (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
 
 
 /*
@@ -128,7 +128,7 @@ typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
 /*
 ** Type for warning functions
 */
-typedef void (*lua_WarnFunction) (void *ud, const char *msg, int tocont);
+typedef void (*lua_WarnFunction) (void *ud, const char *msg, số_nguyên tocont);
 
 
 /*
@@ -146,7 +146,7 @@ typedef void (*lua_Hook) (lua_State *L, lua_Debug *ar);
 /*
 ** generic extra include file
 */
-#if defined(LUA_USER_H)
+#nếu defined(LUA_USER_H)
 #include LUA_USER_H
 #endif
 
@@ -163,7 +163,7 @@ extern const char lua_ident[];
 LUA_API lua_State *(lua_newstate) (lua_Alloc f, void *ud, unsigned seed);
 LUA_API void       (lua_close) (lua_State *L);
 LUA_API lua_State *(lua_newthread) (lua_State *L);
-LUA_API int        (lua_closethread) (lua_State *L, lua_State *from);
+LUA_API số_nguyên        (lua_closethread) (lua_State *L, lua_State *from);
 
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
@@ -174,38 +174,38 @@ LUA_API lua_Number (lua_version) (lua_State *L);
 /*
 ** basic stack manipulation
 */
-LUA_API int   (lua_absindex) (lua_State *L, int idx);
-LUA_API int   (lua_gettop) (lua_State *L);
-LUA_API void  (lua_settop) (lua_State *L, int idx);
-LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
-LUA_API void  (lua_rotate) (lua_State *L, int idx, int n);
-LUA_API void  (lua_copy) (lua_State *L, int fromidx, int toidx);
-LUA_API int   (lua_checkstack) (lua_State *L, int n);
+LUA_API số_nguyên   (lua_absindex) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên   (lua_gettop) (lua_State *L);
+LUA_API void  (lua_settop) (lua_State *L, số_nguyên idx);
+LUA_API void  (lua_pushvalue) (lua_State *L, số_nguyên idx);
+LUA_API void  (lua_rotate) (lua_State *L, số_nguyên idx, số_nguyên n);
+LUA_API void  (lua_copy) (lua_State *L, số_nguyên fromidx, số_nguyên toidx);
+LUA_API số_nguyên   (lua_checkstack) (lua_State *L, số_nguyên n);
 
-LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
+LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, số_nguyên n);
 
 
 /*
 ** access functions (stack -> C)
 */
 
-LUA_API int             (lua_isnumber) (lua_State *L, int idx);
-LUA_API int             (lua_isstring) (lua_State *L, int idx);
-LUA_API int             (lua_iscfunction) (lua_State *L, int idx);
-LUA_API int             (lua_isinteger) (lua_State *L, int idx);
-LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
-LUA_API int             (lua_type) (lua_State *L, int idx);
-LUA_API const char     *(lua_typename) (lua_State *L, int tp);
+LUA_API số_nguyên             (lua_isnumber) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên             (lua_isstring) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên             (lua_iscfunction) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên             (lua_isinteger) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên             (lua_isuserdata) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên             (lua_type) (lua_State *L, số_nguyên idx);
+LUA_API const char     *(lua_typename) (lua_State *L, số_nguyên tp);
 
-LUA_API lua_Number      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
-LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);
-LUA_API int             (lua_toboolean) (lua_State *L, int idx);
-LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
-LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, int idx);
-LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
-LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
-LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
-LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
+LUA_API lua_Number      (lua_tonumberx) (lua_State *L, số_nguyên idx, số_nguyên *isnum);
+LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, số_nguyên idx, số_nguyên *isnum);
+LUA_API số_nguyên             (lua_toboolean) (lua_State *L, số_nguyên idx);
+LUA_API const char     *(lua_tolstring) (lua_State *L, số_nguyên idx, size_t *len);
+LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, số_nguyên idx);
+LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, số_nguyên idx);
+LUA_API void	       *(lua_touserdata) (lua_State *L, số_nguyên idx);
+LUA_API lua_State      *(lua_tothread) (lua_State *L, số_nguyên idx);
+LUA_API const void     *(lua_topointer) (lua_State *L, số_nguyên idx);
 
 
 /*
@@ -227,14 +227,14 @@ LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 #define LUA_OPUNM	12
 #define LUA_OPBNOT	13
 
-LUA_API void  (lua_arith) (lua_State *L, int op);
+LUA_API void  (lua_arith) (lua_State *L, số_nguyên op);
 
 #define LUA_OPEQ	0
 #define LUA_OPLT	1
 #define LUA_OPLE	2
 
-LUA_API int   (lua_rawequal) (lua_State *L, int idx1, int idx2);
-LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
+LUA_API số_nguyên   (lua_rawequal) (lua_State *L, số_nguyên idx1, số_nguyên idx2);
+LUA_API số_nguyên   (lua_compare) (lua_State *L, số_nguyên idx1, số_nguyên idx2, số_nguyên op);
 
 
 /*
@@ -250,69 +250,69 @@ LUA_API const char *(lua_pushstring) (lua_State *L, const char *s);
 LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
                                                       va_list argp);
 LUA_API const char *(lua_pushfstring) (lua_State *L, const char *fmt, ...);
-LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, int n);
-LUA_API void  (lua_pushboolean) (lua_State *L, int b);
+LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, số_nguyên n);
+LUA_API void  (lua_pushboolean) (lua_State *L, số_nguyên b);
 LUA_API void  (lua_pushlightuserdata) (lua_State *L, void *p);
-LUA_API int   (lua_pushthread) (lua_State *L);
+LUA_API số_nguyên   (lua_pushthread) (lua_State *L);
 
 
 /*
 ** get functions (Lua -> stack)
 */
-LUA_API int (lua_getglobal) (lua_State *L, const char *name);
-LUA_API int (lua_gettable) (lua_State *L, int idx);
-LUA_API int (lua_getfield) (lua_State *L, int idx, const char *k);
-LUA_API int (lua_geti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawget) (lua_State *L, int idx);
-LUA_API int (lua_rawgeti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawgetp) (lua_State *L, int idx, const void *p);
+LUA_API số_nguyên (lua_getglobal) (lua_State *L, const char *name);
+LUA_API số_nguyên (lua_gettable) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên (lua_getfield) (lua_State *L, số_nguyên idx, const char *k);
+LUA_API số_nguyên (lua_geti) (lua_State *L, số_nguyên idx, lua_Integer n);
+LUA_API số_nguyên (lua_rawget) (lua_State *L, số_nguyên idx);
+LUA_API số_nguyên (lua_rawgeti) (lua_State *L, số_nguyên idx, lua_Integer n);
+LUA_API số_nguyên (lua_rawgetp) (lua_State *L, số_nguyên idx, const void *p);
 
-LUA_API void  (lua_createtable) (lua_State *L, int narr, int nrec);
-LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, int nuvalue);
-LUA_API int   (lua_getmetatable) (lua_State *L, int objindex);
-LUA_API int  (lua_getiuservalue) (lua_State *L, int idx, int n);
+LUA_API void  (lua_createtable) (lua_State *L, số_nguyên narr, số_nguyên nrec);
+LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, số_nguyên nuvalue);
+LUA_API số_nguyên   (lua_getmetatable) (lua_State *L, số_nguyên objindex);
+LUA_API số_nguyên  (lua_getiuservalue) (lua_State *L, số_nguyên idx, số_nguyên n);
 
 
 /*
 ** set functions (stack -> Lua)
 */
 LUA_API void  (lua_setglobal) (lua_State *L, const char *name);
-LUA_API void  (lua_settable) (lua_State *L, int idx);
-LUA_API void  (lua_setfield) (lua_State *L, int idx, const char *k);
-LUA_API void  (lua_seti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawset) (lua_State *L, int idx);
-LUA_API void  (lua_rawseti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawsetp) (lua_State *L, int idx, const void *p);
-LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
-LUA_API int   (lua_setiuservalue) (lua_State *L, int idx, int n);
+LUA_API void  (lua_settable) (lua_State *L, số_nguyên idx);
+LUA_API void  (lua_setfield) (lua_State *L, số_nguyên idx, const char *k);
+LUA_API void  (lua_seti) (lua_State *L, số_nguyên idx, lua_Integer n);
+LUA_API void  (lua_rawset) (lua_State *L, số_nguyên idx);
+LUA_API void  (lua_rawseti) (lua_State *L, số_nguyên idx, lua_Integer n);
+LUA_API void  (lua_rawsetp) (lua_State *L, số_nguyên idx, const void *p);
+LUA_API số_nguyên   (lua_setmetatable) (lua_State *L, số_nguyên objindex);
+LUA_API số_nguyên   (lua_setiuservalue) (lua_State *L, số_nguyên idx, số_nguyên n);
 
 
 /*
 ** 'load' and 'call' functions (load and run Lua code)
 */
-LUA_API void  (lua_callk) (lua_State *L, int nargs, int nresults,
+LUA_API void  (lua_callk) (lua_State *L, số_nguyên nargs, số_nguyên nresults,
                            lua_KContext ctx, lua_KFunction k);
 #define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, NULL)
 
-LUA_API int   (lua_pcallk) (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API số_nguyên   (lua_pcallk) (lua_State *L, số_nguyên nargs, số_nguyên nresults, số_nguyên errfunc,
                             lua_KContext ctx, lua_KFunction k);
 #define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, NULL)
 
-LUA_API int   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
+LUA_API số_nguyên   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
                           const char *chunkname, const char *mode);
 
-LUA_API int (lua_dump) (lua_State *L, lua_Writer writer, void *data, int strip);
+LUA_API số_nguyên (lua_dump) (lua_State *L, lua_Writer writer, void *data, số_nguyên strip);
 
 
 /*
 ** coroutine functions
 */
-LUA_API int  (lua_yieldk)     (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API số_nguyên  (lua_yieldk)     (lua_State *L, số_nguyên nresults, lua_KContext ctx,
                                lua_KFunction k);
-LUA_API int  (lua_resume)     (lua_State *L, lua_State *from, int narg,
-                               int *nres);
-LUA_API int  (lua_status)     (lua_State *L);
-LUA_API int (lua_isyieldable) (lua_State *L);
+LUA_API số_nguyên  (lua_resume)     (lua_State *L, lua_State *from, số_nguyên narg,
+                               số_nguyên *nres);
+LUA_API số_nguyên  (lua_status)     (lua_State *L);
+LUA_API số_nguyên (lua_isyieldable) (lua_State *L);
 
 #define lua_yield(L,n)		lua_yieldk(L, (n), 0, NULL)
 
@@ -321,7 +321,7 @@ LUA_API int (lua_isyieldable) (lua_State *L);
 ** Warning-related functions
 */
 LUA_API void (lua_setwarnf) (lua_State *L, lua_WarnFunction f, void *ud);
-LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
+LUA_API void (lua_warning)  (lua_State *L, const char *msg, số_nguyên tocont);
 
 
 /*
@@ -357,29 +357,29 @@ LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
 #define LUA_GCPN		6
 
 
-LUA_API int (lua_gc) (lua_State *L, int what, ...);
+LUA_API số_nguyên (lua_gc) (lua_State *L, số_nguyên what, ...);
 
 
 /*
 ** miscellaneous functions
 */
 
-LUA_API int   (lua_error) (lua_State *L);
+LUA_API số_nguyên   (lua_error) (lua_State *L);
 
-LUA_API int   (lua_next) (lua_State *L, int idx);
+LUA_API số_nguyên   (lua_next) (lua_State *L, số_nguyên idx);
 
-LUA_API void  (lua_concat) (lua_State *L, int n);
-LUA_API void  (lua_len)    (lua_State *L, int idx);
+LUA_API void  (lua_concat) (lua_State *L, số_nguyên n);
+LUA_API void  (lua_len)    (lua_State *L, số_nguyên idx);
 
 #define LUA_N2SBUFFSZ	64
-LUA_API unsigned  (lua_numbertocstring) (lua_State *L, int idx, char *buff);
+LUA_API unsigned  (lua_numbertocstring) (lua_State *L, số_nguyên idx, char *buff);
 LUA_API size_t  (lua_stringtonumber) (lua_State *L, const char *s);
 
 LUA_API lua_Alloc (lua_getallocf) (lua_State *L, void **ud);
 LUA_API void      (lua_setallocf) (lua_State *L, lua_Alloc f, void *ud);
 
-LUA_API void (lua_toclose) (lua_State *L, int idx);
-LUA_API void (lua_closeslot) (lua_State *L, int idx);
+LUA_API void (lua_toclose) (lua_State *L, số_nguyên idx);
+LUA_API void (lua_closeslot) (lua_State *L, số_nguyên idx);
 
 
 /*
@@ -467,40 +467,40 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define LUA_MASKCOUNT	(1 << LUA_HOOKCOUNT)
 
 
-LUA_API int (lua_getstack) (lua_State *L, int level, lua_Debug *ar);
-LUA_API int (lua_getinfo) (lua_State *L, const char *what, lua_Debug *ar);
-LUA_API const char *(lua_getlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_setlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_getupvalue) (lua_State *L, int funcindex, int n);
-LUA_API const char *(lua_setupvalue) (lua_State *L, int funcindex, int n);
+LUA_API số_nguyên (lua_getstack) (lua_State *L, số_nguyên level, lua_Debug *ar);
+LUA_API số_nguyên (lua_getinfo) (lua_State *L, const char *what, lua_Debug *ar);
+LUA_API const char *(lua_getlocal) (lua_State *L, const lua_Debug *ar, số_nguyên n);
+LUA_API const char *(lua_setlocal) (lua_State *L, const lua_Debug *ar, số_nguyên n);
+LUA_API const char *(lua_getupvalue) (lua_State *L, số_nguyên funcindex, số_nguyên n);
+LUA_API const char *(lua_setupvalue) (lua_State *L, số_nguyên funcindex, số_nguyên n);
 
-LUA_API void *(lua_upvalueid) (lua_State *L, int fidx, int n);
-LUA_API void  (lua_upvaluejoin) (lua_State *L, int fidx1, int n1,
-                                               int fidx2, int n2);
+LUA_API void *(lua_upvalueid) (lua_State *L, số_nguyên fidx, số_nguyên n);
+LUA_API void  (lua_upvaluejoin) (lua_State *L, số_nguyên fidx1, số_nguyên n1,
+                                               số_nguyên fidx2, số_nguyên n2);
 
-LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, số_nguyên mask, số_nguyên count);
 LUA_API lua_Hook (lua_gethook) (lua_State *L);
-LUA_API int (lua_gethookmask) (lua_State *L);
-LUA_API int (lua_gethookcount) (lua_State *L);
+LUA_API số_nguyên (lua_gethookmask) (lua_State *L);
+LUA_API số_nguyên (lua_gethookcount) (lua_State *L);
 
 
 struct lua_Debug {
-  int event;
+  số_nguyên event;
   const char *name;	/* (n) */
   const char *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
   const char *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
   const char *source;	/* (S) */
   size_t srclen;	/* (S) */
-  int currentline;	/* (l) */
-  int linedefined;	/* (S) */
-  int lastlinedefined;	/* (S) */
+  số_nguyên currentline;	/* (l) */
+  số_nguyên linedefined;	/* (S) */
+  số_nguyên lastlinedefined;	/* (S) */
   unsigned char nups;	/* (u) number of upvalues */
   unsigned char nparams;/* (u) number of parameters */
   char isvararg;        /* (u) */
   unsigned char extraargs;  /* (t) number of extra arguments */
   char istailcall;	/* (t) */
-  int ftransfer;   /* (r) index of first value transferred */
-  int ntransfer;   /* (r) number of transferred values */
+  số_nguyên ftransfer;   /* (r) index of first value transferred */
+  số_nguyên ntransfer;   /* (r) number of transferred values */
   char short_src[LUA_IDSIZE]; /* (S) */
   /* private part */
   struct CallInfo *i_ci;  /* active function */

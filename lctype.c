@@ -12,15 +12,15 @@
 
 #include "lctype.h"
 
-#if !LUA_USE_CTYPE	/* { */
+#nếu !LUA_USE_CTYPE	/* { */
 
 #include <limits.h>
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#nếu defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
 #define NONA		0x01
-#else
+#không_thì
 #define NONA		0x00	/* default */
 #endif
 
