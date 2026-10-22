@@ -7,29 +7,29 @@
 #define ldump_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#include <limits.h>
-#include <stddef.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <stddef.h>
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
-#include "lapi.h"
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "ltable.h"
-#include "lundump.h"
+#अन्तर्भाव "lapi.h"
+#अन्तर्भाव "lgc.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lstate.h"
+#अन्तर्भाव "ltable.h"
+#अन्तर्भाव "lundump.h"
 
 
-typedef struct {
+प्रकारनिर्देश संरचना {
   lua_State *L;
   lua_Writer writer;
-  void *data;
-  size_t offset;  /* current position relative to beginning of dump */
-  int strip;
-  int status;
+  शून्य *data;
+  माप_प्रकार offset;  /* current position relative to beginning of dump */
+  पूर्णाङ्क strip;
+  पूर्णाङ्क status;
   Table *h;  /* table to track saved strings */
   lua_Unsigned nstr;  /* counter for counting saved strings */
 } DumpState;
@@ -39,9 +39,9 @@ typedef struct {
 ** All high-level dumps go through dumpVector; you can change it to
 ** change the endianness of the result
 */
-#define dumpVector(D,v,n)	dumpBlock(D,v,(n)*sizeof((v)[0]))
+#define dumpVector(D,v,n)	dumpBlock(D,v,(n)*परिमाण((v)[0]))
 
-#define dumpLiteral(D, s)	dumpBlock(D,s,sizeof(s) - sizeof(char))
+#define dumpLiteral(D, s)	dumpBlock(D,s,परिमाण(s) - परिमाण(वर्ण))
 
 
 /*
@@ -49,8 +49,8 @@ typedef struct {
 ** 'b' should not be NULL, except for the last call signaling the end
 ** of the dump.
 */
-static void dumpBlock (DumpState *D, const void *b, size_t size) {
-  if (D->status == 0) {  /* do not write anything after an error */
+स्थिर शून्य dumpBlock (DumpState *D, ध्रुव शून्य *b, माप_प्रकार size) {
+  यदि (D->status == 0) {  /* do not write anything after an error */
     lua_unlock(D->L);
     D->status = (*D->writer)(D->L, b, size, D->data);
     lua_lock(D->L);
@@ -63,11 +63,11 @@ static void dumpBlock (DumpState *D, const void *b, size_t size) {
 ** Dump enough zeros to ensure that current position is a multiple of
 ** 'align'.
 */
-static void dumpAlign (DumpState *D, unsigned align) {
-  unsigned padding = align - cast_uint(D->offset % align);
-  if (padding < align) {  /* padding == align means no padding */
-    static lua_Integer paddingContent = 0;
-    lua_assert(align <= sizeof(lua_Integer));
+स्थिर शून्य dumpAlign (DumpState *D, अचिन्हित align) {
+  अचिन्हित padding = align - cast_uint(D->offset % align);
+  यदि (padding < align) {  /* padding == align means no padding */
+    स्थिर lua_Integer paddingContent = 0;
+    lua_assert(align <= परिमाण(lua_Integer));
     dumpBlock(D, &paddingContent, padding);
   }
   lua_assert(D->offset % align == 0);
@@ -77,7 +77,7 @@ static void dumpAlign (DumpState *D, unsigned align) {
 #define dumpVar(D,x)		dumpVector(D,&x,1)
 
 
-static void dumpByte (DumpState *D, int y) {
+स्थिर शून्य dumpByte (DumpState *D, पूर्णाङ्क y) {
   lu_byte x = (lu_byte)y;
   dumpVar(D, x);
 }
@@ -92,28 +92,28 @@ static void dumpByte (DumpState *D, int y) {
 /*
 ** Dumps an unsigned integer using the MSB Varint encoding
 */
-static void dumpVarint (DumpState *D, lua_Unsigned x) {
+स्थिर शून्य dumpVarint (DumpState *D, lua_Unsigned x) {
   lu_byte buff[DIBS];
-  unsigned n = 1;
+  अचिन्हित n = 1;
   buff[DIBS - 1] = x & 0x7f;  /* fill least-significant byte */
-  while ((x >>= 7) != 0)  /* fill other bytes in reverse order */
+  यावत् ((x >>= 7) != 0)  /* fill other bytes in reverse order */
     buff[DIBS - (++n)] = cast_byte((x & 0x7f) | 0x80);
   dumpVector(D, buff + DIBS - n, n);
 }
 
 
-static void dumpSize (DumpState *D, size_t sz) {
+स्थिर शून्य dumpSize (DumpState *D, माप_प्रकार sz) {
   dumpVarint(D, cast(lua_Unsigned, sz));
 }
 
 
-static void dumpInt (DumpState *D, int x) {
+स्थिर शून्य dumpInt (DumpState *D, पूर्णाङ्क x) {
   lua_assert(x >= 0);
   dumpVarint(D, cast_uint(x));
 }
 
 
-static void dumpNumber (DumpState *D, lua_Number x) {
+स्थिर शून्य dump_संख्या (DumpState *D, lua_संख्या x) {
   dumpVar(D, x);
 }
 
@@ -124,7 +124,7 @@ static void dumpNumber (DumpState *D, lua_Number x) {
 ** A non-negative x is coded as 2x; a negative x is coded as -2x - 1.
 ** (0 => 0; -1 => 1; 1 => 2; -2 => 3; 2 => 4; ...)
 */
-static void dumpInteger (DumpState *D, lua_Integer x) {
+स्थिर शून्य dumpInteger (DumpState *D, lua_Integer x) {
   lua_Unsigned cx = (x >= 0) ? 2u * l_castS2U(x)
                              : (2u * ~l_castS2U(x)) + 1;
   dumpVarint(D, cx);
@@ -140,83 +140,83 @@ static void dumpInteger (DumpState *D, lua_Integer x) {
 ** The real size does not include the ending '\0' (which is not dumped),
 ** so adding 1 to it cannot overflow a size_t.
 */
-static void dumpString (DumpState *D, TString *ts) {
-  if (ts == NULL) {
+स्थिर शून्य dumpString (DumpState *D, TString *ts) {
+  यदि (ts == रिक्त) {
     dumpVarint(D, 0);  /* will "reuse" NULL */
     dumpVarint(D, 0);  /* special index for NULL */
   }
-  else {
+  अन्यथा {
     TValue idx;
-    int tag = luaH_getstr(D->h, ts, &idx);
-    if (!tagisempty(tag)) {  /* string already saved? */
+    पूर्णाङ्क tag = luaH_getstr(D->h, ts, &idx);
+    यदि (!tagisempty(tag)) {  /* string already saved? */
       dumpVarint(D, 0);  /* reuse a saved string */
       dumpVarint(D, l_castS2U(ivalue(&idx)));  /* index of saved string */
     }
-    else {  /* must write and save the string */
-      TValue key, value;  /* to save the string in the hash */
-      size_t size;
-      const char *s = getlstr(ts, size);
+    अन्यथा {  /* must write and save the string */
+      TValue कुंजी, मूल्य;  /* to save the string in the hash */
+      माप_प्रकार size;
+      ध्रुव वर्ण *s = getlstr(ts, size);
       dumpSize(D, size + 1);
       dumpVector(D, s, size + 1);  /* include ending '\0' */
       D->nstr++;  /* one more saved string */
-      setsvalue(D->L, &key, ts);  /* the string is the key */
-      setivalue(&value, l_castU2S(D->nstr));  /* its index is the value */
-      luaH_set(D->L, D->h, &key, &value);  /* h[ts] = nstr */
+      setsvalue(D->L, &कुंजी, ts);  /* the string is the key */
+      setivalue(&मूल्य, l_castU2S(D->nstr));  /* its index is the value */
+      luaH_set(D->L, D->h, &कुंजी, &मूल्य);  /* h[ts] = nstr */
       /* integer value does not need barrier */
     }
   }
 }
 
 
-static void dumpCode (DumpState *D, const Proto *f) {
+स्थिर शून्य dumpCode (DumpState *D, ध्रुव Proto *f) {
   dumpInt(D, f->sizecode);
-  dumpAlign(D, sizeof(f->code[0]));
-  lua_assert(f->code != NULL);
+  dumpAlign(D, परिमाण(f->code[0]));
+  lua_assert(f->code != रिक्त);
   dumpVector(D, f->code, cast_uint(f->sizecode));
 }
 
 
-static void dumpFunction (DumpState *D, const Proto *f);
+स्थिर शून्य dumpFunction (DumpState *D, ध्रुव Proto *f);
 
-static void dumpConstants (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizek;
+स्थिर शून्य dumpConstants (DumpState *D, ध्रुव Proto *f) {
+  पूर्णाङ्क i;
+  पूर्णाङ्क n = f->sizek;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
-    const TValue *o = &f->k[i];
-    int tt = ttypetag(o);
+  प्रति (i = 0; i < n; i++) {
+    ध्रुव TValue *o = &f->k[i];
+    पूर्णाङ्क tt = ttypetag(o);
     dumpByte(D, tt);
-    switch (tt) {
-      case LUA_VNUMFLT:
-        dumpNumber(D, fltvalue(o));
-        break;
-      case LUA_VNUMINT:
+    विकल्प (tt) {
+      पक्ष LUA_VNUMFLT:
+        dump_संख्या(D, fltvalue(o));
+        भङ्ग;
+      पक्ष LUA_VNUMINT:
         dumpInteger(D, ivalue(o));
-        break;
-      case LUA_VSHRSTR:
-      case LUA_VLNGSTR:
+        भङ्ग;
+      पक्ष LUA_VSHRSTR:
+      पक्ष LUA_VLNGSTR:
         dumpString(D, tsvalue(o));
-        break;
-      default:
+        भङ्ग;
+      स्वभाव:
         lua_assert(tt == LUA_VNIL || tt == LUA_VFALSE || tt == LUA_VTRUE);
     }
   }
 }
 
 
-static void dumpProtos (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizep;
+स्थिर शून्य dumpProtos (DumpState *D, ध्रुव Proto *f) {
+  पूर्णाङ्क i;
+  पूर्णाङ्क n = f->sizep;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  प्रति (i = 0; i < n; i++)
     dumpFunction(D, f->p[i]);
 }
 
 
-static void dumpUpvalues (DumpState *D, const Proto *f) {
-  int i, n = f->sizeupvalues;
+स्थिर शून्य dumpUpvalues (DumpState *D, ध्रुव Proto *f) {
+  पूर्णाङ्क i, n = f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  प्रति (i = 0; i < n; i++) {
     dumpByte(D, f->upvalues[i].instack);
     dumpByte(D, f->upvalues[i].idx);
     dumpByte(D, f->upvalues[i].kind);
@@ -224,34 +224,34 @@ static void dumpUpvalues (DumpState *D, const Proto *f) {
 }
 
 
-static void dumpDebug (DumpState *D, const Proto *f) {
-  int i, n;
+स्थिर शून्य dumpDebug (DumpState *D, ध्रुव Proto *f) {
+  पूर्णाङ्क i, n;
   n = (D->strip) ? 0 : f->sizelineinfo;
   dumpInt(D, n);
-  if (f->lineinfo != NULL)
+  यदि (f->lineinfo != रिक्त)
     dumpVector(D, f->lineinfo, cast_uint(n));
   n = (D->strip) ? 0 : f->sizeabslineinfo;
   dumpInt(D, n);
-  if (n > 0) {
+  यदि (n > 0) {
     /* 'abslineinfo' is an array of structures of int's */
-    dumpAlign(D, sizeof(int));
+    dumpAlign(D, परिमाण(पूर्णाङ्क));
     dumpVector(D, f->abslineinfo, cast_uint(n));
   }
   n = (D->strip) ? 0 : f->sizelocvars;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  प्रति (i = 0; i < n; i++) {
     dumpString(D, f->locvars[i].varname);
     dumpInt(D, f->locvars[i].startpc);
     dumpInt(D, f->locvars[i].endpc);
   }
   n = (D->strip) ? 0 : f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  प्रति (i = 0; i < n; i++)
     dumpString(D, f->upvalues[i].name);
 }
 
 
-static void dumpFunction (DumpState *D, const Proto *f) {
+स्थिर शून्य dumpFunction (DumpState *D, ध्रुव Proto *f) {
   dumpInt(D, f->linedefined);
   dumpInt(D, f->lastlinedefined);
   dumpByte(D, f->numparams);
@@ -261,36 +261,36 @@ static void dumpFunction (DumpState *D, const Proto *f) {
   dumpConstants(D, f);
   dumpUpvalues(D, f);
   dumpProtos(D, f);
-  dumpString(D, D->strip ? NULL : f->source);
+  dumpString(D, D->strip ? रिक्त : f->source);
   dumpDebug(D, f);
 }
 
 
-#define dumpNumInfo(D, tvar, value)  \
-  { tvar i = value; dumpByte(D, sizeof(tvar)); dumpVar(D, i); }
+#define dump_अंक_Info(D, tvar, मूल्य)  \
+  { tvar i = मूल्य; dumpByte(D, परिमाण(tvar)); dumpVar(D, i); }
 
 
-static void dumpHeader (DumpState *D) {
+स्थिर शून्य dumpHeader (DumpState *D) {
   dumpLiteral(D, LUA_SIGNATURE);
   dumpByte(D, LUAC_VERSION);
   dumpByte(D, LUAC_FORMAT);
   dumpLiteral(D, LUAC_DATA);
-  dumpNumInfo(D, int, LUAC_INT);
-  dumpNumInfo(D, Instruction, LUAC_INST);
-  dumpNumInfo(D, lua_Integer, LUAC_INT);
-  dumpNumInfo(D, lua_Number, LUAC_NUM);
+  dump_अंक_Info(D, पूर्णाङ्क, LUAC_INT);
+  dump_अंक_Info(D, Instruction, LUAC_INST);
+  dump_अंक_Info(D, lua_Integer, LUAC_INT);
+  dump_अंक_Info(D, lua_संख्या, LUAC_अंक);
 }
 
 
 /*
 ** dump Lua function as precompiled chunk
 */
-int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
-               int strip) {
+पूर्णाङ्क luaU_dump (lua_State *L, ध्रुव Proto *f, lua_Writer w, शून्य *data,
+               पूर्णाङ्क strip) {
   DumpState D;
   D.h = luaH_new(L);  /* aux. table to keep strings already dumped */
-  sethvalue2s(L, L->top.p, D.h);  /* anchor it */
-  L->top.p++;
+  sethvalue2s(L, L->शीर्ष.p, D.h);  /* anchor it */
+  L->शीर्ष.p++;
   D.L = L;
   D.writer = w;
   D.offset = 0;
@@ -301,7 +301,7 @@ int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
   dumpHeader(&D);
   dumpByte(&D, f->sizeupvalues);
   dumpFunction(&D, f);
-  dumpBlock(&D, NULL, 0);  /* signal end of dump */
-  return D.status;
+  dumpBlock(&D, रिक्त, 0);  /* signal end of dump */
+  प्रत्यागम D.status;
 }
 

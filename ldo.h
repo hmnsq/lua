@@ -8,10 +8,10 @@
 #define ldo_h
 
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lzio.h"
+#अन्तर्भाव "llimits.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lstate.h"
+#अन्तर्भाव "lzio.h"
 
 
 /*
@@ -24,32 +24,32 @@
 ** at every check.
 */
 
-#if !defined(HARDSTACKTESTS)
-#define condmovestack(L,pre,pos)	((void)0)
-#else
+#यदि !defined(HARDSTACKTESTS)
+#define condmovestack(L,pre,pos)	((शून्य)0)
+#अन्यथा
 /* realloc stack keeping its size */
 #define condmovestack(L,pre,pos)  \
-  { int sz_ = stacksize(L); pre; luaD_reallocstack((L), sz_, 0); pos; }
+  { पूर्णाङ्क sz_ = stacksize(L); pre; luaD_reallocstack((L), sz_, 0); pos; }
 #endif
 
 #define luaD_checkstackaux(L,n,pre,pos)  \
-	if (l_unlikely(L->stack_last.p - L->top.p <= (n))) \
+	यदि (l_unlikely(L->ढेर_last.p - L->शीर्ष.p <= (n))) \
 	  { pre; luaD_growstack(L, n, 1); pos; } \
-	else { condmovestack(L,pre,pos); }
+	अन्यथा { condmovestack(L,pre,pos); }
 
 /* In general, 'pre'/'pos' are empty (nothing to save) */
-#define luaD_checkstack(L,n)	luaD_checkstackaux(L,n,(void)0,(void)0)
+#define luaD_checkstack(L,n)	luaD_checkstackaux(L,n,(शून्य)0,(शून्य)0)
 
 
 
-#define savestack(L,pt)		(cast_charp(pt) - cast_charp(L->stack.p))
-#define restorestack(L,n)	cast(StkId, cast_charp(L->stack.p) + (n))
+#define savestack(L,pt)		(cast_charp(pt) - cast_charp(L->ढेर.p))
+#define restorestack(L,n)	cast(StkId, cast_charp(L->ढेर.p) + (n))
 
 
 /* macro to check stack size, preserving 'p' */
 #define checkstackp(L,n,p)  \
   luaD_checkstackaux(L, n, \
-    ptrdiff_t t__ = savestack(L, p),  /* save 'p' */ \
+    सूचक_भेद_प्रकार t__ = savestack(L, p),  /* save 'p' */ \
     p = restorestack(L, t__))  /* 'pos' part: restore 'p' */
 
 
@@ -59,41 +59,41 @@
 ** fit in a 16-bit unsigned integer. It must also be compatible with
 ** the size of the C stack.)
 */
-#if !defined(LUAI_MAXCCALLS)
+#यदि !defined(LUAI_MAXCCALLS)
 #define LUAI_MAXCCALLS		200
 #endif
 
 
 /* type of protected functions, to be ran by 'runprotected' */
-typedef void (*Pfunc) (lua_State *L, void *ud);
+प्रकारनिर्देश शून्य (*Pfunc) (lua_State *L, शून्य *ud);
 
 LUAI_FUNC l_noret luaD_errerr (lua_State *L);
-LUAI_FUNC void luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop);
+LUAI_FUNC शून्य luaD_seterrorobj (lua_State *L, TStatus errcode, StkId oldtop);
 LUAI_FUNC TStatus luaD_protectedparser (lua_State *L, ZIO *z,
-                                                  const char *name,
-                                                  const char *mode);
-LUAI_FUNC void luaD_hook (lua_State *L, int event, int line,
-                                        int fTransfer, int nTransfer);
-LUAI_FUNC void luaD_hookcall (lua_State *L, CallInfo *ci);
-LUAI_FUNC int luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
-                                              int narg1, int delta);
-LUAI_FUNC CallInfo *luaD_precall (lua_State *L, StkId func, int nResults);
-LUAI_FUNC void luaD_call (lua_State *L, StkId func, int nResults);
-LUAI_FUNC void luaD_callnoyield (lua_State *L, StkId func, int nResults);
-LUAI_FUNC TStatus luaD_closeprotected (lua_State *L, ptrdiff_t level,
+                                                  ध्रुव वर्ण *name,
+                                                  ध्रुव वर्ण *mode);
+LUAI_FUNC शून्य luaD_hook (lua_State *L, पूर्णाङ्क event, पूर्णाङ्क पंक्ति,
+                                        पूर्णाङ्क fTransfer, पूर्णाङ्क nTransfer);
+LUAI_FUNC शून्य luaD_hookcall (lua_State *L, CallInfo *ci);
+LUAI_FUNC पूर्णाङ्क luaD_pretailcall (lua_State *L, CallInfo *ci, StkId func,
+                                              पूर्णाङ्क narg1, पूर्णाङ्क delta);
+LUAI_FUNC CallInfo *luaD_precall (lua_State *L, StkId func, पूर्णाङ्क nResults);
+LUAI_FUNC शून्य luaD_call (lua_State *L, StkId func, पूर्णाङ्क nResults);
+LUAI_FUNC शून्य luaD_callnoyield (lua_State *L, StkId func, पूर्णाङ्क nResults);
+LUAI_FUNC TStatus luaD_closeprotected (lua_State *L, सूचक_भेद_प्रकार level,
                                                      TStatus status);
-LUAI_FUNC TStatus luaD_pcall (lua_State *L, Pfunc func, void *u,
-                                        ptrdiff_t oldtop, ptrdiff_t ef);
-LUAI_FUNC void luaD_poscall (lua_State *L, CallInfo *ci, int nres);
-LUAI_FUNC int luaD_reallocstack (lua_State *L, int newsize, int raiseerror);
-LUAI_FUNC int luaD_growstack (lua_State *L, int n, int raiseerror);
-LUAI_FUNC void luaD_shrinkstack (lua_State *L);
-LUAI_FUNC int luaD_checkminstack (lua_State *L);
-LUAI_FUNC void luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj);
+LUAI_FUNC TStatus luaD_pcall (lua_State *L, Pfunc func, शून्य *u,
+                                        सूचक_भेद_प्रकार oldtop, सूचक_भेद_प्रकार ef);
+LUAI_FUNC शून्य luaD_poscall (lua_State *L, CallInfo *ci, पूर्णाङ्क nres);
+LUAI_FUNC पूर्णाङ्क luaD_reallocstack (lua_State *L, पूर्णाङ्क newsize, पूर्णाङ्क raiseerror);
+LUAI_FUNC पूर्णाङ्क luaD_growstack (lua_State *L, पूर्णाङ्क n, पूर्णाङ्क raiseerror);
+LUAI_FUNC शून्य luaD_shrinkstack (lua_State *L);
+LUAI_FUNC पूर्णाङ्क luaD_checkminstack (lua_State *L);
+LUAI_FUNC शून्य luaD_anchorobj (lua_State *L, Table *anchor, GCObject *obj);
 
 LUAI_FUNC l_noret luaD_throw (lua_State *L, TStatus errcode);
 LUAI_FUNC l_noret luaD_throwbaselevel (lua_State *L, TStatus errcode);
-LUAI_FUNC TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud);
+LUAI_FUNC TStatus luaD_rawrunprotected (lua_State *L, Pfunc f, शून्य *ud);
 
 #endif
 
