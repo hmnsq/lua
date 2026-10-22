@@ -4,11 +4,11 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lopcodes_h
-#define lopcodes_h
+#جے_بنا_تعریف lopcodes_h
+#تعریف_کرو lopcodes_h
 
-#include "llimits.h"
-#include "lobject.h"
+#ضمن "llimits.h"
+#ضمن "lobject.h"
 
 
 /*===========================================================================
@@ -33,37 +33,37 @@ isJ                           sJ (signed)(25)            |   Op(7)     |
 
 
 /* basic instruction formats */
-enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
+تعداد Op_منوال {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 
 
 /*
 ** size and position of opcode arguments.
 */
-#define SIZE_C		8
-#define SIZE_vC		10
-#define SIZE_B		8
-#define SIZE_vB		6
-#define SIZE_Bx		(SIZE_C + SIZE_B + 1)
-#define SIZE_A		8
-#define SIZE_Ax		(SIZE_Bx + SIZE_A)
-#define SIZE_sJ		(SIZE_Bx + SIZE_A)
+#تعریف_کرو ناپ_C		8
+#تعریف_کرو ناپ_v_C		10
+#تعریف_کرو ناپ_B		8
+#تعریف_کرو ناپ_v_B		6
+#تعریف_کرو ناپ_Bx		(ناپ_C + ناپ_B + 1)
+#تعریف_کرو ناپ_A		8
+#تعریف_کرو ناپ_Ax		(ناپ_Bx + ناپ_A)
+#تعریف_کرو ناپ_s_J		(ناپ_Bx + ناپ_A)
 
-#define SIZE_OP		7
+#تعریف_کرو ناپ_OP		7
 
-#define POS_OP		0
+#تعریف_کرو POS_OP		0
 
-#define POS_A		(POS_OP + SIZE_OP)
-#define POS_k		(POS_A + SIZE_A)
-#define POS_B		(POS_k + 1)
-#define POS_vB		(POS_k + 1)
-#define POS_C		(POS_B + SIZE_B)
-#define POS_vC		(POS_vB + SIZE_vB)
+#تعریف_کرو POS_A		(POS_OP + ناپ_OP)
+#تعریف_کرو POS_k		(POS_A + ناپ_A)
+#تعریف_کرو POS_B		(POS_k + 1)
+#تعریف_کرو POS_vB		(POS_k + 1)
+#تعریف_کرو POS_C		(POS_B + ناپ_B)
+#تعریف_کرو POS_vC		(POS_vB + ناپ_v_B)
 
-#define POS_Bx		POS_k
+#تعریف_کرو POS_Bx		POS_k
 
-#define POS_Ax		POS_A
+#تعریف_کرو POS_Ax		POS_A
 
-#define POS_sJ		POS_A
+#تعریف_کرو POS_sJ		POS_A
 
 
 /*
@@ -76,143 +76,143 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** Check whether type 'int' has at least 'b' + 1 bits.
 ** 'b' < 32; +1 for the sign bit.
 */
-#define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
+#تعریف_کرو L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
-#define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
-#define MAXARG_Bx	INT_MAX
-#endif
+#إذا L_INTHASBITS(ناپ_Bx)
+#تعریف_کرو MAXARG_Bx	((1<<ناپ_Bx)-1)
+#وإلا
+#تعریف_کرو MAXARG_Bx	ودھ_توں_ودھ_عدد
+#جے_انت
 
-#define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
-
-
-#if L_INTHASBITS(SIZE_Ax)
-#define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
-#define MAXARG_Ax	INT_MAX
-#endif
-
-#if L_INTHASBITS(SIZE_sJ)
-#define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
-#define MAXARG_sJ	INT_MAX
-#endif
-
-#define OFFSET_sJ	(MAXARG_sJ >> 1)
+#تعریف_کرو وتھ_s_Bx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#define MAXARG_A	((1<<SIZE_A)-1)
-#define MAXARG_B	((1<<SIZE_B)-1)
-#define MAXARG_vB	((1<<SIZE_vB)-1)
-#define MAXARG_C	((1<<SIZE_C)-1)
-#define MAXARG_vC	((1<<SIZE_vC)-1)
-#define OFFSET_sC	(MAXARG_C >> 1)
+#إذا L_INTHASBITS(ناپ_Ax)
+#تعریف_کرو MAXARG_Ax	((1<<ناپ_Ax)-1)
+#وإلا
+#تعریف_کرو MAXARG_Ax	ودھ_توں_ودھ_عدد
+#جے_انت
 
-#define int2sC(i)	((i) + OFFSET_sC)
-#define sC2int(i)	((i) - OFFSET_sC)
+#إذا L_INTHASBITS(ناپ_s_J)
+#تعریف_کرو MAXARG_sJ	((1 << ناپ_s_J) - 1)
+#وإلا
+#تعریف_کرو MAXARG_sJ	ودھ_توں_ودھ_عدد
+#جے_انت
+
+#تعریف_کرو وتھ_s_J	(MAXARG_sJ >> 1)
+
+
+#تعریف_کرو MAXARG_A	((1<<ناپ_A)-1)
+#تعریف_کرو MAXARG_B	((1<<ناپ_B)-1)
+#تعریف_کرو MAXARG_vB	((1<<ناپ_v_B)-1)
+#تعریف_کرو MAXARG_C	((1<<ناپ_C)-1)
+#تعریف_کرو MAXARG_vC	((1<<ناپ_v_C)-1)
+#تعریف_کرو وتھ_s_C	(MAXARG_C >> 1)
+
+#تعریف_کرو int2sC(i)	((i) + وتھ_s_C)
+#تعریف_کرو sC2int(i)	((i) - وتھ_s_C)
 
 
 /* creates a mask with 'n' 1 bits at position 'p' */
-#define MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
+#تعریف_کرو MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
 
 /* creates a mask with 'n' 0 bits at position 'p' */
-#define MASK0(n,p)	(~MASK1(n,p))
+#تعریف_کرو MASK0(n,p)	(~MASK1(n,p))
 
 /*
 ** the following macros help to manipulate instructions
 */
 
-#define GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(SIZE_OP,0)))
-#define SET_OPCODE(i,o)	((i) = (((i)&MASK0(SIZE_OP,POS_OP)) | \
-		((cast_Inst(o)<<POS_OP)&MASK1(SIZE_OP,POS_OP))))
+#تعریف_کرو GET_OPCODE(i)	(cast(Op_کوڈ, ((i)>>POS_OP) & MASK1(ناپ_OP,0)))
+#تعریف_کرو سیٹ_OPCODE(i,o)	((i) = (((i)&MASK0(ناپ_OP,POS_OP)) | \
+		((cast_Inst(o)<<POS_OP)&MASK1(ناپ_OP,POS_OP))))
 
-#define checkopm(i,m)	(getOpMode(GET_OPCODE(i)) == m)
-
-
-#define getarg(i,pos,size)	(cast_int(((i)>>(pos)) & MASK1(size,0)))
-#define setarg(i,v,pos,size)	((i) = (((i)&MASK0(size,pos)) | \
-                ((cast_Inst(v)<<pos)&MASK1(size,pos))))
-
-#define GETARG_A(i)	getarg(i, POS_A, SIZE_A)
-#define SETARG_A(i,v)	setarg(i, v, POS_A, SIZE_A)
-
-#define GETARG_B(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_B, SIZE_B))
-#define GETARG_vB(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, SIZE_vB))
-#define GETARG_sB(i)	sC2int(GETARG_B(i))
-#define SETARG_B(i,v)	setarg(i, v, POS_B, SIZE_B)
-#define SETARG_vB(i,v)	setarg(i, v, POS_vB, SIZE_vB)
-
-#define GETARG_C(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_C, SIZE_C))
-#define GETARG_vC(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, SIZE_vC))
-#define GETARG_sC(i)	sC2int(GETARG_C(i))
-#define SETARG_C(i,v)	setarg(i, v, POS_C, SIZE_C)
-#define SETARG_vC(i,v)	setarg(i, v, POS_vC, SIZE_vC)
-
-#define TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
-#define GETARG_k(i)	getarg(i, POS_k, 1)
-#define SETARG_k(i,v)	setarg(i, v, POS_k, 1)
-
-#define GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, SIZE_Bx))
-#define SETARG_Bx(i,v)	setarg(i, v, POS_Bx, SIZE_Bx)
-
-#define GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, SIZE_Ax))
-#define SETARG_Ax(i,v)	setarg(i, v, POS_Ax, SIZE_Ax)
-
-#define GETARG_sBx(i)  \
-	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, SIZE_Bx) - OFFSET_sBx)
-#define SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+OFFSET_sBx))
-
-#define GETARG_sJ(i)  \
-	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, SIZE_sJ) - OFFSET_sJ)
-#define SETARG_sJ(i,j) \
-	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, SIZE_sJ)
+#تعریف_کرو checkopm(i,m)	(get_Op_منوال(GET_OPCODE(i)) == m)
 
 
-#define CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#تعریف_کرو getarg(i,pos,ناپ)	(cast_int(((i)>>(pos)) & MASK1(ناپ,0)))
+#تعریف_کرو setarg(i,v,pos,ناپ)	((i) = (((i)&MASK0(ناپ,pos)) | \
+                ((cast_Inst(v)<<pos)&MASK1(ناپ,pos))))
+
+#تعریف_کرو GETARG_A(i)	getarg(i, POS_A, ناپ_A)
+#تعریف_کرو SETARG_A(i,v)	setarg(i, v, POS_A, ناپ_A)
+
+#تعریف_کرو GETARG_B(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_B, ناپ_B))
+#تعریف_کرو GETARG_vB(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, ناپ_v_B))
+#تعریف_کرو GETARG_sB(i)	sC2int(GETARG_B(i))
+#تعریف_کرو SETARG_B(i,v)	setarg(i, v, POS_B, ناپ_B)
+#تعریف_کرو SETARG_vB(i,v)	setarg(i, v, POS_vB, ناپ_v_B)
+
+#تعریف_کرو GETARG_C(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_C, ناپ_C))
+#تعریف_کرو GETARG_vC(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, ناپ_v_C))
+#تعریف_کرو GETARG_sC(i)	sC2int(GETARG_C(i))
+#تعریف_کرو SETARG_C(i,v)	setarg(i, v, POS_C, ناپ_C)
+#تعریف_کرو SETARG_vC(i,v)	setarg(i, v, POS_vC, ناپ_v_C)
+
+#تعریف_کرو TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
+#تعریف_کرو GETARG_k(i)	getarg(i, POS_k, 1)
+#تعریف_کرو SETARG_k(i,v)	setarg(i, v, POS_k, 1)
+
+#تعریف_کرو GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, ناپ_Bx))
+#تعریف_کرو SETARG_Bx(i,v)	setarg(i, v, POS_Bx, ناپ_Bx)
+
+#تعریف_کرو GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, ناپ_Ax))
+#تعریف_کرو SETARG_Ax(i,v)	setarg(i, v, POS_Ax, ناپ_Ax)
+
+#تعریف_کرو GETARG_sBx(i)  \
+	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, ناپ_Bx) - وتھ_s_Bx)
+#تعریف_کرو SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+وتھ_s_Bx))
+
+#تعریف_کرو GETARG_sJ(i)  \
+	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, ناپ_s_J) - وتھ_s_J)
+#تعریف_کرو SETARG_sJ(i,j) \
+	setarg(i, cast_uint((j)+وتھ_s_J), POS_sJ, ناپ_s_J)
+
+
+#تعریف_کرو CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_B) \
 			| (cast_Inst(c)<<POS_C) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#تعریف_کرو CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_vB) \
 			| (cast_Inst(c)<<POS_vC) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
+#تعریف_کرو CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(bc)<<POS_Bx))
 
-#define CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
+#تعریف_کرو CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_Ax))
 
-#define CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
+#تعریف_کرو CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
 			| (cast_Inst(j) << POS_sJ) \
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
-#define MAXINDEXRK	MAXARG_B
-#endif
+#إذا !defined(MAXINDEXRK)  /* (for debugging only) */
+#تعریف_کرو MAXINDEXRK	MAXARG_B
+#جے_انت
 
 
 /*
 ** Maximum size for the stack of a Lua function. It must fit in 8 bits.
 ** The highest valid register is one less than this value.
 */
-#define MAX_FSTACK	MAXARG_A
+#تعریف_کرو MAX_FSTACK	MAXARG_A
 
 /*
 ** Invalid register (one more than last valid register).
 */
-#define NO_REG		MAX_FSTACK
+#تعریف_کرو NO_REG		MAX_FSTACK
 
 
 
@@ -228,7 +228,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** See "Notes" below for more information about some instructions.
 */
 
-typedef enum {
+تعريفنوع تعداد {
 /*----------------------------------------------------------------------
   name		args	description
 ------------------------------------------------------------------------*/
@@ -275,7 +275,7 @@ OP_BXORK,/*	A B C	R[A] := R[B] ~ K[C]:integer			*/
 OP_SHLI,/*	A B sC	R[A] := sC << R[B]				*/
 OP_SHRI,/*	A B sC	R[A] := R[B] >> sC				*/
 
-OP_ADD,/*	A B C	R[A] := R[B] + R[C]				*/
+OP_جوڑو,/*	A B C	R[A] := R[B] + R[C]				*/
 OP_SUB,/*	A B C	R[A] := R[B] - R[C]				*/
 OP_MUL,/*	A B C	R[A] := R[B] * R[C]				*/
 OP_MOD,/*	A B C	R[A] := R[B] % R[C]				*/
@@ -334,7 +334,7 @@ OP_TFORLOOP,/*	A Bx	if R[A+2] ~= nil then { R[A]=R[A+2]; pc -= Bx }	*/
 
 OP_SETLIST,/*	A vB vC k	R[A][vC+i] := R[A+i], 1 <= i <= vB	*/
 
-OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
+OP_گھیرا,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
 
 OP_VARARG,/*	A B C k	R[A], ..., R[A+C-2] = varargs  			*/
 
@@ -345,10 +345,10 @@ OP_ERRNNIL,/*	A Bx	raise error if R[A] ~= nil (K[Bx - 1] is global name)*/
 OP_VARARGPREP,/* 	(adjust varargs)				*/
 
 OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
-} OpCode;
+} Op_کوڈ;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#تعریف_کرو عدد_OPCODES	((صحيح)(OP_EXTRAARG) + 1)
 
 
 
@@ -422,23 +422,23 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 ** bit 7: instruction is an MM instruction (call a metamethod)
 */
 
-LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
+LUAI_DDEC(ثابت lu_byte luaP_opmodes[عدد_OPCODES];)
 
-#define getOpMode(m)	(cast(enum OpMode, luaP_opmodes[m] & 7))
-#define testAMode(m)	(luaP_opmodes[m] & (1 << 3))
-#define testTMode(m)	(luaP_opmodes[m] & (1 << 4))
-#define testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
+#تعریف_کرو get_Op_منوال(m)	(cast(تعداد Op_منوال, luaP_opmodes[m] & 7))
+#تعریف_کرو testAMode(m)	(luaP_opmodes[m] & (1 << 3))
+#تعریف_کرو testTMode(m)	(luaP_opmodes[m] & (1 << 4))
+#تعریف_کرو testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
 
 
 /* Check whether instruction sets top for next instruction, that is,
 ** it results in multiple values. Used only for tests.
 */
-#define luaP_isOT(i)  \
+#تعریف_کرو luaP_isOT(i)  \
 	(GET_OPCODE(i) == OP_TAILCALL || \
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC صحيح luaP_isIT (Instruction i);
 
 
-#endif
+#جے_انت
