@@ -44,115 +44,115 @@
 ** Search for 'objidx' in table at index -1. ('objidx' must be an
 ** absolute index.) Return 1 + string at top if it found a good name.
 */
-static int findfield (lua_State *L, int objidx, int level) {
-  if (level == 0 || !lua_istable(L, -1))
-    return 0;  /* not found */
+static цео findfield (lua_State *L, цео objidx, цео level) {
+  ако (level == 0 || !lua_istable(L, -1))
+    врати 0;  /* not found */
   lua_pushnil(L);  /* start 'next' loop */
-  while (lua_next(L, -2)) {  /* for each pair in table */
-    if (lua_type(L, -2) == LUA_TSTRING) {  /* ignore non-string keys */
-      if (lua_rawequal(L, objidx, -1)) {  /* found object? */
+  док (lua_next(L, -2)) {  /* for each pair in table */
+    ако (lua_type(L, -2) == LUA_TSTRING) {  /* ignore non-string keys */
+      ако (lua_rawequal(L, objidx, -1)) {  /* found object? */
         lua_pop(L, 1);  /* remove value (but keep name) */
-        return 1;
+        врати 1;
       }
-      else if (findfield(L, objidx, level - 1)) {  /* try recursively */
+      инако ако (findfield(L, objidx, level - 1)) {  /* try recursively */
         /* stack: lib_name, lib_table, field_name (top) */
         lua_pushliteral(L, ".");  /* place '.' between the two names */
         lua_replace(L, -3);  /* (in the slot occupied by table) */
         lua_concat(L, 3);  /* lib_name.field_name */
-        return 1;
+        врати 1;
       }
     }
     lua_pop(L, 1);  /* remove value */
   }
-  return 0;  /* not found */
+  врати 0;  /* not found */
 }
 
 
 /*
 ** Search for a name for a function in all loaded modules
 */
-static int pushglobalfuncname (lua_State *L, lua_Debug *ar) {
-  int top = lua_gettop(L);
+static цео pushglobalfuncname (lua_State *L, lua_Debug *ar) {
+  цео top = lua_gettop(L);
   lua_getinfo(L, "f", ar);  /* push function */
   lua_getfield(L, LUA_REGISTRYINDEX, LUA_LOADED_TABLE);
   luaL_checkstack(L, 6, "not enough stack");  /* slots for 'findfield' */
-  if (findfield(L, top + 1, 2)) {
+  ако (findfield(L, top + 1, 2)) {
     const char *name = lua_tostring(L, -1);
-    if (strncmp(name, LUA_GNAME ".", 3) == 0) {  /* name start with '_G.'? */
+    ако (strncmp(name, LUA_GNAME ".", 3) == 0) {  /* name start with '_G.'? */
       lua_pushstring(L, name + 3);  /* push name without prefix */
       lua_remove(L, -2);  /* remove original name */
     }
     lua_copy(L, -1, top + 1);  /* copy name to proper place */
     lua_settop(L, top + 1);  /* remove table "loaded" and name copy */
-    return 1;
+    врати 1;
   }
-  else {
+  инако {
     lua_settop(L, top);  /* remove function and global table */
-    return 0;
+    врати 0;
   }
 }
 
 
 static void pushfuncname (lua_State *L, lua_Debug *ar) {
-  if (*ar->namewhat != '\0')  /* is there a name from code? */
+  ако (*ar->namewhat != '\0')  /* is there a name from code? */
     lua_pushfstring(L, "%s '%s'", ar->namewhat, ar->name);  /* use it */
-  else if (*ar->what == 'm')  /* main? */
+  инако ако (*ar->what == 'm')  /* main? */
       lua_pushliteral(L, "main chunk");
-  else if (pushglobalfuncname(L, ar)) {  /* try a global name */
+  инако ако (pushglobalfuncname(L, ar)) {  /* try a global name */
     lua_pushfstring(L, "function '%s'", lua_tostring(L, -1));
     lua_remove(L, -2);  /* remove name */
   }
-  else if (*ar->what != 'C')  /* for Lua functions, use <file:line> */
+  инако ако (*ar->what != 'C')  /* for Lua functions, use <file:line> */
     lua_pushfstring(L, "function <%s:%d>", ar->short_src, ar->linedefined);
-  else  /* nothing left... */
+  инако  /* nothing left... */
     lua_pushliteral(L, "?");
 }
 
 
-static int lastlevel (lua_State *L) {
+static цео lastlevel (lua_State *L) {
   lua_Debug ar;
-  int li = 1, le = 1;
+  цео li = 1, le = 1;
   /* find an upper bound */
-  while (lua_getstack(L, le, &ar)) { li = le; le *= 2; }
+  док (lua_getstack(L, le, &ar)) { li = le; le *= 2; }
   /* do a binary search */
-  while (li < le) {
-    int m = (li + le)/2;
-    if (lua_getstack(L, m, &ar)) li = m + 1;
-    else le = m;
+  док (li < le) {
+    цео m = (li + le)/2;
+    ако (lua_getstack(L, m, &ar)) li = m + 1;
+    инако le = m;
   }
-  return le - 1;
+  врати le - 1;
 }
 
 
 LUALIB_API void luaL_traceback (lua_State *L, lua_State *L1,
-                                const char *msg, int level) {
+                                const char *msg, цео level) {
   luaL_Buffer b;
   lua_Debug ar;
-  int last = lastlevel(L1);
-  int limit2show = (last - level > LEVELS1 + LEVELS2) ? LEVELS1 : -1;
+  цео last = lastlevel(L1);
+  цео limit2show = (last - level > LEVELS1 + LEVELS2) ? LEVELS1 : -1;
   luaL_buffinit(L, &b);
-  if (msg) {
+  ако (msg) {
     luaL_addstring(&b, msg);
     luaL_addchar(&b, '\n');
   }
   luaL_addstring(&b, "stack traceback:");
-  while (lua_getstack(L1, level++, &ar)) {
-    if (limit2show-- == 0) {  /* too many levels? */
-      int n = last - level - LEVELS2 + 1;  /* number of levels to skip */
+  док (lua_getstack(L1, level++, &ar)) {
+    ако (limit2show-- == 0) {  /* too many levels? */
+      цео n = last - level - LEVELS2 + 1;  /* number of levels to skip */
       lua_pushfstring(L, "\n\t...\t(skipping %d levels)", n);
       luaL_addvalue(&b);  /* add warning about skip */
       level += n;  /* and skip to last levels */
     }
-    else {
+    инако {
       lua_getinfo(L1, "Slnt", &ar);
-      if (ar.currentline <= 0)
+      ако (ar.currentline <= 0)
         lua_pushfstring(L, "\n\t%s: in ", ar.short_src);
-      else
+      инако
         lua_pushfstring(L, "\n\t%s:%d: in ", ar.short_src, ar.currentline);
       luaL_addvalue(&b);
       pushfuncname(L, &ar);
       luaL_addvalue(&b);
-      if (ar.istailcall)
+      ако (ar.istailcall)
         luaL_addstring(&b, "\n\t(...tail calls...)");
     }
   }
@@ -168,47 +168,47 @@ LUALIB_API void luaL_traceback (lua_State *L, lua_State *L1,
 ** =======================================================
 */
 
-LUALIB_API int luaL_argerror (lua_State *L, int arg, const char *extramsg) {
+LUALIB_API цео luaL_argerror (lua_State *L, цео arg, const char *extramsg) {
   lua_Debug ar;
   const char *argword;
-  if (!lua_getstack(L, 0, &ar))  /* no stack frame? */
-    return luaL_error(L, "bad argument #%d (%s)", arg, extramsg);
+  ако (!lua_getstack(L, 0, &ar))  /* no stack frame? */
+    врати luaL_error(L, "bad argument #%d (%s)", arg, extramsg);
   lua_getinfo(L, "nt", &ar);
-  if (arg <= ar.extraargs)  /* error in an extra argument? */
+  ако (arg <= ar.extraargs)  /* error in an extra argument? */
     argword =  "extra argument";
-  else {
+  инако {
     arg -= ar.extraargs;  /* do not count extra arguments */
-    if (strcmp(ar.namewhat, "method") == 0) {  /* colon syntax? */
+    ако (strcmp(ar.namewhat, "method") == 0) {  /* colon syntax? */
       arg--;  /* do not count (extra) self argument */
-      if (arg == 0)  /* error in self argument? */
-        return luaL_error(L, "calling '%s' on bad self (%s)",
+      ако (arg == 0)  /* error in self argument? */
+        врати luaL_error(L, "calling '%s' on bad self (%s)",
                                ar.name, extramsg);
       /* else go through; error in a regular argument */
     }
     argword = "argument";
   }
-  if (ar.name == NULL)
+  ако (ar.name == NULL)
     ar.name = (pushglobalfuncname(L, &ar)) ? lua_tostring(L, -1) : "?";
-  return luaL_error(L, "bad %s #%d to '%s' (%s)",
+  врати luaL_error(L, "bad %s #%d to '%s' (%s)",
                        argword, arg, ar.name, extramsg);
 }
 
 
-LUALIB_API int luaL_typeerror (lua_State *L, int arg, const char *tname) {
+LUALIB_API цео luaL_typeerror (lua_State *L, цео arg, const char *tname) {
   const char *msg;
   const char *typearg;  /* name for the type of the actual argument */
-  if (luaL_getmetafield(L, arg, "__name") == LUA_TSTRING)
+  ако (luaL_getmetafield(L, arg, "__name") == LUA_TSTRING)
     typearg = lua_tostring(L, -1);  /* use the given type name */
-  else if (lua_type(L, arg) == LUA_TLIGHTUSERDATA)
+  инако ако (lua_type(L, arg) == LUA_TLIGHTUSERDATA)
     typearg = "light userdata";  /* special name for messages */
-  else
+  инако
     typearg = luaL_typename(L, arg);  /* standard name */
   msg = lua_pushfstring(L, "%s expected, got %s", tname, typearg);
-  return luaL_argerror(L, arg, msg);
+  врати luaL_argerror(L, arg, msg);
 }
 
 
-static void tag_error (lua_State *L, int arg, int tag) {
+static void tag_error (lua_State *L, цео arg, цео tag) {
   luaL_typeerror(L, arg, lua_typename(L, tag));
 }
 
@@ -217,13 +217,13 @@ static void tag_error (lua_State *L, int arg, int tag) {
 ** The use of 'lua_pushfstring' ensures this function does not
 ** need reserved stack space when called.
 */
-LUALIB_API void luaL_where (lua_State *L, int level) {
+LUALIB_API void luaL_where (lua_State *L, цео level) {
   lua_Debug ar;
-  if (lua_getstack(L, level, &ar)) {  /* check function at level */
+  ако (lua_getstack(L, level, &ar)) {  /* check function at level */
     lua_getinfo(L, "Sl", &ar);  /* get info about it */
-    if (ar.currentline > 0) {  /* is there info? */
+    ако (ar.currentline > 0) {  /* is there info? */
       lua_pushfstring(L, "%s:%d: ", ar.short_src, ar.currentline);
-      return;
+      врати;
     }
   }
   lua_pushfstring(L, "");  /* else, no information available... */
@@ -235,40 +235,40 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 ** not need reserved stack space when called. (At worst, it generates
 ** a memory error instead of the given message.)
 */
-LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
+LUALIB_API цео luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
   va_start(argp, fmt);
   luaL_where(L, 1);
   lua_pushvfstring(L, fmt, argp);
   va_end(argp);
   lua_concat(L, 2);
-  return lua_error(L);
+  врати lua_error(L);
 }
 
 
-LUALIB_API int luaL_fileresult (lua_State *L, int stat, const char *fname) {
-  int en = errno;  /* calls to Lua API may change this value */
-  if (stat) {
+LUALIB_API цео luaL_fileresult (lua_State *L, цео stat, const char *fname) {
+  цео en = errno;  /* calls to Lua API may change this value */
+  ако (stat) {
     lua_pushboolean(L, 1);
-    return 1;
+    врати 1;
   }
-  else {
+  инако {
     const char *msg;
     luaL_pushfail(L);
     msg = (en != 0) ? strerror(en) : "(no extra info)";
-    if (fname)
+    ако (fname)
       lua_pushfstring(L, "%s: %s", fname, msg);
-    else
+    инако
       lua_pushstring(L, msg);
     lua_pushinteger(L, en);
-    return 3;
+    врати 3;
   }
 }
 
 
-#if !defined(l_inspectstat)	/* { */
+#ако !defined(l_inspectstat)	/* { */
 
-#if defined(LUA_USE_POSIX)
+#ако defined(LUA_USE_POSIX)
 
 #include <sys/wait.h>
 
@@ -276,10 +276,10 @@ LUALIB_API int luaL_fileresult (lua_State *L, int stat, const char *fname) {
 ** use appropriate macros to interpret 'pclose' return status
 */
 #define l_inspectstat(stat,what)  \
-   if (WIFEXITED(stat)) { stat = WEXITSTATUS(stat); } \
-   else if (WIFSIGNALED(stat)) { stat = WTERMSIG(stat); what = "signal"; }
+   ако (WIFEXITED(stat)) { stat = WEXITSTATUS(stat); } \
+   инако ако (WIFSIGNALED(stat)) { stat = WTERMSIG(stat); what = "signal"; }
 
-#else
+#инако
 
 #define l_inspectstat(stat,what)  /* no op */
 
@@ -288,19 +288,19 @@ LUALIB_API int luaL_fileresult (lua_State *L, int stat, const char *fname) {
 #endif				/* } */
 
 
-LUALIB_API int luaL_execresult (lua_State *L, int stat) {
-  if (stat != 0 && errno != 0)  /* error with an 'errno'? */
-    return luaL_fileresult(L, 0, NULL);
-  else {
+LUALIB_API цео luaL_execresult (lua_State *L, цео stat) {
+  ако (stat != 0 && errno != 0)  /* error with an 'errno'? */
+    врати luaL_fileresult(L, 0, NULL);
+  инако {
     const char *what = "exit";  /* type of termination */
     l_inspectstat(stat, what);  /* interpret result */
-    if (*what == 'e' && stat == 0)  /* successful termination? */
+    ако (*what == 'e' && stat == 0)  /* successful termination? */
       lua_pushboolean(L, 1);
-    else
+    инако
       luaL_pushfail(L);
     lua_pushstring(L, what);
     lua_pushinteger(L, stat);
-    return 3;  /* return true/fail,what,code */
+    врати 3;  /* return true/fail,what,code */
   }
 }
 
@@ -314,16 +314,16 @@ LUALIB_API int luaL_execresult (lua_State *L, int stat) {
 ** =======================================================
 */
 
-LUALIB_API int luaL_newmetatable (lua_State *L, const char *tname) {
-  if (luaL_getmetatable(L, tname) != LUA_TNIL)  /* name already in use? */
-    return 0;  /* leave previous value on top, but return 0 */
+LUALIB_API цео luaL_newmetatable (lua_State *L, const char *tname) {
+  ако (luaL_getmetatable(L, tname) != LUA_TNIL)  /* name already in use? */
+    врати 0;  /* leave previous value on top, but return 0 */
   lua_pop(L, 1);
   lua_createtable(L, 0, 2);  /* create metatable */
   lua_pushstring(L, tname);
   lua_setfield(L, -2, "__name");  /* metatable.__name = tname */
   lua_pushvalue(L, -1);
   lua_setfield(L, LUA_REGISTRYINDEX, tname);  /* registry.name = metatable */
-  return 1;
+  врати 1;
 }
 
 
@@ -333,25 +333,25 @@ LUALIB_API void luaL_setmetatable (lua_State *L, const char *tname) {
 }
 
 
-LUALIB_API void *luaL_testudata (lua_State *L, int ud, const char *tname) {
+LUALIB_API void *luaL_testudata (lua_State *L, цео ud, const char *tname) {
   void *p = lua_touserdata(L, ud);
-  if (p != NULL) {  /* value is a userdata? */
-    if (lua_getmetatable(L, ud)) {  /* does it have a metatable? */
+  ако (p != NULL) {  /* value is a userdata? */
+    ако (lua_getmetatable(L, ud)) {  /* does it have a metatable? */
       luaL_getmetatable(L, tname);  /* get correct metatable */
-      if (!lua_rawequal(L, -1, -2))  /* not the same? */
+      ако (!lua_rawequal(L, -1, -2))  /* not the same? */
         p = NULL;  /* value is a userdata with wrong metatable */
       lua_pop(L, 2);  /* remove both metatables */
-      return p;
+      врати p;
     }
   }
-  return NULL;  /* value is not a userdata with a metatable */
+  врати NULL;  /* value is not a userdata with a metatable */
 }
 
 
-LUALIB_API void *luaL_checkudata (lua_State *L, int ud, const char *tname) {
+LUALIB_API void *luaL_checkudata (lua_State *L, цео ud, const char *tname) {
   void *p = luaL_testudata(L, ud, tname);
   luaL_argexpected(L, p != NULL, ud, tname);
-  return p;
+  врати p;
 }
 
 /* }====================================================== */
@@ -363,15 +363,15 @@ LUALIB_API void *luaL_checkudata (lua_State *L, int ud, const char *tname) {
 ** =======================================================
 */
 
-LUALIB_API int luaL_checkoption (lua_State *L, int arg, const char *def,
+LUALIB_API цео luaL_checkoption (lua_State *L, цео arg, const char *def,
                                  const char *const lst[]) {
   const char *name = (def) ? luaL_optstring(L, arg, def) :
                              luaL_checkstring(L, arg);
-  int i;
-  for (i=0; lst[i]; i++)
-    if (strcmp(lst[i], name) == 0)
-      return i;
-  return luaL_argerror(L, arg,
+  цео i;
+  за (i=0; lst[i]; i++)
+    ако (strcmp(lst[i], name) == 0)
+      врати i;
+  врати luaL_argerror(L, arg,
                        lua_pushfstring(L, "invalid option '%s'", name));
 }
 
@@ -383,81 +383,81 @@ LUALIB_API int luaL_checkoption (lua_State *L, int arg, const char *def,
 ** this extra space, Lua will generate the same 'stack overflow' error,
 ** but without 'msg'.)
 */
-LUALIB_API void luaL_checkstack (lua_State *L, int space, const char *msg) {
-  if (l_unlikely(!lua_checkstack(L, space))) {
-    if (msg)
+LUALIB_API void luaL_checkstack (lua_State *L, цео space, const char *msg) {
+  ако (l_unlikely(!lua_checkstack(L, space))) {
+    ако (msg)
       luaL_error(L, "stack overflow (%s)", msg);
-    else
+    инако
       luaL_error(L, "stack overflow");
   }
 }
 
 
-LUALIB_API void luaL_checktype (lua_State *L, int arg, int t) {
-  if (l_unlikely(lua_type(L, arg) != t))
+LUALIB_API void luaL_checktype (lua_State *L, цео arg, цео t) {
+  ако (l_unlikely(lua_type(L, arg) != t))
     tag_error(L, arg, t);
 }
 
 
-LUALIB_API void luaL_checkany (lua_State *L, int arg) {
-  if (l_unlikely(lua_type(L, arg) == LUA_TNONE))
+LUALIB_API void luaL_checkany (lua_State *L, цео arg) {
+  ако (l_unlikely(lua_type(L, arg) == LUA_TNONE))
     luaL_argerror(L, arg, "value expected");
 }
 
 
-LUALIB_API const char *luaL_checklstring (lua_State *L, int arg, size_t *len) {
+LUALIB_API const char *luaL_checklstring (lua_State *L, цео arg, size_t *len) {
   const char *s = lua_tolstring(L, arg, len);
-  if (l_unlikely(!s)) tag_error(L, arg, LUA_TSTRING);
-  return s;
+  ако (l_unlikely(!s)) tag_error(L, arg, LUA_TSTRING);
+  врати s;
 }
 
 
-LUALIB_API const char *luaL_optlstring (lua_State *L, int arg,
+LUALIB_API const char *luaL_optlstring (lua_State *L, цео arg,
                                         const char *def, size_t *len) {
-  if (lua_isnoneornil(L, arg)) {
-    if (len)
+  ако (lua_isnoneornil(L, arg)) {
+    ако (len)
       *len = (def ? strlen(def) : 0);
-    return def;
+    врати def;
   }
-  else return luaL_checklstring(L, arg, len);
+  инако врати luaL_checklstring(L, arg, len);
 }
 
 
-LUALIB_API lua_Number luaL_checknumber (lua_State *L, int arg) {
-  int isnum;
+LUALIB_API lua_Number luaL_checknumber (lua_State *L, цео arg) {
+  цео isnum;
   lua_Number d = lua_tonumberx(L, arg, &isnum);
-  if (l_unlikely(!isnum))
+  ако (l_unlikely(!isnum))
     tag_error(L, arg, LUA_TNUMBER);
-  return d;
+  врати d;
 }
 
 
-LUALIB_API lua_Number luaL_optnumber (lua_State *L, int arg, lua_Number def) {
-  return luaL_opt(L, luaL_checknumber, arg, def);
+LUALIB_API lua_Number luaL_optnumber (lua_State *L, цео arg, lua_Number def) {
+  врати luaL_opt(L, luaL_checknumber, arg, def);
 }
 
 
-static void interror (lua_State *L, int arg) {
-  if (lua_isnumber(L, arg))
+static void interror (lua_State *L, цео arg) {
+  ако (lua_isnumber(L, arg))
     luaL_argerror(L, arg, "number has no integer representation");
-  else
+  инако
     tag_error(L, arg, LUA_TNUMBER);
 }
 
 
-LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int arg) {
-  int isnum;
+LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, цео arg) {
+  цео isnum;
   lua_Integer d = lua_tointegerx(L, arg, &isnum);
-  if (l_unlikely(!isnum)) {
+  ако (l_unlikely(!isnum)) {
     interror(L, arg);
   }
-  return d;
+  врати d;
 }
 
 
-LUALIB_API lua_Integer luaL_optinteger (lua_State *L, int arg,
+LUALIB_API lua_Integer luaL_optinteger (lua_State *L, цео arg,
                                                       lua_Integer def) {
-  return luaL_opt(L, luaL_checkinteger, arg, def);
+  врати luaL_opt(L, luaL_checkinteger, arg, def);
 }
 
 /* }====================================================== */
@@ -481,28 +481,28 @@ typedef struct UBox {
 ** to 0 even after it was closed. 'pushresult' may also resize it to a
 ** final size that is equal to the one set when the buffer was created.)
 */
-static void *resizebox (lua_State *L, int idx, size_t newsize) {
+static void *resizebox (lua_State *L, цео idx, size_t newsize) {
   UBox *box = (UBox *)lua_touserdata(L, idx);
-  if (box->bsize == newsize)  /* not changing size? */
-    return box->box;  /* keep the buffer */
-  else {
+  ако (box->bsize == newsize)  /* not changing size? */
+    врати box->box;  /* keep the buffer */
+  инако {
     void *ud;
     lua_Alloc allocf = lua_getallocf(L, &ud);
     void *temp = allocf(ud, box->box, box->bsize, newsize);
-    if (l_unlikely(temp == NULL && newsize > 0)) {  /* allocation error? */
+    ако (l_unlikely(temp == NULL && newsize > 0)) {  /* allocation error? */
       lua_pushliteral(L, "not enough memory");
       lua_error(L);  /* raise a memory error */
     }
     box->box = temp;
     box->bsize = newsize;
-    return temp;
+    врати temp;
   }
 }
 
 
-static int boxgc (lua_State *L) {
+static цео boxgc (lua_State *L) {
   resizebox(L, 1, 0);
-  return 0;
+  врати 0;
 }
 
 
@@ -518,7 +518,7 @@ static const luaL_Reg boxmt[] = {  /* box metamethods */
 */
 static void getBoxMT (lua_State *L) {
   const char *BOXMT = "_UBOX*"; /* key for the metatable */
-  if (luaL_getmetatable(L, BOXMT) == LUA_TNIL) {  /* MT not created yet? */
+  ако (luaL_getmetatable(L, BOXMT) == LUA_TNIL) {  /* MT not created yet? */
     luaL_newlibtable(L, boxmt);  /* create it */
     luaL_setfuncs(L, boxmt, 0);  /* initialize it */
     lua_copy(L, -1, -2);  /* change stack from nil,MT to MT,MT */
@@ -558,14 +558,14 @@ static void newbox (lua_State *L) {
 */
 static size_t newbuffsize (luaL_Buffer *B, size_t sz) {
   size_t newsize = B->size;
-  if (l_unlikely(sz >= MAX_SIZE - B->n))
-    return cast_sizet(luaL_error(B->L, "resulting string too large"));
+  ако (l_unlikely(sz >= MAX_SIZE - B->n))
+    врати cast_sizet(luaL_error(B->L, "resulting string too large"));
   /* else  B->n + sz + 1 <= MAX_SIZE */
-  if (newsize <= MAX_SIZE/3 * 2)  /* no overflow? */
+  ако (newsize <= MAX_SIZE/3 * 2)  /* no overflow? */
     newsize += (newsize >> 1);  /* new size *= 1.5 */
-  if (newsize < B->n + sz + 1)  /* not big enough? */
+  ако (newsize < B->n + sz + 1)  /* not big enough? */
     newsize = B->n + sz + 1;
-  return newsize;
+  врати newsize;
 }
 
 
@@ -574,18 +574,18 @@ static size_t newbuffsize (luaL_Buffer *B, size_t sz) {
 ** 'B'. 'boxidx' is the relative position in the stack where is the
 ** buffer's box or its placeholder.
 */
-static char *prepbuffsize (luaL_Buffer *B, size_t sz, int boxidx) {
+static char *prepbuffsize (luaL_Buffer *B, size_t sz, цео boxidx) {
   checkbufferlevel(B, boxidx);
-  if (B->size - B->n >= sz)  /* enough space? */
-    return B->b + B->n;
-  else {
+  ако (B->size - B->n >= sz)  /* enough space? */
+    врати B->b + B->n;
+  инако {
     lua_State *L = B->L;
     char *newbuff;
     size_t newsize = newbuffsize(B, sz);
     /* create larger buffer */
-    if (buffonstack(B))  /* buffer already has a box? */
+    ако (buffonstack(B))  /* buffer already has a box? */
       newbuff = (char *)resizebox(L, boxidx, newsize);  /* resize it */
-    else {  /* no box yet */
+    инако {  /* no box yet */
       lua_remove(L, boxidx);  /* remove placeholder */
       newbox(L);  /* create a new box */
       lua_insert(L, boxidx);  /* move box to its intended position */
@@ -595,7 +595,7 @@ static char *prepbuffsize (luaL_Buffer *B, size_t sz, int boxidx) {
     }
     B->b = newbuff;
     B->size = newsize;
-    return newbuff + B->n;
+    врати newbuff + B->n;
   }
 }
 
@@ -603,12 +603,12 @@ static char *prepbuffsize (luaL_Buffer *B, size_t sz, int boxidx) {
 ** returns a pointer to a free area with at least 'sz' bytes
 */
 LUALIB_API char *luaL_prepbuffsize (luaL_Buffer *B, size_t sz) {
-  return prepbuffsize(B, sz, -1);
+  врати prepbuffsize(B, sz, -1);
 }
 
 
 LUALIB_API void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l) {
-  if (l > 0) {  /* avoid 'memcpy' when 's' can be NULL */
+  ако (l > 0) {  /* avoid 'memcpy' when 's' can be NULL */
     char *b = prepbuffsize(B, l, -1);
     memcpy(b, s, l * sizeof(char));
     luaL_addsize(B, l);
@@ -624,9 +624,9 @@ LUALIB_API void luaL_addstring (luaL_Buffer *B, const char *s) {
 LUALIB_API void luaL_pushresult (luaL_Buffer *B) {
   lua_State *L = B->L;
   checkbufferlevel(B, -1);
-  if (!buffonstack(B))  /* using static buffer? */
+  ако (!buffonstack(B))  /* using static buffer? */
     lua_pushlstring(L, B->b, B->n);  /* save result as regular string */
-  else {  /* reuse buffer already allocated */
+  инако {  /* reuse buffer already allocated */
     UBox *box = (UBox *)lua_touserdata(L, -1);
     void *ud;
     lua_Alloc allocf = lua_getallocf(L, &ud);  /* function to free buffer */
@@ -682,7 +682,7 @@ LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
 
 LUALIB_API char *luaL_buffinitsize (lua_State *L, luaL_Buffer *B, size_t sz) {
   luaL_buffinit(L, B);
-  return prepbuffsize(B, sz, -1);
+  врати prepbuffsize(B, sz, -1);
 }
 
 /* }====================================================== */
@@ -699,35 +699,35 @@ LUALIB_API char *luaL_buffinitsize (lua_State *L, luaL_Buffer *B, size_t sz) {
 ** of a first free index, t[t[1]] is the index of the second element,
 ** etc. A zero signals the end of the list.
 */
-LUALIB_API int luaL_ref (lua_State *L, int t) {
-  int ref;
-  if (lua_isnil(L, -1)) {
+LUALIB_API цео luaL_ref (lua_State *L, цео t) {
+  цео ref;
+  ако (lua_isnil(L, -1)) {
     lua_pop(L, 1);  /* remove from stack */
-    return LUA_REFNIL;  /* 'nil' has a unique fixed reference */
+    врати LUA_REFNIL;  /* 'nil' has a unique fixed reference */
   }
   t = lua_absindex(L, t);
-  if (lua_rawgeti(L, t, 1) == LUA_TNUMBER)  /* already initialized? */
-    ref = (int)lua_tointeger(L, -1);  /* ref = t[1] */
-  else {  /* first access */
+  ако (lua_rawgeti(L, t, 1) == LUA_TNUMBER)  /* already initialized? */
+    ref = (цео)lua_tointeger(L, -1);  /* ref = t[1] */
+  инако {  /* first access */
     lua_assert(!lua_toboolean(L, -1));  /* must be nil or false */
     ref = 0;  /* list is empty */
     lua_pushinteger(L, 0);  /* initialize as an empty list */
     lua_rawseti(L, t, 1);  /* ref = t[1] = 0 */
   }
   lua_pop(L, 1);  /* remove element from stack */
-  if (ref != 0) {  /* any free element? */
+  ако (ref != 0) {  /* any free element? */
     lua_rawgeti(L, t, ref);  /* remove it from list */
     lua_rawseti(L, t, 1);  /* (t[1] = t[ref]) */
   }
-  else  /* no free elements */
-    ref = (int)lua_rawlen(L, t) + 1;  /* get a new reference */
+  инако  /* no free elements */
+    ref = (цео)lua_rawlen(L, t) + 1;  /* get a new reference */
   lua_rawseti(L, t, ref);
-  return ref;
+  врати ref;
 }
 
 
-LUALIB_API void luaL_unref (lua_State *L, int t, int ref) {
-  if (ref >= 0) {
+LUALIB_API void luaL_unref (lua_State *L, цео t, цео ref) {
+  ако (ref >= 0) {
     t = lua_absindex(L, t);
     lua_rawgeti(L, t, 1);
     lua_assert(lua_isinteger(L, -1));
@@ -756,30 +756,30 @@ typedef struct LoadF {
 static const char *getF (lua_State *L, void *ud, size_t *size) {
   LoadF *lf = (LoadF *)ud;
   UNUSED(L);
-  if (lf->n > 0) {  /* are there pre-read characters to be read? */
+  ако (lf->n > 0) {  /* are there pre-read characters to be read? */
     *size = lf->n;  /* return them (chars already in buffer) */
     lf->n = 0;  /* no more pre-read characters */
   }
-  else {  /* read a block from file */
+  инако {  /* read a block from file */
     /* 'fread' can return > 0 *and* set the EOF flag. If next call to
        'getF' called 'fread', it might still wait for user input.
        The next check avoids this problem. */
-    if (feof(lf->f)) return NULL;
+    ако (feof(lf->f)) врати NULL;
     *size = fread(lf->buff, 1, sizeof(lf->buff), lf->f);  /* read block */
   }
-  return lf->buff;
+  врати lf->buff;
 }
 
 
-static int errfile (lua_State *L, const char *what, int fnameindex) {
-  int err = errno;
+static цео errfile (lua_State *L, const char *what, цео fnameindex) {
+  цео err = errno;
   const char *filename = lua_tostring(L, fnameindex) + 1;
-  if (err != 0)
+  ако (err != 0)
     lua_pushfstring(L, "cannot %s %s: %s", what, filename, strerror(err));
-  else
+  инако
     lua_pushfstring(L, "cannot %s %s", what, filename);
   lua_remove(L, fnameindex);
-  return LUA_ERRFILE;
+  врати LUA_ERRFILE;
 }
 
 
@@ -789,12 +789,12 @@ static int errfile (lua_State *L, const char *what, int fnameindex) {
 ** not), returns the first character anyway to force an error
 ** (as no chunk can start with 0xEF).
 */
-static int skipBOM (FILE *f) {
-  int c = getc(f);  /* read first character */
-  if (c == 0xEF && getc(f) == 0xBB && getc(f) == 0xBF)  /* correct BOM? */
-    return getc(f);  /* ignore BOM and return next char */
-  else  /* no (valid) BOM */
-    return c;  /* return first character */
+static цео skipBOM (FILE *f) {
+  цео c = getc(f);  /* read first character */
+  ако (c == 0xEF && getc(f) == 0xBB && getc(f) == 0xBF)  /* correct BOM? */
+    врати getc(f);  /* ignore BOM and return next char */
+  инако  /* no (valid) BOM */
+    врати c;  /* return first character */
 }
 
 
@@ -805,59 +805,59 @@ static int skipBOM (FILE *f) {
 ** first "valid" character of the file (after the optional BOM and
 ** a first-line comment).
 */
-static int skipcomment (FILE *f, int *cp) {
-  int c = *cp = skipBOM(f);
-  if (c == '#') {  /* first line is a comment (Unix exec. file)? */
+static цео skipcomment (FILE *f, цео *cp) {
+  цео c = *cp = skipBOM(f);
+  ако (c == '#') {  /* first line is a comment (Unix exec. file)? */
     do {  /* skip first line */
       c = getc(f);
-    } while (c != EOF && c != '\n');
+    } док (c != EOF && c != '\n');
     *cp = getc(f);  /* next character after comment, if present */
-    return 1;  /* there was a comment */
+    врати 1;  /* there was a comment */
   }
-  else return 0;  /* no comment */
+  инако врати 0;  /* no comment */
 }
 
 
-LUALIB_API int luaL_loadfilex (lua_State *L, const char *filename,
+LUALIB_API цео luaL_loadfilex (lua_State *L, const char *filename,
                                              const char *mode) {
   LoadF lf;
-  int status, readstatus;
-  int c;
-  int fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
-  if (filename == NULL) {
+  цео status, readstatus;
+  цео c;
+  цео fnameindex = lua_gettop(L) + 1;  /* index of filename on the stack */
+  ако (filename == NULL) {
     lua_pushliteral(L, "=stdin");
     lf.f = stdin;
   }
-  else {
+  инако {
     lua_pushfstring(L, "@%s", filename);
     errno = 0;
     lf.f = fopen(filename, "r");
-    if (lf.f == NULL) return errfile(L, "open", fnameindex);
+    ако (lf.f == NULL) врати errfile(L, "open", fnameindex);
   }
   lf.n = 0;
-  if (skipcomment(lf.f, &c))  /* read initial portion */
+  ако (skipcomment(lf.f, &c))  /* read initial portion */
     lf.buff[lf.n++] = '\n';  /* add newline to correct line numbers */
-  if (c == LUA_SIGNATURE[0]) {  /* binary file? */
+  ако (c == LUA_SIGNATURE[0]) {  /* binary file? */
     lf.n = 0;  /* remove possible newline */
-    if (filename) {  /* "real" file? */
+    ако (filename) {  /* "real" file? */
       errno = 0;
       lf.f = freopen(filename, "rb", lf.f);  /* reopen in binary mode */
-      if (lf.f == NULL) return errfile(L, "reopen", fnameindex);
+      ако (lf.f == NULL) врати errfile(L, "reopen", fnameindex);
       skipcomment(lf.f, &c);  /* re-read initial portion */
     }
   }
-  if (c != EOF)
+  ако (c != EOF)
     lf.buff[lf.n++] = cast_char(c);  /* 'c' is the first character */
   status = lua_load(L, getF, &lf, lua_tostring(L, -1), mode);
   readstatus = ferror(lf.f);
   errno = 0;  /* no useful error number until here */
-  if (filename) fclose(lf.f);  /* close file (even in case of errors) */
-  if (readstatus) {
+  ако (filename) fclose(lf.f);  /* close file (even in case of errors) */
+  ако (readstatus) {
     lua_settop(L, fnameindex);  /* ignore results from 'lua_load' */
-    return errfile(L, "read", fnameindex);
+    врати errfile(L, "read", fnameindex);
   }
   lua_remove(L, fnameindex);
-  return status;
+  врати status;
 }
 
 
@@ -870,75 +870,75 @@ typedef struct LoadS {
 static const char *getS (lua_State *L, void *ud, size_t *size) {
   LoadS *ls = (LoadS *)ud;
   UNUSED(L);
-  if (ls->size == 0) return NULL;
+  ако (ls->size == 0) врати NULL;
   *size = ls->size;
   ls->size = 0;
-  return ls->s;
+  врати ls->s;
 }
 
 
-LUALIB_API int luaL_loadbufferx (lua_State *L, const char *buff, size_t size,
+LUALIB_API цео luaL_loadbufferx (lua_State *L, const char *buff, size_t size,
                                  const char *name, const char *mode) {
   LoadS ls;
   ls.s = buff;
   ls.size = size;
-  return lua_load(L, getS, &ls, name, mode);
+  врати lua_load(L, getS, &ls, name, mode);
 }
 
 
-LUALIB_API int luaL_loadstring (lua_State *L, const char *s) {
-  return luaL_loadbufferx(L, s, strlen(s), s, "t");
+LUALIB_API цео luaL_loadstring (lua_State *L, const char *s) {
+  врати luaL_loadbufferx(L, s, strlen(s), s, "t");
 }
 
 /* }====================================================== */
 
 
 
-LUALIB_API int luaL_getmetafield (lua_State *L, int obj, const char *event) {
-  if (!lua_getmetatable(L, obj))  /* no metatable? */
-    return LUA_TNIL;
-  else {
-    int tt;
+LUALIB_API цео luaL_getmetafield (lua_State *L, цео obj, const char *event) {
+  ако (!lua_getmetatable(L, obj))  /* no metatable? */
+    врати LUA_TNIL;
+  инако {
+    цео tt;
     lua_pushstring(L, event);
     tt = lua_rawget(L, -2);
-    if (tt == LUA_TNIL)  /* is metafield nil? */
+    ако (tt == LUA_TNIL)  /* is metafield nil? */
       lua_pop(L, 2);  /* remove metatable and metafield */
-    else
+    инако
       lua_remove(L, -2);  /* remove only metatable */
-    return tt;  /* return metafield type */
+    врати tt;  /* return metafield type */
   }
 }
 
 
-LUALIB_API int luaL_callmeta (lua_State *L, int obj, const char *event) {
+LUALIB_API цео luaL_callmeta (lua_State *L, цео obj, const char *event) {
   obj = lua_absindex(L, obj);
-  if (luaL_getmetafield(L, obj, event) == LUA_TNIL)  /* no metafield? */
-    return 0;
+  ако (luaL_getmetafield(L, obj, event) == LUA_TNIL)  /* no metafield? */
+    врати 0;
   lua_pushvalue(L, obj);
   lua_call(L, 1, 1);
-  return 1;
+  врати 1;
 }
 
 
-LUALIB_API lua_Integer luaL_len (lua_State *L, int idx) {
+LUALIB_API lua_Integer luaL_len (lua_State *L, цео idx) {
   lua_Integer l;
-  int isnum;
+  цео isnum;
   lua_len(L, idx);
   l = lua_tointegerx(L, -1, &isnum);
-  if (l_unlikely(!isnum))
+  ако (l_unlikely(!isnum))
     luaL_error(L, "object length is not an integer");
   lua_pop(L, 1);  /* remove object */
-  return l;
+  врати l;
 }
 
 
-LUALIB_API const char *luaL_tolstring (lua_State *L, int idx, size_t *len) {
+LUALIB_API const char *luaL_tolstring (lua_State *L, цео idx, size_t *len) {
   idx = lua_absindex(L,idx);
-  if (luaL_callmeta(L, idx, "__tostring")) {  /* metafield? */
-    if (!lua_isstring(L, -1))
+  ако (luaL_callmeta(L, idx, "__tostring")) {  /* metafield? */
+    ако (!lua_isstring(L, -1))
       luaL_error(L, "'__tostring' must return a string");
   }
-  else {
+  инако {
     switch (lua_type(L, idx)) {
       case LUA_TNUMBER: {
         char buff[LUA_N2SBUFFSZ];
@@ -956,17 +956,17 @@ LUALIB_API const char *luaL_tolstring (lua_State *L, int idx, size_t *len) {
         lua_pushliteral(L, "nil");
         break;
       default: {
-        int tt = luaL_getmetafield(L, idx, "__name");  /* try name */
+        цео tt = luaL_getmetafield(L, idx, "__name");  /* try name */
         const char *kind = (tt == LUA_TSTRING) ? lua_tostring(L, -1) :
                                                  luaL_typename(L, idx);
         lua_pushfstring(L, "%s: %p", kind, lua_topointer(L, idx));
-        if (tt != LUA_TNIL)
+        ако (tt != LUA_TNIL)
           lua_remove(L, -2);  /* remove '__name' */
         break;
       }
     }
   }
-  return lua_tolstring(L, -1, len);
+  врати lua_tolstring(L, -1, len);
 }
 
 
@@ -975,14 +975,14 @@ LUALIB_API const char *luaL_tolstring (lua_State *L, int idx, size_t *len) {
 ** function gets the 'nup' elements at the top as upvalues.
 ** Returns with only the table at the stack.
 */
-LUALIB_API void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
+LUALIB_API void luaL_setfuncs (lua_State *L, const luaL_Reg *l, цео nup) {
   luaL_checkstack(L, nup, "too many upvalues");
-  for (; l->name != NULL; l++) {  /* fill the table with given functions */
-    if (l->func == NULL)  /* placeholder? */
+  за (; l->name != NULL; l++) {  /* fill the table with given functions */
+    ако (l->func == NULL)  /* placeholder? */
       lua_pushboolean(L, 0);
-    else {
-      int i;
-      for (i = 0; i < nup; i++)  /* copy upvalues to the top */
+    инако {
+      цео i;
+      за (i = 0; i < nup; i++)  /* copy upvalues to the top */
         lua_pushvalue(L, -nup);
       lua_pushcclosure(L, l->func, nup);  /* closure with those upvalues */
     }
@@ -996,16 +996,16 @@ LUALIB_API void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
 ** ensure that stack[idx][fname] has a table and push that table
 ** into the stack
 */
-LUALIB_API int luaL_getsubtable (lua_State *L, int idx, const char *fname) {
-  if (lua_getfield(L, idx, fname) == LUA_TTABLE)
-    return 1;  /* table already there */
-  else {
+LUALIB_API цео luaL_getsubtable (lua_State *L, цео idx, const char *fname) {
+  ако (lua_getfield(L, idx, fname) == LUA_TTABLE)
+    врати 1;  /* table already there */
+  инако {
     lua_pop(L, 1);  /* remove previous result */
     idx = lua_absindex(L, idx);
     lua_newtable(L);
     lua_pushvalue(L, -1);  /* copy to be left at top */
     lua_setfield(L, idx, fname);  /* assign new table to field */
-    return 0;  /* false, because did not find table there */
+    врати 0;  /* false, because did not find table there */
   }
 }
 
@@ -1017,10 +1017,10 @@ LUALIB_API int luaL_getsubtable (lua_State *L, int idx, const char *fname) {
 ** Leaves resulting module on the top.
 */
 LUALIB_API void luaL_requiref (lua_State *L, const char *modname,
-                               lua_CFunction openf, int glb) {
+                               lua_CFunction openf, цео glb) {
   luaL_getsubtable(L, LUA_REGISTRYINDEX, LUA_LOADED_TABLE);
   lua_getfield(L, -1, modname);  /* LOADED[modname] */
-  if (!lua_toboolean(L, -1)) {  /* package not already loaded? */
+  ако (!lua_toboolean(L, -1)) {  /* package not already loaded? */
     lua_pop(L, 1);  /* remove field */
     lua_pushcfunction(L, openf);
     lua_pushstring(L, modname);  /* argument to open function */
@@ -1029,7 +1029,7 @@ LUALIB_API void luaL_requiref (lua_State *L, const char *modname,
     lua_setfield(L, -3, modname);  /* LOADED[modname] = module */
   }
   lua_remove(L, -2);  /* remove LOADED table */
-  if (glb) {
+  ако (glb) {
     lua_pushvalue(L, -1);  /* copy of module */
     lua_setglobal(L, modname);  /* _G[modname] = module */
   }
@@ -1040,7 +1040,7 @@ LUALIB_API void luaL_addgsub (luaL_Buffer *b, const char *s,
                                      const char *p, const char *r) {
   const char *wild;
   size_t l = strlen(p);
-  while ((wild = strstr(s, p)) != NULL) {
+  док ((wild = strstr(s, p)) != NULL) {
     luaL_addlstring(b, s, ct_diff2sz(wild - s));  /* push prefix */
     luaL_addstring(b, r);  /* push replacement in place of pattern */
     s = wild + l;  /* continue after 'p' */
@@ -1055,18 +1055,18 @@ LUALIB_API const char *luaL_gsub (lua_State *L, const char *s,
   luaL_buffinit(L, &b);
   luaL_addgsub(&b, s, p, r);
   luaL_pushresult(&b);
-  return lua_tostring(L, -1);
+  врати lua_tostring(L, -1);
 }
 
 
 void *luaL_alloc (void *ud, void *ptr, size_t osize, size_t nsize) {
   UNUSED(ud); UNUSED(osize);
-  if (nsize == 0) {
+  ако (nsize == 0) {
     free(ptr);
-    return NULL;
+    врати NULL;
   }
-  else
-    return realloc(ptr, nsize);
+  инако
+    врати realloc(ptr, nsize);
 }
 
 
@@ -1074,13 +1074,13 @@ void *luaL_alloc (void *ud, void *ptr, size_t osize, size_t nsize) {
 ** Standard panic function just prints an error message. The test
 ** with 'lua_type' avoids possible memory errors in 'lua_tostring'.
 */
-static int panic (lua_State *L) {
+static цео panic (lua_State *L) {
   const char *msg = (lua_type(L, -1) == LUA_TSTRING)
                   ? lua_tostring(L, -1)
                   : "error object is not a string";
   lua_writestringerror("PANIC: unprotected error in call to Lua API (%s)\n",
                         msg);
-  return 0;  /* return to Lua to abort */
+  врати 0;  /* return to Lua to abort */
 }
 
 
@@ -1090,29 +1090,29 @@ static int panic (lua_State *L) {
 ** warnfon: ready to start a new message
 ** warnfcont: previous message is to be continued
 */
-static void warnfoff (void *ud, const char *message, int tocont);
-static void warnfon (void *ud, const char *message, int tocont);
-static void warnfcont (void *ud, const char *message, int tocont);
+static void warnfoff (void *ud, const char *message, цео tocont);
+static void warnfon (void *ud, const char *message, цео tocont);
+static void warnfcont (void *ud, const char *message, цео tocont);
 
 
 /*
 ** Check whether message is a control message. If so, execute the
 ** control or ignore it if unknown.
 */
-static int checkcontrol (lua_State *L, const char *message, int tocont) {
-  if (tocont || *(message++) != '@')  /* not a control message? */
-    return 0;
-  else {
-    if (strcmp(message, "off") == 0)
+static цео checkcontrol (lua_State *L, const char *message, цео tocont) {
+  ако (tocont || *(message++) != '@')  /* not a control message? */
+    врати 0;
+  инако {
+    ако (strcmp(message, "off") == 0)
       lua_setwarnf(L, warnfoff, L);  /* turn warnings off */
-    else if (strcmp(message, "on") == 0)
+    инако ако (strcmp(message, "on") == 0)
       lua_setwarnf(L, warnfon, L);   /* turn warnings on */
-    return 1;  /* it was a control message */
+    врати 1;  /* it was a control message */
   }
 }
 
 
-static void warnfoff (void *ud, const char *message, int tocont) {
+static void warnfoff (void *ud, const char *message, цео tocont) {
   checkcontrol((lua_State *)ud, message, tocont);
 }
 
@@ -1121,21 +1121,21 @@ static void warnfoff (void *ud, const char *message, int tocont) {
 ** Writes the message and handle 'tocont', finishing the message
 ** if needed and setting the next warn function.
 */
-static void warnfcont (void *ud, const char *message, int tocont) {
+static void warnfcont (void *ud, const char *message, цео tocont) {
   lua_State *L = (lua_State *)ud;
   lua_writestringerror("%s", message);  /* write message */
-  if (tocont)  /* not the last part? */
+  ако (tocont)  /* not the last part? */
     lua_setwarnf(L, warnfcont, L);  /* to be continued */
-  else {  /* last part */
+  инако {  /* last part */
     lua_writestringerror("%s", "\n");  /* finish message with end-of-line */
     lua_setwarnf(L, warnfon, L);  /* next call is a new message */
   }
 }
 
 
-static void warnfon (void *ud, const char *message, int tocont) {
-  if (checkcontrol((lua_State *)ud, message, tocont))  /* control message? */
-    return;  /* nothing else to be done */
+static void warnfon (void *ud, const char *message, цео tocont) {
+  ако (checkcontrol((lua_State *)ud, message, tocont))  /* control message? */
+    врати;  /* nothing else to be done */
   lua_writestringerror("%s", "Lua warning: ");  /* start a new warning */
   warnfcont(ud, message, tocont);  /* finish processing */
 }
@@ -1147,7 +1147,7 @@ static void warnfon (void *ud, const char *message, int tocont) {
 ** randomness. Rely on Address Space Layout Randomization (if present)
 ** and the current time.
 */
-#if !defined(luai_makeseed)
+#ако !defined(luai_makeseed)
 
 #include <time.h>
 
@@ -1156,7 +1156,7 @@ static void warnfon (void *ud, const char *message, int tocont) {
 #define BUFSEEDB	(sizeof(void*) + sizeof(time_t))
 
 /* Size for the buffer in int's, rounded up */
-#define BUFSEED		((BUFSEEDB + sizeof(int) - 1) / sizeof(int))
+#define BUFSEED		((BUFSEEDB + sizeof(цео) - 1) / sizeof(цео))
 
 /*
 ** Copy the contents of variable 'v' into the buffer pointed by 'b'.
@@ -1165,10 +1165,10 @@ static void warnfon (void *ud, const char *message, int tocont) {
 #define addbuff(b,v)	(memcpy(&b[0], &(v), sizeof(v)), b += sizeof(v))
 
 
-static unsigned int luai_makeseed (void) {
-  unsigned int buff[BUFSEED];
-  unsigned int res;
-  unsigned int i;
+static unsigned цео luai_makeseed (void) {
+  unsigned цео buff[BUFSEED];
+  unsigned цео res;
+  unsigned цео i;
   time_t t = time(NULL);
   char *b = (char*)buff;
   addbuff(b, b);  /* local variable's address */
@@ -1176,17 +1176,17 @@ static unsigned int luai_makeseed (void) {
   /* fill (rare but possible) remain of the buffer with zeros */
   memset(b, 0, sizeof(buff) - BUFSEEDB);
   res = buff[0];
-  for (i = 1; i < BUFSEED; i++)
+  за (i = 1; i < BUFSEED; i++)
     res ^= (res >> 3) + (res << 7) + buff[i];
-  return res;
+  врати res;
 }
 
 #endif
 
 
-LUALIB_API unsigned int luaL_makeseed (lua_State *L) {
+LUALIB_API unsigned цео luaL_makeseed (lua_State *L) {
   UNUSED(L);
-  return luai_makeseed();
+  врати luai_makeseed();
 }
 
 
@@ -1196,19 +1196,19 @@ LUALIB_API unsigned int luaL_makeseed (lua_State *L) {
 */
 LUALIB_API lua_State *(luaL_newstate) (void) {
   lua_State *L = lua_newstate(luaL_alloc, NULL, luaL_makeseed(NULL));
-  if (l_likely(L)) {
+  ако (l_likely(L)) {
     lua_atpanic(L, &panic);
     lua_setwarnf(L, warnfon, L);
   }
-  return L;
+  врати L;
 }
 
 
 LUALIB_API void luaL_checkversion_ (lua_State *L, lua_Number ver, size_t sz) {
   lua_Number v = lua_version(L);
-  if (sz != LUAL_NUMSIZES)  /* check numeric types */
+  ако (sz != LUAL_NUMSIZES)  /* check numeric types */
     luaL_error(L, "core and library have incompatible numeric types");
-  else if (v != ver)
+  инако ако (v != ver)
     luaL_error(L, "version mismatch: app. needs %f, Lua core provides %f",
                   (LUAI_UACNUMBER)ver, (LUAI_UACNUMBER)v);
 }

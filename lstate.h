@@ -126,7 +126,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** Atomic type (relative to signals) to better ensure that 'lua_sethook'
 ** is thread safe
 */
-#if !defined(l_signalT)
+#ако !defined(l_signalT)
 #include <signal.h>
 #define l_signalT	sig_atomic_t
 #endif
@@ -147,7 +147,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** sets (better be a prime) and "M" is the size of each set.
 ** (M == 1 makes a direct cache.)
 */
-#if !defined(STRCACHE_N)
+#ако !defined(STRCACHE_N)
 #define STRCACHE_N              53
 #define STRCACHE_M              2
 #endif
@@ -166,8 +166,8 @@ struct lua_longjmp;  /* defined in ldo.c */
 
 typedef struct stringtable {
   TString **hash;  /* array of buckets (linked lists of strings) */
-  int nuse;  /* number of elements */
-  int size;  /* number of buckets */
+  цео nuse;  /* number of elements */
+  цео size;  /* number of buckets */
 } stringtable;
 
 
@@ -192,7 +192,7 @@ struct CallInfo {
     struct {  /* only for Lua functions */
       const Instruction *savedpc;
       volatile l_signalT trap;  /* function is tracing lines/counts */
-      int nextraargs;  /* # of extra arguments in vararg functions */
+      цео nextraargs;  /* # of extra arguments in vararg functions */
     } l;
     struct {  /* only for C functions */
       lua_KFunction k;  /* continuation in case of yields */
@@ -201,9 +201,9 @@ struct CallInfo {
     } c;
   } u;
   union {
-    int funcidx;  /* called-function index */
-    int nyield;  /* number of values yielded */
-    int nres;  /* number of values returned */
+    цео funcidx;  /* called-function index */
+    цео nyield;  /* number of values yielded */
+    цео nres;  /* number of values returned */
   } u2;
   l_uint32 callstatus;
 };
@@ -300,14 +300,14 @@ struct lua_State {
   volatile lua_Hook hook;
   ptrdiff_t errfunc;  /* current error handling function (stack index) */
   l_uint32 nCcalls;  /* number of nested non-yieldable or C calls */
-  int oldpc;  /* last pc traced */
-  int nci;  /* number of items in 'ci' list */
-  int basehookcount;
-  int hookcount;
+  цео oldpc;  /* last pc traced */
+  цео nci;  /* number of items in 'ci' list */
+  цео basehookcount;
+  цео hookcount;
   volatile l_signalT hookmask;
   struct {  /* info about transferred values (for call/return hooks) */
-    int ftransfer;  /* offset of first value transferred */
-    int ntransfer;  /* number of values transferred */
+    цео ftransfer;  /* offset of first value transferred */
+    цео ntransfer;  /* number of values transferred */
   } transferinfo;
 };
 
@@ -334,7 +334,7 @@ typedef struct global_State {
   stringtable strt;  /* hash table for strings */
   TValue l_registry;
   TValue nilvalue;  /* a nil value */
-  unsigned int seed;  /* randomized seed for hashes */
+  unsigned цео seed;  /* randomized seed for hashes */
   lu_byte gcparams[LUA_GCPN];
   lu_byte currentwhite;
   lu_byte gcstate;  /* state of garbage collector */
@@ -438,11 +438,11 @@ union GCUnion {
 LUAI_FUNC void luaE_setdebt (global_State *g, l_mem debt);
 LUAI_FUNC void luaE_freethread (lua_State *L, lua_State *L1);
 LUAI_FUNC lu_mem luaE_threadsize (lua_State *L);
-LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
+LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, цео err);
 LUAI_FUNC void luaE_shrinkCI (lua_State *L);
 LUAI_FUNC void luaE_checkcstack (lua_State *L);
 LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
+LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, цео tocont);
 LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
 LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
 

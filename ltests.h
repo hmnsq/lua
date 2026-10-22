@@ -30,9 +30,9 @@
 
 /* test for sizes in 'l_sprintf' (make sure whole buffer is available) */
 #undef l_sprintf
-#if !defined(LUA_USE_C89)
+#ако !defined(LUA_USE_C89)
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), snprintf(s,sz,f,i))
-#else
+#инако
 #define l_sprintf(s,sz,f,i)	(memset(s,0xAB,sz), sprintf(s,f,i))
 #endif
 
@@ -51,7 +51,7 @@
 
 /* memory-allocator control variables */
 typedef struct Memcontrol {
-  int failnext;
+  цео failnext;
   unsigned long numblocks;
   unsigned long total;
   unsigned long maxmem;
@@ -64,7 +64,7 @@ LUA_API Memcontrol l_memcontrol;
 
 
 #define luai_tracegc(L,f)		luai_tracegctest(L, f)
-extern void luai_tracegctest (lua_State *L, int first);
+extern void luai_tracegctest (lua_State *L, цео first);
 
 
 /*
@@ -76,7 +76,7 @@ extern void *l_Trick;
 /*
 ** Function to traverse and check all memory used by Lua
 */
-extern int lua_checkmemory (lua_State *L);
+extern цео lua_checkmemory (lua_State *L);
 
 /*
 ** Function to print an object GC-friendly
@@ -95,12 +95,12 @@ extern void lua_printvalue (struct TValue *v);
 ** Function to print the stack
 */
 extern void lua_printstack (lua_State *L);
-extern int lua_printallstack (lua_State *L);
+extern цео lua_printallstack (lua_State *L);
 
 
 /* test for lock/unlock */
 
-struct L_EXTRA { int lock; int *plock; };
+struct L_EXTRA { цео lock; цео *plock; };
 #undef LUA_EXTRASPACE
 #define LUA_EXTRASPACE	sizeof(struct L_EXTRA)
 #define getlock(l)	cast(struct L_EXTRA*, lua_getextraspace(l))
@@ -117,7 +117,7 @@ struct L_EXTRA { int lock; int *plock; };
 
 
 
-LUA_API int luaB_opentests (lua_State *L);
+LUA_API цео luaB_opentests (lua_State *L);
 
 LUA_API void *debug_realloc (void *ud, void *block,
                              size_t osize, size_t nsize);
