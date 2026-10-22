@@ -7,27 +7,27 @@
 #define ltm_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#ଅନ୍ତର୍ଭାଵ "lprefix.h"
 
 
-#include <string.h>
+#ଅନ୍ତର୍ଭାଵ <string.h>
 
-#include "lua.h"
+#ଅନ୍ତର୍ଭାଵ "lua.h"
 
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lvm.h"
+#ଅନ୍ତର୍ଭାଵ "ldebug.h"
+#ଅନ୍ତର୍ଭାଵ "ldo.h"
+#ଅନ୍ତର୍ଭାଵ "lgc.h"
+#ଅନ୍ତର୍ଭାଵ "lobject.h"
+#ଅନ୍ତର୍ଭାଵ "lstate.h"
+#ଅନ୍ତର୍ଭାଵ "lstring.h"
+#ଅନ୍ତର୍ଭାଵ "ltable.h"
+#ଅନ୍ତର୍ଭାଵ "ltm.h"
+#ଅନ୍ତର୍ଭାଵ "lvm.h"
 
 
-static const char udatatypename[] = "userdata";
+ସ୍ଥିର ଅଚଳ ଅକ୍ଷର udatatypename[] = "userdata";
 
-LUAI_DDEF const char *const luaT_typenames_[LUA_TOTALTYPES] = {
+LUAI_DDEF ଅଚଳ ଅକ୍ଷର *ଅଚଳ luaT_typenames_[LUA_TOTALTYPES] = {
   "no value",
   "nil", "boolean", udatatypename, "number",
   "string", "table", "function", udatatypename, "thread",
@@ -35,8 +35,8 @@ LUAI_DDEF const char *const luaT_typenames_[LUA_TOTALTYPES] = {
 };
 
 
-void luaT_init (lua_State *L) {
-  static const char *const luaT_eventname[] = {  /* ORDER TM */
+ଶୂନ୍ୟ luaT_init (lua_State *L) {
+  ସ୍ଥିର ଅଚଳ ଅକ୍ଷର *ଅଚଳ luaT_eventname[] = {  /* ORDER TM */
     "__index", "__newindex",
     "__gc", "__mode", "__len", "__eq",
     "__add", "__sub", "__mul", "__mod", "__pow",
@@ -45,8 +45,8 @@ void luaT_init (lua_State *L) {
     "__unm", "__bnot", "__lt", "__le",
     "__concat", "__call", "__close"
   };
-  int i;
-  for (i=0; i<TM_N; i++) {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+  ପାଇଁ (i=0; i<TM_N; i++) {
     G(L)->tmname[i] = luaS_new(L, luaT_eventname[i]);
     luaC_fix(L, obj2gco(G(L)->tmname[i]));  /* never collect these names */
   }
@@ -57,30 +57,30 @@ void luaT_init (lua_State *L) {
 ** function to be used with macro "fasttm": optimized for absence of
 ** tag methods
 */
-const TValue *luaT_gettm (Table *events, TMS event, TString *ename) {
-  const TValue *tm = luaH_Hgetshortstr(events, ename);
+ଅଚଳ TValue *luaT_gettm (Table *events, TMS event, TString *ename) {
+  ଅଚଳ TValue *tm = luaH_Hgetshortstr(events, ename);
   lua_assert(event <= TM_EQ);
-  if (notm(tm)) {  /* no tag method? */
+  ଯଦି (notm(tm)) {  /* no tag method? */
     events->flags |= cast_byte(1u<<event);  /* cache this fact */
-    return NULL;
+    ଫେରନ୍ତୁ ଖାଲି;
   }
-  else return tm;
+  ଅନ୍ୟଥା ଫେରନ୍ତୁ tm;
 }
 
 
-const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o, TMS event) {
+ଅଚଳ TValue *luaT_gettmbyobj (lua_State *L, ଅଚଳ TValue *o, TMS event) {
   Table *mt;
-  switch (ttype(o)) {
-    case LUA_TTABLE:
+  ବାଛ (ttype(o)) {
+    ସ୍ଥିତି LUA_TTABLE:
       mt = hvalue(o)->metatable;
-      break;
-    case LUA_TUSERDATA:
+      ଭାଙ୍ଗ;
+    ସ୍ଥିତି LUA_TUSERDATA:
       mt = uvalue(o)->metatable;
-      break;
-    default:
+      ଭାଙ୍ଗ;
+    ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
       mt = G(L)->mt[ttype(o)];
   }
-  return (mt ? luaH_Hgetshortstr(mt, G(L)->tmname[event]) : &G(L)->nilvalue);
+  ଫେରନ୍ତୁ (mt ? luaH_Hgetshortstr(mt, G(L)->tmname[event]) : &G(L)->nilvalue);
 }
 
 
@@ -88,78 +88,78 @@ const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o, TMS event) {
 ** Return the name of the type of an object. For tables and userdata
 ** with metatable, use their '__name' metafield, if present.
 */
-const char *luaT_objtypename (lua_State *L, const TValue *o) {
+ଅଚଳ ଅକ୍ଷର *luaT_objtypename (lua_State *L, ଅଚଳ TValue *o) {
   Table *mt;
-  if ((ttistable(o) && (mt = hvalue(o)->metatable) != NULL) ||
-      (ttisfulluserdata(o) && (mt = uvalue(o)->metatable) != NULL)) {
-    const TValue *name = luaH_Hgetshortstr(mt, luaS_new(L, "__name"));
-    if (ttisstring(name))  /* is '__name' a string? */
-      return getstr(tsvalue(name));  /* use it as type name */
+  ଯଦି ((ttistable(o) && (mt = hvalue(o)->metatable) != ଖାଲି) ||
+      (ttisfulluserdata(o) && (mt = uvalue(o)->metatable) != ଖାଲି)) {
+    ଅଚଳ TValue *name = luaH_Hgetshortstr(mt, luaS_new(L, "__name"));
+    ଯଦି (ttisstring(name))  /* is '__name' a string? */
+      ଫେରନ୍ତୁ getstr(tsvalue(name));  /* use it as type name */
   }
-  return ttypename(ttype(o));  /* else use standard type name */
+  ଫେରନ୍ତୁ ttypename(ttype(o));  /* else use standard type name */
 }
 
 
-void luaT_callTM (lua_State *L, const TValue *f, const TValue *p1,
-                  const TValue *p2, const TValue *p3) {
-  StkId func = L->top.p;
+ଶୂନ୍ୟ luaT_callTM (lua_State *L, ଅଚଳ TValue *f, ଅଚଳ TValue *p1,
+                  ଅଚଳ TValue *p2, ଅଚଳ TValue *p3) {
+  StkId func = L->ଶୀର୍ଷ.p;
   setobj2s(L, func, f);  /* push function (assume EXTRA_STACK) */
   setobj2s(L, func + 1, p1);  /* 1st argument */
   setobj2s(L, func + 2, p2);  /* 2nd argument */
   setobj2s(L, func + 3, p3);  /* 3rd argument */
-  L->top.p = func + 4;
+  L->ଶୀର୍ଷ.p = func + 4;
   /* metamethod may yield only when called from Lua code */
-  if (isLuacode(L->ci))
+  ଯଦି (isLuacode(L->ci))
     luaD_call(L, func, 0);
-  else
+  ଅନ୍ୟଥା
     luaD_callnoyield(L, func, 0);
 }
 
 
-lu_byte luaT_callTMres (lua_State *L, const TValue *f, const TValue *p1,
-                        const TValue *p2, StkId res) {
+lu_byte luaT_callTMres (lua_State *L, ଅଚଳ TValue *f, ଅଚଳ TValue *p1,
+                        ଅଚଳ TValue *p2, StkId res) {
   ptrdiff_t result = savestack(L, res);
-  StkId func = L->top.p;
+  StkId func = L->ଶୀର୍ଷ.p;
   setobj2s(L, func, f);  /* push function (assume EXTRA_STACK) */
   setobj2s(L, func + 1, p1);  /* 1st argument */
   setobj2s(L, func + 2, p2);  /* 2nd argument */
-  L->top.p += 3;
+  L->ଶୀର୍ଷ.p += 3;
   /* metamethod may yield only when called from Lua code */
-  if (isLuacode(L->ci))
+  ଯଦି (isLuacode(L->ci))
     luaD_call(L, func, 1);
-  else
+  ଅନ୍ୟଥା
     luaD_callnoyield(L, func, 1);
   res = restorestack(L, result);
-  setobjs2s(L, res, --L->top.p);  /* move result to its place */
-  return ttypetag(s2v(res));  /* return tag of the result */
+  setobjs2s(L, res, --L->ଶୀର୍ଷ.p);  /* move result to its place */
+  ଫେରନ୍ତୁ ttypetag(s2v(res));  /* return tag of the result */
 }
 
 
-static int callbinTM (lua_State *L, const TValue *p1, const TValue *p2,
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା callbinTM (lua_State *L, ଅଚଳ TValue *p1, ଅଚଳ TValue *p2,
                       StkId res, TMS event) {
-  const TValue *tm = luaT_gettmbyobj(L, p1, event);  /* try first operand */
-  if (notm(tm))
+  ଅଚଳ TValue *tm = luaT_gettmbyobj(L, p1, event);  /* try first operand */
+  ଯଦି (notm(tm))
     tm = luaT_gettmbyobj(L, p2, event);  /* try second operand */
-  if (notm(tm))
-    return -1;  /* tag method not found */
-  else  /* call tag method and return the tag of the result */
-    return luaT_callTMres(L, tm, p1, p2, res);
+  ଯଦି (notm(tm))
+    ଫେରନ୍ତୁ -1;  /* tag method not found */
+  ଅନ୍ୟଥା  /* call tag method and return the tag of the result */
+    ଫେରନ୍ତୁ luaT_callTMres(L, tm, p1, p2, res);
 }
 
 
-void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
+ଶୂନ୍ୟ luaT_trybinTM (lua_State *L, ଅଚଳ TValue *p1, ଅଚଳ TValue *p2,
                     StkId res, TMS event) {
-  if (l_unlikely(callbinTM(L, p1, p2, res, event) < 0)) {
-    switch (event) {
-      case TM_BAND: case TM_BOR: case TM_BXOR:
-      case TM_SHL: case TM_SHR: case TM_BNOT: {
-        if (ttisnumber(p1) && ttisnumber(p2))
+  ଯଦି (l_unlikely(callbinTM(L, p1, p2, res, event) < 0)) {
+    ବାଛ (event) {
+      ସ୍ଥିତି TM_BAND: ସ୍ଥିତି TM_BOR: ସ୍ଥିତି TM_BXOR:
+      ସ୍ଥିତି TM_SHL: ସ୍ଥିତି TM_SHR: ସ୍ଥିତି TM_BNOT: {
+        ଯଦି (ttisnumber(p1) && ttisnumber(p2))
           luaG_tointerror(L, p1, p2);
-        else
+        ଅନ୍ୟଥା
           luaG_opinterror(L, p1, p2, "perform bitwise operation on");
       }
       /* calls never return, but to avoid warnings: *//* FALLTHROUGH */
-      default:
+      ପୂର୍ବନିର୍ଦ୍ଧାରିତ:
         luaG_opinterror(L, p1, p2, "perform arithmetic on");
     }
   }
@@ -170,24 +170,24 @@ void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
 ** The use of 'p1' after 'callbinTM' is safe because, when a tag
 ** method is not found, 'callbinTM' cannot change the stack.
 */
-void luaT_tryconcatTM (lua_State *L) {
-  StkId p1 = L->top.p - 2;  /* first argument */
-  if (l_unlikely(callbinTM(L, s2v(p1), s2v(p1 + 1), p1, TM_CONCAT) < 0))
+ଶୂନ୍ୟ luaT_tryconcatTM (lua_State *L) {
+  StkId p1 = L->ଶୀର୍ଷ.p - 2;  /* first argument */
+  ଯଦି (l_unlikely(callbinTM(L, s2v(p1), s2v(p1 + 1), p1, TM_CONCAT) < 0))
     luaG_concaterror(L, s2v(p1), s2v(p1 + 1));
 }
 
 
-void luaT_trybinassocTM (lua_State *L, const TValue *p1, const TValue *p2,
-                                       int flip, StkId res, TMS event) {
-  if (flip)
+ଶୂନ୍ୟ luaT_trybinassocTM (lua_State *L, ଅଚଳ TValue *p1, ଅଚଳ TValue *p2,
+                                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା flip, StkId res, TMS event) {
+  ଯଦି (flip)
     luaT_trybinTM(L, p2, p1, res, event);
-  else
+  ଅନ୍ୟଥା
     luaT_trybinTM(L, p1, p2, res, event);
 }
 
 
-void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                                   int flip, StkId res, TMS event) {
+ଶୂନ୍ୟ luaT_trybiniTM (lua_State *L, ଅଚଳ TValue *p1, lua_Integer i2,
+                                   ପୂର୍ଣ୍ଣସଂଖ୍ୟା flip, StkId res, TMS event) {
   TValue aux;
   setivalue(&aux, i2);
   luaT_trybinassocTM(L, p1, &aux, flip, res, event);
@@ -197,30 +197,30 @@ void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
 /*
 ** Calls an order tag method.
 */
-int luaT_callorderTM (lua_State *L, const TValue *p1, const TValue *p2,
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaT_callorderTM (lua_State *L, ଅଚଳ TValue *p1, ଅଚଳ TValue *p2,
                       TMS event) {
-  int tag = callbinTM(L, p1, p2, L->top.p, event);  /* try original event */
-  if (tag >= 0)  /* found tag method? */
-    return !tagisfalse(tag);
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା tag = callbinTM(L, p1, p2, L->ଶୀର୍ଷ.p, event);  /* try original event */
+  ଯଦି (tag >= 0)  /* found tag method? */
+    ଫେରନ୍ତୁ !tagisfalse(tag);
   luaG_ordererror(L, p1, p2);  /* no metamethod found */
-  return 0;  /* to avoid warnings */
+  ଫେରନ୍ତୁ 0;  /* to avoid warnings */
 }
 
 
-int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                       int flip, int isfloat, TMS event) {
-  TValue aux; const TValue *p2;
-  if (isfloat) {
-    setfltvalue(&aux, cast_num(v2));
+ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaT_callorderiTM (lua_State *L, ଅଚଳ TValue *p1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା v2,
+                       ପୂର୍ଣ୍ଣସଂଖ୍ୟା flip, ପୂର୍ଣ୍ଣସଂଖ୍ୟା isfloat, TMS event) {
+  TValue aux; ଅଚଳ TValue *p2;
+  ଯଦି (isfloat) {
+    setfltvalue(&aux, cast_ଅଙ୍କ(v2));
   }
-  else
+  ଅନ୍ୟଥା
     setivalue(&aux, v2);
-  if (flip) {  /* arguments were exchanged? */
+  ଯଦି (flip) {  /* arguments were exchanged? */
     p2 = p1; p1 = &aux;  /* correct them */
   }
-  else
+  ଅନ୍ୟଥା
     p2 = &aux;
-  return luaT_callorderTM(L, p1, p2, event);
+  ଫେରନ୍ତୁ luaT_callorderTM(L, p1, p2, event);
 }
 
 
@@ -228,19 +228,19 @@ int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
 ** Create a vararg table at the top of the stack, with 'n' elements
 ** starting at 'f'.
 */
-static void createvarargtab (lua_State *L, StkId f, int n) {
-  int i;
-  TValue key, value;
+ସ୍ଥିର ଶୂନ୍ୟ createvarargtab (lua_State *L, StkId f, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n) {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
+  TValue ଚାବି, ମୂଲ୍ୟ;
   Table *t = luaH_new(L);
-  sethvalue(L, s2v(L->top.p), t);
-  L->top.p++;
+  sethvalue(L, s2v(L->ଶୀର୍ଷ.p), t);
+  L->ଶୀର୍ଷ.p++;
   luaH_resize(L, t, cast_uint(n), 1);
-  setsvalue(L, &key, luaS_new(L, "n"));  /* key is "n" */
-  setivalue(&value, n);  /* value is n */
+  setsvalue(L, &ଚାବି, luaS_new(L, "n"));  /* key is "n" */
+  setivalue(&ମୂଲ୍ୟ, n);  /* value is n */
   /* No need to anchor the key: Due to the resize, the next operation
      cannot trigger a garbage collection */
-  luaH_set(L, t, &key, &value);  /* t.n = n */
-  for (i = 0; i < n; i++)
+  luaH_set(L, t, &ଚାବି, &ମୂଲ୍ୟ);  /* t.n = n */
+  ପାଇଁ (i = 0; i < n; i++)
     luaH_setint(L, t, i + 1, s2v(f + i));
   luaC_checkGC(L);
 }
@@ -252,59 +252,59 @@ static void createvarargtab (lua_State *L, StkId f, int n) {
 ** final stack: func nil ... nil extra1 ... func arg1 ... argn
 **                                          ^ ci->func
 */
-static void buildhiddenargs (lua_State *L, CallInfo *ci, const Proto *p,
-                             int totalargs, int nfixparams, int nextra) {
-  int i;
+ସ୍ଥିର ଶୂନ୍ୟ buildhiddenargs (lua_State *L, CallInfo *ci, ଅଚଳ Proto *p,
+                             ପୂର୍ଣ୍ଣସଂଖ୍ୟା totalargs, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nfixparams, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nextra) {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା i;
   ci->u.l.nextraargs = nextra;
   luaD_checkstack(L, p->maxstacksize + 1);
   /* copy function to the top of the stack, after extra arguments */
-  setobjs2s(L, L->top.p++, ci->func.p);
+  setobjs2s(L, L->ଶୀର୍ଷ.p++, ci->func.p);
   /* move fixed parameters to after the copied function */
-  for (i = 1; i <= nfixparams; i++) {
-    setobjs2s(L, L->top.p++, ci->func.p + i);
+  ପାଇଁ (i = 1; i <= nfixparams; i++) {
+    setobjs2s(L, L->ଶୀର୍ଷ.p++, ci->func.p + i);
     setnilvalue2s(ci->func.p + i);  /* erase original parameter (for GC) */
   }
   ci->func.p += totalargs + 1;  /* 'func' now lives after hidden arguments */
-  ci->top.p += totalargs + 1;
+  ci->ଶୀର୍ଷ.p += totalargs + 1;
 }
 
 
-void luaT_adjustvarargs (lua_State *L, CallInfo *ci, const Proto *p) {
-  int totalargs = cast_int(L->top.p - ci->func.p) - 1;
-  int nfixparams = p->numparams;
-  int nextra = totalargs - nfixparams;  /* number of extra arguments */
-  if (p->flag & PF_VATAB) {  /* does it need a vararg table? */
+ଶୂନ୍ୟ luaT_adjustvarargs (lua_State *L, CallInfo *ci, ଅଚଳ Proto *p) {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା totalargs = cast_int(L->ଶୀର୍ଷ.p - ci->func.p) - 1;
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nfixparams = p->numparams;
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nextra = totalargs - nfixparams;  /* number of extra arguments */
+  ଯଦି (p->flag & PF_VATAB) {  /* does it need a vararg table? */
     lua_assert(!(p->flag & PF_VAHID));
     createvarargtab(L, ci->func.p + nfixparams + 1, nextra);
     /* move table to proper place (last parameter) */
-    setobjs2s(L, ci->func.p + nfixparams + 1, L->top.p - 1);
+    setobjs2s(L, ci->func.p + nfixparams + 1, L->ଶୀର୍ଷ.p - 1);
   }
-  else {  /* no table */
+  ଅନ୍ୟଥା {  /* no table */
     lua_assert(p->flag & PF_VAHID);
     buildhiddenargs(L, ci, p, totalargs, nfixparams, nextra);
     /* set vararg parameter to nil */
     setnilvalue2s(ci->func.p + nfixparams + 1);
-    lua_assert(L->top.p <= ci->top.p && ci->top.p <= L->stack_last.p);
+    lua_assert(L->ଶୀର୍ଷ.p <= ci->ଶୀର୍ଷ.p && ci->ଶୀର୍ଷ.p <= L->ଗଦା_last.p);
   }
 }
 
 
-void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc) {
-  int nextra = ci->u.l.nextraargs;
+ଶୂନ୍ୟ luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc) {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nextra = ci->u.l.nextraargs;
   lua_Integer n;
-  if (tointegerns(rc, &n)) {  /* integral value? */
-    if (l_castS2U(n) - 1 < cast_uint(nextra)) {
+  ଯଦି (tointegerns(rc, &n)) {  /* integral value? */
+    ଯଦି (l_castS2U(n) - 1 < cast_uint(nextra)) {
       StkId slot = ci->func.p - nextra + cast_int(n) - 1;
-      setobjs2s(((lua_State*)NULL), ra, slot);
-      return;
+      setobjs2s(((lua_State*)ଖାଲି), ra, slot);
+      ଫେରନ୍ତୁ;
     }
   }
-  else if (ttisstring(rc)) {  /* string value? */
+  ଅନ୍ୟଥା ଯଦି (ttisstring(rc)) {  /* string value? */
     size_t len;
-    const char *s = getlstr(tsvalue(rc), len);
-    if (len == 1 && s[0] == 'n') {  /* key is "n"? */
+    ଅଚଳ ଅକ୍ଷର *s = getlstr(tsvalue(rc), len);
+    ଯଦି (len == 1 && s[0] == 'n') {  /* key is "n"? */
       setivalue(s2v(ra), nextra);
-      return;
+      ଫେରନ୍ତୁ;
     }
   }
   setnilvalue2s(ra);  /* else produce nil */
@@ -318,15 +318,15 @@ void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc) {
 ** has a proper value (non-negative integer not larger than the stack
 ** limit).
 */
-static int getnumargs (lua_State *L, CallInfo *ci, Table *h) {
-  if (h == NULL)  /* no vararg table? */
-    return ci->u.l.nextraargs;
-  else {
+ସ୍ଥିର ପୂର୍ଣ୍ଣସଂଖ୍ୟା getnumargs (lua_State *L, CallInfo *ci, Table *h) {
+  ଯଦି (h == ଖାଲି)  /* no vararg table? */
+    ଫେରନ୍ତୁ ci->u.l.nextraargs;
+  ଅନ୍ୟଥା {
     TValue res;
-    if (luaH_getshortstr(h, luaS_new(L, "n"), &res) != LUA_VNUMINT ||
+    ଯଦି (luaH_getshortstr(h, luaS_new(L, "n"), &res) != LUA_VNUMINT ||
         l_castS2U(ivalue(&res)) > cast_uint(INT_MAX/2))
       luaG_runerror(L, "vararg table has no proper 'n'");
-    return cast_int(ivalue(&res));
+    ଫେରନ୍ତୁ cast_int(ivalue(&res));
   }
 }
 
@@ -335,30 +335,30 @@ static int getnumargs (lua_State *L, CallInfo *ci, Table *h) {
 ** Get 'wanted' vararg arguments and put them in 'where'. 'vatab' is
 ** the register of the vararg table or -1 if there is no vararg table.
 */
-void luaT_getvarargs (lua_State *L, CallInfo *ci, StkId where, int wanted,
-                                    int vatab) {
-  Table *h = (vatab < 0) ? NULL : hvalue(s2v(ci->func.p + vatab + 1));
-  int nargs = getnumargs(L, ci, h);  /* number of available vararg args. */
-  int i, touse;  /* 'touse' is minimum between 'wanted' and 'nargs' */
-  if (wanted < 0) {
+ଶୂନ୍ୟ luaT_getvarargs (lua_State *L, CallInfo *ci, StkId where, ପୂର୍ଣ୍ଣସଂଖ୍ୟା wanted,
+                                    ପୂର୍ଣ୍ଣସଂଖ୍ୟା vatab) {
+  Table *h = (vatab < 0) ? ଖାଲି : hvalue(s2v(ci->func.p + vatab + 1));
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nargs = getnumargs(L, ci, h);  /* number of available vararg args. */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା i, touse;  /* 'touse' is minimum between 'wanted' and 'nargs' */
+  ଯଦି (wanted < 0) {
     touse = wanted = nargs;  /* get all extra arguments available */
     checkstackp(L, nargs, where);  /* ensure stack space */
-    L->top.p = where + nargs;  /* next instruction will need top */
+    L->ଶୀର୍ଷ.p = where + nargs;  /* next instruction will need top */
   }
-  else
+  ଅନ୍ୟଥା
     touse = (nargs > wanted) ? wanted : nargs;
-  if (h == NULL) {  /* no vararg table? */
-    for (i = 0; i < touse; i++)  /* get vararg values from the stack */
+  ଯଦି (h == ଖାଲି) {  /* no vararg table? */
+    ପାଇଁ (i = 0; i < touse; i++)  /* get vararg values from the stack */
       setobjs2s(L, where + i, ci->func.p - nargs + i);
   }
-  else {  /* get vararg values from vararg table */
-    for (i = 0; i < touse; i++) {
+  ଅନ୍ୟଥା {  /* get vararg values from vararg table */
+    ପାଇଁ (i = 0; i < touse; i++) {
       lu_byte tag = luaH_getint(h, i + 1, s2v(where + i));
-      if (tagisempty(tag))
+      ଯଦି (tagisempty(tag))
        setnilvalue2s(where + i);
     }
   }
-  for (; i < wanted; i++)   /* complete required results with nil */
+  ପାଇଁ (; i < wanted; i++)   /* complete required results with nil */
     setnilvalue2s(where + i);
 }
 

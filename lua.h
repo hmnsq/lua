@@ -9,8 +9,8 @@
 #ifndef lua_h
 #define lua_h
 
-#include <stdarg.h>
-#include <stddef.h>
+#ଅନ୍ତର୍ଭାଵ <stdarg.h>
+#ଅନ୍ତର୍ଭାଵ <stddef.h>
 
 
 #define LUA_COPYRIGHT	LUA_RELEASE "  Copyright (C) 1994-2026 Lua.org, PUC-Rio"
@@ -21,11 +21,11 @@
 #define LUA_VERSION_MINOR_N	5
 #define LUA_VERSION_RELEASE_N	1
 
-#define LUA_VERSION_NUM  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
-#define LUA_VERSION_RELEASE_NUM  (LUA_VERSION_NUM * 100 + LUA_VERSION_RELEASE_N)
+#define LUA_VERSION_ଅଙ୍କ  (LUA_VERSION_MAJOR_N * 100 + LUA_VERSION_MINOR_N)
+#define LUA_VERSION_RELEASE_ଅଙ୍କ  (LUA_VERSION_ଅଙ୍କ * 100 + LUA_VERSION_RELEASE_N)
 
 
-#include "luaconf.h"
+#ଅନ୍ତର୍ଭାଵ "luaconf.h"
 
 
 /* mark for precompiled code ('<esc>Lua') */
@@ -53,7 +53,7 @@
 #define LUA_ERRERR	5
 
 
-typedef struct lua_State lua_State;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା lua_State lua_State;
 
 
 /*
@@ -87,125 +87,125 @@ typedef struct lua_State lua_State;
 
 
 /* type of numbers in Lua */
-typedef LUA_NUMBER lua_Number;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା LUA_ସଂଖ୍ୟା lua_ସଂଖ୍ୟା;
 
 
 /* type for integer functions */
-typedef LUA_INTEGER lua_Integer;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା LUA_INTEGER lua_Integer;
 
 /* unsigned integer type */
-typedef LUA_UNSIGNED lua_Unsigned;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା LUA_UNSIGNED lua_Unsigned;
 
 /* type for continuation-function contexts */
-typedef LUA_KCONTEXT lua_KContext;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା LUA_KCONTEXT lua_KContext;
 
 
 /*
 ** Type for C functions registered with Lua
 */
-typedef int (*lua_CFunction) (lua_State *L);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*lua_CFunction) (lua_State *L);
 
 /*
 ** Type for continuation functions
 */
-typedef int (*lua_KFunction) (lua_State *L, int status, lua_KContext ctx);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*lua_KFunction) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା status, lua_KContext ctx);
 
 
 /*
 ** Type for functions that read/write blocks when loading/dumping Lua chunks
 */
-typedef const char * (*lua_Reader) (lua_State *L, void *ud, size_t *sz);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଅଚଳ ଅକ୍ଷର * (*lua_Reader) (lua_State *L, ଶୂନ୍ୟ *ud, size_t *sz);
 
-typedef int (*lua_Writer) (lua_State *L, const void *p, size_t sz, void *ud);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ପୂର୍ଣ୍ଣସଂଖ୍ୟା (*lua_Writer) (lua_State *L, ଅଚଳ ଶୂନ୍ୟ *p, size_t sz, ଶୂନ୍ୟ *ud);
 
 
 /*
 ** Type for memory-allocation functions
 */
-typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ * (*lua_Alloc) (ଶୂନ୍ୟ *ud, ଶୂନ୍ୟ *ptr, size_t osize, size_t nsize);
 
 
 /*
 ** Type for warning functions
 */
-typedef void (*lua_WarnFunction) (void *ud, const char *msg, int tocont);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*lua_WarnFunction) (ଶୂନ୍ୟ *ud, ଅଚଳ ଅକ୍ଷର *ସନ୍ଦେଶ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା tocont);
 
 
 /*
 ** Type used by the debug API to collect debug information
 */
-typedef struct lua_Debug lua_Debug;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା lua_Debug lua_Debug;
 
 
 /*
 ** Functions to be called by the debugger in specific events
 */
-typedef void (*lua_Hook) (lua_State *L, lua_Debug *ar);
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଶୂନ୍ୟ (*lua_Hook) (lua_State *L, lua_Debug *ar);
 
 
 /*
 ** generic extra include file
 */
-#if defined(LUA_USER_H)
-#include LUA_USER_H
+#ଯଦି defined(LUA_USER_H)
+#ଅନ୍ତର୍ଭାଵ LUA_USER_H
 #endif
 
 
 /*
 ** RCS ident string
 */
-extern const char lua_ident[];
+ବାହ୍ୟ ଅଚଳ ଅକ୍ଷର lua_ident[];
 
 
 /*
 ** state manipulation
 */
-LUA_API lua_State *(lua_newstate) (lua_Alloc f, void *ud, unsigned seed);
-LUA_API void       (lua_close) (lua_State *L);
+LUA_API lua_State *(lua_newstate) (lua_Alloc f, ଶୂନ୍ୟ *ud, unsigned seed);
+LUA_API ଶୂନ୍ୟ       (lua_close) (lua_State *L);
 LUA_API lua_State *(lua_newthread) (lua_State *L);
-LUA_API int        (lua_closethread) (lua_State *L, lua_State *from);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା        (lua_closethread) (lua_State *L, lua_State *from);
 
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
 
-LUA_API lua_Number (lua_version) (lua_State *L);
+LUA_API lua_ସଂଖ୍ୟା (lua_version) (lua_State *L);
 
 
 /*
 ** basic stack manipulation
 */
-LUA_API int   (lua_absindex) (lua_State *L, int idx);
-LUA_API int   (lua_gettop) (lua_State *L);
-LUA_API void  (lua_settop) (lua_State *L, int idx);
-LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
-LUA_API void  (lua_rotate) (lua_State *L, int idx, int n);
-LUA_API void  (lua_copy) (lua_State *L, int fromidx, int toidx);
-LUA_API int   (lua_checkstack) (lua_State *L, int n);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_absindex) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_gettop) (lua_State *L);
+LUA_API ଶୂନ୍ୟ  (lua_settop) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ  (lua_pushvalue) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ  (lua_rotate) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଶୂନ୍ୟ  (lua_copy) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା fromidx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା toidx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_checkstack) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
 
-LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
+LUA_API ଶୂନ୍ୟ  (lua_xmove) (lua_State *from, lua_State *to, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
 
 
 /*
 ** access functions (stack -> C)
 */
 
-LUA_API int             (lua_isnumber) (lua_State *L, int idx);
-LUA_API int             (lua_isstring) (lua_State *L, int idx);
-LUA_API int             (lua_iscfunction) (lua_State *L, int idx);
-LUA_API int             (lua_isinteger) (lua_State *L, int idx);
-LUA_API int             (lua_isuserdata) (lua_State *L, int idx);
-LUA_API int             (lua_type) (lua_State *L, int idx);
-LUA_API const char     *(lua_typename) (lua_State *L, int tp);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_isnumber) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_isstring) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_iscfunction) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_isinteger) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_isuserdata) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_type) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଅଚଳ ଅକ୍ଷର     *(lua_typename) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା tp);
 
-LUA_API lua_Number      (lua_tonumberx) (lua_State *L, int idx, int *isnum);
-LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);
-LUA_API int             (lua_toboolean) (lua_State *L, int idx);
-LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
-LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, int idx);
-LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
-LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
-LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
-LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
+LUA_API lua_ସଂଖ୍ୟା      (lua_tonumberx) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *isnum);
+LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା *isnum);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା             (lua_toboolean) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଅଚଳ ଅକ୍ଷର     *(lua_tolstring) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, size_t *len);
+LUA_API lua_Unsigned    (lua_rawlen) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ	       *(lua_touserdata) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API lua_State      *(lua_tothread) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଅଚଳ ଶୂନ୍ୟ     *(lua_topointer) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
 
 
 /*
@@ -227,101 +227,101 @@ LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 #define LUA_OPUNM	12
 #define LUA_OPBNOT	13
 
-LUA_API void  (lua_arith) (lua_State *L, int op);
+LUA_API ଶୂନ୍ୟ  (lua_arith) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା op);
 
 #define LUA_OPEQ	0
 #define LUA_OPLT	1
 #define LUA_OPLE	2
 
-LUA_API int   (lua_rawequal) (lua_State *L, int idx1, int idx2);
-LUA_API int   (lua_compare) (lua_State *L, int idx1, int idx2, int op);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_rawequal) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx2);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_compare) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx2, ପୂର୍ଣ୍ଣସଂଖ୍ୟା op);
 
 
 /*
 ** push functions (C -> stack)
 */
-LUA_API void        (lua_pushnil) (lua_State *L);
-LUA_API void        (lua_pushnumber) (lua_State *L, lua_Number n);
-LUA_API void        (lua_pushinteger) (lua_State *L, lua_Integer n);
-LUA_API const char *(lua_pushlstring) (lua_State *L, const char *s, size_t len);
-LUA_API const char *(lua_pushexternalstring) (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUA_API const char *(lua_pushstring) (lua_State *L, const char *s);
-LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
+LUA_API ଶୂନ୍ୟ        (lua_pushnil) (lua_State *L);
+LUA_API ଶୂନ୍ୟ        (lua_pushnumber) (lua_State *L, lua_ସଂଖ୍ୟା n);
+LUA_API ଶୂନ୍ୟ        (lua_pushinteger) (lua_State *L, lua_Integer n);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_pushlstring) (lua_State *L, ଅଚଳ ଅକ୍ଷର *s, size_t len);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_pushexternalstring) (lua_State *L,
+		ଅଚଳ ଅକ୍ଷର *s, size_t len, lua_Alloc falloc, ଶୂନ୍ୟ *ud);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_pushstring) (lua_State *L, ଅଚଳ ଅକ୍ଷର *s);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_pushvfstring) (lua_State *L, ଅଚଳ ଅକ୍ଷର *fmt,
                                                       va_list argp);
-LUA_API const char *(lua_pushfstring) (lua_State *L, const char *fmt, ...);
-LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, int n);
-LUA_API void  (lua_pushboolean) (lua_State *L, int b);
-LUA_API void  (lua_pushlightuserdata) (lua_State *L, void *p);
-LUA_API int   (lua_pushthread) (lua_State *L);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_pushfstring) (lua_State *L, ଅଚଳ ଅକ୍ଷର *fmt, ...);
+LUA_API ଶୂନ୍ୟ  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଶୂନ୍ୟ  (lua_pushboolean) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା b);
+LUA_API ଶୂନ୍ୟ  (lua_pushlightuserdata) (lua_State *L, ଶୂନ୍ୟ *p);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_pushthread) (lua_State *L);
 
 
 /*
 ** get functions (Lua -> stack)
 */
-LUA_API int (lua_getglobal) (lua_State *L, const char *name);
-LUA_API int (lua_gettable) (lua_State *L, int idx);
-LUA_API int (lua_getfield) (lua_State *L, int idx, const char *k);
-LUA_API int (lua_geti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawget) (lua_State *L, int idx);
-LUA_API int (lua_rawgeti) (lua_State *L, int idx, lua_Integer n);
-LUA_API int (lua_rawgetp) (lua_State *L, int idx, const void *p);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_getglobal) (lua_State *L, ଅଚଳ ଅକ୍ଷର *name);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_gettable) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_getfield) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ଅଚଳ ଅକ୍ଷର *k);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_geti) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, lua_Integer n);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_rawget) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_rawgeti) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, lua_Integer n);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_rawgetp) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ଅଚଳ ଶୂନ୍ୟ *p);
 
-LUA_API void  (lua_createtable) (lua_State *L, int narr, int nrec);
-LUA_API void *(lua_newuserdatauv) (lua_State *L, size_t sz, int nuvalue);
-LUA_API int   (lua_getmetatable) (lua_State *L, int objindex);
-LUA_API int  (lua_getiuservalue) (lua_State *L, int idx, int n);
+LUA_API ଶୂନ୍ୟ  (lua_createtable) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା narr, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nrec);
+LUA_API ଶୂନ୍ୟ *(lua_newuserdatauv) (lua_State *L, size_t sz, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nuvalue);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_getmetatable) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା objindex);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା  (lua_getiuservalue) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
 
 
 /*
 ** set functions (stack -> Lua)
 */
-LUA_API void  (lua_setglobal) (lua_State *L, const char *name);
-LUA_API void  (lua_settable) (lua_State *L, int idx);
-LUA_API void  (lua_setfield) (lua_State *L, int idx, const char *k);
-LUA_API void  (lua_seti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawset) (lua_State *L, int idx);
-LUA_API void  (lua_rawseti) (lua_State *L, int idx, lua_Integer n);
-LUA_API void  (lua_rawsetp) (lua_State *L, int idx, const void *p);
-LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
-LUA_API int   (lua_setiuservalue) (lua_State *L, int idx, int n);
+LUA_API ଶୂନ୍ୟ  (lua_setglobal) (lua_State *L, ଅଚଳ ଅକ୍ଷର *name);
+LUA_API ଶୂନ୍ୟ  (lua_settable) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ  (lua_setfield) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ଅଚଳ ଅକ୍ଷର *k);
+LUA_API ଶୂନ୍ୟ  (lua_seti) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, lua_Integer n);
+LUA_API ଶୂନ୍ୟ  (lua_rawset) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ  (lua_rawseti) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, lua_Integer n);
+LUA_API ଶୂନ୍ୟ  (lua_rawsetp) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ଅଚଳ ଶୂନ୍ୟ *p);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_setmetatable) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା objindex);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_setiuservalue) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
 
 
 /*
 ** 'load' and 'call' functions (load and run Lua code)
 */
-LUA_API void  (lua_callk) (lua_State *L, int nargs, int nresults,
+LUA_API ଶୂନ୍ୟ  (lua_callk) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nargs, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nresults,
                            lua_KContext ctx, lua_KFunction k);
-#define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, NULL)
+#define lua_call(L,n,r)		lua_callk(L, (n), (r), 0, ଖାଲି)
 
-LUA_API int   (lua_pcallk) (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_pcallk) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nargs, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nresults, ପୂର୍ଣ୍ଣସଂଖ୍ୟା errfunc,
                             lua_KContext ctx, lua_KFunction k);
-#define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, NULL)
+#define lua_pcall(L,n,r,f)	lua_pcallk(L, (n), (r), (f), 0, ଖାଲି)
 
-LUA_API int   (lua_load) (lua_State *L, lua_Reader reader, void *dt,
-                          const char *chunkname, const char *mode);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_load) (lua_State *L, lua_Reader reader, ଶୂନ୍ୟ *dt,
+                          ଅଚଳ ଅକ୍ଷର *chunkname, ଅଚଳ ଅକ୍ଷର *mode);
 
-LUA_API int (lua_dump) (lua_State *L, lua_Writer writer, void *data, int strip);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_dump) (lua_State *L, lua_Writer writer, ଶୂନ୍ୟ *data, ପୂର୍ଣ୍ଣସଂଖ୍ୟା strip);
 
 
 /*
 ** coroutine functions
 */
-LUA_API int  (lua_yieldk)     (lua_State *L, int nresults, lua_KContext ctx,
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା  (lua_yieldk)     (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା nresults, lua_KContext ctx,
                                lua_KFunction k);
-LUA_API int  (lua_resume)     (lua_State *L, lua_State *from, int narg,
-                               int *nres);
-LUA_API int  (lua_status)     (lua_State *L);
-LUA_API int (lua_isyieldable) (lua_State *L);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା  (lua_resume)     (lua_State *L, lua_State *from, ପୂର୍ଣ୍ଣସଂଖ୍ୟା narg,
+                               ପୂର୍ଣ୍ଣସଂଖ୍ୟା *nres);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା  (lua_status)     (lua_State *L);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_isyieldable) (lua_State *L);
 
-#define lua_yield(L,n)		lua_yieldk(L, (n), 0, NULL)
+#define lua_yield(L,n)		lua_yieldk(L, (n), 0, ଖାଲି)
 
 
 /*
 ** Warning-related functions
 */
-LUA_API void (lua_setwarnf) (lua_State *L, lua_WarnFunction f, void *ud);
-LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
+LUA_API ଶୂନ୍ୟ (lua_setwarnf) (lua_State *L, lua_WarnFunction f, ଶୂନ୍ୟ *ud);
+LUA_API ଶୂନ୍ୟ (lua_warning)  (lua_State *L, ଅଚଳ ଅକ୍ଷର *ସନ୍ଦେଶ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା tocont);
 
 
 /*
@@ -357,29 +357,29 @@ LUA_API void (lua_warning)  (lua_State *L, const char *msg, int tocont);
 #define LUA_GCPN		6
 
 
-LUA_API int (lua_gc) (lua_State *L, int what, ...);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_gc) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା what, ...);
 
 
 /*
 ** miscellaneous functions
 */
 
-LUA_API int   (lua_error) (lua_State *L);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_error) (lua_State *L);
 
-LUA_API int   (lua_next) (lua_State *L, int idx);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା   (lua_next) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
 
-LUA_API void  (lua_concat) (lua_State *L, int n);
-LUA_API void  (lua_len)    (lua_State *L, int idx);
+LUA_API ଶୂନ୍ୟ  (lua_concat) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଶୂନ୍ୟ  (lua_len)    (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
 
 #define LUA_N2SBUFFSZ	64
-LUA_API unsigned  (lua_numbertocstring) (lua_State *L, int idx, char *buff);
-LUA_API size_t  (lua_stringtonumber) (lua_State *L, const char *s);
+LUA_API unsigned  (lua_numbertocstring) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx, ଅକ୍ଷର *buff);
+LUA_API size_t  (lua_stringtonumber) (lua_State *L, ଅଚଳ ଅକ୍ଷର *s);
 
-LUA_API lua_Alloc (lua_getallocf) (lua_State *L, void **ud);
-LUA_API void      (lua_setallocf) (lua_State *L, lua_Alloc f, void *ud);
+LUA_API lua_Alloc (lua_getallocf) (lua_State *L, ଶୂନ୍ୟ **ud);
+LUA_API ଶୂନ୍ୟ      (lua_setallocf) (lua_State *L, lua_Alloc f, ଶୂନ୍ୟ *ud);
 
-LUA_API void (lua_toclose) (lua_State *L, int idx);
-LUA_API void (lua_closeslot) (lua_State *L, int idx);
+LUA_API ଶୂନ୍ୟ (lua_toclose) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
+LUA_API ଶୂନ୍ୟ (lua_closeslot) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା idx);
 
 
 /*
@@ -388,12 +388,12 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 ** ===============================================================
 */
 
-#define lua_getextraspace(L)	((void *)((char *)(L) - LUA_EXTRASPACE))
+#define lua_getextraspace(L)	((ଶୂନ୍ୟ *)((ଅକ୍ଷର *)(L) - LUA_EXTRASPACE))
 
-#define lua_tonumber(L,i)	lua_tonumberx(L,(i),NULL)
-#define lua_tointeger(L,i)	lua_tointegerx(L,(i),NULL)
+#define lua_tonumber(L,i)	lua_tonumberx(L,(i),ଖାଲି)
+#define lua_tointeger(L,i)	lua_tointegerx(L,(i),ଖାଲି)
 
-#define lua_pop(L,n)		lua_settop(L, -(n)-1)
+#define lua_କାଢ଼(L,n)		lua_settop(L, -(n)-1)
 
 #define lua_newtable(L)		lua_createtable(L, 0, 0)
 
@@ -413,16 +413,16 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_pushliteral(L, s)	lua_pushstring(L, "" s)
 
 #define lua_pushglobaltable(L)  \
-	((void)lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS))
+	((ଶୂନ୍ୟ)lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS))
 
-#define lua_tostring(L,i)	lua_tolstring(L, (i), NULL)
+#define lua_tostring(L,i)	lua_tolstring(L, (i), ଖାଲି)
 
 
-#define lua_insert(L,idx)	lua_rotate(L, (idx), 1)
+#define lua_ଭର୍ତ୍ତି(L,idx)	lua_rotate(L, (idx), 1)
 
-#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_pop(L, 1))
+#define lua_remove(L,idx)	(lua_rotate(L, (idx), -1), lua_କାଢ଼(L, 1))
 
-#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_pop(L, 1))
+#define lua_replace(L,idx)	(lua_copy(L, -1, (idx)), lua_କାଢ଼(L, 1))
 
 /* }============================================================== */
 
@@ -437,7 +437,7 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define lua_getuservalue(L,idx)	lua_getiuservalue(L,idx,1)
 #define lua_setuservalue(L,idx)	lua_setiuservalue(L,idx,1)
 
-#define lua_resetthread(L)	lua_closethread(L,NULL)
+#define lua_resetthread(L)	lua_closethread(L,ଖାଲି)
 
 /* }============================================================== */
 
@@ -467,43 +467,43 @@ LUA_API void (lua_closeslot) (lua_State *L, int idx);
 #define LUA_MASKCOUNT	(1 << LUA_HOOKCOUNT)
 
 
-LUA_API int (lua_getstack) (lua_State *L, int level, lua_Debug *ar);
-LUA_API int (lua_getinfo) (lua_State *L, const char *what, lua_Debug *ar);
-LUA_API const char *(lua_getlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_setlocal) (lua_State *L, const lua_Debug *ar, int n);
-LUA_API const char *(lua_getupvalue) (lua_State *L, int funcindex, int n);
-LUA_API const char *(lua_setupvalue) (lua_State *L, int funcindex, int n);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_getstack) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା level, lua_Debug *ar);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_getinfo) (lua_State *L, ଅଚଳ ଅକ୍ଷର *what, lua_Debug *ar);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_getlocal) (lua_State *L, ଅଚଳ lua_Debug *ar, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_setlocal) (lua_State *L, ଅଚଳ lua_Debug *ar, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_getupvalue) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା funcindex, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଅଚଳ ଅକ୍ଷର *(lua_setupvalue) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା funcindex, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
 
-LUA_API void *(lua_upvalueid) (lua_State *L, int fidx, int n);
-LUA_API void  (lua_upvaluejoin) (lua_State *L, int fidx1, int n1,
-                                               int fidx2, int n2);
+LUA_API ଶୂନ୍ୟ *(lua_upvalueid) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା fidx, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n);
+LUA_API ଶୂନ୍ୟ  (lua_upvaluejoin) (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା fidx1, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n1,
+                                               ପୂର୍ଣ୍ଣସଂଖ୍ୟା fidx2, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n2);
 
-LUA_API void (lua_sethook) (lua_State *L, lua_Hook func, int mask, int count);
+LUA_API ଶୂନ୍ୟ (lua_sethook) (lua_State *L, lua_Hook func, ପୂର୍ଣ୍ଣସଂଖ୍ୟା mask, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଗଣନା_2);
 LUA_API lua_Hook (lua_gethook) (lua_State *L);
-LUA_API int (lua_gethookmask) (lua_State *L);
-LUA_API int (lua_gethookcount) (lua_State *L);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_gethookmask) (lua_State *L);
+LUA_API ପୂର୍ଣ୍ଣସଂଖ୍ୟା (lua_gethookcount) (lua_State *L);
 
 
-struct lua_Debug {
-  int event;
-  const char *name;	/* (n) */
-  const char *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
-  const char *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
-  const char *source;	/* (S) */
+ସଂରଚନା lua_Debug {
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା event;
+  ଅଚଳ ଅକ୍ଷର *name;	/* (n) */
+  ଅଚଳ ଅକ୍ଷର *namewhat;	/* (n) 'global', 'local', 'field', 'method' */
+  ଅଚଳ ଅକ୍ଷର *what;	/* (S) 'Lua', 'C', 'main', 'tail' */
+  ଅଚଳ ଅକ୍ଷର *source;	/* (S) */
   size_t srclen;	/* (S) */
-  int currentline;	/* (l) */
-  int linedefined;	/* (S) */
-  int lastlinedefined;	/* (S) */
-  unsigned char nups;	/* (u) number of upvalues */
-  unsigned char nparams;/* (u) number of parameters */
-  char isvararg;        /* (u) */
-  unsigned char extraargs;  /* (t) number of extra arguments */
-  char istailcall;	/* (t) */
-  int ftransfer;   /* (r) index of first value transferred */
-  int ntransfer;   /* (r) number of transferred values */
-  char short_src[LUA_IDSIZE]; /* (S) */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା currentline;	/* (l) */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା linedefined;	/* (S) */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା lastlinedefined;	/* (S) */
+  unsigned ଅକ୍ଷର nups;	/* (u) number of upvalues */
+  unsigned ଅକ୍ଷର nparams;/* (u) number of parameters */
+  ଅକ୍ଷର isvararg;        /* (u) */
+  unsigned ଅକ୍ଷର extraargs;  /* (t) number of extra arguments */
+  ଅକ୍ଷର istailcall;	/* (t) */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା ftransfer;   /* (r) index of first value transferred */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା ntransfer;   /* (r) number of transferred values */
+  ଅକ୍ଷର short_src[LUA_IDSIZE]; /* (S) */
   /* private part */
-  struct CallInfo *i_ci;  /* active function */
+  ସଂରଚନା CallInfo *i_ci;  /* active function */
 };
 
 /* }====================================================================== */

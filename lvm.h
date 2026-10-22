@@ -8,21 +8,21 @@
 #define lvm_h
 
 
-#include "ldo.h"
-#include "lobject.h"
-#include "ltm.h"
+#ଅନ୍ତର୍ଭାଵ "ldo.h"
+#ଅନ୍ତର୍ଭାଵ "lobject.h"
+#ଅନ୍ତର୍ଭାଵ "ltm.h"
 
 
-#if !defined(LUA_NOCVTN2S)
+#ଯଦି !defined(LUA_NOCVTN2S)
 #define cvt2str(o)	ttisnumber(o)
-#else
+#ଅନ୍ୟଥା
 #define cvt2str(o)	0	/* no conversion from numbers to strings */
 #endif
 
 
-#if !defined(LUA_NOCVTS2N)
+#ଯଦି !defined(LUA_NOCVTS2N)
 #define cvt2num(o)	ttisstring(o)
-#else
+#ଅନ୍ୟଥା
 #define cvt2num(o)	0	/* no conversion from strings to numbers */
 #endif
 
@@ -32,7 +32,7 @@
 ** by flooring them (instead of raising an error if they are not
 ** integral values)
 */
-#if !defined(LUA_FLOORN2I)
+#ଯଦି !defined(LUA_FLOORN2I)
 #define LUA_FLOORN2I		F2Ieq
 #endif
 
@@ -40,7 +40,7 @@
 /*
 ** Rounding modes for float->integer coercion
  */
-typedef enum {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ଗଣନା {
   F2Ieq,     /* no rounding; accepts only integral values */
   F2Ifloor,  /* takes the floor of the number */
   F2Iceil    /* takes the ceiling of the number */
@@ -55,7 +55,7 @@ typedef enum {
 /* convert an object to a float (without string coercion) */
 #define tonumberns(o,n) \
 	(ttisfloat(o) ? ((n) = fltvalue(o), 1) : \
-	(ttisinteger(o) ? ((n) = cast_num(ivalue(o)), 1) : 0))
+	(ttisinteger(o) ? ((n) = cast_ଅଙ୍କ(ivalue(o)), 1) : 0))
 
 
 /* convert an object to an integer (including string coercion) */
@@ -72,7 +72,7 @@ typedef enum {
 
 #define intop(op,v1,v2) l_castU2S(l_castS2U(v1) op l_castS2U(v2))
 
-#define luaV_rawequalobj(t1,t2)		luaV_equalobj(NULL,t1,t2)
+#define luaV_rawequalobj(t1,t2)		luaV_equalobj(ଖାଲି,t1,t2)
 
 
 /*
@@ -87,16 +87,16 @@ typedef enum {
 ** of 'luaH_getint'.
 */
 #define luaV_fastgeti(t,k,res,tag) \
-  if (!ttistable(t)) tag = LUA_VNOTABLE; \
-  else { luaH_fastgeti(hvalue(t), k, res, tag); }
+  ଯଦି (!ttistable(t)) tag = LUA_VNOTABLE; \
+  ଅନ୍ୟଥା { luaH_fastgeti(hvalue(t), k, res, tag); }
 
 
 #define luaV_fastset(t,k,val,hres,f) \
   (hres = (!ttistable(t) ? HNOTATABLE : f(hvalue(t), k, val)))
 
 #define luaV_fastseti(t,k,val,hres) \
-  if (!ttistable(t)) hres = HNOTATABLE; \
-  else { luaH_fastseti(hvalue(t), k, val, hres); }
+  ଯଦି (!ttistable(t)) hres = HNOTATABLE; \
+  ଅନ୍ୟଥା { luaH_fastseti(hvalue(t), k, val, hres); }
 
 
 /*
@@ -112,25 +112,25 @@ typedef enum {
 
 
 
-LUAI_FUNC int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2);
-LUAI_FUNC int luaV_lessthan (lua_State *L, const TValue *l, const TValue *r);
-LUAI_FUNC int luaV_lessequal (lua_State *L, const TValue *l, const TValue *r);
-LUAI_FUNC int luaV_tonumber_ (const TValue *obj, lua_Number *n);
-LUAI_FUNC int luaV_tointeger (const TValue *obj, lua_Integer *p, F2Imod mode);
-LUAI_FUNC int luaV_tointegerns (const TValue *obj, lua_Integer *p,
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_equalobj (lua_State *L, ଅଚଳ TValue *t1, ଅଚଳ TValue *t2);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_lessthan (lua_State *L, ଅଚଳ TValue *l, ଅଚଳ TValue *r);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_lessequal (lua_State *L, ଅଚଳ TValue *l, ଅଚଳ TValue *r);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_tonumber_ (ଅଚଳ TValue *obj, lua_ସଂଖ୍ୟା *n);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_tointeger (ଅଚଳ TValue *obj, lua_Integer *p, F2Imod mode);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_tointegerns (ଅଚଳ TValue *obj, lua_Integer *p,
                                 F2Imod mode);
-LUAI_FUNC int luaV_flttointeger (lua_Number n, lua_Integer *p, F2Imod mode);
-LUAI_FUNC lu_byte luaV_finishget (lua_State *L, const TValue *t, TValue *key,
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaV_flttointeger (lua_ସଂଖ୍ୟା n, lua_Integer *p, F2Imod mode);
+LUAI_FUNC lu_byte luaV_finishget (lua_State *L, ଅଚଳ TValue *t, TValue *ଚାବି,
                                                 StkId val, lu_byte tag);
-LUAI_FUNC void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
-                                             TValue *val, int aux);
-LUAI_FUNC void luaV_finishOp (lua_State *L);
-LUAI_FUNC void luaV_execute (lua_State *L, CallInfo *ci);
-LUAI_FUNC void luaV_concat (lua_State *L, int total);
+LUAI_FUNC ଶୂନ୍ୟ luaV_finishset (lua_State *L, ଅଚଳ TValue *t, TValue *ଚାବି,
+                                             TValue *val, ପୂର୍ଣ୍ଣସଂଖ୍ୟା aux);
+LUAI_FUNC ଶୂନ୍ୟ luaV_finishOp (lua_State *L);
+LUAI_FUNC ଶୂନ୍ୟ luaV_execute (lua_State *L, CallInfo *ci);
+LUAI_FUNC ଶୂନ୍ୟ luaV_concat (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା total);
 LUAI_FUNC lua_Integer luaV_idiv (lua_State *L, lua_Integer x, lua_Integer y);
 LUAI_FUNC lua_Integer luaV_mod (lua_State *L, lua_Integer x, lua_Integer y);
-LUAI_FUNC lua_Number luaV_modf (lua_State *L, lua_Number x, lua_Number y);
+LUAI_FUNC lua_ସଂଖ୍ୟା luaV_modf (lua_State *L, lua_ସଂଖ୍ୟା x, lua_ସଂଖ୍ୟା y);
 LUAI_FUNC lua_Integer luaV_shiftl (lua_Integer x, lua_Integer y);
-LUAI_FUNC void luaV_objlen (lua_State *L, StkId ra, const TValue *rb);
+LUAI_FUNC ଶୂନ୍ୟ luaV_objlen (lua_State *L, StkId ra, ଅଚଳ TValue *rb);
 
 #endif

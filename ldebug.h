@@ -8,7 +8,7 @@
 #define ldebug_h
 
 
-#include "lstate.h"
+#ଅନ୍ତର୍ଭାଵ "lstate.h"
 
 
 #define pcRel(pc, p)	(cast_int((pc) - (p)->code) - 1)
@@ -31,35 +31,35 @@
 ** MAXimum number of successive Instructions WiTHout ABSolute line
 ** information. (A power of two allows fast divisions.)
 */
-#if !defined(MAXIWTHABS)
+#ଯଦି !defined(MAXIWTHABS)
 #define MAXIWTHABS	128
 #endif
 
 
-LUAI_FUNC int luaG_getfuncline (const Proto *f, int pc);
-LUAI_FUNC const char *luaG_findlocal (lua_State *L, CallInfo *ci, int n,
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaG_getfuncline (ଅଚଳ Proto *f, ପୂର୍ଣ୍ଣସଂଖ୍ୟା pc);
+LUAI_FUNC ଅଚଳ ଅକ୍ଷର *luaG_findlocal (lua_State *L, CallInfo *ci, ପୂର୍ଣ୍ଣସଂଖ୍ୟା n,
                                                     StkId *pos);
-LUAI_FUNC l_noret luaG_typeerror (lua_State *L, const TValue *o,
-                                                const char *opname);
-LUAI_FUNC l_noret luaG_callerror (lua_State *L, const TValue *o);
-LUAI_FUNC l_noret luaG_forerror (lua_State *L, const TValue *o,
-                                               const char *what);
-LUAI_FUNC l_noret luaG_concaterror (lua_State *L, const TValue *p1,
-                                                  const TValue *p2);
-LUAI_FUNC l_noret luaG_opinterror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2,
-                                                 const char *msg);
-LUAI_FUNC l_noret luaG_tointerror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2);
-LUAI_FUNC l_noret luaG_ordererror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2);
-LUAI_FUNC l_noret luaG_errnnil (lua_State *L, LClosure *cl, int k);
-LUAI_FUNC l_noret luaG_runerror (lua_State *L, const char *fmt, ...);
-LUAI_FUNC const char *luaG_addinfo (lua_State *L, const char *msg,
-                                                  TString *src, int line);
+LUAI_FUNC l_noret luaG_typeerror (lua_State *L, ଅଚଳ TValue *o,
+                                                ଅଚଳ ଅକ୍ଷର *opname);
+LUAI_FUNC l_noret luaG_callerror (lua_State *L, ଅଚଳ TValue *o);
+LUAI_FUNC l_noret luaG_forerror (lua_State *L, ଅଚଳ TValue *o,
+                                               ଅଚଳ ଅକ୍ଷର *what);
+LUAI_FUNC l_noret luaG_concaterror (lua_State *L, ଅଚଳ TValue *p1,
+                                                  ଅଚଳ TValue *p2);
+LUAI_FUNC l_noret luaG_opinterror (lua_State *L, ଅଚଳ TValue *p1,
+                                                 ଅଚଳ TValue *p2,
+                                                 ଅଚଳ ଅକ୍ଷର *ସନ୍ଦେଶ);
+LUAI_FUNC l_noret luaG_tointerror (lua_State *L, ଅଚଳ TValue *p1,
+                                                 ଅଚଳ TValue *p2);
+LUAI_FUNC l_noret luaG_ordererror (lua_State *L, ଅଚଳ TValue *p1,
+                                                 ଅଚଳ TValue *p2);
+LUAI_FUNC l_noret luaG_errnnil (lua_State *L, LClosure *cl, ପୂର୍ଣ୍ଣସଂଖ୍ୟା k);
+LUAI_FUNC l_noret luaG_runerror (lua_State *L, ଅଚଳ ଅକ୍ଷର *fmt, ...);
+LUAI_FUNC ଅଚଳ ଅକ୍ଷର *luaG_addinfo (lua_State *L, ଅଚଳ ଅକ୍ଷର *ସନ୍ଦେଶ,
+                                                  TString *src, ପୂର୍ଣ୍ଣସଂଖ୍ୟା ଧାଡ଼ି);
 LUAI_FUNC l_noret luaG_errormsg (lua_State *L);
-LUAI_FUNC int luaG_traceexec (lua_State *L, const Instruction *pc);
-LUAI_FUNC int luaG_tracecall (lua_State *L);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaG_traceexec (lua_State *L, ଅଚଳ Instruction *pc);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaG_tracecall (lua_State *L);
 
 
 #endif

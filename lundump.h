@@ -7,11 +7,11 @@
 #ifndef lundump_h
 #define lundump_h
 
-#include <limits.h>
+#ଅନ୍ତର୍ଭାଵ <limits.h>
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#ଅନ୍ତର୍ଭାଵ "llimits.h"
+#ଅନ୍ତର୍ଭାଵ "lobject.h"
+#ଅନ୍ତର୍ଭାଵ "lzio.h"
 
 
 /* data to catch conversion errors */
@@ -19,7 +19,7 @@
 
 #define LUAC_INT	-0x5678
 #define LUAC_INST	0x12345678
-#define LUAC_NUM	cast_num(-370.5)
+#define LUAC_ଅଙ୍କ	cast_ଅଙ୍କ(-370.5)
 
 /*
 ** Encode major-minor version in one byte, one nibble for each
@@ -31,10 +31,10 @@
 
 /* load one chunk; from lundump.c */
 LUAI_FUNC LClosure* luaU_undump (lua_State* L, ZIO* Z, Table *anchor,
-                                 const char* name, int fixed);
+                                 ଅଚଳ ଅକ୍ଷର* name, ପୂର୍ଣ୍ଣସଂଖ୍ୟା fixed);
 
 /* dump one chunk; from ldump.c */
-LUAI_FUNC int luaU_dump (lua_State* L, const Proto* f, lua_Writer w,
-                         void* data, int strip);
+LUAI_FUNC ପୂର୍ଣ୍ଣସଂଖ୍ୟା luaU_dump (lua_State* L, ଅଚଳ Proto* f, lua_Writer w,
+                         ଶୂନ୍ୟ* data, ପୂର୍ଣ୍ଣସଂଖ୍ୟା strip);
 
 #endif

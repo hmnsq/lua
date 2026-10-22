@@ -7,16 +7,16 @@
 #ifndef lstate_h
 #define lstate_h
 
-#include "lua.h"
+#ଅନ୍ତର୍ଭାଵ "lua.h"
 
 
 /* Some header files included here need this definition */
-typedef struct CallInfo CallInfo;
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା CallInfo CallInfo;
 
 
-#include "lobject.h"
-#include "ltm.h"
-#include "lzio.h"
+#ଅନ୍ତର୍ଭାଵ "lobject.h"
+#ଅନ୍ତର୍ଭାଵ "ltm.h"
+#ଅନ୍ତର୍ଭାଵ "lzio.h"
 
 
 /*
@@ -119,15 +119,15 @@ typedef struct CallInfo CallInfo;
 
 
 
-struct lua_longjmp;  /* defined in ldo.c */
+ସଂରଚନା lua_longjmp;  /* defined in ldo.c */
 
 
 /*
 ** Atomic type (relative to signals) to better ensure that 'lua_sethook'
 ** is thread safe
 */
-#if !defined(l_signalT)
-#include <signal.h>
+#ଯଦି !defined(l_signalT)
+#ଅନ୍ତର୍ଭାଵ <signal.h>
 #define l_signalT	sig_atomic_t
 #endif
 
@@ -139,7 +139,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** there will be a stack check soon after the push. Function frames
 ** never use this extra space, so it does not need to be kept clean.
 */
-#define EXTRA_STACK   5
+#define EXTRA_ଗଦା   5
 
 
 /*
@@ -147,15 +147,15 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** sets (better be a prime) and "M" is the size of each set.
 ** (M == 1 makes a direct cache.)
 */
-#if !defined(STRCACHE_N)
+#ଯଦି !defined(STRCACHE_N)
 #define STRCACHE_N              53
 #define STRCACHE_M              2
 #endif
 
 
-#define BASIC_STACK_SIZE        (2*LUA_MINSTACK)
+#define BASIC_ଗଦା_SIZE        (2*LUA_MINSTACK)
 
-#define stacksize(th)	cast_int((th)->stack_last.p - (th)->stack.p)
+#define stacksize(th)	cast_int((th)->ଗଦା_last.p - (th)->ଗଦା.p)
 
 
 /* kinds of Garbage Collection */
@@ -164,10 +164,10 @@ struct lua_longjmp;  /* defined in ldo.c */
 #define KGC_GENMAJOR	2	/* generational in major mode */
 
 
-typedef struct stringtable {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା stringtable {
   TString **hash;  /* array of buckets (linked lists of strings) */
-  int nuse;  /* number of elements */
-  int size;  /* number of buckets */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nuse;  /* number of elements */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା size;  /* number of buckets */
 } stringtable;
 
 
@@ -184,26 +184,26 @@ typedef struct stringtable {
 ** - field 'nres' is used only while closing tbc variables when
 ** returning from a function;
 */
-struct CallInfo {
+ସଂରଚନା CallInfo {
   StkIdRel func;  /* function index in the stack */
-  StkIdRel top;  /* top for this function */
-  struct CallInfo *previous, *next;  /* dynamic call link */
-  union {
-    struct {  /* only for Lua functions */
-      const Instruction *savedpc;
-      volatile l_signalT trap;  /* function is tracing lines/counts */
-      int nextraargs;  /* # of extra arguments in vararg functions */
+  StkIdRel ଶୀର୍ଷ;  /* top for this function */
+  ସଂରଚନା CallInfo *previous, *next;  /* dynamic call link */
+  ସଂଘ {
+    ସଂରଚନା {  /* only for Lua functions */
+      ଅଚଳ Instruction *savedpc;
+      ଅସ୍ଥିର l_signalT trap;  /* function is tracing lines/counts */
+      ପୂର୍ଣ୍ଣସଂଖ୍ୟା nextraargs;  /* # of extra arguments in vararg functions */
     } l;
-    struct {  /* only for C functions */
+    ସଂରଚନା {  /* only for C functions */
       lua_KFunction k;  /* continuation in case of yields */
       ptrdiff_t old_errfunc;
       lua_KContext ctx;  /* context info. in case of yields */
     } c;
   } u;
-  union {
-    int funcidx;  /* called-function index */
-    int nyield;  /* number of values yielded */
-    int nres;  /* number of values returned */
+  ସଂଘ {
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା funcidx;  /* called-function index */
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା nyield;  /* number of values yielded */
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା nres;  /* number of values returned */
   } u2;
   l_uint32 callstatus;
 };
@@ -282,32 +282,32 @@ struct CallInfo {
 /*
 ** 'per thread' state
 */
-struct lua_State {
+ସଂରଚନା lua_State {
   CommonHeader;
   lu_byte allowhook;
   TStatus status;
-  StkIdRel top;  /* first free slot in the stack */
-  struct global_State *l_G;
+  StkIdRel ଶୀର୍ଷ;  /* first free slot in the stack */
+  ସଂରଚନା global_State *l_G;
   CallInfo *ci;  /* call info for current function */
-  StkIdRel stack_last;  /* end of stack (last element + 1) */
-  StkIdRel stack;  /* stack base */
+  StkIdRel ଗଦା_last;  /* end of stack (last element + 1) */
+  StkIdRel ଗଦା;  /* stack base */
   UpVal *openupval;  /* list of open upvalues in this stack */
   StkIdRel tbclist;  /* list of to-be-closed variables */
   GCObject *gclist;
-  struct lua_State *twups;  /* list of threads with open upvalues */
-  struct lua_longjmp *errorJmp;  /* current error recover point */
+  ସଂରଚନା lua_State *twups;  /* list of threads with open upvalues */
+  ସଂରଚନା lua_longjmp *errorJmp;  /* current error recover point */
   CallInfo base_ci;  /* CallInfo for first level (C host) */
-  volatile lua_Hook hook;
+  ଅସ୍ଥିର lua_Hook hook;
   ptrdiff_t errfunc;  /* current error handling function (stack index) */
   l_uint32 nCcalls;  /* number of nested non-yieldable or C calls */
-  int oldpc;  /* last pc traced */
-  int nci;  /* number of items in 'ci' list */
-  int basehookcount;
-  int hookcount;
-  volatile l_signalT hookmask;
-  struct {  /* info about transferred values (for call/return hooks) */
-    int ftransfer;  /* offset of first value transferred */
-    int ntransfer;  /* number of values transferred */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା oldpc;  /* last pc traced */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା nci;  /* number of items in 'ci' list */
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା basehookcount;
+  ପୂର୍ଣ୍ଣସଂଖ୍ୟା hookcount;
+  ଅସ୍ଥିର l_signalT hookmask;
+  ସଂରଚନା {  /* info about transferred values (for call/return hooks) */
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ftransfer;  /* offset of first value transferred */
+    ପୂର୍ଣ୍ଣସଂଖ୍ୟା ntransfer;  /* number of values transferred */
   } transferinfo;
 };
 
@@ -315,7 +315,7 @@ struct lua_State {
 /*
 ** thread state + extra space
 */
-typedef struct LX {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା LX {
   lu_byte extra_[LUA_EXTRASPACE];
   lua_State l;
 } LX;
@@ -324,9 +324,9 @@ typedef struct LX {
 /*
 ** 'global state', shared by all threads of this state
 */
-typedef struct global_State {
+ପ୍ରକାରବ୍ୟାଖ୍ୟା ସଂରଚନା global_State {
   lua_Alloc frealloc;  /* function to reallocate memory */
-  void *ud;         /* auxiliary data to 'frealloc' */
+  ଶୂନ୍ୟ *ud;         /* auxiliary data to 'frealloc' */
   l_mem GCtotalbytes;  /* number of bytes currently allocated + debt */
   l_mem GCdebt;  /* bytes counted but not yet allocated */
   l_mem GCmarked;  /* number of objects marked in a GC cycle */
@@ -334,7 +334,7 @@ typedef struct global_State {
   stringtable strt;  /* hash table for strings */
   TValue l_registry;
   TValue nilvalue;  /* a nil value */
-  unsigned int seed;  /* randomized seed for hashes */
+  unsigned ପୂର୍ଣ୍ଣସଂଖ୍ୟା seed;  /* randomized seed for hashes */
   lu_byte gcparams[LUA_GCPN];
   lu_byte currentwhite;
   lu_byte gcstate;  /* state of garbage collector */
@@ -360,14 +360,14 @@ typedef struct global_State {
   GCObject *finobjsur;  /* list of survival objects with finalizers */
   GCObject *finobjold1;  /* list of old1 objects with finalizers */
   GCObject *finobjrold;  /* list of really old objects with finalizers */
-  struct lua_State *twups;  /* list of threads with open upvalues */
+  ସଂରଚନା lua_State *twups;  /* list of threads with open upvalues */
   lua_CFunction panic;  /* to be called in unprotected errors */
   TString *memerrmsg;  /* message for memory-allocation errors */
   TString *tmname[TM_N];  /* array with tag-method names */
-  struct Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
+  ସଂରଚନା Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
   TString *strcache[STRCACHE_N][STRCACHE_M];  /* cache for strings in API */
   lua_WarnFunction warnf;  /* warning function */
-  void *ud_warn;         /* auxiliary data to 'warnf' */
+  ଶୂନ୍ୟ *ud_warn;         /* auxiliary data to 'warnf' */
   LX mainth;  /* main thread of this state */
 } global_State;
 
@@ -391,15 +391,15 @@ typedef struct global_State {
 ** part of any of them anywhere that a declaration of the complete type
 ** of the union is visible."
 */
-union GCUnion {
+ସଂଘ GCUnion {
   GCObject gc;  /* common header */
-  struct TString ts;
-  struct Udata u;
-  union Closure cl;
-  struct Table h;
-  struct Proto p;
-  struct lua_State th;  /* thread */
-  struct UpVal upv;
+  ସଂରଚନା TString ts;
+  ସଂରଚନା Udata u;
+  ସଂଘ Closure cl;
+  ସଂରଚନା Table h;
+  ସଂରଚନା Proto p;
+  ସଂରଚନା lua_State th;  /* thread */
+  ସଂରଚନା UpVal upv;
 };
 
 
@@ -435,15 +435,15 @@ union GCUnion {
 #define gettotalbytes(g)	((g)->GCtotalbytes - (g)->GCdebt)
 
 
-LUAI_FUNC void luaE_setdebt (global_State *g, l_mem debt);
-LUAI_FUNC void luaE_freethread (lua_State *L, lua_State *L1);
+LUAI_FUNC ଶୂନ୍ୟ luaE_setdebt (global_State *g, l_mem debt);
+LUAI_FUNC ଶୂନ୍ୟ luaE_freethread (lua_State *L, lua_State *L1);
 LUAI_FUNC lu_mem luaE_threadsize (lua_State *L);
-LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
-LUAI_FUNC void luaE_shrinkCI (lua_State *L);
-LUAI_FUNC void luaE_checkcstack (lua_State *L);
-LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
-LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
+LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, ପୂର୍ଣ୍ଣସଂଖ୍ୟା err);
+LUAI_FUNC ଶୂନ୍ୟ luaE_shrinkCI (lua_State *L);
+LUAI_FUNC ଶୂନ୍ୟ luaE_checkcstack (lua_State *L);
+LUAI_FUNC ଶୂନ୍ୟ luaE_incCstack (lua_State *L);
+LUAI_FUNC ଶୂନ୍ୟ luaE_warning (lua_State *L, ଅଚଳ ଅକ୍ଷର *ସନ୍ଦେଶ, ପୂର୍ଣ୍ଣସଂଖ୍ୟା tocont);
+LUAI_FUNC ଶୂନ୍ୟ luaE_warnerror (lua_State *L, ଅଚଳ ଅକ୍ଷର *where);
 LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
 
 
