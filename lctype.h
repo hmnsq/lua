@@ -4,10 +4,10 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lctype_h
-#define lctype_h
+#اگر_غیر_تعریف_شدہ lctype_h
+#تعریف_کرو lctype_h
 
-#include "lua.h"
+#شامل "lua.h"
 
 
 /*
@@ -16,50 +16,50 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#اگر !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#اگر 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
-#define LUA_USE_CTYPE	0
-#else
+#تعریف_کرو LUA_USE_CTYPE	0
+#ورنہ
 /* must use standard C ctype */
-#define LUA_USE_CTYPE	1
-#endif
+#تعریف_کرو LUA_USE_CTYPE	1
+#اگر_ختم
 
-#endif
-
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
-
-#include "llimits.h"
+#اگر_ختم
 
 
-#define ALPHABIT	0
-#define DIGITBIT	1
-#define PRINTBIT	2
-#define SPACEBIT	3
-#define XDIGITBIT	4
+#اگر !LUA_USE_CTYPE	/* { */
+
+#شامل <limits.h>
+
+#شامل "llimits.h"
 
 
-#define MASK(B)		(1 << (B))
+#تعریف_کرو ALPHABIT	0
+#تعریف_کرو DIGITBIT	1
+#تعریف_کرو PRINTBIT	2
+#تعریف_کرو SPACEBIT	3
+#تعریف_کرو XDIGITBIT	4
+
+
+#تعریف_کرو نقاب(B)		(1 << (B))
 
 
 /*
 ** add 1 to char to allow index -1 (EOZ)
 */
-#define testprop(c,p)	(luai_ctype_[(c)+1] & (p))
+#تعریف_کرو testprop(c,p)	(luai_ctype_[(c)+1] & (p))
 
 /*
 ** 'lalpha' (Lua alphabetic) and 'lalnum' (Lua alphanumeric) both include '_'
 */
-#define lislalpha(c)	testprop(c, MASK(ALPHABIT))
-#define lislalnum(c)	testprop(c, (MASK(ALPHABIT) | MASK(DIGITBIT)))
-#define lisdigit(c)	testprop(c, MASK(DIGITBIT))
-#define lisspace(c)	testprop(c, MASK(SPACEBIT))
-#define lisprint(c)	testprop(c, MASK(PRINTBIT))
-#define lisxdigit(c)	testprop(c, MASK(XDIGITBIT))
+#تعریف_کرو lislalpha(c)	testprop(c, نقاب(ALPHABIT))
+#تعریف_کرو lislalnum(c)	testprop(c, (نقاب(ALPHABIT) | نقاب(DIGITBIT)))
+#تعریف_کرو lisdigit(c)	testprop(c, نقاب(DIGITBIT))
+#تعریف_کرو lisspace(c)	testprop(c, نقاب(SPACEBIT))
+#تعریف_کرو lisprint(c)	testprop(c, نقاب(PRINTBIT))
+#تعریف_کرو lisxdigit(c)	testprop(c, نقاب(XDIGITBIT))
 
 
 /*
@@ -68,34 +68,34 @@
 ** the character either is an upper-case letter or is unchanged by
 ** the transformation, which holds for lower-case letters and '.'.)
 */
-#define ltolower(c)  \
+#تعریف_کرو ltolower(c)  \
   check_exp(('A' <= (c) && (c) <= 'Z') || (c) == ((c) | ('A' ^ 'a')),  \
             (c) | ('A' ^ 'a'))
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(ثابت lu_byte luai_ctype_[UCHAR_MAX + 2];)
 
 
-#else			/* }{ */
+#ورنہ			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#شامل <ctype.h>
 
 
-#define lislalpha(c)	(isalpha(c) || (c) == '_')
-#define lislalnum(c)	(isalnum(c) || (c) == '_')
-#define lisdigit(c)	(isdigit(c))
-#define lisspace(c)	(isspace(c))
-#define lisprint(c)	(isprint(c))
-#define lisxdigit(c)	(isxdigit(c))
+#تعریف_کرو lislalpha(c)	(حرف_ہے(c) || (c) == '_')
+#تعریف_کرو lislalnum(c)	(حرف_یا_ہندسہ(c) || (c) == '_')
+#تعریف_کرو lisdigit(c)	(ہندسہ_ہے(c))
+#تعریف_کرو lisspace(c)	(خلا_ہے(c))
+#تعریف_کرو lisprint(c)	(isprint(c))
+#تعریف_کرو lisxdigit(c)	(isxdigit(c))
 
-#define ltolower(c)	(tolower(c))
+#تعریف_کرو ltolower(c)	(tolower(c))
 
-#endif			/* } */
+#اگر_ختم			/* } */
 
-#endif
+#اگر_ختم
 

@@ -4,12 +4,12 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lparser_h
-#define lparser_h
+#اگر_غیر_تعریف_شدہ lparser_h
+#تعریف_کرو lparser_h
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#شامل "llimits.h"
+#شامل "lobject.h"
+#شامل "lzio.h"
 
 
 /*
@@ -22,7 +22,7 @@
 */
 
 /* kinds of variables/expressions */
-typedef enum {
+قسمتعریف شمار {
   VVOID,  /* when 'expdesc' describes the last expression of a list,
              this kind means an empty list (so, no expression) */
   VNIL,  /* constant nil */
@@ -71,56 +71,56 @@ typedef enum {
 } expkind;
 
 
-#define vkisvar(k)	(VLOCAL <= (k) && (k) <= VINDEXSTR)
-#define vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
+#تعریف_کرو vkisvar(k)	(VLOCAL <= (k) && (k) <= VINDEXSTR)
+#تعریف_کرو vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
 
 
-typedef struct expdesc {
+قسمتعریف ساخت expdesc {
   expkind k;
-  union {
+  اتحاد {
     lua_Integer ival;    /* for VKINT */
-    lua_Number nval;  /* for VKFLT */
+    lua_نمبر nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
-    int info;  /* for generic use */
-    struct {  /* for indexed variables */
-      short idx;  /* index (R or "long" K) */
+    صحیح info;  /* for generic use */
+    ساخت {  /* for indexed variables */
+      مختصر idx;  /* index (R or "long" K) */
       lu_byte t;  /* table (register or upvalue) */
       lu_byte ro;  /* true if variable is read-only */
-      int keystr;  /* index in 'k' of string key, or -1 if not a string */
+      صحیح keystr;  /* index in 'k' of string key, or -1 if not a string */
     } ind;
-    struct {  /* for local variables */
+    ساخت {  /* for local variables */
       lu_byte ridx;  /* register holding the variable */
-      short vidx;  /* index in 'actvar.arr' */
+      مختصر vidx;  /* index in 'actvar.arr' */
     } var;
   } u;
-  int t;  /* patch list of 'exit when true' */
-  int f;  /* patch list of 'exit when false' */
+  صحیح t;  /* patch list of 'exit when true' */
+  صحیح f;  /* patch list of 'exit when false' */
 } expdesc;
 
 
 /* kinds of variables */
-#define VDKREG		0   /* regular local */
-#define RDKCONST	1   /* local constant */
-#define RDKVAVAR	2   /* vararg parameter */
-#define RDKTOCLOSE	3   /* to-be-closed */
-#define RDKCTC		4   /* local compile-time constant */
-#define GDKREG		5   /* regular global */
-#define GDKCONST	6   /* global constant */
+#تعریف_کرو VDKREG		0   /* regular local */
+#تعریف_کرو RDKCONST	1   /* local constant */
+#تعریف_کرو RDKVAVAR	2   /* vararg parameter */
+#تعریف_کرو RDKTOCLOSE	3   /* to-be-closed */
+#تعریف_کرو RDKCTC		4   /* local compile-time constant */
+#تعریف_کرو GDKREG		5   /* regular global */
+#تعریف_کرو GDKCONST	6   /* global constant */
 
 /* variables that live in registers */
-#define varinreg(v)	((v)->vd.kind <= RDKTOCLOSE)
+#تعریف_کرو varinreg(v)	((v)->vd.قسم <= RDKTOCLOSE)
 
 /* test for global variables */
-#define varglobal(v)	((v)->vd.kind >= GDKREG)
+#تعریف_کرو varglobal(v)	((v)->vd.قسم >= GDKREG)
 
 
 /* description of an active variable */
-typedef union Vardesc {
-  struct {
+قسمتعریف اتحاد Vardesc {
+  ساخت {
     TValuefields;  /* constant value (if it is a compile-time constant) */
-    lu_byte kind;
+    lu_byte قسم;
     lu_byte ridx;  /* register holding the variable */
-    short pidx;  /* index of the variable in the Proto's 'locvars' array */
+    مختصر pidx;  /* index of the variable in the Proto's 'locvars' array */
     TString *name;  /* variable name */
   } vd;
   TValue k;  /* constant value (if any) */
@@ -129,29 +129,29 @@ typedef union Vardesc {
 
 
 /* description of pending goto statements and label statements */
-typedef struct Labeldesc {
+قسمتعریف ساخت Labeldesc {
   TString *name;  /* label identifier */
-  int pc;  /* position in code */
-  int line;  /* line where it appeared */
-  short nactvar;  /* number of active variables in that position */
+  صحیح pc;  /* position in code */
+  صحیح سطر;  /* line where it appeared */
+  مختصر nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;
 
 
 /* list of labels or gotos */
-typedef struct Labellist {
+قسمتعریف ساخت Labellist {
   Labeldesc *arr;  /* array */
-  int n;  /* number of entries in use */
-  int size;  /* array size */
+  صحیح n;  /* number of entries in use */
+  صحیح سائز;  /* array size */
 } Labellist;
 
 
 /* dynamic structures used by the parser */
-typedef struct Dyndata {
-  struct {  /* list of all active local variables */
+قسمتعریف ساخت Dyndata {
+  ساخت {  /* list of all active local variables */
     Vardesc *arr;
-    int n;
-    int size;
+    صحیح n;
+    صحیح سائز;
   } actvar;
   Labellist gt;  /* list of pending gotos */
   Labellist label;   /* list of active labels */
@@ -159,26 +159,26 @@ typedef struct Dyndata {
 
 
 /* control of blocks */
-struct BlockCnt;  /* defined in lparser.c */
+ساخت بلاک_Cnt;  /* defined in lparser.c */
 
 
 /* state needed to generate code for a given function */
-typedef struct FuncState {
+قسمتعریف ساخت FuncState {
   Proto *f;  /* current function header */
-  struct FuncState *prev;  /* enclosing function */
-  struct LexState *ls;  /* lexical state */
-  struct BlockCnt *bl;  /* chain of current blocks */
-  Table *kcache;  /* cache for reusing constants */
-  int pc;  /* next position to code (equivalent to 'ncode') */
-  int lasttarget;   /* 'label' of last 'jump label' */
-  int previousline;  /* last line that was saved in 'lineinfo' */
-  int nk;  /* number of elements in 'k' */
-  int np;  /* number of elements in 'p' */
-  int nabslineinfo;  /* number of elements in 'abslineinfo' */
-  int firstlocal;  /* index of first local var (in Dyndata array) */
-  int firstlabel;  /* index of first label (in 'dyd->label->arr') */
-  short ndebugvars;  /* number of elements in 'f->locvars' */
-  short nactvar;  /* number of active variable declarations */
+  ساخت FuncState *پچھلا_2;  /* enclosing function */
+  ساخت LexState *ls;  /* lexical state */
+  ساخت بلاک_Cnt *bl;  /* chain of current blocks */
+  جدول *kcache;  /* cache for reusing constants */
+  صحیح pc;  /* next position to code (equivalent to 'ncode') */
+  صحیح lasttarget;   /* 'label' of last 'jump label' */
+  صحیح previousline;  /* last line that was saved in 'lineinfo' */
+  صحیح nk;  /* number of elements in 'k' */
+  صحیح np;  /* number of elements in 'p' */
+  صحیح nabslineinfo;  /* number of elements in 'abslineinfo' */
+  صحیح firstlocal;  /* index of first local var (in Dyndata array) */
+  صحیح firstlabel;  /* index of first label (in 'dyd->label->arr') */
+  مختصر ndebugvars;  /* number of elements in 'f->locvars' */
+  مختصر nactvar;  /* number of active variable declarations */
   lu_byte nups;  /* number of upvalues */
   lu_byte freereg;  /* first free register */
   lu_byte iwthabs;  /* instructions issued since last absolute line info */
@@ -187,11 +187,11 @@ typedef struct FuncState {
 
 
 LUAI_FUNC lu_byte luaY_nvarstack (FuncState *fs);
-LUAI_FUNC void luaY_checklimit (FuncState *fs, int v, int l,
-                                const char *what);
-LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor,
+LUAI_FUNC خالی luaY_checklimit (FuncState *fs, صحیح v, صحیح l,
+                                ثابت حرف *what);
+LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, جدول *anchor,
                                  Mbuffer *buff, Dyndata *dyd,
-                                 const char *name, int firstchar);
+                                 ثابت حرف *name, صحیح firstchar);
 
 
-#endif
+#اگر_ختم

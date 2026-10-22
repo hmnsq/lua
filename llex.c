@@ -4,45 +4,45 @@
 ** See Copyright Notice in lua.h
 */
 
-#define llex_c
-#define LUA_CORE
+#تعریف_کرو llex_c
+#تعریف_کرو LUA_CORE
 
-#include "lprefix.h"
-
-
-#include <locale.h>
-#include <string.h>
-
-#include "lua.h"
-
-#include "lctype.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lgc.h"
-#include "llex.h"
-#include "lobject.h"
-#include "lparser.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "lzio.h"
+#شامل "lprefix.h"
 
 
+#شامل <locale.h>
+#شامل <string.h>
 
-#define next(ls)	(ls->current = zgetc(ls->z))
+#شامل "lua.h"
+
+#شامل "lctype.h"
+#شامل "ldebug.h"
+#شامل "ldo.h"
+#شامل "lgc.h"
+#شامل "llex.h"
+#شامل "lobject.h"
+#شامل "lparser.h"
+#شامل "lstate.h"
+#شامل "lstring.h"
+#شامل "ltable.h"
+#شامل "lzio.h"
+
+
+
+#تعریف_کرو اگلا(ls)	(ls->current = zgetc(ls->z))
 
 
 /* minimum size for string buffer */
-#if !defined(LUA_MINBUFFER)
-#define LUA_MINBUFFER   32
-#endif
+#اگر !defined(LUA_MINBUFFER)
+#تعریف_کرو LUA_MINBUFFER   32
+#اگر_ختم
 
 
-#define currIsNewline(ls)	(ls->current == '\n' || ls->current == '\r')
+#تعریف_کرو currIsNewline(ls)	(ls->current == '\n' || ls->current == '\r')
 
 
 /* ORDER RESERVED */
-static const char *const luaX_tokens [] = {
+ساکن ثابت حرف *ثابت lua_X_علامات [] = {
     "and", "break", "do", "else", "elseif",
     "end", "false", "for", "function", "global", "goto", "if",
     "in", "local", "nil", "not", "or", "repeat",
@@ -53,76 +53,76 @@ static const char *const luaX_tokens [] = {
 };
 
 
-#define save_and_next(ls) (save(ls, ls->current), next(ls))
+#تعریف_کرو save_and_اگلا(ls) (save(ls, ls->current), اگلا(ls))
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token);
+ساکن l_noret lexerror (LexState *ls, ثابت حرف *پیغام, صحیح token);
 
 
-static void save (LexState *ls, int c) {
+ساکن خالی save (LexState *ls, صحیح c) {
   Mbuffer *b = ls->buff;
-  if (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
+  اگر (luaZ_bufflen(b) + 1 > luaZ_sizebuffer(b)) {
     size_t newsize = luaZ_sizebuffer(b);  /* get old size */;
-    if (newsize >= (MAX_SIZE/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
+    اگر (newsize >= (MAX_سائز/3 * 2))  /* larger than MAX_SIZE/1.5 ? */
       lexerror(ls, "lexical element too long", 0);
     newsize += (newsize >> 1);  /* new size is 1.5 times the old one */
     luaZ_resizebuffer(ls->L, b, newsize);
   }
-  b->buffer[luaZ_bufflen(b)++] = cast_char(c);
+  b->بفر[luaZ_bufflen(b)++] = cast_char(c);
 }
 
 
-void luaX_init (lua_State *L) {
-  int i;
+خالی luaX_init (lua_State *L) {
+  صحیح i;
   TString *e = luaS_newliteral(L, LUA_ENV);  /* create env name */
   luaC_fix(L, obj2gco(e));  /* never collect this name */
-  for (i=0; i<NUM_RESERVED; i++) {
-    TString *ts = luaS_new(L, luaX_tokens[i]);
+  برائے (i=0; i<عدد_RESERVED; i++) {
+    TString *ts = luaS_new(L, lua_X_علامات[i]);
     luaC_fix(L, obj2gco(ts));  /* reserved words are never collected */
     ts->extra = cast_byte(i+1);  /* reserved word */
   }
 }
 
 
-const char *luaX_token2str (LexState *ls, int token) {
-  if (token < FIRST_RESERVED) {  /* single-byte symbols? */
-    if (lisprint(token))
-      return luaO_pushfstring(ls->L, "'%c'", token);
-    else  /* control character */
-      return luaO_pushfstring(ls->L, "'<\\%d>'", token);
+ثابت حرف *luaX_token2str (LexState *ls, صحیح token) {
+  اگر (token < پہلا_RESERVED) {  /* single-byte symbols? */
+    اگر (lisprint(token))
+      واپس luaO_pushfstring(ls->L, "'%c'", token);
+    ورنہ  /* control character */
+      واپس luaO_pushfstring(ls->L, "'<\\%d>'", token);
   }
-  else {
-    const char *s = luaX_tokens[token - FIRST_RESERVED];
-    if (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
-      return luaO_pushfstring(ls->L, "'%s'", s);
-    else  /* names, strings, and numerals */
-      return s;
+  ورنہ {
+    ثابت حرف *s = lua_X_علامات[token - پہلا_RESERVED];
+    اگر (token < TK_EOS)  /* fixed format (symbols and reserved words)? */
+      واپس luaO_pushfstring(ls->L, "'%s'", s);
+    ورنہ  /* names, strings, and numerals */
+      واپس s;
   }
 }
 
 
-static const char *txtToken (LexState *ls, int token) {
-  switch (token) {
-    case TK_NAME: case TK_STRING:
-    case TK_FLT: case TK_INT:
+ساکن ثابت حرف *txtToken (LexState *ls, صحیح token) {
+  انتخاب (token) {
+    حالت TK_NAME: حالت TK_STRING:
+    حالت TK_FLT: حالت TK_INT:
       save(ls, '\0');
-      return luaO_pushfstring(ls->L, "'%s'", luaZ_buffer(ls->buff));
-    default:
-      return luaX_token2str(ls, token);
+      واپس luaO_pushfstring(ls->L, "'%s'", lua_Z_بفر(ls->buff));
+    طےشدہ:
+      واپس luaX_token2str(ls, token);
   }
 }
 
 
-static l_noret lexerror (LexState *ls, const char *msg, int token) {
-  msg = luaG_addinfo(ls->L, msg, ls->source, ls->linenumber);
-  if (token)
-    luaO_pushfstring(ls->L, "%s near %s", msg, txtToken(ls, token));
+ساکن l_noret lexerror (LexState *ls, ثابت حرف *پیغام, صحیح token) {
+  پیغام = luaG_addinfo(ls->L, پیغام, ls->ماخذ, ls->linenumber);
+  اگر (token)
+    luaO_pushfstring(ls->L, "%s near %s", پیغام, txtToken(ls, token));
   luaD_throw(ls->L, LUA_ERRSYNTAX);
 }
 
 
-l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
-  lexerror(ls, msg, ls->t.token);
+l_noret luaX_syntaxerror (LexState *ls, ثابت حرف *پیغام) {
+  lexerror(ls, پیغام, ls->t.token);
 }
 
 
@@ -132,20 +132,20 @@ l_noret luaX_syntaxerror (LexState *ls, const char *msg) {
 ** somewhere. It also internalizes long strings, ensuring there is only
 ** one copy of each unique string.
 */
-static TString *anchorstr (LexState *ls, TString *ts) {
+ساکن TString *anchorstr (LexState *ls, TString *ts) {
   lua_State *L = ls->L;
   TValue oldts;
-  int tag = luaH_getstr(ls->h, ts, &oldts);
-  if (!tagisempty(tag))  /* string already present? */
-    return tsvalue(&oldts);  /* use stored value */
-  else {  /* create a new entry */
-    TValue *stv = s2v(L->top.p++);  /* reserve stack space for string */
+  صحیح لیبل = luaH_getstr(ls->h, ts, &oldts);
+  اگر (!tagisempty(لیبل))  /* string already present? */
+    واپس tsvalue(&oldts);  /* use stored value */
+  ورنہ {  /* create a new entry */
+    TValue *stv = s2v(L->چوٹی.p++);  /* reserve stack space for string */
     setsvalue(L, stv, ts);  /* push (anchor) the string on the stack */
-    luaH_set(L, ls->h, stv, stv);  /* t[string] = string */
+    lua_H_سیٹ(L, ls->h, stv, stv);  /* t[string] = string */
     /* table is not a metatable, so it does not need to invalidate cache */
     luaC_checkGC(L);
-    L->top.p--;  /* remove string from stack */
-    return ts;
+    L->چوٹی.p--;  /* remove string from stack */
+    واپس ts;
   }
 }
 
@@ -153,8 +153,8 @@ static TString *anchorstr (LexState *ls, TString *ts) {
 /*
 ** Creates a new string and anchors it in scanner's table.
 */
-TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
-  return anchorstr(ls, luaS_newlstr(ls->L, str, l));
+TString *luaX_newstring (LexState *ls, ثابت حرف *str, size_t l) {
+  واپس anchorstr(ls, luaS_newlstr(ls->L, str, l));
 }
 
 
@@ -162,37 +162,37 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
 ** increment line number and skips newline sequence (any of
 ** \n, \r, \n\r, or \r\n)
 */
-static void inclinenumber (LexState *ls) {
-  int old = ls->current;
+ساکن خالی inclinenumber (LexState *ls) {
+  صحیح old = ls->current;
   lua_assert(currIsNewline(ls));
-  next(ls);  /* skip '\n' or '\r' */
-  if (currIsNewline(ls) && ls->current != old)
-    next(ls);  /* skip '\n\r' or '\r\n' */
-  if (++ls->linenumber >= INT_MAX)
+  اگلا(ls);  /* skip '\n' or '\r' */
+  اگر (currIsNewline(ls) && ls->current != old)
+    اگلا(ls);  /* skip '\n\r' or '\r\n' */
+  اگر (++ls->linenumber >= زیادہ_سے_زیادہ_عدد)
     lexerror(ls, "chunk has too many lines", 0);
 }
 
 
-void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
-                    int firstchar) {
+خالی luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *ماخذ,
+                    صحیح firstchar) {
   ls->t.token = 0;
   ls->L = L;
   ls->current = firstchar;
   ls->lookahead.token = TK_EOS;  /* no look-ahead token */
   ls->z = z;
-  ls->fs = NULL;
+  ls->fs = تہی;
   ls->linenumber = 1;
   ls->lastline = 1;
-  ls->source = source;
+  ls->ماخذ = ماخذ;
   /* all three strings here ("_ENV", "break", "global") were fixed,
      so they cannot be collected */
   ls->envn = luaS_newliteral(L, LUA_ENV);  /* get env string */
   ls->brkn = luaS_newliteral(L, "break");  /* get "break" string */
-#if LUA_COMPAT_GLOBAL
+#اگر LUA_COMPAT_GLOBAL
   /* compatibility mode: "global" is not a reserved word */
   ls->glbn = luaS_newliteral(L, "global");  /* get "global" string */
   ls->glbn->extra = 0;  /* mark it as not reserved */
-#endif
+#اگر_ختم
   luaZ_resizebuffer(ls->L, ls->buff, LUA_MINBUFFER);  /* initialize buffer */
 }
 
@@ -205,12 +205,12 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source,
 */
 
 
-static int check_next1 (LexState *ls, int c) {
-  if (ls->current == c) {
-    next(ls);
-    return 1;
+ساکن صحیح check_next1 (LexState *ls, صحیح c) {
+  اگر (ls->current == c) {
+    اگلا(ls);
+    واپس 1;
   }
-  else return 0;
+  ورنہ واپس 0;
 }
 
 
@@ -218,13 +218,13 @@ static int check_next1 (LexState *ls, int c) {
 ** Check whether current char is in set 'set' (with two chars) and
 ** saves it
 */
-static int check_next2 (LexState *ls, const char *set) {
-  lua_assert(set[2] == '\0');
-  if (ls->current == set[0] || ls->current == set[1]) {
-    save_and_next(ls);
-    return 1;
+ساکن صحیح check_next2 (LexState *ls, ثابت حرف *سیٹ) {
+  lua_assert(سیٹ[2] == '\0');
+  اگر (ls->current == سیٹ[0] || ls->current == سیٹ[1]) {
+    save_and_اگلا(ls);
+    واپس 1;
   }
-  else return 0;
+  ورنہ واپس 0;
 }
 
 
@@ -241,34 +241,34 @@ static int check_next2 (LexState *ls, const char *set) {
 **
 ** The caller might have already read an initial dot.
 */
-static int read_numeral (LexState *ls, SemInfo *seminfo) {
+ساکن صحیح read_numeral (LexState *ls, SemInfo *seminfo) {
   TValue obj;
-  const char *expo = "Ee";
-  int first = ls->current;
+  ثابت حرف *expo = "Ee";
+  صحیح پہلا = ls->current;
   lua_assert(lisdigit(ls->current));
-  save_and_next(ls);
-  if (first == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
+  save_and_اگلا(ls);
+  اگر (پہلا == '0' && check_next2(ls, "xX"))  /* hexadecimal? */
     expo = "Pp";
-  for (;;) {
-    if (check_next2(ls, expo))  /* exponent mark? */
+  برائے (;;) {
+    اگر (check_next2(ls, expo))  /* exponent mark? */
       check_next2(ls, "-+");  /* optional exponent sign */
-    else if (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
-      save_and_next(ls);
-    else break;
+    ورنہ اگر (lisxdigit(ls->current) || ls->current == '.')  /* '%x|%.' */
+      save_and_اگلا(ls);
+    ورنہ توڑو;
   }
-  if (lislalpha(ls->current))  /* is numeral touching a letter? */
-    save_and_next(ls);  /* force an error */
+  اگر (lislalpha(ls->current))  /* is numeral touching a letter? */
+    save_and_اگلا(ls);  /* force an error */
   save(ls, '\0');
-  if (luaO_str2num(luaZ_buffer(ls->buff), &obj) == 0)  /* format error? */
+  اگر (luaO_str2num(lua_Z_بفر(ls->buff), &obj) == 0)  /* format error? */
     lexerror(ls, "malformed number", TK_FLT);
-  if (ttisinteger(&obj)) {
+  اگر (ttisinteger(&obj)) {
     seminfo->i = ivalue(&obj);
-    return TK_INT;
+    واپس TK_INT;
   }
-  else {
+  ورنہ {
     lua_assert(ttisfloat(&obj));
     seminfo->r = fltvalue(&obj);
-    return TK_FLT;
+    واپس TK_FLT;
   }
 }
 
@@ -279,81 +279,81 @@ static int read_numeral (LexState *ls, SemInfo *seminfo) {
 ** return 1 if it is a single bracket (no '='s and no 2nd bracket);
 ** otherwise (an unfinished '[==...') return 0.
 */
-static size_t skip_sep (LexState *ls) {
-  size_t count = 0;
-  int s = ls->current;
+ساکن size_t skip_sep (LexState *ls) {
+  size_t گنتی = 0;
+  صحیح s = ls->current;
   lua_assert(s == '[' || s == ']');
-  save_and_next(ls);
-  while (ls->current == '=') {
-    save_and_next(ls);
-    count++;
+  save_and_اگلا(ls);
+  جب (ls->current == '=') {
+    save_and_اگلا(ls);
+    گنتی++;
   }
-  return (ls->current == s) ? count + 2
-         : (count == 0) ? 1
+  واپس (ls->current == s) ? گنتی + 2
+         : (گنتی == 0) ? 1
          : 0;
 }
 
 
-static void read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
-  int line = ls->linenumber;  /* initial line (for error message) */
-  save_and_next(ls);  /* skip 2nd '[' */
-  if (currIsNewline(ls))  /* string starts with a newline? */
+ساکن خالی read_long_string (LexState *ls, SemInfo *seminfo, size_t sep) {
+  صحیح سطر = ls->linenumber;  /* initial line (for error message) */
+  save_and_اگلا(ls);  /* skip 2nd '[' */
+  اگر (currIsNewline(ls))  /* string starts with a newline? */
     inclinenumber(ls);  /* skip it */
-  for (;;) {
-    switch (ls->current) {
-      case EOZ: {  /* error */
-        const char *what = (seminfo ? "string" : "comment");
-        const char *msg = luaO_pushfstring(ls->L,
-                     "unfinished long %s (starting at line %d)", what, line);
-        lexerror(ls, msg, TK_EOS);
-        break;  /* to avoid warnings */
+  برائے (;;) {
+    انتخاب (ls->current) {
+      حالت EOZ: {  /* error */
+        ثابت حرف *what = (seminfo ? "string" : "comment");
+        ثابت حرف *پیغام = luaO_pushfstring(ls->L,
+                     "unfinished long %s (starting at line %d)", what, سطر);
+        lexerror(ls, پیغام, TK_EOS);
+        توڑو;  /* to avoid warnings */
       }
-      case ']': {
-        if (skip_sep(ls) == sep) {
-          save_and_next(ls);  /* skip 2nd ']' */
-          goto endloop;
+      حالت ']': {
+        اگر (skip_sep(ls) == sep) {
+          save_and_اگلا(ls);  /* skip 2nd ']' */
+          جاؤ endloop;
         }
-        break;
+        توڑو;
       }
-      case '\n': case '\r': {
+      حالت '\n': حالت '\r': {
         save(ls, '\n');
         inclinenumber(ls);
-        if (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
-        break;
+        اگر (!seminfo) luaZ_resetbuffer(ls->buff);  /* avoid wasting space */
+        توڑو;
       }
-      default: {
-        if (seminfo) save_and_next(ls);
-        else next(ls);
+      طےشدہ: {
+        اگر (seminfo) save_and_اگلا(ls);
+        ورنہ اگلا(ls);
       }
     }
   } endloop:
-  if (seminfo)
-    seminfo->ts = luaX_newstring(ls, luaZ_buffer(ls->buff) + sep,
+  اگر (seminfo)
+    seminfo->ts = luaX_newstring(ls, lua_Z_بفر(ls->buff) + sep,
                                      luaZ_bufflen(ls->buff) - 2 * sep);
 }
 
 
-static void esccheck (LexState *ls, int c, const char *msg) {
-  if (!c) {
-    if (ls->current != EOZ)
-      save_and_next(ls);  /* add current to buffer for error message */
-    lexerror(ls, msg, TK_STRING);
+ساکن خالی esccheck (LexState *ls, صحیح c, ثابت حرف *پیغام) {
+  اگر (!c) {
+    اگر (ls->current != EOZ)
+      save_and_اگلا(ls);  /* add current to buffer for error message */
+    lexerror(ls, پیغام, TK_STRING);
   }
 }
 
 
-static int gethexa (LexState *ls) {
-  save_and_next(ls);
+ساکن صحیح gethexa (LexState *ls) {
+  save_and_اگلا(ls);
   esccheck (ls, lisxdigit(ls->current), "hexadecimal digit expected");
-  return luaO_hexavalue(ls->current);
+  واپس luaO_hexavalue(ls->current);
 }
 
 
-static int readhexaesc (LexState *ls) {
-  int r = gethexa(ls);
+ساکن صحیح readhexaesc (LexState *ls) {
+  صحیح r = gethexa(ls);
   r = (r << 4) + gethexa(ls);
   luaZ_buffremove(ls->buff, 2);  /* remove saved chars from buffer */
-  return r;
+  واپس r;
 }
 
 
@@ -362,222 +362,222 @@ static int readhexaesc (LexState *ls) {
 ** for error reporting in case of errors; 'i' counts the number of
 ** saved characters, so that they can be removed if case of success.
 */
-static l_uint32 readutf8esc (LexState *ls) {
+ساکن l_uint32 readutf8esc (LexState *ls) {
   l_uint32 r;
-  int i = 4;  /* number of chars to be removed: start with #"\u{X" */
-  save_and_next(ls);  /* skip 'u' */
+  صحیح i = 4;  /* number of chars to be removed: start with #"\u{X" */
+  save_and_اگلا(ls);  /* skip 'u' */
   esccheck(ls, ls->current == '{', "missing '{'");
   r = cast_uint(gethexa(ls));  /* must have at least one digit */
-  while (cast_void(save_and_next(ls)), lisxdigit(ls->current)) {
+  جب (cast_void(save_and_اگلا(ls)), lisxdigit(ls->current)) {
     i++;
     esccheck(ls, r <= (0x7FFFFFFFu >> 4), "UTF-8 value too large");
     r = (r << 4) + luaO_hexavalue(ls->current);
   }
   esccheck(ls, ls->current == '}', "missing '}'");
-  next(ls);  /* skip '}' */
+  اگلا(ls);  /* skip '}' */
   luaZ_buffremove(ls->buff, i);  /* remove saved chars from buffer */
-  return r;
+  واپس r;
 }
 
 
-static void utf8esc (LexState *ls) {
-  char buff[UTF8BUFFSZ];
-  int n = luaO_utf8esc(buff, readutf8esc(ls));
-  for (; n > 0; n--)  /* add 'buff' to string */
+ساکن خالی utf8esc (LexState *ls) {
+  حرف buff[UTF8BUFFSZ];
+  صحیح n = luaO_utf8esc(buff, readutf8esc(ls));
+  برائے (; n > 0; n--)  /* add 'buff' to string */
     save(ls, buff[UTF8BUFFSZ - n]);
 }
 
 
-static int readdecesc (LexState *ls) {
-  int i;
-  int r = 0;  /* result accumulator */
-  for (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
+ساکن صحیح readdecesc (LexState *ls) {
+  صحیح i;
+  صحیح r = 0;  /* result accumulator */
+  برائے (i = 0; i < 3 && lisdigit(ls->current); i++) {  /* read up to 3 digits */
     r = 10*r + ls->current - '0';
-    save_and_next(ls);
+    save_and_اگلا(ls);
   }
   esccheck(ls, r <= UCHAR_MAX, "decimal escape too large");
   luaZ_buffremove(ls->buff, i);  /* remove read digits from buffer */
-  return r;
+  واپس r;
 }
 
 
-static void read_string (LexState *ls, int del, SemInfo *seminfo) {
-  save_and_next(ls);  /* keep delimiter (for error messages) */
-  while (ls->current != del) {
-    switch (ls->current) {
-      case EOZ:
+ساکن خالی read_string (LexState *ls, صحیح del, SemInfo *seminfo) {
+  save_and_اگلا(ls);  /* keep delimiter (for error messages) */
+  جب (ls->current != del) {
+    انتخاب (ls->current) {
+      حالت EOZ:
         lexerror(ls, "unfinished string", TK_EOS);
-        break;  /* to avoid warnings */
-      case '\n':
-      case '\r':
+        توڑو;  /* to avoid warnings */
+      حالت '\n':
+      حالت '\r':
         lexerror(ls, "unfinished string", TK_STRING);
-        break;  /* to avoid warnings */
-      case '\\': {  /* escape sequences */
-        int c;  /* final character to be saved */
-        save_and_next(ls);  /* keep '\\' for error messages */
-        switch (ls->current) {
-          case 'a': c = '\a'; goto read_save;
-          case 'b': c = '\b'; goto read_save;
-          case 'f': c = '\f'; goto read_save;
-          case 'n': c = '\n'; goto read_save;
-          case 'r': c = '\r'; goto read_save;
-          case 't': c = '\t'; goto read_save;
-          case 'v': c = '\v'; goto read_save;
-          case 'x': c = readhexaesc(ls); goto read_save;
-          case 'u': utf8esc(ls);  goto no_save;
-          case '\n': case '\r':
-            inclinenumber(ls); c = '\n'; goto only_save;
-          case '\\': case '\"': case '\'':
-            c = ls->current; goto read_save;
-          case EOZ: goto no_save;  /* will raise an error next loop */
-          case 'z': {  /* zap following span of spaces */
+        توڑو;  /* to avoid warnings */
+      حالت '\\': {  /* escape sequences */
+        صحیح c;  /* final character to be saved */
+        save_and_اگلا(ls);  /* keep '\\' for error messages */
+        انتخاب (ls->current) {
+          حالت 'a': c = '\a'; جاؤ read_save;
+          حالت 'b': c = '\b'; جاؤ read_save;
+          حالت 'f': c = '\f'; جاؤ read_save;
+          حالت 'n': c = '\n'; جاؤ read_save;
+          حالت 'r': c = '\r'; جاؤ read_save;
+          حالت 't': c = '\t'; جاؤ read_save;
+          حالت 'v': c = '\v'; جاؤ read_save;
+          حالت 'x': c = readhexaesc(ls); جاؤ read_save;
+          حالت 'u': utf8esc(ls);  جاؤ no_save;
+          حالت '\n': حالت '\r':
+            inclinenumber(ls); c = '\n'; جاؤ only_save;
+          حالت '\\': حالت '\"': حالت '\'':
+            c = ls->current; جاؤ read_save;
+          حالت EOZ: جاؤ no_save;  /* will raise an error next loop */
+          حالت 'z': {  /* zap following span of spaces */
             luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
-            next(ls);  /* skip the 'z' */
-            while (lisspace(ls->current)) {
-              if (currIsNewline(ls)) inclinenumber(ls);
-              else next(ls);
+            اگلا(ls);  /* skip the 'z' */
+            جب (lisspace(ls->current)) {
+              اگر (currIsNewline(ls)) inclinenumber(ls);
+              ورنہ اگلا(ls);
             }
-            goto no_save;
+            جاؤ no_save;
           }
-          default: {
+          طےشدہ: {
             esccheck(ls, lisdigit(ls->current), "invalid escape sequence");
             c = readdecesc(ls);  /* digital escape '\ddd' */
-            goto only_save;
+            جاؤ only_save;
           }
         }
        read_save:
-         next(ls);
+         اگلا(ls);
          /* go through */
        only_save:
          luaZ_buffremove(ls->buff, 1);  /* remove '\\' */
          save(ls, c);
          /* go through */
-       no_save: break;
+       no_save: توڑو;
       }
-      default:
-        save_and_next(ls);
+      طےشدہ:
+        save_and_اگلا(ls);
     }
   }
-  save_and_next(ls);  /* skip delimiter */
-  seminfo->ts = luaX_newstring(ls, luaZ_buffer(ls->buff) + 1,
+  save_and_اگلا(ls);  /* skip delimiter */
+  seminfo->ts = luaX_newstring(ls, lua_Z_بفر(ls->buff) + 1,
                                    luaZ_bufflen(ls->buff) - 2);
 }
 
 
-static int llex (LexState *ls, SemInfo *seminfo) {
+ساکن صحیح llex (LexState *ls, SemInfo *seminfo) {
   luaZ_resetbuffer(ls->buff);
-  for (;;) {
-    switch (ls->current) {
-      case '\n': case '\r': {  /* line breaks */
+  برائے (;;) {
+    انتخاب (ls->current) {
+      حالت '\n': حالت '\r': {  /* line breaks */
         inclinenumber(ls);
-        break;
+        توڑو;
       }
-      case ' ': case '\f': case '\t': case '\v': {  /* spaces */
-        next(ls);
-        break;
+      حالت ' ': حالت '\f': حالت '\t': حالت '\v': {  /* spaces */
+        اگلا(ls);
+        توڑو;
       }
-      case '-': {  /* '-' or '--' (comment) */
-        next(ls);
-        if (ls->current != '-') return '-';
+      حالت '-': {  /* '-' or '--' (comment) */
+        اگلا(ls);
+        اگر (ls->current != '-') واپس '-';
         /* else is a comment */
-        next(ls);
-        if (ls->current == '[') {  /* long comment? */
+        اگلا(ls);
+        اگر (ls->current == '[') {  /* long comment? */
           size_t sep = skip_sep(ls);
           luaZ_resetbuffer(ls->buff);  /* 'skip_sep' may dirty the buffer */
-          if (sep >= 2) {
-            read_long_string(ls, NULL, sep);  /* skip long comment */
+          اگر (sep >= 2) {
+            read_long_string(ls, تہی, sep);  /* skip long comment */
             luaZ_resetbuffer(ls->buff);  /* previous call may dirty the buff. */
-            break;
+            توڑو;
           }
         }
         /* else short comment */
-        while (!currIsNewline(ls) && ls->current != EOZ)
-          next(ls);  /* skip until end of line (or end of file) */
-        break;
+        جب (!currIsNewline(ls) && ls->current != EOZ)
+          اگلا(ls);  /* skip until end of line (or end of file) */
+        توڑو;
       }
-      case '[': {  /* long string or simply '[' */
+      حالت '[': {  /* long string or simply '[' */
         size_t sep = skip_sep(ls);
-        if (sep >= 2) {
+        اگر (sep >= 2) {
           read_long_string(ls, seminfo, sep);
-          return TK_STRING;
+          واپس TK_STRING;
         }
-        else if (sep == 0)  /* '[=...' missing second bracket? */
+        ورنہ اگر (sep == 0)  /* '[=...' missing second bracket? */
           lexerror(ls, "invalid long string delimiter", TK_STRING);
-        return '[';
+        واپس '[';
       }
-      case '=': {
-        next(ls);
-        if (check_next1(ls, '=')) return TK_EQ;  /* '==' */
-        else return '=';
+      حالت '=': {
+        اگلا(ls);
+        اگر (check_next1(ls, '=')) واپس TK_EQ;  /* '==' */
+        ورنہ واپس '=';
       }
-      case '<': {
-        next(ls);
-        if (check_next1(ls, '=')) return TK_LE;  /* '<=' */
-        else if (check_next1(ls, '<')) return TK_SHL;  /* '<<' */
-        else return '<';
+      حالت '<': {
+        اگلا(ls);
+        اگر (check_next1(ls, '=')) واپس TK_LE;  /* '<=' */
+        ورنہ اگر (check_next1(ls, '<')) واپس TK_SHL;  /* '<<' */
+        ورنہ واپس '<';
       }
-      case '>': {
-        next(ls);
-        if (check_next1(ls, '=')) return TK_GE;  /* '>=' */
-        else if (check_next1(ls, '>')) return TK_SHR;  /* '>>' */
-        else return '>';
+      حالت '>': {
+        اگلا(ls);
+        اگر (check_next1(ls, '=')) واپس TK_GE;  /* '>=' */
+        ورنہ اگر (check_next1(ls, '>')) واپس TK_SHR;  /* '>>' */
+        ورنہ واپس '>';
       }
-      case '/': {
-        next(ls);
-        if (check_next1(ls, '/')) return TK_IDIV;  /* '//' */
-        else return '/';
+      حالت '/': {
+        اگلا(ls);
+        اگر (check_next1(ls, '/')) واپس TK_IDIV;  /* '//' */
+        ورنہ واپس '/';
       }
-      case '~': {
-        next(ls);
-        if (check_next1(ls, '=')) return TK_NE;  /* '~=' */
-        else return '~';
+      حالت '~': {
+        اگلا(ls);
+        اگر (check_next1(ls, '=')) واپس TK_NE;  /* '~=' */
+        ورنہ واپس '~';
       }
-      case ':': {
-        next(ls);
-        if (check_next1(ls, ':')) return TK_DBCOLON;  /* '::' */
-        else return ':';
+      حالت ':': {
+        اگلا(ls);
+        اگر (check_next1(ls, ':')) واپس TK_DBCOLON;  /* '::' */
+        ورنہ واپس ':';
       }
-      case '"': case '\'': {  /* short literal strings */
+      حالت '"': حالت '\'': {  /* short literal strings */
         read_string(ls, ls->current, seminfo);
-        return TK_STRING;
+        واپس TK_STRING;
       }
-      case '.': {  /* '.', '..', '...', or number */
-        save_and_next(ls);
-        if (check_next1(ls, '.')) {
-          if (check_next1(ls, '.'))
-            return TK_DOTS;   /* '...' */
-          else return TK_CONCAT;   /* '..' */
+      حالت '.': {  /* '.', '..', '...', or number */
+        save_and_اگلا(ls);
+        اگر (check_next1(ls, '.')) {
+          اگر (check_next1(ls, '.'))
+            واپس TK_DOTS;   /* '...' */
+          ورنہ واپس TK_CONCAT;   /* '..' */
         }
-        else if (!lisdigit(ls->current)) return '.';
-        else return read_numeral(ls, seminfo);
+        ورنہ اگر (!lisdigit(ls->current)) واپس '.';
+        ورنہ واپس read_numeral(ls, seminfo);
       }
-      case '0': case '1': case '2': case '3': case '4':
-      case '5': case '6': case '7': case '8': case '9': {
-        return read_numeral(ls, seminfo);
+      حالت '0': حالت '1': حالت '2': حالت '3': حالت '4':
+      حالت '5': حالت '6': حالت '7': حالت '8': حالت '9': {
+        واپس read_numeral(ls, seminfo);
       }
-      case EOZ: {
-        return TK_EOS;
+      حالت EOZ: {
+        واپس TK_EOS;
       }
-      default: {
-        if (lislalpha(ls->current)) {  /* identifier or reserved word? */
+      طےشدہ: {
+        اگر (lislalpha(ls->current)) {  /* identifier or reserved word? */
           TString *ts;
-          do {
-            save_and_next(ls);
-          } while (lislalnum(ls->current));
+          کرو {
+            save_and_اگلا(ls);
+          } جب (lislalnum(ls->current));
           /* find or create string */
-          ts = luaS_newlstr(ls->L, luaZ_buffer(ls->buff),
+          ts = luaS_newlstr(ls->L, lua_Z_بفر(ls->buff),
                                    luaZ_bufflen(ls->buff));
-          if (isreserved(ts))   /* reserved word? */
-            return ts->extra - 1 + FIRST_RESERVED;
-          else {
+          اگر (isreserved(ts))   /* reserved word? */
+            واپس ts->extra - 1 + پہلا_RESERVED;
+          ورنہ {
             seminfo->ts = anchorstr(ls, ts);
-            return TK_NAME;
+            واپس TK_NAME;
           }
         }
-        else {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
-          int c = ls->current;
-          next(ls);
-          return c;
+        ورنہ {  /* single-char tokens ('+', '*', '%', '{', '}', ...) */
+          صحیح c = ls->current;
+          اگلا(ls);
+          واپس c;
         }
       }
     }
@@ -585,20 +585,20 @@ static int llex (LexState *ls, SemInfo *seminfo) {
 }
 
 
-void luaX_next (LexState *ls) {
+خالی lua_X_اگلا (LexState *ls) {
   ls->lastline = ls->linenumber;
-  if (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
+  اگر (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
     ls->t = ls->lookahead;  /* use this one */
     ls->lookahead.token = TK_EOS;  /* and discharge it */
   }
-  else
+  ورنہ
     ls->t.token = llex(ls, &ls->t.seminfo);  /* read next token */
 }
 
 
-int luaX_lookahead (LexState *ls) {
+صحیح luaX_lookahead (LexState *ls) {
   lua_assert(ls->lookahead.token == TK_EOS);
   ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);
-  return ls->lookahead.token;
+  واپس ls->lookahead.token;
 }
 
