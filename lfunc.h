@@ -8,14 +8,14 @@
 #define lfunc_h
 
 
-#include "lobject.h"
+#अन्तर्भाव "lobject.h"
 
 
 #define sizeCclosure(n)  \
-	(offsetof(CClosure, upvalue) + sizeof(TValue) * cast_uint(n))
+	(offsetof(CClosure, upvalue) + परिमाण(TValue) * cast_uint(n))
 
 #define sizeLclosure(n)  \
-	(offsetof(LClosure, upvals) + sizeof(UpVal *) * cast_uint(n))
+	(offsetof(LClosure, upvals) + परिमाण(UpVal *) * cast_uint(n))
 
 
 /* test whether thread is in 'twups' list */
@@ -29,7 +29,7 @@
 #define MAXUPVAL	255
 
 
-#define upisopen(up)	((up)->v.p != &(up)->u.value)
+#define upisopen(up)	((up)->v.p != &(up)->u.मानम्)
 
 
 #define uplevel(up)	check_exp(upisopen(up), cast(StkId, (up)->v.p))
@@ -48,18 +48,18 @@
 
 
 LUAI_FUNC Proto *luaF_newproto (lua_State *L);
-LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, int nupvals);
-LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, int nupvals);
-LUAI_FUNC void luaF_initupvals (lua_State *L, LClosure *cl);
+LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, पूर्णाङ्क nupvals);
+LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, पूर्णाङ्क nupvals);
+LUAI_FUNC शून्य luaF_initupvals (lua_State *L, LClosure *cl);
 LUAI_FUNC UpVal *luaF_findupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_newtbcupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_closeupval (lua_State *L, StkId level);
-LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus status, int yy);
-LUAI_FUNC void luaF_unlinkupval (UpVal *uv);
+LUAI_FUNC शून्य luaF_newtbcupval (lua_State *L, StkId level);
+LUAI_FUNC शून्य luaF_closeupval (lua_State *L, StkId level);
+LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus status, पूर्णाङ्क yy);
+LUAI_FUNC शून्य luaF_unlinkupval (UpVal *uv);
 LUAI_FUNC lu_mem luaF_protosize (Proto *p);
-LUAI_FUNC void luaF_freeproto (lua_State *L, Proto *f);
-LUAI_FUNC const char *luaF_getlocalname (const Proto *func,
-                                         unsigned local_number, int pc);
+LUAI_FUNC शून्य luaF_freeproto (lua_State *L, Proto *f);
+LUAI_FUNC ध्रुव वर्ण *luaF_getlocalname (ध्रुव Proto *func,
+                                         unsigned local_सङ्ख्या, पूर्णाङ्क pc);
 
 
 #endif
