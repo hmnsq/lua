@@ -5,25 +5,25 @@
 */
 
 
-#undef vmdispatch
-#undef vmcase
-#undef vmbreak
+#अपरिभाषय vmdispatch
+#अपरिभाषय vmcase
+#अपरिभाषय vmbreak
 
-#define vmdispatch(x)     goto *disptab[x];
+#परिभाषय vmdispatch(x)     गच्छ *disptab[x];
 
-#define vmcase(l)     L_##l:
+#परिभाषय vmcase(l)     L_##l:
 
-#define vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
+#परिभाषय vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
 
 
-static const void *const disptab[NUM_OPCODES] = {
+स्थिर ध्रुव शून्य *ध्रुव disptab[अङ्कः_OPCODES] = {
 
-#if 0
+#यदि 0
 ** you can update the following list with this command:
 **
 **  sed -n '/^OP_/!d; s/OP_/\&\&L_OP_/ ; s/,.*/,/ ; s/\/.*// ; p'  lopcodes.h
 **
-#endif
+#यदि_अन्तः
 
 &&L_OP_MOVE,
 &&L_OP_LOADI,
@@ -59,7 +59,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_BXORK,
 &&L_OP_SHLI,
 &&L_OP_SHRI,
-&&L_OP_ADD,
+&&L_OP_सङ्कलय,
 &&L_OP_SUB,
 &&L_OP_MUL,
 &&L_OP_MOD,
@@ -104,7 +104,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_TFORCALL,
 &&L_OP_TFORLOOP,
 &&L_OP_SETLIST,
-&&L_OP_CLOSURE,
+&&L_OP_संवृतिः,
 &&L_OP_VARARG,
 &&L_OP_GETVARG,
 &&L_OP_ERRNNIL,

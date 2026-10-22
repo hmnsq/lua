@@ -5,61 +5,61 @@
 */
 
 
-#ifndef lualib_h
-#define lualib_h
+#यदि_अपरिभाषितम् lualib_h
+#परिभाषय lualib_h
 
-#include "lua.h"
+#अन्तर्भाव "lua.h"
 
 
 /* version suffix for environment variable names */
-#define LUA_VERSUFFIX          "_" LUA_VERSION_MAJOR "_" LUA_VERSION_MINOR
+#परिभाषय LUA_VERSUFFIX          "_" LUA_संस्करणम्_MAJOR "_" LUA_संस्करणम्_MINOR
 
-#define LUA_GLIBK		1
-LUAMOD_API int (luaopen_base) (lua_State *L);
+#परिभाषय LUA_GLIBK		1
+LUAMOD_API पूर्णाङ्क (luaopen_आधारः) (lua_State *L);
 
-#define LUA_LOADLIBNAME	"package"
-#define LUA_LOADLIBK	(LUA_GLIBK << 1)
-LUAMOD_API int (luaopen_package) (lua_State *L);
+#परिभाषय LUA_LOADLIBNAME	"package"
+#परिभाषय LUA_LOADLIBK	(LUA_GLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_package) (lua_State *L);
 
 
-#define LUA_COLIBNAME	"coroutine"
-#define LUA_COLIBK	(LUA_LOADLIBK << 1)
-LUAMOD_API int (luaopen_coroutine) (lua_State *L);
+#परिभाषय LUA_COLIBNAME	"coroutine"
+#परिभाषय LUA_COLIBK	(LUA_LOADLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_coroutine) (lua_State *L);
 
-#define LUA_DBLIBNAME	"debug"
-#define LUA_DBLIBK	(LUA_COLIBK << 1)
-LUAMOD_API int (luaopen_debug) (lua_State *L);
+#परिभाषय LUA_DBLIBNAME	"debug"
+#परिभाषय LUA_DBLIBK	(LUA_COLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_debug) (lua_State *L);
 
-#define LUA_IOLIBNAME	"io"
-#define LUA_IOLIBK	(LUA_DBLIBK << 1)
-LUAMOD_API int (luaopen_io) (lua_State *L);
+#परिभाषय LUA_IOLIBNAME	"io"
+#परिभाषय LUA_IOLIBK	(LUA_DBLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_io) (lua_State *L);
 
-#define LUA_MATHLIBNAME	"math"
-#define LUA_MATHLIBK	(LUA_IOLIBK << 1)
-LUAMOD_API int (luaopen_math) (lua_State *L);
+#परिभाषय LUA_MATHLIBNAME	"math"
+#परिभाषय LUA_MATHLIBK	(LUA_IOLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_math) (lua_State *L);
 
-#define LUA_OSLIBNAME	"os"
-#define LUA_OSLIBK	(LUA_MATHLIBK << 1)
-LUAMOD_API int (luaopen_os) (lua_State *L);
+#परिभाषय LUA_OSLIBNAME	"os"
+#परिभाषय LUA_OSLIBK	(LUA_MATHLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_os) (lua_State *L);
 
-#define LUA_STRLIBNAME	"string"
-#define LUA_STRLIBK	(LUA_OSLIBK << 1)
-LUAMOD_API int (luaopen_string) (lua_State *L);
+#परिभाषय LUA_STRLIBNAME	"string"
+#परिभाषय LUA_STRLIBK	(LUA_OSLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_string) (lua_State *L);
 
-#define LUA_TABLIBNAME	"table"
-#define LUA_TABLIBK	(LUA_STRLIBK << 1)
-LUAMOD_API int (luaopen_table) (lua_State *L);
+#परिभाषय LUA_TABLIBNAME	"table"
+#परिभाषय LUA_TABLIBK	(LUA_STRLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_सारणी) (lua_State *L);
 
-#define LUA_UTF8LIBNAME	"utf8"
-#define LUA_UTF8LIBK	(LUA_TABLIBK << 1)
-LUAMOD_API int (luaopen_utf8) (lua_State *L);
+#परिभाषय LUA_UTF8LIBNAME	"utf8"
+#परिभाषय LUA_UTF8LIBK	(LUA_TABLIBK << 1)
+LUAMOD_API पूर्णाङ्क (luaopen_utf8) (lua_State *L);
 
 
 /* open selected libraries */
-LUALIB_API void (luaL_openselectedlibs) (lua_State *L, int load, int preload);
+LUALIB_API शून्य (luaL_openselectedlibs) (lua_State *L, पूर्णाङ्क आरोपय, पूर्णाङ्क preload);
 
 /* open all libraries */
-#define luaL_openlibs(L)	luaL_openselectedlibs(L, ~0, 0)
+#परिभाषय luaL_openlibs(L)	luaL_openselectedlibs(L, ~0, 0)
 
 
-#endif
+#यदि_अन्तः

@@ -4,28 +4,28 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lcode_h
-#define lcode_h
+#यदि_अपरिभाषितम् lcode_h
+#परिभाषय lcode_h
 
-#include "llex.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lparser.h"
+#अन्तर्भाव "llex.h"
+#अन्तर्भाव "lobject.h"
+#अन्तर्भाव "lopcodes.h"
+#अन्तर्भाव "lparser.h"
 
 
 /*
 ** Marks the end of a patch list. It is an invalid value both as an absolute
 ** address, and as a list link (would link an element to itself).
 */
-#define NO_JUMP (-1)
+#परिभाषय NO_JUMP (-1)
 
 
 /*
 ** grep "ORDER OPR" if you change these enums  (ORDER OP)
 */
-typedef enum BinOpr {
+प्रकारनिर्देश गणना BinOpr {
   /* arithmetic operators */
-  OPR_ADD, OPR_SUB, OPR_MUL, OPR_MOD, OPR_POW,
+  OPR_सङ्कलय, OPR_SUB, OPR_MUL, OPR_MOD, OPR_POW,
   OPR_DIV, OPR_IDIV,
   /* bitwise operators */
   OPR_BAND, OPR_BOR, OPR_BXOR,
@@ -42,64 +42,64 @@ typedef enum BinOpr {
 
 
 /* true if operation is foldable (that is, it is arithmetic or bitwise) */
-#define foldbinop(op)	((op) <= OPR_SHR)
+#परिभाषय foldbinop(op)	((op) <= OPR_SHR)
 
 
-#define luaK_codeABC(fs,o,a,b,c)	luaK_codeABCk(fs,o,a,b,c,0)
+#परिभाषय lua_K_संहिता_ABC(fs,o,a,b,c)	lua_K_संहिता_ABCk(fs,o,a,b,c,0)
 
 
-typedef enum UnOpr { OPR_MINUS, OPR_BNOT, OPR_NOT, OPR_LEN, OPR_NOUNOPR } UnOpr;
+प्रकारनिर्देश गणना UnOpr { OPR_MINUS, OPR_BNOT, OPR_NOT, OPR_LEN, OPR_NOUNOPR } UnOpr;
 
 
 /* get (pointer to) instruction of given 'expdesc' */
-#define getinstruction(fs,e)	((fs)->f->code[(e)->u.info])
+#परिभाषय getinstruction(fs,e)	((fs)->f->संहिता[(e)->u.info])
 
 
-#define luaK_setmultret(fs,e)	luaK_setreturns(fs, e, LUA_MULTRET)
+#परिभाषय luaK_setmultret(fs,e)	luaK_setreturns(fs, e, LUA_MULTRET)
 
-#define luaK_jumpto(fs,t)	luaK_patchlist(fs, luaK_jump(fs), t)
+#परिभाषय luaK_jumpto(fs,t)	luaK_patchlist(fs, luaK_jump(fs), t)
 
-LUAI_FUNC int luaK_code (FuncState *fs, Instruction i);
-LUAI_FUNC int luaK_codeABx (FuncState *fs, OpCode o, int A, int Bx);
-LUAI_FUNC int luaK_codeABCk (FuncState *fs, OpCode o, int A, int B, int C,
-                                            int k);
-LUAI_FUNC int luaK_codevABCk (FuncState *fs, OpCode o, int A, int B, int C,
-                                             int k);
-LUAI_FUNC int luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v);
-LUAI_FUNC void luaK_fixline (FuncState *fs, int line);
-LUAI_FUNC void luaK_nil (FuncState *fs, int from, int n);
-LUAI_FUNC void luaK_codecheckglobal (FuncState *fs, expdesc *var, int k,
-                                                    int line);
-LUAI_FUNC void luaK_reserveregs (FuncState *fs, int n);
-LUAI_FUNC void luaK_checkstack (FuncState *fs, int n);
-LUAI_FUNC void luaK_int (FuncState *fs, int reg, lua_Integer n);
-LUAI_FUNC void luaK_vapar2local (FuncState *fs, expdesc *var);
-LUAI_FUNC void luaK_dischargevars (FuncState *fs, expdesc *e);
-LUAI_FUNC int luaK_exp2anyreg (FuncState *fs, expdesc *e);
-LUAI_FUNC void luaK_exp2anyregup (FuncState *fs, expdesc *e);
-LUAI_FUNC void luaK_exp2nextreg (FuncState *fs, expdesc *e);
-LUAI_FUNC void luaK_exp2val (FuncState *fs, expdesc *e);
-LUAI_FUNC void luaK_self (FuncState *fs, expdesc *e, expdesc *key);
-LUAI_FUNC void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k);
-LUAI_FUNC void luaK_goiftrue (FuncState *fs, expdesc *e);
-LUAI_FUNC void luaK_storevar (FuncState *fs, expdesc *var, expdesc *e);
-LUAI_FUNC void luaK_setreturns (FuncState *fs, expdesc *e, int nresults);
-LUAI_FUNC void luaK_setoneret (FuncState *fs, expdesc *e);
-LUAI_FUNC int luaK_jump (FuncState *fs);
-LUAI_FUNC void luaK_ret (FuncState *fs, int first, int nret);
-LUAI_FUNC void luaK_patchlist (FuncState *fs, int list, int target);
-LUAI_FUNC void luaK_patchtohere (FuncState *fs, int list);
-LUAI_FUNC void luaK_concat (FuncState *fs, int *l1, int l2);
-LUAI_FUNC int luaK_getlabel (FuncState *fs);
-LUAI_FUNC void luaK_prefix (FuncState *fs, UnOpr op, expdesc *v, int line);
-LUAI_FUNC void luaK_infix (FuncState *fs, BinOpr op, expdesc *v);
-LUAI_FUNC void luaK_posfix (FuncState *fs, BinOpr op, expdesc *v1,
-                            expdesc *v2, int line);
-LUAI_FUNC void luaK_settablesize (FuncState *fs, int pc,
-                                  int ra, int asize, int hsize);
-LUAI_FUNC void luaK_setlist (FuncState *fs, int base, int nelems, int tostore);
-LUAI_FUNC void luaK_finish (FuncState *fs);
-LUAI_FUNC l_noret luaK_semerror (LexState *ls, const char *fmt, ...);
+LUAI_FUNC पूर्णाङ्क lua_K_संहिता (FuncState *fs, Instruction i);
+LUAI_FUNC पूर्णाङ्क lua_K_संहिता_ABx (FuncState *fs, Op_संहिता o, पूर्णाङ्क A, पूर्णाङ्क Bx);
+LUAI_FUNC पूर्णाङ्क lua_K_संहिता_ABCk (FuncState *fs, Op_संहिता o, पूर्णाङ्क A, पूर्णाङ्क B, पूर्णाङ्क C,
+                                            पूर्णाङ्क k);
+LUAI_FUNC पूर्णाङ्क luaK_codevABCk (FuncState *fs, Op_संहिता o, पूर्णाङ्क A, पूर्णाङ्क B, पूर्णाङ्क C,
+                                             पूर्णाङ्क k);
+LUAI_FUNC पूर्णाङ्क luaK_exp2const (FuncState *fs, ध्रुव expdesc *e, TValue *v);
+LUAI_FUNC शून्य luaK_fixline (FuncState *fs, पूर्णाङ्क पङ्क्तिः);
+LUAI_FUNC शून्य luaK_nil (FuncState *fs, पूर्णाङ्क from, पूर्णाङ्क n);
+LUAI_FUNC शून्य luaK_codecheckglobal (FuncState *fs, expdesc *var, पूर्णाङ्क k,
+                                                    पूर्णाङ्क पङ्क्तिः);
+LUAI_FUNC शून्य luaK_reserveregs (FuncState *fs, पूर्णाङ्क n);
+LUAI_FUNC शून्य luaK_checkstack (FuncState *fs, पूर्णाङ्क n);
+LUAI_FUNC शून्य luaK_int (FuncState *fs, पूर्णाङ्क reg, lua_Integer n);
+LUAI_FUNC शून्य luaK_vapar2local (FuncState *fs, expdesc *var);
+LUAI_FUNC शून्य luaK_dischargevars (FuncState *fs, expdesc *e);
+LUAI_FUNC पूर्णाङ्क luaK_exp2anyreg (FuncState *fs, expdesc *e);
+LUAI_FUNC शून्य luaK_exp2anyregup (FuncState *fs, expdesc *e);
+LUAI_FUNC शून्य luaK_exp2nextreg (FuncState *fs, expdesc *e);
+LUAI_FUNC शून्य luaK_exp2val (FuncState *fs, expdesc *e);
+LUAI_FUNC शून्य luaK_self (FuncState *fs, expdesc *e, expdesc *कुञ्चिका);
+LUAI_FUNC शून्य lua_K_अनुक्रमितम् (FuncState *fs, expdesc *t, expdesc *k);
+LUAI_FUNC शून्य luaK_goiftrue (FuncState *fs, expdesc *e);
+LUAI_FUNC शून्य luaK_storevar (FuncState *fs, expdesc *var, expdesc *e);
+LUAI_FUNC शून्य luaK_setreturns (FuncState *fs, expdesc *e, पूर्णाङ्क nresults);
+LUAI_FUNC शून्य luaK_setoneret (FuncState *fs, expdesc *e);
+LUAI_FUNC पूर्णाङ्क luaK_jump (FuncState *fs);
+LUAI_FUNC शून्य luaK_ret (FuncState *fs, पूर्णाङ्क first, पूर्णाङ्क nret);
+LUAI_FUNC शून्य luaK_patchlist (FuncState *fs, पूर्णाङ्क list, पूर्णाङ्क target);
+LUAI_FUNC शून्य luaK_patchtohere (FuncState *fs, पूर्णाङ्क list);
+LUAI_FUNC शून्य luaK_concat (FuncState *fs, पूर्णाङ्क *l1, पूर्णाङ्क l2);
+LUAI_FUNC पूर्णाङ्क luaK_getlabel (FuncState *fs);
+LUAI_FUNC शून्य lua_K_उपसर्गः (FuncState *fs, UnOpr op, expdesc *v, पूर्णाङ्क पङ्क्तिः);
+LUAI_FUNC शून्य luaK_infix (FuncState *fs, BinOpr op, expdesc *v);
+LUAI_FUNC शून्य luaK_posfix (FuncState *fs, BinOpr op, expdesc *v1,
+                            expdesc *v2, पूर्णाङ्क पङ्क्तिः);
+LUAI_FUNC शून्य luaK_settablesize (FuncState *fs, पूर्णाङ्क pc,
+                                  पूर्णाङ्क ra, पूर्णाङ्क asize, पूर्णाङ्क hsize);
+LUAI_FUNC शून्य luaK_setlist (FuncState *fs, पूर्णाङ्क आधारः, पूर्णाङ्क nelems, पूर्णाङ्क tostore);
+LUAI_FUNC शून्य luaK_finish (FuncState *fs);
+LUAI_FUNC l_noret luaK_semerror (LexState *ls, ध्रुव वर्ण *fmt, ...);
 
 
-#endif
+#यदि_अन्तः

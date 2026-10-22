@@ -4,22 +4,22 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lopcodes_c
-#define LUA_CORE
+#परिभाषय lopcodes_c
+#परिभाषय LUA_CORE
 
-#include "lprefix.h"
-
-
-#include "lopcodes.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#define opmode(mm,ot,it,t,a,m)  \
+#अन्तर्भाव "lopcodes.h"
+
+
+#परिभाषय opmode(mm,ot,it,t,a,m)  \
     (((mm) << 7) | ((ot) << 6) | ((it) << 5) | ((t) << 4) | ((a) << 3) | (m))
 
 
 /* ORDER OP */
 
-LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
+LUAI_DDEF ध्रुव lu_byte luaP_opmodes[अङ्कः_OPCODES] = {
 /*       MM OT IT T  A  mode		   opcode  */
   opmode(0, 0, 0, 0, 1, iABC)		/* OP_MOVE */
  ,opmode(0, 0, 0, 0, 1, iAsBx)		/* OP_LOADI */
@@ -109,7 +109,7 @@ LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
 };
 
 
-#define testITMode(m)	(luaP_opmodes[m] & (1 << 5))
+#परिभाषय testITMode(m)	(luaP_opmodes[m] & (1 << 5))
 
 
 /*
@@ -117,15 +117,15 @@ LUAI_DDEF const lu_byte luaP_opmodes[NUM_OPCODES] = {
 ** and for instructions that use multiple values set by the previous
 ** instruction.
 */
-int luaP_isIT (Instruction i) {
-  OpCode op = GET_OPCODE(i);
-  switch (op) {
-    case OP_SETLIST:
-      return GETARG_vB(i) == 0;
-    case OP_VARARGPREP:
-      return 1;
-    default:
-      return testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
+पूर्णाङ्क luaP_isIT (Instruction i) {
+  Op_संहिता op = GET_OPCODE(i);
+  विकल्प (op) {
+    पक्ष OP_SETLIST:
+      प्रत्यागम GETARG_vB(i) == 0;
+    पक्ष OP_VARARGPREP:
+      प्रत्यागम 1;
+    स्वभाव:
+      प्रत्यागम testITMode(GET_OPCODE(i)) && GETARG_B(i) == 0;
   }
 }
 

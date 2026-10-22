@@ -16,13 +16,13 @@
 */
 
 /* default is to build the full interpreter */
-#ifndef MAKE_LIB
-#ifndef MAKE_LUAC
-#ifndef MAKE_LUA
-#define MAKE_LUA
-#endif
-#endif
-#endif
+#यदि_अपरिभाषितम् MAKE_LIB
+#यदि_अपरिभाषितम् MAKE_LUAC
+#यदि_अपरिभाषितम् MAKE_LUA
+#परिभाषय MAKE_LUA
+#यदि_अन्तः
+#यदि_अन्तः
+#यदि_अन्तः
 
 
 /*
@@ -30,107 +30,107 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
-#define LUA_USE_LINUX
-#define LUA_USE_MACOSX
-#define LUA_USE_POSIX
-#endif
+#यदि 0
+#परिभाषय LUA_USE_LINUX
+#परिभाषय LUA_USE_MACOSX
+#परिभाषय LUA_USE_POSIX
+#यदि_अन्तः
 
 
 /*
 ** Other specific features
 */
-#if 0
-#define LUA_32BITS
-#define LUA_USE_C89
-#endif
+#यदि 0
+#परिभाषय LUA_32_द्वयङ्काः
+#परिभाषय LUA_USE_C89
+#यदि_अन्तः
 
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#अन्तर्भाव <assert.h>
+#अन्तर्भाव <ctype.h>
+#अन्तर्भाव <errno.h>
+#अन्तर्भाव <float.h>
+#अन्तर्भाव <limits.h>
+#अन्तर्भाव <locale.h>
+#अन्तर्भाव <math.h>
+#अन्तर्भाव <setjmp.h>
+#अन्तर्भाव <signal.h>
+#अन्तर्भाव <stdarg.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdio.h>
+#अन्तर्भाव <stdlib.h>
+#अन्तर्भाव <string.h>
+#अन्तर्भाव <time.h>
 
 /* setup for luaconf.h */
-#define LUA_CORE
-#define LUA_LIB
+#परिभाषय LUA_CORE
+#परिभाषय LUA_LIB
 
-#include "luaconf.h"
+#अन्तर्भाव "luaconf.h"
 
 /* do not export internal symbols */
-#undef LUAI_FUNC
-#undef LUAI_DDEC
-#undef LUAI_DDEF
-#define LUAI_FUNC	static
-#define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#अपरिभाषय LUAI_FUNC
+#अपरिभाषय LUAI_DDEC
+#अपरिभाषय LUAI_DDEF
+#परिभाषय LUAI_FUNC	स्थिर
+#परिभाषय LUAI_DDEC(def)	/*रिक्तानि*/
+#परिभाषय LUAI_DDEF	स्थिर
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#अन्तर्भाव "lzio.c"
+#अन्तर्भाव "lctype.c"
+#अन्तर्भाव "lopcodes.c"
+#अन्तर्भाव "lmem.c"
+#अन्तर्भाव "lundump.c"
+#अन्तर्भाव "ldump.c"
+#अन्तर्भाव "lstate.c"
+#अन्तर्भाव "lgc.c"
+#अन्तर्भाव "llex.c"
+#अन्तर्भाव "lcode.c"
+#अन्तर्भाव "lparser.c"
+#अन्तर्भाव "ldebug.c"
+#अन्तर्भाव "lfunc.c"
+#अन्तर्भाव "lobject.c"
+#अन्तर्भाव "ltm.c"
+#अन्तर्भाव "lstring.c"
+#अन्तर्भाव "ltable.c"
+#अन्तर्भाव "ldo.c"
+#अन्तर्भाव "lvm.c"
+#अन्तर्भाव "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#अन्तर्भाव "lauxlib.c"
 
 /* standard library  -- not used by luac */
-#ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
-#endif
+#यदि_अपरिभाषितम् MAKE_LUAC
+#अन्तर्भाव "lbaselib.c"
+#अन्तर्भाव "lcorolib.c"
+#अन्तर्भाव "ldblib.c"
+#अन्तर्भाव "liolib.c"
+#अन्तर्भाव "lmathlib.c"
+#अन्तर्भाव "loadlib.c"
+#अन्तर्भाव "loslib.c"
+#अन्तर्भाव "lstrlib.c"
+#अन्तर्भाव "ltablib.c"
+#अन्तर्भाव "lutf8lib.c"
+#अन्तर्भाव "linit.c"
+#यदि_अन्तः
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
-#endif
+#यदि defined(LUA_DEBUG)
+#अन्तर्भाव "ltests.c"
+#यदि_अन्तः
 
 /* lua */
-#ifdef MAKE_LUA
-#include "lua.c"
-#endif
+#यदि_परिभाषितम् MAKE_LUA
+#अन्तर्भाव "lua.c"
+#यदि_अन्तः
 
 /* luac */
-#ifdef MAKE_LUAC
-#include "luac.c"
-#endif
+#यदि_परिभाषितम् MAKE_LUAC
+#अन्तर्भाव "luac.c"
+#यदि_अन्तः

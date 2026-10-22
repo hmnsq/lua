@@ -4,62 +4,62 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lfunc_h
-#define lfunc_h
+#यदि_अपरिभाषितम् lfunc_h
+#परिभाषय lfunc_h
 
 
-#include "lobject.h"
+#अन्तर्भाव "lobject.h"
 
 
-#define sizeCclosure(n)  \
-	(offsetof(CClosure, upvalue) + sizeof(TValue) * cast_uint(n))
+#परिभाषय आकार_Cclosure(n)  \
+	(offsetof(CClosure, upvalue) + परिमाण(TValue) * cast_uint(n))
 
-#define sizeLclosure(n)  \
-	(offsetof(LClosure, upvals) + sizeof(UpVal *) * cast_uint(n))
+#परिभाषय आकार_Lclosure(n)  \
+	(offsetof(LClosure, upvals) + परिमाण(ऊर्ध्वम्_Val *) * cast_uint(n))
 
 
 /* test whether thread is in 'twups' list */
-#define isintwups(L)	(L->twups != L)
+#परिभाषय isintwups(L)	(L->twups != L)
 
 
 /*
 ** maximum number of upvalues in a closure (both C and Lua). (Value
 ** must fit in a VM register.)
 */
-#define MAXUPVAL	255
+#परिभाषय MAXUPVAL	255
 
 
-#define upisopen(up)	((up)->v.p != &(up)->u.value)
+#परिभाषय upisopen(ऊर्ध्वम्)	((ऊर्ध्वम्)->v.p != &(ऊर्ध्वम्)->u.मानम्)
 
 
-#define uplevel(up)	check_exp(upisopen(up), cast(StkId, (up)->v.p))
+#परिभाषय uplevel(ऊर्ध्वम्)	check_exp(upisopen(ऊर्ध्वम्), cast(StkId, (ऊर्ध्वम्)->v.p))
 
 
 /*
 ** maximum number of misses before giving up the cache of closures
 ** in prototypes
 */
-#define MAXMISS		10
+#परिभाषय MAXMISS		10
 
 
 
 /* special status to close upvalues preserving the top of the stack */
-#define CLOSEKTOP	(LUA_ERRERR + 1)
+#परिभाषय CLOSEKTOP	(LUA_ERRERR + 1)
 
 
 LUAI_FUNC Proto *luaF_newproto (lua_State *L);
-LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, int nupvals);
-LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, int nupvals);
-LUAI_FUNC void luaF_initupvals (lua_State *L, LClosure *cl);
-LUAI_FUNC UpVal *luaF_findupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_newtbcupval (lua_State *L, StkId level);
-LUAI_FUNC void luaF_closeupval (lua_State *L, StkId level);
-LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus status, int yy);
-LUAI_FUNC void luaF_unlinkupval (UpVal *uv);
+LUAI_FUNC CClosure *luaF_newCclosure (lua_State *L, पूर्णाङ्क nupvals);
+LUAI_FUNC LClosure *luaF_newLclosure (lua_State *L, पूर्णाङ्क nupvals);
+LUAI_FUNC शून्य luaF_initupvals (lua_State *L, LClosure *cl);
+LUAI_FUNC ऊर्ध्वम्_Val *luaF_findupval (lua_State *L, StkId level);
+LUAI_FUNC शून्य luaF_newtbcupval (lua_State *L, StkId level);
+LUAI_FUNC शून्य luaF_closeupval (lua_State *L, StkId level);
+LUAI_FUNC StkId luaF_close (lua_State *L, StkId level, TStatus स्थितिः, पूर्णाङ्क yy);
+LUAI_FUNC शून्य luaF_unlinkupval (ऊर्ध्वम्_Val *uv);
 LUAI_FUNC lu_mem luaF_protosize (Proto *p);
-LUAI_FUNC void luaF_freeproto (lua_State *L, Proto *f);
-LUAI_FUNC const char *luaF_getlocalname (const Proto *func,
-                                         unsigned local_number, int pc);
+LUAI_FUNC शून्य luaF_freeproto (lua_State *L, Proto *f);
+LUAI_FUNC ध्रुव वर्ण *luaF_getlocalname (ध्रुव Proto *func,
+                                         अचिह्नित local_सङ्ख्या, पूर्णाङ्क pc);
 
 
-#endif
+#यदि_अन्तः
