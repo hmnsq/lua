@@ -7,8 +7,8 @@
 #ifndef lopcodes_h
 #define lopcodes_h
 
-#include "llimits.h"
-#include "lobject.h"
+#अन्तर्भाव "llimits.h"
+#अन्तर्भाव "lobject.h"
 
 
 /*===========================================================================
@@ -33,7 +33,7 @@ isJ                           sJ (signed)(25)            |   Op(7)     |
 
 
 /* basic instruction formats */
-enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
+गणना OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 
 
 /*
@@ -79,24 +79,24 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 #define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
+#यदि L_INTHASBITS(SIZE_Bx)
 #define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
+#अन्यथा
 #define MAXARG_Bx	INT_MAX
 #endif
 
 #define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#if L_INTHASBITS(SIZE_Ax)
+#यदि L_INTHASBITS(SIZE_Ax)
 #define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
+#अन्यथा
 #define MAXARG_Ax	INT_MAX
 #endif
 
-#if L_INTHASBITS(SIZE_sJ)
+#यदि L_INTHASBITS(SIZE_sJ)
 #define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
+#अन्यथा
 #define MAXARG_sJ	INT_MAX
 #endif
 
@@ -198,7 +198,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
+#यदि !defined(MAXINDEXRK)  /* (for debugging only) */
 #define MAXINDEXRK	MAXARG_B
 #endif
 
@@ -228,7 +228,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** See "Notes" below for more information about some instructions.
 */
 
-typedef enum {
+प्रकारनिर्देश गणना {
 /*----------------------------------------------------------------------
   name		args	description
 ------------------------------------------------------------------------*/
@@ -348,7 +348,7 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 } OpCode;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#define अंक_OPCODES	((पूर्णाङ्क)(OP_EXTRAARG) + 1)
 
 
 
@@ -422,9 +422,9 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 ** bit 7: instruction is an MM instruction (call a metamethod)
 */
 
-LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
+LUAI_DDEC(ध्रुव lu_byte luaP_opmodes[अंक_OPCODES];)
 
-#define getOpMode(m)	(cast(enum OpMode, luaP_opmodes[m] & 7))
+#define getOpMode(m)	(cast(गणना OpMode, luaP_opmodes[m] & 7))
 #define testAMode(m)	(luaP_opmodes[m] & (1 << 3))
 #define testTMode(m)	(luaP_opmodes[m] & (1 << 4))
 #define testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
@@ -438,7 +438,7 @@ LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC पूर्णाङ्क luaP_isIT (Instruction i);
 
 
 #endif
