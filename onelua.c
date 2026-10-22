@@ -16,13 +16,13 @@
 */
 
 /* default is to build the full interpreter */
-#ifndef MAKE_LIB
-#ifndef MAKE_LUAC
-#ifndef MAKE_LUA
-#define MAKE_LUA
-#endif
-#endif
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ MAKE_LIB
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ MAKE_LUAC
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ MAKE_LUA
+#ವ್ಯಾಖ್ಯಾನಿಸು MAKE_LUA
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -30,107 +30,107 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
-#define LUA_USE_LINUX
-#define LUA_USE_MACOSX
-#define LUA_USE_POSIX
-#endif
+#ಆದರೆ 0
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_LINUX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_MACOSX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_POSIX
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
 ** Other specific features
 */
-#if 0
-#define LUA_32BITS
-#define LUA_USE_C89
-#endif
+#ಆದರೆ 0
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_32_ಬಿಟ್ಟುಗಳು
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_C89
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#ಅನ್ತರ್ಭಾವ "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#ಅನ್ತರ್ಭಾವ <assert.h>
+#ಅನ್ತರ್ಭಾವ <ctype.h>
+#ಅನ್ತರ್ಭಾವ <errno.h>
+#ಅನ್ತರ್ಭಾವ <float.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <locale.h>
+#ಅನ್ತರ್ಭಾವ <math.h>
+#ಅನ್ತರ್ಭಾವ <setjmp.h>
+#ಅನ್ತರ್ಭಾವ <signal.h>
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <time.h>
 
 /* setup for luaconf.h */
-#define LUA_CORE
-#define LUA_LIB
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_CORE
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_LIB
 
-#include "luaconf.h"
+#ಅನ್ತರ್ಭಾವ "luaconf.h"
 
 /* do not export internal symbols */
-#undef LUAI_FUNC
-#undef LUAI_DDEC
-#undef LUAI_DDEF
-#define LUAI_FUNC	static
-#define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು LUAI_FUNC
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು LUAI_DDEC
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು LUAI_DDEF
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_FUNC	ಸ್ಥಿರ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_DDEC(def)	/*ಖಾಲಿಗಳು*/
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_DDEF	ಸ್ಥಿರ
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#ಅನ್ತರ್ಭಾವ "lzio.c"
+#ಅನ್ತರ್ಭಾವ "lctype.c"
+#ಅನ್ತರ್ಭಾವ "lopcodes.c"
+#ಅನ್ತರ್ಭಾವ "lmem.c"
+#ಅನ್ತರ್ಭಾವ "lundump.c"
+#ಅನ್ತರ್ಭಾವ "ldump.c"
+#ಅನ್ತರ್ಭಾವ "lstate.c"
+#ಅನ್ತರ್ಭಾವ "lgc.c"
+#ಅನ್ತರ್ಭಾವ "llex.c"
+#ಅನ್ತರ್ಭಾವ "lcode.c"
+#ಅನ್ತರ್ಭಾವ "lparser.c"
+#ಅನ್ತರ್ಭಾವ "ldebug.c"
+#ಅನ್ತರ್ಭಾವ "lfunc.c"
+#ಅನ್ತರ್ಭಾವ "lobject.c"
+#ಅನ್ತರ್ಭಾವ "ltm.c"
+#ಅನ್ತರ್ಭಾವ "lstring.c"
+#ಅನ್ತರ್ಭಾವ "ltable.c"
+#ಅನ್ತರ್ಭಾವ "ldo.c"
+#ಅನ್ತರ್ಭಾವ "lvm.c"
+#ಅನ್ತರ್ಭಾವ "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#ಅನ್ತರ್ಭಾವ "lauxlib.c"
 
 /* standard library  -- not used by luac */
-#ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ MAKE_LUAC
+#ಅನ್ತರ್ಭಾವ "lbaselib.c"
+#ಅನ್ತರ್ಭಾವ "lcorolib.c"
+#ಅನ್ತರ್ಭಾವ "ldblib.c"
+#ಅನ್ತರ್ಭಾವ "liolib.c"
+#ಅನ್ತರ್ಭಾವ "lmathlib.c"
+#ಅನ್ತರ್ಭಾವ "loadlib.c"
+#ಅನ್ತರ್ಭಾವ "loslib.c"
+#ಅನ್ತರ್ಭಾವ "lstrlib.c"
+#ಅನ್ತರ್ಭಾವ "ltablib.c"
+#ಅನ್ತರ್ಭಾವ "lutf8lib.c"
+#ಅನ್ತರ್ಭಾವ "linit.c"
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
-#endif
+#ಆದರೆ defined(LUA_DEBUG)
+#ಅನ್ತರ್ಭಾವ "ltests.c"
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* lua */
-#ifdef MAKE_LUA
-#include "lua.c"
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ MAKE_LUA
+#ಅನ್ತರ್ಭಾವ "lua.c"
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* luac */
-#ifdef MAKE_LUAC
-#include "luac.c"
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ MAKE_LUAC
+#ಅನ್ತರ್ಭಾವ "luac.c"
+#ಆದರೆ_ಅಂತ್ಯ

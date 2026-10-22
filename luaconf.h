@@ -5,11 +5,11 @@
 */
 
 
-#ifndef luaconf_h
-#define luaconf_h
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ luaconf_h
+#ವ್ಯಾಖ್ಯಾನಿಸು luaconf_h
 
-#include <limits.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
 
 /*
@@ -47,15 +47,15 @@
 /*
 ** By default, Lua on Windows use (some) specific Windows features
 */
-#if !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
-#define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
-#endif
+#ಆದರೆ !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_WINDOWS  /* enable goodies for regular Windows */
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if defined(LUA_USE_WINDOWS)
-#define LUA_DL_DLL	/* enable support for DLL */
-#define LUA_USE_C89	/* broadly, Windows is C89 */
-#endif
+#ಆದರೆ defined(LUA_USE_WINDOWS)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_DL_DLL	/* enable support for DLL */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_C89	/* broadly, Windows is C89 */
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -67,37 +67,37 @@
 ** without 'readline'.  If that macro is not defined, lua.c will not
 ** use 'readline'.
 */
-#if defined(LUA_USE_LINUX)
-#define LUA_USE_POSIX
-#define LUA_USE_DLOPEN		/* needs an extra library: -ldl */
-#if !defined(LUA_READLINELIB)
-#define LUA_READLINELIB		"libreadline.so"
-#endif
-#endif
+#ಆದರೆ defined(LUA_USE_LINUX)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_POSIX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_DLOPEN		/* needs an extra library: -ldl */
+#ಆದರೆ !defined(LUA_READLINELIB)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_READLINELIB		"libreadline.so"
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if defined(LUA_USE_MACOSX)
-#define LUA_USE_POSIX
-#define LUA_USE_DLOPEN		/* macOS does not need -ldl */
-#define LUA_USE_READLINE	/* needs an extra library: -lreadline */
-#endif
+#ಆದರೆ defined(LUA_USE_MACOSX)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_POSIX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_DLOPEN		/* macOS does not need -ldl */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_READLINE	/* needs an extra library: -lreadline */
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if defined(LUA_USE_IOS)
-#define LUA_USE_POSIX
-#define LUA_USE_DLOPEN
-#endif
+#ಆದರೆ defined(LUA_USE_IOS)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_POSIX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_USE_DLOPEN
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if defined(LUA_USE_C89) && defined(LUA_USE_POSIX)
-#error "POSIX is not compatible with C89"
-#endif
+#ಆದರೆ defined(LUA_USE_C89) && defined(LUA_USE_POSIX)
+#ದೋಷ "POSIX is not compatible with C89"
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
 @@ LUAI_IS32INT is true iff 'int' has (at least) 32 bits.
 */
-#define LUAI_IS32INT	((UINT_MAX >> 30) >= 3)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_IS32INT	((UINT_MAX >> 30) >= 3)
 
 /* }================================================================== */
 
@@ -122,19 +122,19 @@
 */
 
 /* predefined options for LUA_INT_TYPE */
-#define LUA_INT_INT		1
-#define LUA_INT_LONG		2
-#define LUA_INT_LONGLONG	3
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_INT		1
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_LONG		2
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_LONGLONG	3
 
 /* predefined options for LUA_FLOAT_TYPE */
-#define LUA_FLOAT_FLOAT		1
-#define LUA_FLOAT_DOUBLE	2
-#define LUA_FLOAT_LONGDOUBLE	3
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_FLOAT		1
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_DOUBLE	2
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_LONGDOUBLE	3
 
 
 /* Default configuration ('long long' and 'double', for 64-bit Lua) */
-#define LUA_INT_DEFAULT		LUA_INT_LONGLONG
-#define LUA_FLOAT_DEFAULT	LUA_FLOAT_DOUBLE
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_DEFAULT		LUA_INT_LONGLONG
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_DEFAULT	LUA_FLOAT_DOUBLE
 
 
 /*
@@ -148,38 +148,38 @@
 ** C89 ('long' and 'double'); Windows always has '__int64', so it does
 ** not need to use this case.
 */
-#if defined(LUA_USE_C89) && !defined(LUA_USE_WINDOWS)
-#define LUA_C89_NUMBERS		1
-#else
-#define LUA_C89_NUMBERS		0
-#endif
+#ಆದರೆ defined(LUA_USE_C89) && !defined(LUA_USE_WINDOWS)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_C89_NUMBERS		1
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_C89_NUMBERS		0
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-#if defined(LUA_32BITS)	/* { */
+#ಆದರೆ defined(LUA_32_ಬಿಟ್ಟುಗಳು)	/* { */
 /*
 ** 32-bit integers and 'float'
 */
-#if LUAI_IS32INT  /* use 'int' if big enough */
-#define LUA_INT_TYPE	LUA_INT_INT
-#else  /* otherwise use 'long' */
-#define LUA_INT_TYPE	LUA_INT_LONG
-#endif
-#define LUA_FLOAT_TYPE	LUA_FLOAT_FLOAT
+#ಆದರೆ LUAI_IS32INT  /* use 'int' if big enough */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_TYPE	LUA_INT_INT
+#ಇಲ್ಲದಿದ್ದರೆ  /* otherwise use 'long' */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_TYPE	LUA_INT_LONG
+#ಆದರೆ_ಅಂತ್ಯ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_TYPE	LUA_FLOAT_FLOAT
 
-#elif LUA_C89_NUMBERS	/* }{ */
+#ಅಥವಾಆದರೆ LUA_C89_NUMBERS	/* }{ */
 /*
 ** largest types available for C89 ('long' and 'double')
 */
-#define LUA_INT_TYPE	LUA_INT_LONG
-#define LUA_FLOAT_TYPE	LUA_FLOAT_DOUBLE
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_TYPE	LUA_INT_LONG
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_TYPE	LUA_FLOAT_DOUBLE
 
-#else		/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ		/* }{ */
 /* use defaults */
 
-#define LUA_INT_TYPE	LUA_INT_DEFAULT
-#define LUA_FLOAT_TYPE	LUA_FLOAT_DEFAULT
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INT_TYPE	LUA_INT_DEFAULT
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_FLOAT_TYPE	LUA_FLOAT_DEFAULT
 
-#endif				/* } */
+#ಆದರೆ_ಅಂತ್ಯ				/* } */
 
 
 /* }================================================================== */
@@ -199,9 +199,9 @@
 ** LUA_EXEC_DIR in a Windows path is replaced by the executable's
 ** directory.
 */
-#define LUA_PATH_SEP            ";"
-#define LUA_PATH_MARK           "?"
-#define LUA_EXEC_DIR            "!"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಮಾರ್ಗ_SEP            ";"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಮಾರ್ಗ_MARK           "?"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_EXEC_DIR            "!"
 
 
 /*
@@ -214,50 +214,50 @@
 ** non-conventional directories.
 */
 
-#define LUA_VDIR	LUA_VERSION_MAJOR "." LUA_VERSION_MINOR
-#if defined(_WIN32)	/* { */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_VDIR	LUA_ಆವೃತ್ತಿ_MAJOR "." LUA_ಆವೃತ್ತಿ_MINOR
+#ಆದರೆ defined(_WIN32)	/* { */
 /*
 ** In Windows, any exclamation mark ('!') in the path is replaced by the
 ** path of the directory of the executable file of the current process.
 */
-#define LUA_LDIR	"!\\lua\\"
-#define LUA_CDIR	"!\\"
-#define LUA_SHRDIR	"!\\..\\share\\lua\\" LUA_VDIR "\\"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_LDIR	"!\\lua\\"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_CDIR	"!\\"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_SHRDIR	"!\\..\\share\\lua\\" LUA_VDIR "\\"
 
-#if !defined(LUA_PATH_DEFAULT)
-#define LUA_PATH_DEFAULT  \
+#ಆದರೆ !defined(LUA_ಮಾರ್ಗ_DEFAULT)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಮಾರ್ಗ_DEFAULT  \
 		LUA_LDIR "?.lua;"  LUA_LDIR "?\\init.lua;" \
 		LUA_CDIR "?.lua;"  LUA_CDIR "?\\init.lua;" \
 		LUA_SHRDIR "?.lua;"  LUA_SHRDIR "?\\init.lua;" \
 		".\\?.lua;" ".\\?\\init.lua"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !defined(LUA_CPATH_DEFAULT)
-#define LUA_CPATH_DEFAULT \
+#ಆದರೆ !defined(LUA_CPATH_DEFAULT)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_CPATH_DEFAULT \
 		LUA_CDIR "?.dll;" \
 		LUA_CDIR "..\\lib\\lua\\"  LUA_VDIR "\\?.dll;" \
 		LUA_CDIR "loadall.dll;" ".\\?.dll"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#else			/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ			/* }{ */
 
-#define LUA_ROOT	"/usr/local/"
-#define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
-#define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಬೇರು	"/usr/local/"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_LDIR	LUA_ಬೇರು "share/lua/" LUA_VDIR "/"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_CDIR	LUA_ಬೇರು "lib/lua/" LUA_VDIR "/"
 
-#if !defined(LUA_PATH_DEFAULT)
-#define LUA_PATH_DEFAULT  \
+#ಆದರೆ !defined(LUA_ಮಾರ್ಗ_DEFAULT)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಮಾರ್ಗ_DEFAULT  \
 		LUA_LDIR "?.lua;"  LUA_LDIR "?/init.lua;" \
 		LUA_CDIR "?.lua;"  LUA_CDIR "?/init.lua;" \
 		"./?.lua;" "./?/init.lua"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if !defined(LUA_CPATH_DEFAULT)
-#define LUA_CPATH_DEFAULT \
+#ಆದರೆ !defined(LUA_CPATH_DEFAULT)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_CPATH_DEFAULT \
 		LUA_CDIR "?.so;" LUA_CDIR "loadall.so;" "./?.so"
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif			/* } */
+#ಆದರೆ_ಅಂತ್ಯ			/* } */
 
 
 /*
@@ -265,15 +265,15 @@
 ** CHANGE it if your machine does not use "/" as the directory separator
 ** and is not Windows. (On Windows Lua automatically uses "\".)
 */
-#if !defined(LUA_DIRSEP)
+#ಆದರೆ !defined(LUA_DIRSEP)
 
-#if defined(_WIN32)
-#define LUA_DIRSEP	"\\"
-#else
-#define LUA_DIRSEP	"/"
-#endif
+#ಆದರೆ defined(_WIN32)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_DIRSEP	"\\"
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_DIRSEP	"/"
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -282,7 +282,7 @@
 ** Typically, the suffix after the mark is the module version,
 ** as in "mod-v1.2.so".
 */
-#define LUA_IGMARK		"-"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_IGMARK		"-"
 
 /* }================================================================== */
 
@@ -302,32 +302,32 @@
 ** the libraries, you may want to use the following definition (define
 ** LUA_BUILD_AS_DLL to get it).
 */
-#if defined(LUA_BUILD_AS_DLL)	/* { */
+#ಆದರೆ defined(LUA_BUILD_AS_DLL)	/* { */
 
-#if defined(LUA_CORE) || defined(LUA_LIB)	/* { */
-#define LUA_API __declspec(dllexport)
-#else						/* }{ */
-#define LUA_API __declspec(dllimport)
-#endif						/* } */
+#ಆದರೆ defined(LUA_CORE) || defined(LUA_LIB)	/* { */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_API __declspec(dllexport)
+#ಇಲ್ಲದಿದ್ದರೆ						/* }{ */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_API __declspec(dllimport)
+#ಆದರೆ_ಅಂತ್ಯ						/* } */
 
-#else				/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ				/* }{ */
 
-#define LUA_API		extern
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_API		ಬಾಹ್ಯ
 
-#endif				/* } */
+#ಆದರೆ_ಅಂತ್ಯ				/* } */
 
 
 /*
 ** More often than not the libs go together with the core.
 */
-#define LUALIB_API	LUA_API
+#ವ್ಯಾಖ್ಯಾನಿಸು LUALIB_API	LUA_API
 
-#if defined(__cplusplus)
+#ಆದರೆ defined(__cplusplus)
 /* Lua uses the "C name" when calling open functions */
-#define LUAMOD_API	extern "C"
-#else
-#define LUAMOD_API	LUA_API
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAMOD_API	ಬಾಹ್ಯ "C"
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAMOD_API	LUA_API
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* }================================================================== */
 
@@ -341,9 +341,9 @@
 /*
 @@ LUA_COMPAT_GLOBAL avoids 'global' being a reserved word
 */
-#if !defined(LUA_COMPAT_GLOBAL)
-#define LUA_COMPAT_GLOBAL	1
-#endif
+#ಆದರೆ !defined(LUA_COMPAT_GLOBAL)
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_COMPAT_GLOBAL	1
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -362,12 +362,12 @@
 ** (Once more, these macros were officially removed in 5.3, but they are
 ** still available here.)
 */
-#define lua_strlen(L,i)		lua_rawlen(L, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_strlen(L,i)		lua_rawlen(L, (i))
 
-#define lua_objlen(L,i)		lua_rawlen(L, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_objlen(L,i)		lua_rawlen(L, (i))
 
-#define lua_equal(L,idx1,idx2)		lua_compare(L,(idx1),(idx2),LUA_OPEQ)
-#define lua_lessthan(L,idx1,idx2)	lua_compare(L,(idx1),(idx2),LUA_OPLT)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_equal(L,idx1,idx2)		lua_compare(L,(idx1),(idx2),LUA_OPEQ)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_lessthan(L,idx1,idx2)	lua_compare(L,(idx1),(idx2),LUA_OPLT)
 
 /* }================================================================== */
 
@@ -402,65 +402,65 @@
 
 /* The following definition is good for most cases here */
 
-#define l_floor(x)		(l_mathop(floor)(x))
+#ವ್ಯಾಖ್ಯಾನಿಸು l_floor(x)		(l_mathop(floor)(x))
 
 
 /* now the variable definitions */
 
-#if LUA_FLOAT_TYPE == LUA_FLOAT_FLOAT		/* { single float */
+#ಆದರೆ LUA_FLOAT_TYPE == LUA_FLOAT_FLOAT		/* { single float */
 
-#define LUA_NUMBER	float
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ	ದಶಮಾಂಶ
 
-#define l_floatatt(n)		(FLT_##n)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_floatatt(n)		(FLT_##n)
 
-#define LUAI_UACNUMBER	double
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_UACNUMBER	ದ್ವಿಗುಣ
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.7g"
-#define LUA_NUMBER_FMT_N	"%.9g"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FRMLEN	""
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT		"%.7g"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT_N	"%.9g"
 
-#define l_mathop(op)		op##f
+#ವ್ಯಾಖ್ಯಾನಿಸು l_mathop(op)		op##f
 
-#define lua_str2number(s,p)	strtof((s), (p))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_str2number(s,p)	strtof((s), (p))
 
 
-#elif LUA_FLOAT_TYPE == LUA_FLOAT_LONGDOUBLE	/* }{ long double */
+#ಅಥವಾಆದರೆ LUA_FLOAT_TYPE == LUA_FLOAT_LONGDOUBLE	/* }{ long double */
 
-#define LUA_NUMBER	long double
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ	ದೀರ್ಘ ದ್ವಿಗುಣ
 
-#define l_floatatt(n)		(LDBL_##n)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_floatatt(n)		(LDBL_##n)
 
-#define LUAI_UACNUMBER	long double
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_UACNUMBER	ದೀರ್ಘ ದ್ವಿಗುಣ
 
-#define LUA_NUMBER_FRMLEN	"L"
-#define LUA_NUMBER_FMT		"%.19Lg"
-#define LUA_NUMBER_FMT_N	"%.21Lg"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FRMLEN	"L"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT		"%.19Lg"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT_N	"%.21Lg"
 
-#define l_mathop(op)		op##l
+#ವ್ಯಾಖ್ಯಾನಿಸು l_mathop(op)		op##l
 
-#define lua_str2number(s,p)	strtold((s), (p))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_str2number(s,p)	strtold((s), (p))
 
-#elif LUA_FLOAT_TYPE == LUA_FLOAT_DOUBLE	/* }{ double */
+#ಅಥವಾಆದರೆ LUA_FLOAT_TYPE == LUA_FLOAT_DOUBLE	/* }{ double */
 
-#define LUA_NUMBER	double
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ	ದ್ವಿಗುಣ
 
-#define l_floatatt(n)		(DBL_##n)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_floatatt(n)		(DBL_##n)
 
-#define LUAI_UACNUMBER	double
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_UACNUMBER	ದ್ವಿಗುಣ
 
-#define LUA_NUMBER_FRMLEN	""
-#define LUA_NUMBER_FMT		"%.15g"
-#define LUA_NUMBER_FMT_N	"%.17g"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FRMLEN	""
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT		"%.15g"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_ಸಂಖ್ಯೆ_FMT_N	"%.17g"
 
-#define l_mathop(op)		op
+#ವ್ಯಾಖ್ಯಾನಿಸು l_mathop(op)		op
 
-#define lua_str2number(s,p)	strtod((s), (p))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_str2number(s,p)	strtod((s), (p))
 
-#else						/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ						/* }{ */
 
-#error "numeric float type not defined"
+#ದೋಷ "numeric float type not defined"
 
-#endif					/* } */
+#ಆದರೆ_ಅಂತ್ಯ					/* } */
 
 
 
@@ -479,79 +479,79 @@
 
 /* The following definitions are good for most cases here */
 
-#define LUA_INTEGER_FMT		"%" LUA_INTEGER_FRMLEN "d"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER_FMT		"%" LUA_INTEGER_FRMLEN "d"
 
-#define LUAI_UACINT		LUA_INTEGER
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_UACINT		LUA_INTEGER
 
-#define lua_integer2str(s,sz,n)  \
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_integer2str(s,sz,n)  \
 	l_sprintf((s), sz, LUA_INTEGER_FMT, (LUAI_UACINT)(n))
 
 /*
 ** use LUAI_UACINT here to avoid problems with promotions (which
 ** can turn a comparison between unsigneds into a signed comparison)
 */
-#define LUA_UNSIGNED		unsigned LUAI_UACINT
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_UNSIGNED		ಚಿಹ್ನೆರಹಿತ LUAI_UACINT
 
 
 /* now the variable definitions */
 
-#if LUA_INT_TYPE == LUA_INT_INT		/* { int */
+#ಆದರೆ LUA_INT_TYPE == LUA_INT_INT		/* { int */
 
-#define LUA_INTEGER		int
-#define LUA_INTEGER_FRMLEN	""
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER		ಪೂರ್ಣಾಂಕ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER_FRMLEN	""
 
-#define LUA_MAXINTEGER		INT_MAX
-#define LUA_MININTEGER		INT_MIN
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXINTEGER		ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MININTEGER		INT_MIN
 
-#define LUA_MAXUNSIGNED		UINT_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXUNSIGNED		UINT_MAX
 
-#elif LUA_INT_TYPE == LUA_INT_LONG	/* }{ long */
+#ಅಥವಾಆದರೆ LUA_INT_TYPE == LUA_INT_LONG	/* }{ long */
 
-#define LUA_INTEGER		long
-#define LUA_INTEGER_FRMLEN	"l"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER		ದೀರ್ಘ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER_FRMLEN	"l"
 
-#define LUA_MAXINTEGER		LONG_MAX
-#define LUA_MININTEGER		LONG_MIN
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXINTEGER		LONG_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MININTEGER		LONG_MIN
 
-#define LUA_MAXUNSIGNED		ULONG_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXUNSIGNED		ULONG_MAX
 
-#elif LUA_INT_TYPE == LUA_INT_LONGLONG	/* }{ long long */
+#ಅಥವಾಆದರೆ LUA_INT_TYPE == LUA_INT_LONGLONG	/* }{ long long */
 
 /* use presence of macro LLONG_MAX as proxy for C99 compliance */
-#if defined(LLONG_MAX)		/* { */
+#ಆದರೆ defined(LLONG_MAX)		/* { */
 /* use ISO C99 stuff */
 
-#define LUA_INTEGER		long long
-#define LUA_INTEGER_FRMLEN	"ll"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER		ದೀರ್ಘ ದೀರ್ಘ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER_FRMLEN	"ll"
 
-#define LUA_MAXINTEGER		LLONG_MAX
-#define LUA_MININTEGER		LLONG_MIN
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXINTEGER		LLONG_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MININTEGER		LLONG_MIN
 
-#define LUA_MAXUNSIGNED		ULLONG_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXUNSIGNED		ULLONG_MAX
 
-#elif defined(LUA_USE_WINDOWS) /* }{ */
+#ಅಥವಾಆದರೆ defined(LUA_USE_WINDOWS) /* }{ */
 /* in Windows, can use specific Windows types */
 
-#define LUA_INTEGER		__int64
-#define LUA_INTEGER_FRMLEN	"I64"
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER		__int64
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_INTEGER_FRMLEN	"I64"
 
-#define LUA_MAXINTEGER		_I64_MAX
-#define LUA_MININTEGER		_I64_MIN
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXINTEGER		_I64_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MININTEGER		_I64_MIN
 
-#define LUA_MAXUNSIGNED		_UI64_MAX
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_MAXUNSIGNED		_UI64_MAX
 
-#else				/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ				/* }{ */
 
-#error "Compiler does not support 'long long'. Use option '-DLUA_32BITS' \
-  or '-DLUA_C89_NUMBERS' (see file 'luaconf.h' for details)"
+#ದೋಷ "Compiler does not support 'long long'. Use option '-DLUA_32BITS' \
+  or '-DLUA_C89_NUMBERS' (see file 'luaconf.h' ಗಾಗಿ details)"
 
-#endif				/* } */
+#ಆದರೆ_ಅಂತ್ಯ				/* } */
 
-#else				/* }{ */
+#ಇಲ್ಲದಿದ್ದರೆ				/* }{ */
 
-#error "numeric integer type not defined"
+#ದೋಷ "numeric integer type not defined"
 
-#endif				/* } */
+#ಆದರೆ_ಅಂತ್ಯ				/* } */
 
 /* }================================================================== */
 
@@ -566,11 +566,11 @@
 @@ l_sprintf is equivalent to 'snprintf' or 'sprintf' in C89.
 ** (All uses in Lua have only one format item.)
 */
-#if !defined(LUA_USE_C89)
-#define l_sprintf(s,sz,f,i)	snprintf(s,sz,f,i)
-#else
-#define l_sprintf(s,sz,f,i)	((void)(sz), sprintf(s,f,i))
-#endif
+#ಆದರೆ !defined(LUA_USE_C89)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_sprintf(s,sz,f,i)	snprintf(s,sz,f,i)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು l_sprintf(s,sz,f,i)	((ಶೂನ್ಯ)(sz), sprintf(s,f,i))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -579,16 +579,16 @@
 ** leave 'lua_strx2number' undefined and Lua will provide its own
 ** implementation.
 */
-#if !defined(LUA_USE_C89)
-#define lua_strx2number(s,p)		lua_str2number(s,p)
-#endif
+#ಆದರೆ !defined(LUA_USE_C89)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_strx2number(s,p)		lua_str2number(s,p)
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
 @@ lua_pointer2str converts a pointer to a readable string in a
 ** non-specified way.
 */
-#define lua_pointer2str(buff,sz,p)	l_sprintf(buff,sz,"%p",p)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_pointer2str(buff,sz,p)	l_sprintf(buff,sz,"%p",p)
 
 
 /*
@@ -597,10 +597,10 @@
 ** Otherwise, you can leave 'lua_number2strx' undefined and Lua will
 ** provide its own implementation.
 */
-#if !defined(LUA_USE_C89)
-#define lua_number2strx(L,b,sz,f,n)  \
-	((void)L, l_sprintf(b,sz,f,(LUAI_UACNUMBER)(n)))
-#endif
+#ಆದರೆ !defined(LUA_USE_C89)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_number2strx(L,b,sz,f,n)  \
+	((ಶೂನ್ಯ)L, l_sprintf(b,sz,f,(LUAI_UACNUMBER)(n)))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -609,12 +609,12 @@
 ** availability of these variants. ('math.h' is already included in
 ** all files that use these macros.)
 */
-#if defined(LUA_USE_C89) || (defined(HUGE_VAL) && !defined(HUGE_VALF))
-#undef l_mathop  /* variants not available */
-#undef lua_str2number
-#define l_mathop(op)		(lua_Number)op  /* no variant */
-#define lua_str2number(s,p)	((lua_Number)strtod((s), (p)))
-#endif
+#ಆದರೆ defined(LUA_USE_C89) || (defined(HUGE_VAL) && !defined(HUGE_VALF))
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು l_mathop  /* variants not available */
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು lua_str2number
+#ವ್ಯಾಖ್ಯಾನಿಸು l_mathop(op)		(lua_ಸಂಖ್ಯೆ)op  /* no variant */
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_str2number(s,p)	((lua_ಸಂಖ್ಯೆ)strtod((s), (p)))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -623,16 +623,16 @@
 ** available, otherwise it will use 'ptrdiff_t' (the nearest thing to
 ** 'intptr_t' in C89)
 */
-#define LUA_KCONTEXT	ptrdiff_t
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_KCONTEXT	ptrdiff_t
 
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#ಆದರೆ !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(INTPTR_MAX)  /* even in C99 this type is optional */
-#undef LUA_KCONTEXT
-#define LUA_KCONTEXT	intptr_t
-#endif
-#endif
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಆದರೆ defined(INTPTR_MAX)  /* even in C99 this type is optional */
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು LUA_KCONTEXT
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_KCONTEXT	intptr_t
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -640,9 +640,9 @@
 ** Change that if you do not want to use C locales. (Code using this
 ** macro must include the header 'locale.h'.)
 */
-#if !defined(lua_getlocaledecpoint)
-#define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
-#endif
+#ಆದರೆ !defined(lua_getlocaledecpoint)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -651,17 +651,17 @@
 ** Define LUA_NOBUILTIN if you do not want '__builtin_expect' in your
 ** code.)
 */
-#if !defined(luai_likely)
+#ಆದರೆ !defined(luai_likely)
 
-#if !defined(LUA_NOBUILTIN) && defined(__GNUC__) && (__GNUC__ >= 3)
-#define luai_likely(x)		(__builtin_expect(((x) != 0), 1))
-#define luai_unlikely(x)	(__builtin_expect(((x) != 0), 0))
-#else
-#define luai_likely(x)		(x)
-#define luai_unlikely(x)	(x)
-#endif
+#ಆದರೆ !defined(LUA_NOBUILTIN) && defined(__GNUC__) && (__GNUC__ >= 3)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_likely(x)		(__builtin_expect(((x) != 0), 1))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_unlikely(x)	(__builtin_expect(((x) != 0), 0))
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_likely(x)		(x)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_unlikely(x)	(x)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 
@@ -706,7 +706,7 @@
 ** a Lua state with very fast access.
 ** CHANGE it if you need a different size.
 */
-#define LUA_EXTRASPACE		(sizeof(void *))
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_EXTRASPACE		(ಗಾತ್ರ(ಶೂನ್ಯ *))
 
 
 /*
@@ -714,14 +714,14 @@
 ** of a function in debug information.
 ** CHANGE it if you want a different size.
 */
-#define LUA_IDSIZE	60
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_IDSIZE	60
 
 
 /*
 @@ LUAL_BUFFERSIZE is the initial buffer size used by the lauxlib
 ** buffer system.
 */
-#define LUAL_BUFFERSIZE   ((int)(16 * sizeof(void*) * sizeof(lua_Number)))
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAL_BUFFERSIZE   ((ಪೂರ್ಣಾಂಕ)(16 * ಗಾತ್ರ(ಶೂನ್ಯ*) * ಗಾತ್ರ(lua_ಸಂಖ್ಯೆ)))
 
 
 /*
@@ -729,13 +729,13 @@
 ** memory areas offered by Lua (e.g., userdata memory).
 ** Add fields to it if you need alignment for non-ISO objects.
 */
-#if defined(LLONG_MAX)
+#ಆದರೆ defined(LLONG_MAX)
 /* use ISO C99 stuff */
-#define LUAI_MAXALIGN long double u; void *s; long long l
-#else
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_MAXALIGN ದೀರ್ಘ ದ್ವಿಗುಣ u; ಶೂನ್ಯ *s; ದೀರ್ಘ ದೀರ್ಘ l
+#ಇಲ್ಲದಿದ್ದರೆ
 /* use only C89 stuff */
-#define LUAI_MAXALIGN  lua_Number n; double u; void *s; lua_Integer i; long l
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_MAXALIGN  lua_ಸಂಖ್ಯೆ n; ದ್ವಿಗುಣ u; ಶೂನ್ಯ *s; lua_Integer i; ದೀರ್ಘ l
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* }================================================================== */
 
@@ -752,5 +752,5 @@
 
 
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 

@@ -4,25 +4,25 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lcorolib_c
-#define LUA_LIB
+#ವ್ಯಾಖ್ಯಾನಿಸು lcorolib_c
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_LIB
 
-#include "lprefix.h"
-
-
-#include <stdlib.h>
-
-#include "lua.h"
-
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ಅನ್ತರ್ಭಾವ "lprefix.h"
 
 
-static lua_State *getco (lua_State *L) {
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+
+#ಅನ್ತರ್ಭಾವ "lua.h"
+
+#ಅನ್ತರ್ಭಾವ "lauxlib.h"
+#ಅನ್ತರ್ಭಾವ "lualib.h"
+#ಅನ್ತರ್ಭಾವ "llimits.h"
+
+
+ಸ್ಥಿರ lua_State *getco (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   luaL_argexpected(L, co, 1, "thread");
-  return co;
+  ಹಿಂತಿರುಗಿ co;
 }
 
 
@@ -30,182 +30,182 @@ static lua_State *getco (lua_State *L) {
 ** Resumes a coroutine. Returns the number of results for non-error
 ** cases or -1 for errors.
 */
-static int auxresume (lua_State *L, lua_State *co, int narg) {
-  int status, nres;
-  if (l_unlikely(!lua_checkstack(co, narg))) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ auxresume (lua_State *L, lua_State *co, ಪೂರ್ಣಾಂಕ narg) {
+  ಪೂರ್ಣಾಂಕ ಸ್ಥಿತಿ_2, nres;
+  ಆದರೆ (l_unlikely(!lua_checkstack(co, narg))) {
     lua_pushliteral(L, "too many arguments to resume");
-    return -1;  /* error flag */
+    ಹಿಂತಿರುಗಿ -1;  /* error flag */
   }
   lua_xmove(L, co, narg);
-  status = lua_resume(co, L, narg, &nres);
-  if (l_likely(status == LUA_OK || status == LUA_YIELD)) {
-    if (l_unlikely(!lua_checkstack(L, nres + 1))) {
-      lua_pop(co, nres);  /* remove results anyway */
+  ಸ್ಥಿತಿ_2 = lua_resume(co, L, narg, &nres);
+  ಆದರೆ (l_likely(ಸ್ಥಿತಿ_2 == LUA_OK || ಸ್ಥಿತಿ_2 == LUA_YIELD)) {
+    ಆದರೆ (l_unlikely(!lua_checkstack(L, nres + 1))) {
+      lua_ತೆಗೆ(co, nres);  /* remove results anyway */
       lua_pushliteral(L, "too many results to resume");
-      return -1;  /* error flag */
+      ಹಿಂತಿರುಗಿ -1;  /* error flag */
     }
     lua_xmove(co, L, nres);  /* move yielded values */
-    return nres;
+    ಹಿಂತಿರುಗಿ nres;
   }
-  else {
+  ಇಲ್ಲದಿದ್ದರೆ {
     lua_xmove(co, L, 1);  /* move error message */
-    return -1;  /* error flag */
+    ಹಿಂತಿರುಗಿ -1;  /* error flag */
   }
 }
 
 
-static int luaB_coresume (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_coresume (lua_State *L) {
   lua_State *co = getco(L);
-  int r;
+  ಪೂರ್ಣಾಂಕ r;
   r = auxresume(L, co, lua_gettop(L) - 1);
-  if (l_unlikely(r < 0)) {
+  ಆದರೆ (l_unlikely(r < 0)) {
     lua_pushboolean(L, 0);
-    lua_insert(L, -2);
-    return 2;  /* return false + error message */
+    lua_ಸೇರಿಸು(L, -2);
+    ಹಿಂತಿರುಗಿ 2;  /* return false + error message */
   }
-  else {
+  ಇಲ್ಲದಿದ್ದರೆ {
     lua_pushboolean(L, 1);
-    lua_insert(L, -(r + 1));
-    return r + 1;  /* return true + 'resume' returns */
+    lua_ಸೇರಿಸು(L, -(r + 1));
+    ಹಿಂತಿರುಗಿ r + 1;  /* return true + 'resume' returns */
   }
 }
 
 
-static int luaB_auxwrap (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
-  int r = auxresume(L, co, lua_gettop(L));
-  if (l_unlikely(r < 0)) {  /* error? */
-    int stat = lua_status(co);
-    if (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
+  ಪೂರ್ಣಾಂಕ r = auxresume(L, co, lua_gettop(L));
+  ಆದರೆ (l_unlikely(r < 0)) {  /* error? */
+    ಪೂರ್ಣಾಂಕ stat = lua_ಸ್ಥಿತಿ(co);
+    ಆದರೆ (stat != LUA_OK && stat != LUA_YIELD) {  /* error in the coroutine? */
       stat = lua_closethread(co, L);  /* close its tbc variables */
-      if (stat == LUA_OK)
-        return 0;  /* nothing to return */
+      ಆದರೆ (stat == LUA_OK)
+        ಹಿಂತಿರುಗಿ 0;  /* nothing to return */
       lua_xmove(co, L, 1);  /* move error message to the caller */
     }
-    if (stat != LUA_ERRMEM &&  /* not a memory error and ... */
+    ಆದರೆ (stat != LUA_ERRMEM &&  /* not a memory error and ... */
         lua_type(L, -1) == LUA_TSTRING) {  /* ... error object is a string? */
       luaL_where(L, 1);  /* add extra info, if available */
-      lua_insert(L, -2);
+      lua_ಸೇರಿಸು(L, -2);
       lua_concat(L, 2);
     }
-    return lua_error(L);  /* propagate error */
+    ಹಿಂತಿರುಗಿ lua_error(L);  /* propagate error */
   }
-  return r;
+  ಹಿಂತಿರುಗಿ r;
 }
 
 
-static int luaB_cocreate (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_cocreate (lua_State *L) {
   lua_State *NL;
   luaL_checktype(L, 1, LUA_TFUNCTION);
   NL = lua_newthread(L);
   lua_pushvalue(L, 1);  /* move function to top */
   lua_xmove(L, NL, 1);  /* move function from L to NL */
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
-static int luaB_cowrap (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_cowrap (lua_State *L) {
   luaB_cocreate(L);
   lua_pushcclosure(L, luaB_auxwrap, 1);
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
-static int luaB_yield (lua_State *L) {
-  return lua_yield(L, lua_gettop(L));
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_yield (lua_State *L) {
+  ಹಿಂತಿರುಗಿ lua_yield(L, lua_gettop(L));
 }
 
 
-#define COS_RUN		0
-#define COS_DEAD	1
-#define COS_YIELD	2
-#define COS_NORM	3
+#ವ್ಯಾಖ್ಯಾನಿಸು COS_ಸತತ		0
+#ವ್ಯಾಖ್ಯಾನಿಸು COS_DEAD	1
+#ವ್ಯಾಖ್ಯಾನಿಸು COS_YIELD	2
+#ವ್ಯಾಖ್ಯಾನಿಸು COS_NORM	3
 
 
-static const char *const statname[] =
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ statname[] =
   {"running", "dead", "suspended", "normal"};
 
 
-static int auxstatus (lua_State *L, lua_State *co) {
-  if (L == co) return COS_RUN;
-  else {
-    switch (lua_status(co)) {
-      case LUA_YIELD:
-        return COS_YIELD;
-      case LUA_OK: {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ auxstatus (lua_State *L, lua_State *co) {
+  ಆದರೆ (L == co) ಹಿಂತಿರುಗಿ COS_ಸತತ;
+  ಇಲ್ಲದಿದ್ದರೆ {
+    ಆಯ್ಕೆ (lua_ಸ್ಥಿತಿ(co)) {
+      ಸ್ಥಿತಿ LUA_YIELD:
+        ಹಿಂತಿರುಗಿ COS_YIELD;
+      ಸ್ಥಿತಿ LUA_OK: {
         lua_Debug ar;
-        if (lua_getstack(co, 0, &ar))  /* does it have frames? */
-          return COS_NORM;  /* it is running */
-        else if (lua_gettop(co) == 0)
-            return COS_DEAD;
-        else
-          return COS_YIELD;  /* initial state */
+        ಆದರೆ (lua_getstack(co, 0, &ar))  /* does it have frames? */
+          ಹಿಂತಿರುಗಿ COS_NORM;  /* it is running */
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (lua_gettop(co) == 0)
+            ಹಿಂತಿರುಗಿ COS_DEAD;
+        ಇಲ್ಲದಿದ್ದರೆ
+          ಹಿಂತಿರುಗಿ COS_YIELD;  /* initial state */
       }
-      default:  /* some error occurred */
-        return COS_DEAD;
+      ಪೂರ್ವನಿಯೋಜಿತ:  /* some error occurred */
+        ಹಿಂತಿರುಗಿ COS_DEAD;
     }
   }
 }
 
 
-static int luaB_costatus (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_costatus (lua_State *L) {
   lua_State *co = getco(L);
   lua_pushstring(L, statname[auxstatus(L, co)]);
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
-static lua_State *getoptco (lua_State *L) {
-  return (lua_isnone(L, 1) ? L : getco(L));
+ಸ್ಥಿರ lua_State *getoptco (lua_State *L) {
+  ಹಿಂತಿರುಗಿ (lua_isnone(L, 1) ? L : getco(L));
 }
 
 
-static int luaB_yieldable (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_yieldable (lua_State *L) {
   lua_State *co = getoptco(L);
   lua_pushboolean(L, lua_isyieldable(co));
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
-static int luaB_corunning (lua_State *L) {
-  int ismain = lua_pushthread(L);
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_corunning (lua_State *L) {
+  ಪೂರ್ಣಾಂಕ ismain = lua_pushthread(L);
   lua_pushboolean(L, ismain);
-  return 2;
+  ಹಿಂತಿರುಗಿ 2;
 }
 
 
-static int luaB_close (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ luaB_close (lua_State *L) {
   lua_State *co = getoptco(L);
-  int status = auxstatus(L, co);
-  switch (status) {
-    case COS_DEAD: case COS_YIELD: {
-      status = lua_closethread(co, L);
-      if (status == LUA_OK) {
+  ಪೂರ್ಣಾಂಕ ಸ್ಥಿತಿ_2 = auxstatus(L, co);
+  ಆಯ್ಕೆ (ಸ್ಥಿತಿ_2) {
+    ಸ್ಥಿತಿ COS_DEAD: ಸ್ಥಿತಿ COS_YIELD: {
+      ಸ್ಥಿತಿ_2 = lua_closethread(co, L);
+      ಆದರೆ (ಸ್ಥಿತಿ_2 == LUA_OK) {
         lua_pushboolean(L, 1);
-        return 1;
+        ಹಿಂತಿರುಗಿ 1;
       }
-      else {
+      ಇಲ್ಲದಿದ್ದರೆ {
         lua_pushboolean(L, 0);
         lua_xmove(co, L, 1);  /* move error message */
-        return 2;
+        ಹಿಂತಿರುಗಿ 2;
       }
     }
-    case COS_NORM:
-      return luaL_error(L, "cannot close a %s coroutine", statname[status]);
-    case COS_RUN:
+    ಸ್ಥಿತಿ COS_NORM:
+      ಹಿಂತಿರುಗಿ luaL_error(L, "cannot close a %s coroutine", statname[ಸ್ಥಿತಿ_2]);
+    ಸ್ಥಿತಿ COS_ಸತತ:
       lua_geti(L, LUA_REGISTRYINDEX, LUA_RIDX_MAINTHREAD);  /* get main */
-      if (lua_tothread(L, -1) == co)
-        return luaL_error(L, "cannot close main thread");
+      ಆದರೆ (lua_tothread(L, -1) == co)
+        ಹಿಂತಿರುಗಿ luaL_error(L, "cannot close main thread");
       lua_closethread(co, L);  /* close itself */
       /* previous call does not return *//* FALLTHROUGH */
-    default:
+    ಪೂರ್ವನಿಯೋಜಿತ:
       lua_assert(0);
-      return 0;
+      ಹಿಂತಿರುಗಿ 0;
   }
 }
 
 
-static const luaL_Reg co_funcs[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ luaL_Reg co_funcs[] = {
   {"create", luaB_cocreate},
   {"resume", luaB_coresume},
   {"running", luaB_corunning},
@@ -214,13 +214,13 @@ static const luaL_Reg co_funcs[] = {
   {"yield", luaB_yield},
   {"isyieldable", luaB_yieldable},
   {"close", luaB_close},
-  {NULL, NULL}
+  {ಖಾಲಿ, ಖಾಲಿ}
 };
 
 
 
-LUAMOD_API int luaopen_coroutine (lua_State *L) {
+LUAMOD_API ಪೂರ್ಣಾಂಕ luaopen_coroutine (lua_State *L) {
   luaL_newlib(L, co_funcs);
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 

@@ -4,41 +4,41 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lutf8lib_c
-#define LUA_LIB
+#ವ್ಯಾಖ್ಯಾನಿಸು lutf8lib_c
+#ವ್ಯಾಖ್ಯಾನಿಸು LUA_LIB
 
-#include "lprefix.h"
-
-
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "lua.h"
-
-#include "lauxlib.h"
-#include "lualib.h"
-#include "llimits.h"
+#ಅನ್ತರ್ಭಾವ "lprefix.h"
 
 
-#define MAXUNICODE	0x10FFFFu
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <string.h>
 
-#define MAXUTF		0x7FFFFFFFu
+#ಅನ್ತರ್ಭಾವ "lua.h"
+
+#ಅನ್ತರ್ಭಾವ "lauxlib.h"
+#ಅನ್ತರ್ಭಾವ "lualib.h"
+#ಅನ್ತರ್ಭಾವ "llimits.h"
 
 
-#define MSGInvalid	"invalid UTF-8 code"
+#ವ್ಯಾಖ್ಯಾನಿಸು MAXUNICODE	0x10FFFFu
+
+#ವ್ಯಾಖ್ಯಾನಿಸು MAXUTF		0x7FFFFFFFu
 
 
-#define iscont(c)	(((c) & 0xC0) == 0x80)
-#define iscontp(p)	iscont(*(p))
+#ವ್ಯಾಖ್ಯಾನಿಸು MSGInvalid	"invalid UTF-8 code"
+
+
+#ವ್ಯಾಖ್ಯಾನಿಸು iscont(c)	(((c) & 0xC0) == 0x80)
+#ವ್ಯಾಖ್ಯಾನಿಸು iscontp(p)	iscont(*(p))
 
 
 /* from strlib */
 /* translate a relative string position: negative means back from end */
-static lua_Integer u_posrelat (lua_Integer pos, size_t len) {
-  if (pos >= 0) return pos;
-  else if (0u - (size_t)pos > len) return 0;
-  else return (lua_Integer)len + pos + 1;
+ಸ್ಥಿರ lua_Integer u_posrelat (lua_Integer pos, size_t len) {
+  ಆದರೆ (pos >= 0) ಹಿಂತಿರುಗಿ pos;
+  ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (0u - (size_t)pos > len) ಹಿಂತಿರುಗಿ 0;
+  ಇಲ್ಲದಿದ್ದರೆ ಹಿಂತಿರುಗಿ (lua_Integer)len + pos + 1;
 }
 
 
@@ -49,36 +49,36 @@ static lua_Integer u_posrelat (lua_Integer pos, size_t len) {
 ** entry forces an error for non-ASCII bytes with no continuation
 ** bytes (count == 0).
 */
-static const char *utf8_decode (const char *s, l_uint32 *val, int strict) {
-  static const l_uint32 limits[] =
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *utf8_decode (ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, l_uint32 *val, ಪೂರ್ಣಾಂಕ strict) {
+  ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ l_uint32 limits[] =
         {~(l_uint32)0, 0x80, 0x800, 0x10000u, 0x200000u, 0x4000000u};
-  unsigned int c = (unsigned char)s[0];
+  ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ c = (ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ)s[0];
   l_uint32 res = 0;  /* final result */
-  if (c < 0x80)  /* ASCII? */
+  ಆದರೆ (c < 0x80)  /* ASCII? */
     res = c;
-  else if (c >= 0xfe)  /* c >= 1111 1110b ? */
-    return NULL;  /* would need six or more continuation bytes */
-  else {
-    int count = 0;  /* to count number of continuation bytes */
-    for (; c & 0x40; c <<= 1) {  /* while it needs continuation bytes... */
-      unsigned int cc = (unsigned char)s[++count];  /* read next byte */
-      if (!iscont(cc))  /* not a continuation byte? */
-        return NULL;  /* invalid byte sequence */
+  ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c >= 0xfe)  /* c >= 1111 1110b ? */
+    ಹಿಂತಿರುಗಿ ಖಾಲಿ;  /* would need six or more continuation bytes */
+  ಇಲ್ಲದಿದ್ದರೆ {
+    ಪೂರ್ಣಾಂಕ ಎಣಿಕೆ_2 = 0;  /* to count number of continuation bytes */
+    ಗಾಗಿ (; c & 0x40; c <<= 1) {  /* while it needs continuation bytes... */
+      ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ cc = (ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ)s[++ಎಣಿಕೆ_2];  /* read next byte */
+      ಆದರೆ (!iscont(cc))  /* not a continuation byte? */
+        ಹಿಂತಿರುಗಿ ಖಾಲಿ;  /* invalid byte sequence */
       res = (res << 6) | (cc & 0x3F);  /* add lower 6 bits from cont. byte */
     }
-    lua_assert(count <= 5);
-    res |= ((l_uint32)(c & 0x7F) << (count * 5));  /* add first byte */
-    if (res > MAXUTF || res < limits[count])
-      return NULL;  /* invalid byte sequence */
-    s += count;  /* skip continuation bytes read */
+    lua_assert(ಎಣಿಕೆ_2 <= 5);
+    res |= ((l_uint32)(c & 0x7F) << (ಎಣಿಕೆ_2 * 5));  /* add first byte */
+    ಆದರೆ (res > MAXUTF || res < limits[ಎಣಿಕೆ_2])
+      ಹಿಂತಿರುಗಿ ಖಾಲಿ;  /* invalid byte sequence */
+    s += ಎಣಿಕೆ_2;  /* skip continuation bytes read */
   }
-  if (strict) {
+  ಆದರೆ (strict) {
     /* check for invalid code points; too large or surrogates */
-    if (res > MAXUNICODE || (0xD800u <= res && res <= 0xDFFFu))
-      return NULL;
+    ಆದರೆ (res > MAXUNICODE || (0xD800u <= res && res <= 0xDFFFu))
+      ಹಿಂತಿರುಗಿ ಖಾಲಿ;
   }
-  if (val) *val = res;
-  return s + 1;  /* +1 to include first byte */
+  ಆದರೆ (val) *val = res;
+  ಹಿಂತಿರುಗಿ s + 1;  /* +1 to include first byte */
 }
 
 
@@ -87,29 +87,29 @@ static const char *utf8_decode (const char *s, l_uint32 *val, int strict) {
 ** start in the range [i,j], or nil + current position if 's' is not
 ** well formed in that interval
 */
-static int utflen (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ utflen (lua_State *L) {
   lua_Integer n = 0;  /* counter for the number of characters */
   size_t len;  /* string length in bytes */
-  const char *s = luaL_checklstring(L, 1, &len);
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = luaL_checklstring(L, 1, &len);
   lua_Integer posi = u_posrelat(luaL_optinteger(L, 2, 1), len);
   lua_Integer posj = u_posrelat(luaL_optinteger(L, 3, -1), len);
-  int lax = lua_toboolean(L, 4);
+  ಪೂರ್ಣಾಂಕ lax = lua_toboolean(L, 4);
   luaL_argcheck(L, 1 <= posi && --posi <= (lua_Integer)len, 2,
                    "initial position out of bounds");
   luaL_argcheck(L, --posj < (lua_Integer)len, 3,
                    "final position out of bounds");
-  while (posi <= posj) {
-    const char *s1 = utf8_decode(s + posi, NULL, !lax);
-    if (s1 == NULL) {  /* conversion error? */
+  ಆಗ (posi <= posj) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s1 = utf8_decode(s + posi, ಖಾಲಿ, !lax);
+    ಆದರೆ (s1 == ಖಾಲಿ) {  /* conversion error? */
       luaL_pushfail(L);  /* return fail ... */
       lua_pushinteger(L, posi + 1);  /* ... and current position */
-      return 2;
+      ಹಿಂತಿರುಗಿ 2;
     }
     posi = ct_diff2S(s1 - s);
     n++;
   }
   lua_pushinteger(L, n);
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
@@ -117,60 +117,60 @@ static int utflen (lua_State *L) {
 ** codepoint(s, [i, [j [, lax]]]) -> returns codepoints for all
 ** characters that start in the range [i,j]
 */
-static int codepoint (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ codepoint (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = luaL_checklstring(L, 1, &len);
   lua_Integer posi = u_posrelat(luaL_optinteger(L, 2, 1), len);
   lua_Integer pose = u_posrelat(luaL_optinteger(L, 3, posi), len);
-  int lax = lua_toboolean(L, 4);
-  int n;
-  const char *se;
+  ಪೂರ್ಣಾಂಕ lax = lua_toboolean(L, 4);
+  ಪೂರ್ಣಾಂಕ n;
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *se;
   luaL_argcheck(L, posi >= 1, 2, "out of bounds");
   luaL_argcheck(L, pose <= (lua_Integer)len, 3, "out of bounds");
-  if (posi > pose) return 0;  /* empty interval; return no values */
-  if (pose - posi >= INT_MAX)  /* (lua_Integer -> int) overflow? */
-    return luaL_error(L, "string slice too long");
-  n = (int)(pose -  posi) + 1;  /* upper bound for number of returns */
+  ಆದರೆ (posi > pose) ಹಿಂತಿರುಗಿ 0;  /* empty interval; return no values */
+  ಆದರೆ (pose - posi >= ಗರಿಷ್ಠ_ಪೂರ್ಣಾಂಕ)  /* (lua_Integer -> int) overflow? */
+    ಹಿಂತಿರುಗಿ luaL_error(L, "string slice too long");
+  n = (ಪೂರ್ಣಾಂಕ)(pose -  posi) + 1;  /* upper bound for number of returns */
   luaL_checkstack(L, n, "string slice too long");
   n = 0;  /* count the number of returns */
   se = s + pose;  /* string end */
-  for (s += posi - 1; s < se;) {
-    l_uint32 code;
-    s = utf8_decode(s, &code, !lax);
-    if (s == NULL)
-      return luaL_error(L, MSGInvalid);
-    lua_pushinteger(L, l_castU2S(code));
+  ಗಾಗಿ (s += posi - 1; s < se;) {
+    l_uint32 ಸಂಕೇತ_2;
+    s = utf8_decode(s, &ಸಂಕೇತ_2, !lax);
+    ಆದರೆ (s == ಖಾಲಿ)
+      ಹಿಂತಿರುಗಿ luaL_error(L, MSGInvalid);
+    lua_pushinteger(L, l_castU2S(ಸಂಕೇತ_2));
     n++;
   }
-  return n;
+  ಹಿಂತಿರುಗಿ n;
 }
 
 
-static void pushutfchar (lua_State *L, int arg) {
-  lua_Unsigned code = (lua_Unsigned)luaL_checkinteger(L, arg);
-  luaL_argcheck(L, code <= MAXUTF, arg, "value out of range");
-  lua_pushfstring(L, "%U", cast(unsigned long, code));
+ಸ್ಥಿರ ಶೂನ್ಯ pushutfchar (lua_State *L, ಪೂರ್ಣಾಂಕ arg) {
+  lua_Unsigned ಸಂಕೇತ_2 = (lua_Unsigned)luaL_checkinteger(L, arg);
+  luaL_argcheck(L, ಸಂಕೇತ_2 <= MAXUTF, arg, "value out of range");
+  lua_pushfstring(L, "%U", cast(ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ, ಸಂಕೇತ_2));
 }
 
 
 /*
 ** utfchar(n1, n2, ...)  -> char(n1)..char(n2)...
 */
-static int utfchar (lua_State *L) {
-  int n = lua_gettop(L);  /* number of arguments */
-  if (n == 1)  /* optimize common case of single char */
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ utfchar (lua_State *L) {
+  ಪೂರ್ಣಾಂಕ n = lua_gettop(L);  /* number of arguments */
+  ಆದರೆ (n == 1)  /* optimize common case of single char */
     pushutfchar(L, 1);
-  else {
-    int i;
-    luaL_Buffer b;
+  ಇಲ್ಲದಿದ್ದರೆ {
+    ಪೂರ್ಣಾಂಕ i;
+    lua_L_ಬಫರ್ b;
     luaL_buffinit(L, &b);
-    for (i = 1; i <= n; i++) {
+    ಗಾಗಿ (i = 1; i <= n; i++) {
       pushutfchar(L, i);
       luaL_addvalue(&b);
     }
     luaL_pushresult(&b);
   }
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 
 
@@ -178,117 +178,117 @@ static int utfchar (lua_State *L) {
 ** offset(s, n, [i])  -> indices where n-th character counting from
 **   position 'i' starts and ends; 0 means character at 'i'.
 */
-static int byteoffset (lua_State *L) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ byteoffset (lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = luaL_checklstring(L, 1, &len);
   lua_Integer n  = luaL_checkinteger(L, 2);
   lua_Integer posi = (n >= 0) ? 1 : cast_st2S(len) + 1;
   posi = u_posrelat(luaL_optinteger(L, 3, posi), len);
   luaL_argcheck(L, 1 <= posi && --posi <= (lua_Integer)len, 3,
                    "position out of bounds");
-  if (n == 0) {
+  ಆದರೆ (n == 0) {
     /* find beginning of current byte sequence */
-    while (posi > 0 && iscontp(s + posi)) posi--;
+    ಆಗ (posi > 0 && iscontp(s + posi)) posi--;
   }
-  else {
-    if (iscontp(s + posi))
-      return luaL_error(L, "initial position is a continuation byte");
-    if (n < 0) {
-      while (n < 0 && posi > 0) {  /* move back */
-        do {  /* find beginning of previous character */
+  ಇಲ್ಲದಿದ್ದರೆ {
+    ಆದರೆ (iscontp(s + posi))
+      ಹಿಂತಿರುಗಿ luaL_error(L, "initial position is a continuation byte");
+    ಆದರೆ (n < 0) {
+      ಆಗ (n < 0 && posi > 0) {  /* move back */
+        ಮಾಡು {  /* find beginning of previous character */
           posi--;
-        } while (posi > 0 && iscontp(s + posi));
+        } ಆಗ (posi > 0 && iscontp(s + posi));
         n++;
       }
     }
-    else {
+    ಇಲ್ಲದಿದ್ದರೆ {
       n--;  /* do not move for 1st character */
-      while (n > 0 && posi < (lua_Integer)len) {
-        do {  /* find beginning of next character */
+      ಆಗ (n > 0 && posi < (lua_Integer)len) {
+        ಮಾಡು {  /* find beginning of next character */
           posi++;
-        } while (iscontp(s + posi));  /* (cannot pass final '\0') */
+        } ಆಗ (iscontp(s + posi));  /* (cannot pass final '\0') */
         n--;
       }
     }
   }
-  if (n != 0) {  /* did not find given character? */
+  ಆದರೆ (n != 0) {  /* did not find given character? */
     luaL_pushfail(L);
-    return 1;
+    ಹಿಂತಿರುಗಿ 1;
   }
   lua_pushinteger(L, posi + 1);  /* initial position */
-  if ((s[posi] & 0x80) != 0) {  /* multi-byte character? */
-    if (iscont(s[posi]))
-      return luaL_error(L, "initial position is a continuation byte");
-    while (iscontp(s + posi + 1))
+  ಆದರೆ ((s[posi] & 0x80) != 0) {  /* multi-byte character? */
+    ಆದರೆ (iscont(s[posi]))
+      ಹಿಂತಿರುಗಿ luaL_error(L, "initial position is a continuation byte");
+    ಆಗ (iscontp(s + posi + 1))
       posi++;  /* skip to last continuation byte */
   }
   /* else one-byte character: final position is the initial one */
   lua_pushinteger(L, posi + 1);  /* 'posi' now is the final position */
-  return 2;
+  ಹಿಂತಿರುಗಿ 2;
 }
 
 
-static int iter_aux (lua_State *L, int strict) {
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ iter_aux (lua_State *L, ಪೂರ್ಣಾಂಕ strict) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = luaL_checklstring(L, 1, &len);
   lua_Unsigned n = (lua_Unsigned)lua_tointeger(L, 2);
-  if (n < len) {
-    while (iscontp(s + n)) n++;  /* go to next character */
+  ಆದರೆ (n < len) {
+    ಆಗ (iscontp(s + n)) n++;  /* go to next character */
   }
-  if (n >= len)  /* (also handles original 'n' being negative) */
-    return 0;  /* no more codepoints */
-  else {
-    l_uint32 code;
-    const char *next = utf8_decode(s + n, &code, strict);
-    if (next == NULL || iscontp(next))
-      return luaL_error(L, MSGInvalid);
+  ಆದರೆ (n >= len)  /* (also handles original 'n' being negative) */
+    ಹಿಂತಿರುಗಿ 0;  /* no more codepoints */
+  ಇಲ್ಲದಿದ್ದರೆ {
+    l_uint32 ಸಂಕೇತ_2;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮುಂದಿನ = utf8_decode(s + n, &ಸಂಕೇತ_2, strict);
+    ಆದರೆ (ಮುಂದಿನ == ಖಾಲಿ || iscontp(ಮುಂದಿನ))
+      ಹಿಂತಿರುಗಿ luaL_error(L, MSGInvalid);
     lua_pushinteger(L, l_castU2S(n + 1));
-    lua_pushinteger(L, l_castU2S(code));
-    return 2;
+    lua_pushinteger(L, l_castU2S(ಸಂಕೇತ_2));
+    ಹಿಂತಿರುಗಿ 2;
   }
 }
 
 
-static int iter_auxstrict (lua_State *L) {
-  return iter_aux(L, 1);
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ iter_auxstrict (lua_State *L) {
+  ಹಿಂತಿರುಗಿ iter_aux(L, 1);
 }
 
-static int iter_auxlax (lua_State *L) {
-  return iter_aux(L, 0);
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ iter_auxlax (lua_State *L) {
+  ಹಿಂತಿರುಗಿ iter_aux(L, 0);
 }
 
 
-static int iter_codes (lua_State *L) {
-  int lax = lua_toboolean(L, 2);
-  const char *s = luaL_checkstring(L, 1);
+ಸ್ಥಿರ ಪೂರ್ಣಾಂಕ iter_codes (lua_State *L) {
+  ಪೂರ್ಣಾಂಕ lax = lua_toboolean(L, 2);
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s = luaL_checkstring(L, 1);
   luaL_argcheck(L, !iscontp(s), 1, MSGInvalid);
   lua_pushcfunction(L, lax ? iter_auxlax : iter_auxstrict);
   lua_pushvalue(L, 1);
   lua_pushinteger(L, 0);
-  return 3;
+  ಹಿಂತಿರುಗಿ 3;
 }
 
 
 /* pattern to match a single UTF-8 character */
-#define UTF8PATT	"[\0-\x7F\xC2-\xFD][\x80-\xBF]*"
+#ವ್ಯಾಖ್ಯಾನಿಸು UTF8PATT	"[\0-\x7F\xC2-\xFD][\x80-\xBF]*"
 
 
-static const luaL_Reg funcs[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ luaL_Reg funcs[] = {
   {"offset", byteoffset},
   {"codepoint", codepoint},
   {"char", utfchar},
   {"len", utflen},
   {"codes", iter_codes},
   /* placeholders */
-  {"charpattern", NULL},
-  {NULL, NULL}
+  {"charpattern", ಖಾಲಿ},
+  {ಖಾಲಿ, ಖಾಲಿ}
 };
 
 
-LUAMOD_API int luaopen_utf8 (lua_State *L) {
+LUAMOD_API ಪೂರ್ಣಾಂಕ luaopen_utf8 (lua_State *L) {
   luaL_newlib(L, funcs);
-  lua_pushlstring(L, UTF8PATT, sizeof(UTF8PATT)/sizeof(char) - 1);
+  lua_pushlstring(L, UTF8PATT, ಗಾತ್ರ(UTF8PATT)/ಗಾತ್ರ(ಅಕ್ಷರ) - 1);
   lua_setfield(L, -2, "charpattern");
-  return 1;
+  ಹಿಂತಿರುಗಿ 1;
 }
 

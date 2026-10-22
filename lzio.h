@@ -5,63 +5,63 @@
 */
 
 
-#ifndef lzio_h
-#define lzio_h
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ lzio_h
+#ವ್ಯಾಖ್ಯಾನಿಸು lzio_h
 
-#include "lua.h"
+#ಅನ್ತರ್ಭಾವ "lua.h"
 
-#include "lmem.h"
-
-
-#define EOZ	(-1)			/* end of stream */
-
-typedef struct Zio ZIO;
-
-#define zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
+#ಅನ್ತರ್ಭಾವ "lmem.h"
 
 
-typedef struct Mbuffer {
-  char *buffer;
+#ವ್ಯಾಖ್ಯಾನಿಸು EOZ	(-1)			/* end of stream */
+
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Zio ZIO;
+
+#ವ್ಯಾಖ್ಯಾನಿಸು zgetc(z)  (((z)->n--)>0 ?  cast_uchar(*(z)->p++) : luaZ_fill(z))
+
+
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ Mbuffer {
+  ಅಕ್ಷರ *ಬಫರ್;
   size_t n;
   size_t buffsize;
 } Mbuffer;
 
-#define luaZ_initbuffer(L, buff) ((buff)->buffer = NULL, (buff)->buffsize = 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_initbuffer(L, buff) ((buff)->ಬಫರ್ = ಖಾಲಿ, (buff)->buffsize = 0)
 
-#define luaZ_buffer(buff)	((buff)->buffer)
-#define luaZ_sizebuffer(buff)	((buff)->buffsize)
-#define luaZ_bufflen(buff)	((buff)->n)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_Z_ಬಫರ್(buff)	((buff)->ಬಫರ್)
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_sizebuffer(buff)	((buff)->buffsize)
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_bufflen(buff)	((buff)->n)
 
-#define luaZ_buffremove(buff,i)	((buff)->n -= cast_sizet(i))
-#define luaZ_resetbuffer(buff) ((buff)->n = 0)
-
-
-#define luaZ_resizebuffer(L, buff, size) \
-	((buff)->buffer = luaM_reallocvchar(L, (buff)->buffer, \
-				(buff)->buffsize, size), \
-	(buff)->buffsize = size)
-
-#define luaZ_freebuffer(L, buff)	luaZ_resizebuffer(L, buff, 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_buffremove(buff,i)	((buff)->n -= cast_sizet(i))
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_resetbuffer(buff) ((buff)->n = 0)
 
 
-LUAI_FUNC void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
-                                        void *data);
-LUAI_FUNC size_t luaZ_read (ZIO* z, void *b, size_t n);	/* read next n bytes */
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_resizebuffer(L, buff, ಗಾತ್ರ_2) \
+	((buff)->ಬಫರ್ = luaM_reallocvchar(L, (buff)->ಬಫರ್, \
+				(buff)->buffsize, ಗಾತ್ರ_2), \
+	(buff)->buffsize = ಗಾತ್ರ_2)
 
-LUAI_FUNC const void *luaZ_getaddr (ZIO* z, size_t n);
+#ವ್ಯಾಖ್ಯಾನಿಸು luaZ_freebuffer(L, buff)	luaZ_resizebuffer(L, buff, 0)
+
+
+LUAI_FUNC ಶೂನ್ಯ luaZ_init (lua_State *L, ZIO *z, lua_Reader reader,
+                                        ಶೂನ್ಯ *ದತ್ತಾಂಶ);
+LUAI_FUNC size_t luaZ_read (ZIO* z, ಶೂನ್ಯ *b, size_t n);	/* read next n bytes */
+
+LUAI_FUNC ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *luaZ_getaddr (ZIO* z, size_t n);
 
 
 /* --------- Private Part ------------------ */
 
-struct Zio {
+ರಚನೆ Zio {
   size_t n;			/* bytes still unread */
-  const char *p;		/* current position in buffer */
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *p;		/* current position in buffer */
   lua_Reader reader;		/* reader function */
-  void *data;			/* additional data */
+  ಶೂನ್ಯ *ದತ್ತಾಂಶ;			/* additional data */
   lua_State *L;			/* Lua state (for reader) */
 };
 
 
-LUAI_FUNC int luaZ_fill (ZIO *z);
+LUAI_FUNC ಪೂರ್ಣಾಂಕ luaZ_fill (ZIO *z);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

@@ -4,18 +4,18 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llimits_h
-#define llimits_h
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ llimits_h
+#ವ್ಯಾಖ್ಯಾನಿಸು llimits_h
 
 
-#include <limits.h>
-#include <stddef.h>
+#ಅನ್ತರ್ಭಾವ <limits.h>
+#ಅನ್ತರ್ಭಾವ <stddef.h>
 
 
-#include "lua.h"
+#ಅನ್ತರ್ಭಾವ "lua.h"
 
 
-#define l_numbits(t)	cast_int(sizeof(t) * CHAR_BIT)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_numbits(t)	cast_int(ಗಾತ್ರ(t) * CHAR_BIT)
 
 /*
 ** 'l_mem' is a signed integer big enough to count the total memory
@@ -23,50 +23,50 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
-typedef LUAI_MEM l_mem;
-typedef LUAI_UMEM lu_mem;
-#elif LUAI_IS32INT	/* }{ */
-typedef ptrdiff_t l_mem;
-typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
-typedef long l_mem;
-typedef unsigned long lu_mem;
-#endif				/* } */
+#ಆದರೆ defined(LUAI_MEM)		/* { external definitions? */
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ LUAI_MEM l_mem;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ LUAI_UMEM lu_mem;
+#ಅಥವಾಆದರೆ LUAI_IS32INT	/* }{ */
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ptrdiff_t l_mem;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ size_t lu_mem;
+#ಇಲ್ಲದಿದ್ದರೆ  /* 16-bit ints */	/* }{ */
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ದೀರ್ಘ l_mem;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ lu_mem;
+#ಆದರೆ_ಅಂತ್ಯ				/* } */
 
-#define MAX_LMEM  \
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_LMEM  \
 	cast(l_mem, (cast(lu_mem, 1) << (l_numbits(l_mem) - 1)) - 1)
 
 
 /* chars used as small naturals (so that 'char' is reserved for characters) */
-typedef unsigned char lu_byte;
-typedef signed char ls_byte;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ lu_byte;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಚಿಹ್ನೆಯುಳ್ಳ ಅಕ್ಷರ ls_byte;
 
 
 /* Type for thread status/error codes */
-typedef lu_byte TStatus;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ lu_byte TStatus;
 
 /* The C API still uses 'int' for status/error codes */
-#define APIstatus(st)	cast_int(st)
+#ವ್ಯಾಖ್ಯಾನಿಸು APIstatus(st)	cast_int(st)
 
 /* maximum value for size_t */
-#define MAX_SIZET	((size_t)(~(size_t)0))
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_SIZET	((size_t)(~(size_t)0))
 
 /*
 ** Maximum size for strings and userdata visible for Lua; should be
 ** representable as a lua_Integer and as a size_t.
 */
-#define MAX_SIZE	(sizeof(size_t) < sizeof(lua_Integer) ? MAX_SIZET \
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_ಗಾತ್ರ	(ಗಾತ್ರ(size_t) < ಗಾತ್ರ(lua_Integer) ? MAX_SIZET \
 			  : cast_sizet(LUA_MAXINTEGER))
 
 /*
 ** test whether an unsigned value is a power of 2 (or zero)
 */
-#define ispow2(x)	(((x) & ((x) - 1)) == 0)
+#ವ್ಯಾಖ್ಯಾನಿಸು ispow2(x)	(((x) & ((x) - 1)) == 0)
 
 
 /* number of chars of a literal string without the ending \0 */
-#define LL(x)   (sizeof(x)/sizeof(char) - 1)
+#ವ್ಯಾಖ್ಯಾನಿಸು LL(x)   (ಗಾತ್ರ(x)/ಗಾತ್ರ(ಅಕ್ಷರ) - 1)
 
 
 /*
@@ -75,157 +75,157 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#ಆದರೆ !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
-#define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
-#define L_P2I	uintmax_t  /* use the largest available integer */
-#endif
-#else  /* C89 option */
-#define L_P2I	size_t
-#endif
+#ಅನ್ತರ್ಭಾವ <stdint.h>
+#ಆದರೆ defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#ವ್ಯಾಖ್ಯಾನಿಸು L_P2I	uintptr_t
+#ಇಲ್ಲದಿದ್ದರೆ  /* no 'intptr'? */
+#ವ್ಯಾಖ್ಯಾನಿಸು L_P2I	uintmax_t  /* use the largest available integer */
+#ಆದರೆ_ಅಂತ್ಯ
+#ಇಲ್ಲದಿದ್ದರೆ  /* C89 option */
+#ವ್ಯಾಖ್ಯಾನಿಸು L_P2I	size_t
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
+#ವ್ಯಾಖ್ಯಾನಿಸು point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
 
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ LUAI_UACNUMBER l_uac_ಸಂಖ್ಯೆ;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ LUAI_UACINT l_uacInt;
 
 
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
-#undef NDEBUG
-#include <assert.h>
-#define lua_assert(c)           assert(c)
-#define assert_code(c)		c
-#endif
+#ಆದರೆ defined LUAI_ASSERT
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು NDEBUG
+#ಅನ್ತರ್ಭಾವ <assert.h>
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_assert(c)           ಪ್ರತಿಜ್ಞಾ(c)
+#ವ್ಯಾಖ್ಯಾನಿಸು assert_ಸಂಕೇತ(c)		c
+#ಆದರೆ_ಅಂತ್ಯ
 
-#if defined(lua_assert)
-#else
-#define lua_assert(c)		((void)0)
-#define assert_code(c)		((void)0)
-#endif
+#ಆದರೆ defined(lua_assert)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_assert(c)		((ಶೂನ್ಯ)0)
+#ವ್ಯಾಖ್ಯಾನಿಸು assert_ಸಂಕೇತ(c)		((ಶೂನ್ಯ)0)
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define check_exp(c,e)		(lua_assert(c), (e))
+#ವ್ಯಾಖ್ಯಾನಿಸು check_exp(c,e)		(lua_assert(c), (e))
 /* to avoid problems with conditions too long */
-#define lua_longassert(c)	assert_code((c) ? (void)0 : lua_assert(0))
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_longassert(c)	assert_ಸಂಕೇತ((c) ? (ಶೂನ್ಯ)0 : lua_assert(0))
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
-#define UNUSED(x)	((void)(x))
-#endif
+#ಆದರೆ !defined(ಬಳಸದ)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಬಳಸದ(x)	((ಶೂನ್ಯ)(x))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /* type casts (a macro highlights casts in the code) */
-#define cast(t, exp)	((t)(exp))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast(t, ಘಾತಾಂಕ)	((t)(ಘಾತಾಂಕ))
 
-#define cast_void(i)	cast(void, (i))
-#define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
-#define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
-#define cast_byte(i)	cast(lu_byte, (i))
-#define cast_uchar(i)	cast(unsigned char, (i))
-#define cast_char(i)	cast(char, (i))
-#define cast_charp(i)	cast(char *, (i))
-#define cast_sizet(i)	cast(size_t, (i))
-#define cast_Integer(i)	cast(lua_Integer, (i))
-#define cast_Inst(i)	cast(Instruction, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_void(i)	cast(ಶೂನ್ಯ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_voidp(i)	cast(ಶೂನ್ಯ *, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_ಅಂಕೆ(i)	cast(lua_ಸಂಖ್ಯೆ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_int(i)	cast(ಪೂರ್ಣಾಂಕ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_short(i)	cast(ಗಿಡ್ಡ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_uint(i)	cast(ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_byte(i)	cast(lu_byte, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_uchar(i)	cast(ಚಿಹ್ನೆರಹಿತ ಅಕ್ಷರ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_char(i)	cast(ಅಕ್ಷರ, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_charp(i)	cast(ಅಕ್ಷರ *, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_sizet(i)	cast(size_t, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_Integer(i)	cast(lua_Integer, (i))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_Inst(i)	cast(Instruction, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
-#define l_castS2U(i)	((lua_Unsigned)(i))
-#endif
+#ಆದರೆ !defined(l_castS2U)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_castS2U(i)	((lua_Unsigned)(i))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
 ** cast a lua_Unsigned to a signed lua_Integer; this cast is
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
-#define l_castU2S(i)	((lua_Integer)(i))
-#endif
+#ಆದರೆ !defined(l_castU2S)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_castU2S(i)	((lua_Integer)(i))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
 ** cast a size_t to lua_Integer: These casts are always valid for
 ** sizes of Lua objects (see MAX_SIZE)
 */
-#define cast_st2S(sz)	((lua_Integer)(sz))
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_st2S(sz)	((lua_Integer)(sz))
 
 /* Cast a ptrdiff_t to size_t, when it is known that the minuend
 ** comes from the subtrahend (the base)
 */
-#define ct_diff2sz(df)	((size_t)(df))
+#ವ್ಯಾಖ್ಯಾನಿಸು ct_diff2sz(df)	((size_t)(df))
 
 /* ptrdiff_t to lua_Integer */
-#define ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
+#ವ್ಯಾಖ್ಯಾನಿಸು ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
 
 /*
 ** Special type equivalent to '(void*)' for functions (to suppress some
 ** warnings when converting function pointers)
 */
-typedef void (*voidf)(void);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ (*voidf)(ಶೂನ್ಯ);
 
 /*
 ** Macro to convert pointer-to-void* to pointer-to-function. This cast
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
-#define cast_func(p) (__extension__ (voidf)(p))
-#else
-#define cast_func(p) ((voidf)(p))
-#endif
+#ಆದರೆ defined(__GNUC__)
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_func(p) (__extension__ (voidf)(p))
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು cast_func(p) ((voidf)(p))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#ಆದರೆ !defined(l_noret)
 
-#if defined(__GNUC__)
-#define l_noret		void __attribute__((noreturn))
-#elif defined(_MSC_VER) && _MSC_VER >= 1200
-#define l_noret		void __declspec(noreturn)
-#else
-#define l_noret		void
-#endif
+#ಆದರೆ defined(__GNUC__)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_noret		ಶೂನ್ಯ __attribute__((noreturn))
+#ಅಥವಾಆದರೆ defined(_MSC_VER) && _MSC_VER >= 1200
+#ವ್ಯಾಖ್ಯಾನಿಸು l_noret		ಶೂನ್ಯ __declspec(noreturn)
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು l_noret		ಶೂನ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
-#define l_inline	inline
-#elif defined(__GNUC__)
-#define l_inline	__inline__
-#else
-#define l_inline	/* empty */
-#endif
+#ಆದರೆ !defined(LUA_USE_C89)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_inline	ಸಾಲೊಳಗೆ
+#ಅಥವಾಆದರೆ defined(__GNUC__)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_inline	__inline__
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು l_inline	/*ಖಾಲಿಗಳು*/
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define l_sinline	static l_inline
+#ವ್ಯಾಖ್ಯಾನಿಸು l_sinline	ಸ್ಥಿರ l_inline
 
 
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
-typedef unsigned long l_uint32;
-#endif
+#ಆದರೆ LUAI_IS32INT
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಚಿಹ್ನೆರಹಿತ ಪೂರ್ಣಾಂಕ l_uint32;
+#ಇಲ್ಲದಿದ್ದರೆ
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಚಿಹ್ನೆರಹಿತ ದೀರ್ಘ l_uint32;
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*
@@ -233,14 +233,14 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
-#define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
-#endif
+#ಆದರೆ !defined(luai_numidiv)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* float division */
-#if !defined(luai_numdiv)
-#define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
-#endif
+#ಆದರೆ !defined(luai_numdiv)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numdiv(L,a,b)      ((ಶೂನ್ಯ)L, (a)/(b))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
 ** modulo: defined as 'a - floor(a/b)*b'; the direct computation
@@ -253,31 +253,31 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
-#define luai_nummod(L,a,b,m)  \
-  { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
-#endif
+#ಆದರೆ !defined(luai_nummod)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_nummod(L,a,b,m)  \
+  { (ಶೂನ್ಯ)L; (m) = l_mathop(fmod)(a,b); \
+    ಆದರೆ (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* exponentiation */
-#if !defined(luai_numpow)
-#define luai_numpow(L,a,b)  \
-  ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
-#endif
+#ಆದರೆ !defined(luai_numpow)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numpow(L,a,b)  \
+  ((ಶೂನ್ಯ)L, (b == 2) ? (a)*(a) : l_mathop(ಘಾತ)(a,b))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
-#define luai_numadd(L,a,b)      ((void)L, (a)+(b))
-#define luai_numsub(L,a,b)      ((void)L, (a)-(b))
-#define luai_nummul(L,a,b)      ((void)L, (a)*(b))
-#define luai_numunm(L,a)        ((void)L, -(a))
-#define luai_numeq(a,b)         ((a)==(b))
-#define luai_numlt(a,b)         ((a)<(b))
-#define luai_numle(a,b)         ((a)<=(b))
-#define luai_numgt(a,b)         ((a)>(b))
-#define luai_numge(a,b)         ((a)>=(b))
-#define luai_numisnan(a)        (!luai_numeq((a), (a)))
-#endif
+#ಆದರೆ !defined(luai_numadd)
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numadd(L,a,b)      ((ಶೂನ್ಯ)L, (a)+(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numsub(L,a,b)      ((ಶೂನ್ಯ)L, (a)-(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_nummul(L,a,b)      ((ಶೂನ್ಯ)L, (a)*(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numunm(L,a)        ((ಶೂನ್ಯ)L, -(a))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numeq(a,b)         ((a)==(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numlt(a,b)         ((a)<(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numle(a,b)         ((a)<=(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numgt(a,b)         ((a)>(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numge(a,b)         ((a)>=(b))
+#ವ್ಯಾಖ್ಯಾನಿಸು luai_numisnan(a)        (!luai_numeq((a), (a)))
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 
@@ -290,9 +290,9 @@ typedef unsigned long l_uint32;
 ** MAXINTEGER may not have one, and therefore its conversion to float
 ** may have an ill-defined value.)
 */
-#define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_numbertointeger(n,p) \
+  ((n) >= (LUA_ಸಂಖ್ಯೆ)(LUA_MININTEGER) && \
+   (n) < -(LUA_ಸಂಖ್ಯೆ)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 
@@ -310,24 +310,24 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#ಆದರೆ !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#ಆದರೆ defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
-#define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
-#define LUAI_FUNC	extern
-#endif
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_FUNC	__attribute__((visibility("internal"))) ಬಾಹ್ಯ
+#ಇಲ್ಲದಿದ್ದರೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_FUNC	ಬಾಹ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define LUAI_DDEC(dec)	LUAI_FUNC dec
-#define LUAI_DDEF	/* empty */
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_DDEC(dec)	LUAI_FUNC dec
+#ವ್ಯಾಖ್ಯಾನಿಸು LUAI_DDEF	/*ಖಾಲಿಗಳು*/
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /* Give these macros simpler names for internal use */
-#define l_likely(x)	luai_likely(x)
-#define l_unlikely(x)	luai_unlikely(x)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_likely(x)	luai_likely(x)
+#ವ್ಯಾಖ್ಯಾನಿಸು l_unlikely(x)	luai_unlikely(x)
 
 /*
 ** {==================================================================
@@ -336,22 +336,22 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
-#endif
+#ಆದರೆ !defined(lua_writestring)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_writestring(s,l)   fwrite((s), ಗಾತ್ರ(ಅಕ್ಷರ), (l), stdout)
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
-#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
-#endif
+#ಆದರೆ !defined(lua_writeline)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* print an error message */
-#if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
+#ಆದರೆ !defined(lua_writestringerror)
+#ವ್ಯಾಖ್ಯಾನಿಸು lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* }================================================================== */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
