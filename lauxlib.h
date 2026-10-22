@@ -9,18 +9,18 @@
 #define lauxlib_h
 
 
-#include <stddef.h>
-#include <stdio.h>
+#अन्तर्भाव <stddef.h>
+#अन्तर्भाव <stdio.h>
 
-#include "luaconf.h"
-#include "lua.h"
+#अन्तर्भाव "luaconf.h"
+#अन्तर्भाव "lua.h"
 
 
 /* global table */
 #define LUA_GNAME	"_G"
 
 
-typedef struct luaL_Buffer luaL_Buffer;
+प्रकारनिर्देश संरचना luaL_Buffer luaL_Buffer;
 
 
 /* extra error code for 'luaL_loadfilex' */
@@ -35,92 +35,92 @@ typedef struct luaL_Buffer luaL_Buffer;
 #define LUA_PRELOAD_TABLE	"_PRELOAD"
 
 
-typedef struct luaL_Reg {
-  const char *name;
+प्रकारनिर्देश संरचना luaL_Reg {
+  ध्रुव वर्ण *name;
   lua_CFunction func;
 } luaL_Reg;
 
 
-#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_Number))
+#define LUAL_NUMSIZES	(परिमाण(lua_Integer)*16 + परिमाण(lua_संख्या))
 
-LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_Number ver, size_t sz);
+LUALIB_API शून्य (luaL_checkversion_) (lua_State *L, lua_संख्या ver, माप_प्रकार sz);
 #define luaL_checkversion(L)  \
-	  luaL_checkversion_(L, LUA_VERSION_NUM, LUAL_NUMSIZES)
+	  luaL_checkversion_(L, LUA_VERSION_अंक, LUAL_NUMSIZES)
 
-LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
-LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
-LUALIB_API const char *(luaL_tolstring) (lua_State *L, int idx, size_t *len);
-LUALIB_API int (luaL_argerror) (lua_State *L, int arg, const char *extramsg);
-LUALIB_API int (luaL_typeerror) (lua_State *L, int arg, const char *tname);
-LUALIB_API const char *(luaL_checklstring) (lua_State *L, int arg,
-                                                          size_t *l);
-LUALIB_API const char *(luaL_optlstring) (lua_State *L, int arg,
-                                          const char *def, size_t *l);
-LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int arg);
-LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int arg, lua_Number def);
+LUALIB_API पूर्णाङ्क (luaL_getmetafield) (lua_State *L, पूर्णाङ्क obj, ध्रुव वर्ण *e);
+LUALIB_API पूर्णाङ्क (luaL_callmeta) (lua_State *L, पूर्णाङ्क obj, ध्रुव वर्ण *e);
+LUALIB_API ध्रुव वर्ण *(luaL_tolstring) (lua_State *L, पूर्णाङ्क idx, माप_प्रकार *len);
+LUALIB_API पूर्णाङ्क (luaL_argerror) (lua_State *L, पूर्णाङ्क arg, ध्रुव वर्ण *extramsg);
+LUALIB_API पूर्णाङ्क (luaL_typeerror) (lua_State *L, पूर्णाङ्क arg, ध्रुव वर्ण *tname);
+LUALIB_API ध्रुव वर्ण *(luaL_checklstring) (lua_State *L, पूर्णाङ्क arg,
+                                                          माप_प्रकार *l);
+LUALIB_API ध्रुव वर्ण *(luaL_optlstring) (lua_State *L, पूर्णाङ्क arg,
+                                          ध्रुव वर्ण *def, माप_प्रकार *l);
+LUALIB_API lua_संख्या (luaL_checknumber) (lua_State *L, पूर्णाङ्क arg);
+LUALIB_API lua_संख्या (luaL_optnumber) (lua_State *L, पूर्णाङ्क arg, lua_संख्या def);
 
-LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, int arg);
-LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, int arg,
+LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, पूर्णाङ्क arg);
+LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, पूर्णाङ्क arg,
                                           lua_Integer def);
 
-LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
-LUALIB_API void (luaL_checktype) (lua_State *L, int arg, int t);
-LUALIB_API void (luaL_checkany) (lua_State *L, int arg);
+LUALIB_API शून्य (luaL_checkstack) (lua_State *L, पूर्णाङ्क sz, ध्रुव वर्ण *संदेश);
+LUALIB_API शून्य (luaL_checktype) (lua_State *L, पूर्णाङ्क arg, पूर्णाङ्क t);
+LUALIB_API शून्य (luaL_checkany) (lua_State *L, पूर्णाङ्क arg);
 
-LUALIB_API int   (luaL_newmetatable) (lua_State *L, const char *tname);
-LUALIB_API void  (luaL_setmetatable) (lua_State *L, const char *tname);
-LUALIB_API void *(luaL_testudata) (lua_State *L, int ud, const char *tname);
-LUALIB_API void *(luaL_checkudata) (lua_State *L, int ud, const char *tname);
+LUALIB_API पूर्णाङ्क   (luaL_newmetatable) (lua_State *L, ध्रुव वर्ण *tname);
+LUALIB_API शून्य  (luaL_setmetatable) (lua_State *L, ध्रुव वर्ण *tname);
+LUALIB_API शून्य *(luaL_testudata) (lua_State *L, पूर्णाङ्क ud, ध्रुव वर्ण *tname);
+LUALIB_API शून्य *(luaL_checkudata) (lua_State *L, पूर्णाङ्क ud, ध्रुव वर्ण *tname);
 
-LUALIB_API void (luaL_where) (lua_State *L, int lvl);
-LUALIB_API int (luaL_error) (lua_State *L, const char *fmt, ...);
+LUALIB_API शून्य (luaL_where) (lua_State *L, पूर्णाङ्क lvl);
+LUALIB_API पूर्णाङ्क (luaL_error) (lua_State *L, ध्रुव वर्ण *fmt, ...);
 
-LUALIB_API int (luaL_checkoption) (lua_State *L, int arg, const char *def,
-                                   const char *const lst[]);
+LUALIB_API पूर्णाङ्क (luaL_checkoption) (lua_State *L, पूर्णाङ्क arg, ध्रुव वर्ण *def,
+                                   ध्रुव वर्ण *ध्रुव lst[]);
 
-LUALIB_API int (luaL_fileresult) (lua_State *L, int stat, const char *fname);
-LUALIB_API int (luaL_execresult) (lua_State *L, int stat);
+LUALIB_API पूर्णाङ्क (luaL_fileresult) (lua_State *L, पूर्णाङ्क stat, ध्रुव वर्ण *fname);
+LUALIB_API पूर्णाङ्क (luaL_execresult) (lua_State *L, पूर्णाङ्क stat);
 
-LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
-                                                    size_t nsize);
+LUALIB_API शून्य *(luaL_alloc) (शून्य *ud, शून्य *ptr, माप_प्रकार osize,
+                                                    माप_प्रकार nsize);
 
 
 /* predefined references */
 #define LUA_NOREF       (-2)
 #define LUA_REFNIL      (-1)
 
-LUALIB_API int (luaL_ref) (lua_State *L, int t);
-LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
+LUALIB_API पूर्णाङ्क (luaL_ref) (lua_State *L, पूर्णाङ्क t);
+LUALIB_API शून्य (luaL_unref) (lua_State *L, पूर्णाङ्क t, पूर्णाङ्क ref);
 
-LUALIB_API int (luaL_loadfilex) (lua_State *L, const char *filename,
-                                               const char *mode);
+LUALIB_API पूर्णाङ्क (luaL_loadfilex) (lua_State *L, ध्रुव वर्ण *filename,
+                                               ध्रुव वर्ण *mode);
 
-#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,NULL)
+#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,रिक्त)
 
-LUALIB_API int (luaL_loadbufferx) (lua_State *L, const char *buff, size_t sz,
-                                   const char *name, const char *mode);
-LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s);
+LUALIB_API पूर्णाङ्क (luaL_loadbufferx) (lua_State *L, ध्रुव वर्ण *buff, माप_प्रकार sz,
+                                   ध्रुव वर्ण *name, ध्रुव वर्ण *mode);
+LUALIB_API पूर्णाङ्क (luaL_loadstring) (lua_State *L, ध्रुव वर्ण *s);
 
-LUALIB_API lua_State *(luaL_newstate) (void);
+LUALIB_API lua_State *(luaL_newstate) (शून्य);
 
-LUALIB_API unsigned (luaL_makeseed) (lua_State *L);
+LUALIB_API अचिन्हित (luaL_makeseed) (lua_State *L);
 
-LUALIB_API lua_Integer (luaL_len) (lua_State *L, int idx);
+LUALIB_API lua_Integer (luaL_len) (lua_State *L, पूर्णाङ्क idx);
 
-LUALIB_API void (luaL_addgsub) (luaL_Buffer *b, const char *s,
-                                     const char *p, const char *r);
-LUALIB_API const char *(luaL_gsub) (lua_State *L, const char *s,
-                                    const char *p, const char *r);
+LUALIB_API शून्य (luaL_addgsub) (luaL_Buffer *b, ध्रुव वर्ण *s,
+                                     ध्रुव वर्ण *p, ध्रुव वर्ण *r);
+LUALIB_API ध्रुव वर्ण *(luaL_gsub) (lua_State *L, ध्रुव वर्ण *s,
+                                    ध्रुव वर्ण *p, ध्रुव वर्ण *r);
 
-LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
+LUALIB_API शून्य (luaL_setfuncs) (lua_State *L, ध्रुव luaL_Reg *l, पूर्णाङ्क nup);
 
-LUALIB_API int (luaL_getsubtable) (lua_State *L, int idx, const char *fname);
+LUALIB_API पूर्णाङ्क (luaL_getsubtable) (lua_State *L, पूर्णाङ्क idx, ध्रुव वर्ण *fname);
 
-LUALIB_API void (luaL_traceback) (lua_State *L, lua_State *L1,
-                                  const char *msg, int level);
+LUALIB_API शून्य (luaL_traceback) (lua_State *L, lua_State *L1,
+                                  ध्रुव वर्ण *संदेश, पूर्णाङ्क level);
 
-LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
-                                 lua_CFunction openf, int glb);
+LUALIB_API शून्य (luaL_requiref) (lua_State *L, ध्रुव वर्ण *modname,
+                                 lua_CFunction openf, पूर्णाङ्क glb);
 
 /*
 ** ===============================================================
@@ -130,19 +130,19 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 #define luaL_newlibtable(L,l)	\
-  lua_createtable(L, 0, sizeof(l)/sizeof((l)[0]) - 1)
+  lua_createtable(L, 0, परिमाण(l)/परिमाण((l)[0]) - 1)
 
 #define luaL_newlib(L,l)  \
   (luaL_checkversion(L), luaL_newlibtable(L,l), luaL_setfuncs(L,l,0))
 
 #define luaL_argcheck(L, cond,arg,extramsg)	\
-	((void)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
+	((शून्य)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
 
 #define luaL_argexpected(L,cond,arg,tname)	\
-	((void)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
+	((शून्य)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
 
-#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
-#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
+#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), रिक्त))
+#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), रिक्त))
 
 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 
@@ -156,7 +156,7 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 #define luaL_opt(L,f,n,d)	(lua_isnoneornil(L,(n)) ? (d) : f(L,(n)))
 
-#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,NULL)
+#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,रिक्त)
 
 
 /*
@@ -168,9 +168,9 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 
 
 /* push the value used to represent failure/error */
-#if defined(LUA_FAILISFALSE)
+#यदि defined(LUA_FAILISFALSE)
 #define luaL_pushfail(L)	lua_pushboolean(L, 0)
-#else
+#अन्यथा
 #define luaL_pushfail(L)	lua_pushnil(L)
 #endif
 
@@ -182,14 +182,14 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 ** =======================================================
 */
 
-struct luaL_Buffer {
-  char *b;  /* buffer address */
-  size_t size;  /* buffer size */
-  size_t n;  /* number of characters in buffer */
+संरचना luaL_Buffer {
+  वर्ण *b;  /* buffer address */
+  माप_प्रकार size;  /* buffer size */
+  माप_प्रकार n;  /* number of characters in buffer */
   lua_State *L;
-  union {
+  सङ्घ {
     LUAI_MAXALIGN;  /* ensure maximum alignment for buffer */
-    char b[LUAL_BUFFERSIZE];  /* initial buffer */
+    वर्ण b[LUAL_BUFFERSIZE];  /* initial buffer */
   } init;
 };
 
@@ -199,21 +199,21 @@ struct luaL_Buffer {
 
 
 #define luaL_addchar(B,c) \
-  ((void)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
+  ((शून्य)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
    ((B)->b[(B)->n++] = (c)))
 
 #define luaL_addsize(B,s)	((B)->n += (s))
 
 #define luaL_buffsub(B,s)	((B)->n -= (s))
 
-LUALIB_API void (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
-LUALIB_API char *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
-LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
-LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
+LUALIB_API शून्य (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
+LUALIB_API वर्ण *(luaL_prepbuffsize) (luaL_Buffer *B, माप_प्रकार sz);
+LUALIB_API शून्य (luaL_addlstring) (luaL_Buffer *B, ध्रुव वर्ण *s, माप_प्रकार l);
+LUALIB_API शून्य (luaL_addstring) (luaL_Buffer *B, ध्रुव वर्ण *s);
+LUALIB_API शून्य (luaL_addvalue) (luaL_Buffer *B);
+LUALIB_API शून्य (luaL_pushresult) (luaL_Buffer *B);
+LUALIB_API शून्य (luaL_pushresultsize) (luaL_Buffer *B, माप_प्रकार sz);
+LUALIB_API वर्ण *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, माप_प्रकार sz);
 
 #define luaL_prepbuffer(B)	luaL_prepbuffsize(B, LUAL_BUFFERSIZE)
 
@@ -236,8 +236,8 @@ LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 #define LUA_FILEHANDLE          "FILE*"
 
 
-typedef struct luaL_Stream {
-  FILE *f;  /* stream (NULL for incompletely created streams) */
+प्रकारनिर्देश संरचना luaL_Stream {
+  खाता *f;  /* stream (NULL for incompletely created streams) */
   lua_CFunction closef;  /* to close stream (NULL for closed streams) */
 } luaL_Stream;
 
@@ -249,17 +249,17 @@ typedef struct luaL_Stream {
 ** Compatibility with deprecated conversions
 ** =============================================================
 */
-#if defined(LUA_COMPAT_APIINTCASTS)
+#यदि defined(LUA_COMPAT_APIINTCASTS)
 
 #define luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
 #define luaL_optunsigned(L,a,d)	\
 	((lua_Unsigned)luaL_optinteger(L,a,(lua_Integer)(d)))
 
-#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
-#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+#define luaL_checkint(L,n)	((पूर्णाङ्क)luaL_checkinteger(L, (n)))
+#define luaL_optint(L,n,d)	((पूर्णाङ्क)luaL_optinteger(L, (n), (d)))
 
-#define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
-#define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
+#define luaL_checklong(L,n)	((दीर्घ)luaL_checkinteger(L, (n)))
+#define luaL_optlong(L,n,d)	((दीर्घ)luaL_optinteger(L, (n), (d)))
 
 #endif
 /* }============================================================ */

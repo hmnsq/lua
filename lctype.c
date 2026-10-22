@@ -7,25 +7,25 @@
 #define lctype_c
 #define LUA_CORE
 
-#include "lprefix.h"
+#अन्तर्भाव "lprefix.h"
 
 
-#include "lctype.h"
+#अन्तर्भाव "lctype.h"
 
-#if !LUA_USE_CTYPE	/* { */
+#यदि !LUA_USE_CTYPE	/* { */
 
-#include <limits.h>
+#अन्तर्भाव <limits.h>
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#यदि defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
 #define NONA		0x01
-#else
+#अन्यथा
 #define NONA		0x00	/* default */
 #endif
 
 
-LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
+LUAI_DDEF ध्रुव lu_byte luai_ctype_[अच_अक्षर_उच्च + 2] = {
   0x00,  /* EOZ */
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,	/* 0. */
   0x00,  0x08,  0x08,  0x08,  0x08,  0x08,  0x00,  0x00,
