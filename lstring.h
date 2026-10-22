@@ -4,19 +4,19 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lstring_h
-#define lstring_h
+#నిర్వచితం_కాకపోతే lstring_h
+#నిర్వచించు lstring_h
 
-#include "lgc.h"
-#include "lobject.h"
-#include "lstate.h"
+#అన్తర్భావ "lgc.h"
+#అన్తర్భావ "lobject.h"
+#అన్తర్భావ "lstate.h"
 
 
 /*
 ** Memory-allocation error message must be preallocated (it cannot
 ** be created after memory is exhausted)
 */
-#define MEMERRMSG       "not enough memory"
+#నిర్వచించు MEMERRMSG       "not enough memory"
 
 
 /*
@@ -25,49 +25,49 @@
 ** metamethods, as these strings must be internalized;
 ** #("function") = 8, #("__newindex") = 10.)
 */
-#if !defined(LUAI_MAXSHORTLEN)
-#define LUAI_MAXSHORTLEN	40
-#endif
+#ఒకవేళ !defined(LUAI_MAXSHORTLEN)
+#నిర్వచించు LUAI_MAXSHORTLEN	40
+#అయితే_ముగింపు
 
 
 /*
 ** Size of a short TString: Size of the header plus space for the string
 ** itself (including final '\0').
 */
-#define sizestrshr(l)  \
-	(offsetof(TString, contents) + ((l) + 1) * sizeof(char))
+#నిర్వచించు sizestrshr(l)  \
+	(offsetof(TString, contents) + ((l) + 1) * పరిమాణం(అక్షరం))
 
 
-#define luaS_newliteral(L, s)	(luaS_newlstr(L, "" s, \
-                                 (sizeof(s)/sizeof(char))-1))
+#నిర్వచించు luaS_newliteral(L, s)	(luaS_newlstr(L, "" s, \
+                                 (పరిమాణం(s)/పరిమాణం(అక్షరం))-1))
 
 
 /*
 ** test whether a string is a reserved word
 */
-#define isreserved(s)	(strisshr(s) && (s)->extra > 0)
+#నిర్వచించు isreserved(s)	(strisshr(s) && (s)->extra > 0)
 
 
 /*
 ** equality for short strings, which are always internalized
 */
-#define eqshrstr(a,b)	check_exp((a)->tt == LUA_VSHRSTR, (a) == (b))
+#నిర్వచించు eqshrstr(a,b)	check_exp((a)->tt == LUA_VSHRSTR, (a) == (b))
 
 
-LUAI_FUNC unsigned luaS_hashlongstr (TString *ts);
-LUAI_FUNC int luaS_eqstr (TString *a, TString *b);
-LUAI_FUNC void luaS_resize (lua_State *L, int newsize);
-LUAI_FUNC void luaS_clearcache (global_State *g);
-LUAI_FUNC void luaS_init (lua_State *L);
-LUAI_FUNC void luaS_remove (lua_State *L, TString *ts);
+LUAI_FUNC గుర్తులేని luaS_hashlongstr (TString *ts);
+LUAI_FUNC పూర్ణాంకం luaS_eqstr (TString *a, TString *b);
+LUAI_FUNC శూన్య luaS_resize (lua_State *L, పూర్ణాంకం newsize);
+LUAI_FUNC శూన్య luaS_clearcache (global_State *g);
+LUAI_FUNC శూన్య luaS_init (lua_State *L);
+LUAI_FUNC శూన్య luaS_remove (lua_State *L, TString *ts);
 LUAI_FUNC Udata *luaS_newudata (lua_State *L, size_t s,
-                                              unsigned short nuvalue);
-LUAI_FUNC TString *luaS_newlstr (lua_State *L, const char *str, size_t l);
-LUAI_FUNC TString *luaS_new (lua_State *L, const char *str);
+                                              గుర్తులేని పొట్టి nuvalue);
+LUAI_FUNC TString *luaS_newlstr (lua_State *L, స్థిరరాశి అక్షరం *str, size_t l);
+LUAI_FUNC TString *luaS_new (lua_State *L, స్థిరరాశి అక్షరం *str);
 LUAI_FUNC TString *luaS_createlngstrobj (lua_State *L, size_t l);
 LUAI_FUNC TString *luaS_newextlstr (lua_State *L,
-		const char *s, size_t len, lua_Alloc falloc, void *ud);
-LUAI_FUNC size_t luaS_sizelngstr (size_t len, int kind);
+		స్థిరరాశి అక్షరం *s, size_t len, lua_Alloc falloc, శూన్య *ud);
+LUAI_FUNC size_t luaS_sizelngstr (size_t len, పూర్ణాంకం రకం);
 LUAI_FUNC TString *luaS_normstr (lua_State *L, TString *ts);
 
-#endif
+#అయితే_ముగింపు

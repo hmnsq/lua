@@ -1,10 +1,10 @@
-#include "lua.h"
+#అన్తర్భావ "lua.h"
 
 
-int luaopen_lib2 (lua_State *L);
+పూర్ణాంకం luaopen_lib2 (lua_State *L);
 
-LUAMOD_API int luaopen_lib21 (lua_State *L) {
-  return luaopen_lib2(L);
+LUAMOD_API పూర్ణాంకం luaopen_lib21 (lua_State *L) {
+  తిరిగి luaopen_lib2(L);
 }
 
 

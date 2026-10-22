@@ -4,42 +4,42 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lprefix_h
-#define lprefix_h
+#నిర్వచితం_కాకపోతే lprefix_h
+#నిర్వచించు lprefix_h
 
 
 /*
 ** Allows POSIX/XSI stuff
 */
-#if !defined(LUA_USE_C89)	/* { */
+#ఒకవేళ !defined(LUA_USE_C89)	/* { */
 
-#if !defined(_XOPEN_SOURCE)
-#define _XOPEN_SOURCE           600
-#elif _XOPEN_SOURCE == 0
-#undef _XOPEN_SOURCE  /* use -D_XOPEN_SOURCE=0 to undefine it */
-#endif
+#ఒకవేళ !defined(XOPEN_ఆధారం)
+#నిర్వచించు XOPEN_ఆధారం           600
+#లేదావేళ XOPEN_ఆధారం == 0
+#నిర్వచనం_రద్దు XOPEN_ఆధారం  /* use -D_XOPEN_SOURCE=0 to undefine it */
+#అయితే_ముగింపు
 
 /*
 ** Allows manipulation of large files in gcc and some other compilers
 */
-#if !defined(LUA_32BITS) && !defined(_FILE_OFFSET_BITS)
-#define _LARGEFILE_SOURCE       1
-#define _FILE_OFFSET_BITS       64
-#endif
+#ఒకవేళ !defined(LUA_32_బిట్లు) && !defined(FILE_స్థానభ్రంశం_బిట్లు)
+#నిర్వచించు LARGEFILE_ఆధారం       1
+#నిర్వచించు FILE_స్థానభ్రంశం_బిట్లు       64
+#అయితే_ముగింపు
 
-#endif				/* } */
+#అయితే_ముగింపు				/* } */
 
 
 /*
 ** Windows stuff
 */
-#if defined(_WIN32)	/* { */
+#ఒకవేళ defined(_WIN32)	/* { */
 
-#if !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS  /* avoid warnings about ISO C functions */
-#endif
+#ఒకవేళ !defined(_CRT_SECURE_NO_WARNINGS)
+#నిర్వచించు _CRT_SECURE_NO_WARNINGS  /* avoid warnings about ISO C functions */
+#అయితే_ముగింపు
 
-#endif			/* } */
+#అయితే_ముగింపు			/* } */
 
-#endif
+#అయితే_ముగింపు
 

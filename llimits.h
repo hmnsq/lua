@@ -4,18 +4,18 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llimits_h
-#define llimits_h
+#నిర్వచితం_కాకపోతే llimits_h
+#నిర్వచించు llimits_h
 
 
-#include <limits.h>
-#include <stddef.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stddef.h>
 
 
-#include "lua.h"
+#అన్తర్భావ "lua.h"
 
 
-#define l_numbits(t)	cast_int(sizeof(t) * CHAR_BIT)
+#నిర్వచించు l_numbits(t)	cast_int(పరిమాణం(t) * CHAR_BIT)
 
 /*
 ** 'l_mem' is a signed integer big enough to count the total memory
@@ -23,50 +23,50 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
-typedef LUAI_MEM l_mem;
-typedef LUAI_UMEM lu_mem;
-#elif LUAI_IS32INT	/* }{ */
-typedef ptrdiff_t l_mem;
-typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
-typedef long l_mem;
-typedef unsigned long lu_mem;
-#endif				/* } */
+#ఒకవేళ defined(LUAI_MEM)		/* { external definitions? */
+రకనిర్వచనం LUAI_MEM l_mem;
+రకనిర్వచనం LUAI_UMEM lu_mem;
+#లేదావేళ LUAI_IS32INT	/* }{ */
+రకనిర్వచనం ptrdiff_t l_mem;
+రకనిర్వచనం size_t lu_mem;
+#లేకపోతే  /* 16-bit ints */	/* }{ */
+రకనిర్వచనం దీర్ఘ l_mem;
+రకనిర్వచనం గుర్తులేని దీర్ఘ lu_mem;
+#అయితే_ముగింపు				/* } */
 
-#define MAX_LMEM  \
+#నిర్వచించు MAX_LMEM  \
 	cast(l_mem, (cast(lu_mem, 1) << (l_numbits(l_mem) - 1)) - 1)
 
 
 /* chars used as small naturals (so that 'char' is reserved for characters) */
-typedef unsigned char lu_byte;
-typedef signed char ls_byte;
+రకనిర్వచనం గుర్తులేని అక్షరం lu_byte;
+రకనిర్వచనం గుర్తుగల అక్షరం ls_byte;
 
 
 /* Type for thread status/error codes */
-typedef lu_byte TStatus;
+రకనిర్వచనం lu_byte TStatus;
 
 /* The C API still uses 'int' for status/error codes */
-#define APIstatus(st)	cast_int(st)
+#నిర్వచించు APIstatus(st)	cast_int(st)
 
 /* maximum value for size_t */
-#define MAX_SIZET	((size_t)(~(size_t)0))
+#నిర్వచించు MAX_SIZET	((size_t)(~(size_t)0))
 
 /*
 ** Maximum size for strings and userdata visible for Lua; should be
 ** representable as a lua_Integer and as a size_t.
 */
-#define MAX_SIZE	(sizeof(size_t) < sizeof(lua_Integer) ? MAX_SIZET \
+#నిర్వచించు MAX_కొలత	(పరిమాణం(size_t) < పరిమాణం(lua_Integer) ? MAX_SIZET \
 			  : cast_sizet(LUA_MAXINTEGER))
 
 /*
 ** test whether an unsigned value is a power of 2 (or zero)
 */
-#define ispow2(x)	(((x) & ((x) - 1)) == 0)
+#నిర్వచించు ispow2(x)	(((x) & ((x) - 1)) == 0)
 
 
 /* number of chars of a literal string without the ending \0 */
-#define LL(x)   (sizeof(x)/sizeof(char) - 1)
+#నిర్వచించు LL(x)   (పరిమాణం(x)/పరిమాణం(అక్షరం) - 1)
 
 
 /*
@@ -75,157 +75,157 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#ఒకవేళ !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
-#include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
-#define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
-#define L_P2I	uintmax_t  /* use the largest available integer */
-#endif
-#else  /* C89 option */
-#define L_P2I	size_t
-#endif
+#అన్తర్భావ <stdint.h>
+#ఒకవేళ defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#నిర్వచించు L_P2I	uintptr_t
+#లేకపోతే  /* no 'intptr'? */
+#నిర్వచించు L_P2I	uintmax_t  /* use the largest available integer */
+#అయితే_ముగింపు
+#లేకపోతే  /* C89 option */
+#నిర్వచించు L_P2I	size_t
+#అయితే_ముగింపు
 
-#define point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
+#నిర్వచించు point2uint(p)	cast_uint((L_P2I)(p) & UINT_MAX)
 
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
-typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+రకనిర్వచనం LUAI_UACNUMBER l_uac_సంఖ్య;
+రకనిర్వచనం LUAI_UACINT l_uacInt;
 
 
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
-#undef NDEBUG
-#include <assert.h>
-#define lua_assert(c)           assert(c)
-#define assert_code(c)		c
-#endif
+#ఒకవేళ defined LUAI_ASSERT
+#నిర్వచనం_రద్దు NDEBUG
+#అన్తర్భావ <assert.h>
+#నిర్వచించు lua_assert(c)           ప్రతిజ్ఞా(c)
+#నిర్వచించు assert_సంకేతం(c)		c
+#అయితే_ముగింపు
 
-#if defined(lua_assert)
-#else
-#define lua_assert(c)		((void)0)
-#define assert_code(c)		((void)0)
-#endif
+#ఒకవేళ defined(lua_assert)
+#లేకపోతే
+#నిర్వచించు lua_assert(c)		((శూన్య)0)
+#నిర్వచించు assert_సంకేతం(c)		((శూన్య)0)
+#అయితే_ముగింపు
 
-#define check_exp(c,e)		(lua_assert(c), (e))
+#నిర్వచించు check_exp(c,e)		(lua_assert(c), (e))
 /* to avoid problems with conditions too long */
-#define lua_longassert(c)	assert_code((c) ? (void)0 : lua_assert(0))
+#నిర్వచించు lua_longassert(c)	assert_సంకేతం((c) ? (శూన్య)0 : lua_assert(0))
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
-#define UNUSED(x)	((void)(x))
-#endif
+#ఒకవేళ !defined(వాడని)
+#నిర్వచించు వాడని(x)	((శూన్య)(x))
+#అయితే_ముగింపు
 
 
 /* type casts (a macro highlights casts in the code) */
-#define cast(t, exp)	((t)(exp))
+#నిర్వచించు cast(t, ఘాతాంకం)	((t)(ఘాతాంకం))
 
-#define cast_void(i)	cast(void, (i))
-#define cast_voidp(i)	cast(void *, (i))
-#define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
-#define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
-#define cast_byte(i)	cast(lu_byte, (i))
-#define cast_uchar(i)	cast(unsigned char, (i))
-#define cast_char(i)	cast(char, (i))
-#define cast_charp(i)	cast(char *, (i))
-#define cast_sizet(i)	cast(size_t, (i))
-#define cast_Integer(i)	cast(lua_Integer, (i))
-#define cast_Inst(i)	cast(Instruction, (i))
+#నిర్వచించు cast_void(i)	cast(శూన్య, (i))
+#నిర్వచించు cast_voidp(i)	cast(శూన్య *, (i))
+#నిర్వచించు cast_అంకె(i)	cast(lua_సంఖ్య, (i))
+#నిర్వచించు cast_int(i)	cast(పూర్ణాంకం, (i))
+#నిర్వచించు cast_short(i)	cast(పొట్టి, (i))
+#నిర్వచించు cast_uint(i)	cast(గుర్తులేని పూర్ణాంకం, (i))
+#నిర్వచించు cast_byte(i)	cast(lu_byte, (i))
+#నిర్వచించు cast_uchar(i)	cast(గుర్తులేని అక్షరం, (i))
+#నిర్వచించు cast_char(i)	cast(అక్షరం, (i))
+#నిర్వచించు cast_charp(i)	cast(అక్షరం *, (i))
+#నిర్వచించు cast_sizet(i)	cast(size_t, (i))
+#నిర్వచించు cast_Integer(i)	cast(lua_Integer, (i))
+#నిర్వచించు cast_Inst(i)	cast(Instruction, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
-#define l_castS2U(i)	((lua_Unsigned)(i))
-#endif
+#ఒకవేళ !defined(l_castS2U)
+#నిర్వచించు l_castS2U(i)	((lua_Unsigned)(i))
+#అయితే_ముగింపు
 
 /*
 ** cast a lua_Unsigned to a signed lua_Integer; this cast is
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
-#define l_castU2S(i)	((lua_Integer)(i))
-#endif
+#ఒకవేళ !defined(l_castU2S)
+#నిర్వచించు l_castU2S(i)	((lua_Integer)(i))
+#అయితే_ముగింపు
 
 /*
 ** cast a size_t to lua_Integer: These casts are always valid for
 ** sizes of Lua objects (see MAX_SIZE)
 */
-#define cast_st2S(sz)	((lua_Integer)(sz))
+#నిర్వచించు cast_st2S(sz)	((lua_Integer)(sz))
 
 /* Cast a ptrdiff_t to size_t, when it is known that the minuend
 ** comes from the subtrahend (the base)
 */
-#define ct_diff2sz(df)	((size_t)(df))
+#నిర్వచించు ct_diff2sz(df)	((size_t)(df))
 
 /* ptrdiff_t to lua_Integer */
-#define ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
+#నిర్వచించు ct_diff2S(df)	cast_st2S(ct_diff2sz(df))
 
 /*
 ** Special type equivalent to '(void*)' for functions (to suppress some
 ** warnings when converting function pointers)
 */
-typedef void (*voidf)(void);
+రకనిర్వచనం శూన్య (*voidf)(శూన్య);
 
 /*
 ** Macro to convert pointer-to-void* to pointer-to-function. This cast
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
-#define cast_func(p) (__extension__ (voidf)(p))
-#else
-#define cast_func(p) ((voidf)(p))
-#endif
+#ఒకవేళ defined(__GNUC__)
+#నిర్వచించు cast_func(p) (__extension__ (voidf)(p))
+#లేకపోతే
+#నిర్వచించు cast_func(p) ((voidf)(p))
+#అయితే_ముగింపు
 
 
 
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#ఒకవేళ !defined(l_noret)
 
-#if defined(__GNUC__)
-#define l_noret		void __attribute__((noreturn))
-#elif defined(_MSC_VER) && _MSC_VER >= 1200
-#define l_noret		void __declspec(noreturn)
-#else
-#define l_noret		void
-#endif
+#ఒకవేళ defined(__GNUC__)
+#నిర్వచించు l_noret		శూన్య __attribute__((noreturn))
+#లేదావేళ defined(_MSC_VER) && _MSC_VER >= 1200
+#నిర్వచించు l_noret		శూన్య __declspec(noreturn)
+#లేకపోతే
+#నిర్వచించు l_noret		శూన్య
+#అయితే_ముగింపు
 
-#endif
+#అయితే_ముగింపు
 
 
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
-#define l_inline	inline
-#elif defined(__GNUC__)
-#define l_inline	__inline__
-#else
-#define l_inline	/* empty */
-#endif
+#ఒకవేళ !defined(LUA_USE_C89)
+#నిర్వచించు l_inline	అంతఃవరుస
+#లేదావేళ defined(__GNUC__)
+#నిర్వచించు l_inline	__inline__
+#లేకపోతే
+#నిర్వచించు l_inline	/*ఖాళీలు*/
+#అయితే_ముగింపు
 
-#define l_sinline	static l_inline
+#నిర్వచించు l_sinline	స్థిర l_inline
 
 
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
-typedef unsigned long l_uint32;
-#endif
+#ఒకవేళ LUAI_IS32INT
+రకనిర్వచనం గుర్తులేని పూర్ణాంకం l_uint32;
+#లేకపోతే
+రకనిర్వచనం గుర్తులేని దీర్ఘ l_uint32;
+#అయితే_ముగింపు
 
 
 /*
@@ -233,14 +233,14 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
-#define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
-#endif
+#ఒకవేళ !defined(luai_numidiv)
+#నిర్వచించు luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
+#అయితే_ముగింపు
 
 /* float division */
-#if !defined(luai_numdiv)
-#define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
-#endif
+#ఒకవేళ !defined(luai_numdiv)
+#నిర్వచించు luai_numdiv(L,a,b)      ((శూన్య)L, (a)/(b))
+#అయితే_ముగింపు
 
 /*
 ** modulo: defined as 'a - floor(a/b)*b'; the direct computation
@@ -253,31 +253,31 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
-#define luai_nummod(L,a,b,m)  \
-  { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
-#endif
+#ఒకవేళ !defined(luai_nummod)
+#నిర్వచించు luai_nummod(L,a,b,m)  \
+  { (శూన్య)L; (m) = l_mathop(fmod)(a,b); \
+    ఒకవేళ (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+#అయితే_ముగింపు
 
 /* exponentiation */
-#if !defined(luai_numpow)
-#define luai_numpow(L,a,b)  \
-  ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
-#endif
+#ఒకవేళ !defined(luai_numpow)
+#నిర్వచించు luai_numpow(L,a,b)  \
+  ((శూన్య)L, (b == 2) ? (a)*(a) : l_mathop(ఘాతం)(a,b))
+#అయితే_ముగింపు
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
-#define luai_numadd(L,a,b)      ((void)L, (a)+(b))
-#define luai_numsub(L,a,b)      ((void)L, (a)-(b))
-#define luai_nummul(L,a,b)      ((void)L, (a)*(b))
-#define luai_numunm(L,a)        ((void)L, -(a))
-#define luai_numeq(a,b)         ((a)==(b))
-#define luai_numlt(a,b)         ((a)<(b))
-#define luai_numle(a,b)         ((a)<=(b))
-#define luai_numgt(a,b)         ((a)>(b))
-#define luai_numge(a,b)         ((a)>=(b))
-#define luai_numisnan(a)        (!luai_numeq((a), (a)))
-#endif
+#ఒకవేళ !defined(luai_numadd)
+#నిర్వచించు luai_numadd(L,a,b)      ((శూన్య)L, (a)+(b))
+#నిర్వచించు luai_numsub(L,a,b)      ((శూన్య)L, (a)-(b))
+#నిర్వచించు luai_nummul(L,a,b)      ((శూన్య)L, (a)*(b))
+#నిర్వచించు luai_numunm(L,a)        ((శూన్య)L, -(a))
+#నిర్వచించు luai_numeq(a,b)         ((a)==(b))
+#నిర్వచించు luai_numlt(a,b)         ((a)<(b))
+#నిర్వచించు luai_numle(a,b)         ((a)<=(b))
+#నిర్వచించు luai_numgt(a,b)         ((a)>(b))
+#నిర్వచించు luai_numge(a,b)         ((a)>=(b))
+#నిర్వచించు luai_numisnan(a)        (!luai_numeq((a), (a)))
+#అయితే_ముగింపు
 
 
 
@@ -290,9 +290,9 @@ typedef unsigned long l_uint32;
 ** MAXINTEGER may not have one, and therefore its conversion to float
 ** may have an ill-defined value.)
 */
-#define lua_numbertointeger(n,p) \
-  ((n) >= (LUA_NUMBER)(LUA_MININTEGER) && \
-   (n) < -(LUA_NUMBER)(LUA_MININTEGER) && \
+#నిర్వచించు lua_numbertointeger(n,p) \
+  ((n) >= (LUA_సంఖ్య)(LUA_MININTEGER) && \
+   (n) < -(LUA_సంఖ్య)(LUA_MININTEGER) && \
       (*(p) = (LUA_INTEGER)(n), 1))
 
 
@@ -310,24 +310,24 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#ఒకవేళ !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#ఒకవేళ defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
-#define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
-#define LUAI_FUNC	extern
-#endif
+#నిర్వచించు LUAI_FUNC	__attribute__((visibility("internal"))) బాహ్య
+#లేకపోతే
+#నిర్వచించు LUAI_FUNC	బాహ్య
+#అయితే_ముగింపు
 
-#define LUAI_DDEC(dec)	LUAI_FUNC dec
-#define LUAI_DDEF	/* empty */
+#నిర్వచించు LUAI_DDEC(dec)	LUAI_FUNC dec
+#నిర్వచించు LUAI_DDEF	/*ఖాళీలు*/
 
-#endif
+#అయితే_ముగింపు
 
 
 /* Give these macros simpler names for internal use */
-#define l_likely(x)	luai_likely(x)
-#define l_unlikely(x)	luai_unlikely(x)
+#నిర్వచించు l_likely(x)	luai_likely(x)
+#నిర్వచించు l_unlikely(x)	luai_unlikely(x)
 
 /*
 ** {==================================================================
@@ -336,22 +336,22 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
-#endif
+#ఒకవేళ !defined(lua_writestring)
+#నిర్వచించు lua_writestring(s,l)   fwrite((s), పరిమాణం(అక్షరం), (l), stdout)
+#అయితే_ముగింపు
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
-#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
-#endif
+#ఒకవేళ !defined(lua_writeline)
+#నిర్వచించు lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
+#అయితే_ముగింపు
 
 /* print an error message */
-#if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
+#ఒకవేళ !defined(lua_writestringerror)
+#నిర్వచించు lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
+#అయితే_ముగింపు
 
 /* }================================================================== */
 
-#endif
+#అయితే_ముగింపు
 

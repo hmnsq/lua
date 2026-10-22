@@ -4,15 +4,15 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ltable_h
-#define ltable_h
+#నిర్వచితం_కాకపోతే ltable_h
+#నిర్వచించు ltable_h
 
-#include "lobject.h"
+#అన్తర్భావ "lobject.h"
 
 
-#define gnode(t,i)	(&(t)->node[i])
-#define gval(n)		(&(n)->i_val)
-#define gnext(n)	((n)->u.next)
+#నిర్వచించు gnode(t,i)	(&(t)->కణుపు[i])
+#నిర్వచించు gval(n)		(&(n)->i_val)
+#నిర్వచించు gnext(n)	((n)->u.తదుపరి)
 
 
 /*
@@ -20,7 +20,7 @@
 ** may have any of these metamethods. (First access that fails after the
 ** clearing will set the bit again.)
 */
-#define invalidateTMcache(t)	((t)->flags &= cast_byte(~maskflags))
+#నిర్వచించు invalidateTMcache(t)	((t)->flags &= cast_byte(~maskflags))
 
 
 /*
@@ -28,47 +28,47 @@
 ** for its hash part.
 */
 
-#define BITDUMMY		(1 << 6)
-#define NOTBITDUMMY		cast_byte(~BITDUMMY)
-#define isdummy(t)		((t)->flags & BITDUMMY)
+#నిర్వచించు BITDUMMY		(1 << 6)
+#నిర్వచించు NOTBITDUMMY		cast_byte(~BITDUMMY)
+#నిర్వచించు isdummy(t)		((t)->flags & BITDUMMY)
 
-#define setnodummy(t)		((t)->flags &= NOTBITDUMMY)
-#define setdummy(t)		((t)->flags |= BITDUMMY)
+#నిర్వచించు setnodummy(t)		((t)->flags &= NOTBITDUMMY)
+#నిర్వచించు setdummy(t)		((t)->flags |= BITDUMMY)
 
 
 
 /* allocated size for hash nodes */
-#define allocsizenode(t)	(isdummy(t) ? 0 : sizenode(t))
+#నిర్వచించు allocsizenode(t)	(isdummy(t) ? 0 : sizenode(t))
 
 
 /* returns the Node, given the value of a table entry */
-#define nodefromval(v)	cast(Node *, (v))
+#నిర్వచించు nodefromval(v)	cast(కణుపు_2 *, (v))
 
 
 
-#define luaH_fastgeti(t,k,res,tag) \
-  { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
-      tag = *getArrTag(h, u); \
-      if (!tagisempty(tag)) { farr2val(h, u, tag, res); }} \
-    else { tag = luaH_getint(h, (k), res); }}
+#నిర్వచించు luaH_fastgeti(t,k,res,ట్యాగ్) \
+  { పట్టిక *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
+    ఒకవేళ ((u < h->asize)) { \
+      ట్యాగ్ = *get_Arr_ట్యాగ్(h, u); \
+      ఒకవేళ (!tagisempty(ట్యాగ్)) { farr2val(h, u, ట్యాగ్, res); }} \
+    లేకపోతే { ట్యాగ్ = luaH_getint(h, (k), res); }}
 
 
-#define luaH_fastseti(t,k,val,hres) \
-  { Table *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
-    if ((u < h->asize)) { \
-      lu_byte *tag = getArrTag(h, u); \
-      if (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*tag)) \
-        { fval2arr(h, u, tag, val); hres = HOK; } \
-      else hres = ~cast_int(u); } \
-    else { hres = luaH_psetint(h, k, val); }}
+#నిర్వచించు luaH_fastseti(t,k,val,hres) \
+  { పట్టిక *h = t; lua_Unsigned u = l_castS2U(k) - 1u; \
+    ఒకవేళ ((u < h->asize)) { \
+      lu_byte *ట్యాగ్ = get_Arr_ట్యాగ్(h, u); \
+      ఒకవేళ (checknoTM(h->metatable, TM_NEWINDEX) || !tagisempty(*ట్యాగ్)) \
+        { fval2arr(h, u, ట్యాగ్, val); hres = HOK; } \
+      లేకపోతే hres = ~cast_int(u); } \
+    లేకపోతే { hres = luaH_psetint(h, k, val); }}
 
 
 /* results from pset */
-#define HOK		0
-#define HNOTFOUND	1
-#define HNOTATABLE	2
-#define HFIRSTNODE	3
+#నిర్వచించు HOK		0
+#నిర్వచించు HNOTFOUND	1
+#నిర్వచించు HNOTATABLE	2
+#నిర్వచించు HFIRSTNODE	3
 
 /*
 ** 'luaH_get*' operations set 'res', unless the value is absent, and
@@ -110,10 +110,10 @@
 */
 
 /* Computes the address of the tag for the abstract C-index 'k' */
-#define getArrTag(t,k)	(cast(lu_byte*, (t)->array) + sizeof(unsigned) + (k))
+#నిర్వచించు get_Arr_ట్యాగ్(t,k)	(cast(lu_byte*, (t)->array) + పరిమాణం(గుర్తులేని) + (k))
 
 /* Computes the address of the value for the abstract C-index 'k' */
-#define getArrVal(t,k)	((t)->array - 1 - (k))
+#నిర్వచించు getArrVal(t,k)	((t)->array - 1 - (k))
 
 
 /*
@@ -121,17 +121,17 @@
 ** see luaH_getn. It is stored there to avoid wasting space in
 ** the structure Table for tables with no array part.
 */
-#define lenhint(t)	cast(unsigned*, (t)->array)
+#నిర్వచించు lenhint(t)	cast(గుర్తులేని*, (t)->array)
 
 
 /*
 ** Move TValues to/from arrays, using C indices
 */
-#define arr2obj(h,k,val)  \
-  ((val)->tt_ = *getArrTag(h,(k)), (val)->value_ = *getArrVal(h,(k)))
+#నిర్వచించు arr2obj(h,k,val)  \
+  ((val)->tt_ = *get_Arr_ట్యాగ్(h,(k)), (val)->విలువ_3 = *getArrVal(h,(k)))
 
-#define obj2arr(h,k,val)  \
-  (*getArrTag(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+#నిర్వచించు obj2arr(h,k,val)  \
+  (*get_Arr_ట్యాగ్(h,(k)) = (val)->tt_, *getArrVal(h,(k)) = (val)->విలువ_3)
 
 
 /*
@@ -139,46 +139,46 @@
 ** following macros also move TValues to/from arrays, but receive the
 ** precomputed tag value or address as an extra argument.
 */
-#define farr2val(h,k,tag,res)  \
-  ((res)->tt_ = tag, (res)->value_ = *getArrVal(h,(k)))
+#నిర్వచించు farr2val(h,k,ట్యాగ్,res)  \
+  ((res)->tt_ = ట్యాగ్, (res)->విలువ_3 = *getArrVal(h,(k)))
 
-#define fval2arr(h,k,tag,val)  \
-  (*tag = (val)->tt_, *getArrVal(h,(k)) = (val)->value_)
+#నిర్వచించు fval2arr(h,k,ట్యాగ్,val)  \
+  (*ట్యాగ్ = (val)->tt_, *getArrVal(h,(k)) = (val)->విలువ_3)
 
 
-LUAI_FUNC lu_byte luaH_get (Table *t, const TValue *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getshortstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getstr (Table *t, TString *key, TValue *res);
-LUAI_FUNC lu_byte luaH_getint (Table *t, lua_Integer key, TValue *res);
+LUAI_FUNC lu_byte luaH_get (పట్టిక *t, స్థిరరాశి TValue *కీలకం, TValue *res);
+LUAI_FUNC lu_byte luaH_getshortstr (పట్టిక *t, TString *కీలకం, TValue *res);
+LUAI_FUNC lu_byte luaH_getstr (పట్టిక *t, TString *కీలకం, TValue *res);
+LUAI_FUNC lu_byte luaH_getint (పట్టిక *t, lua_Integer కీలకం, TValue *res);
 
 /* Special get for metamethods */
-LUAI_FUNC const TValue *luaH_Hgetshortstr (Table *t, TString *key);
+LUAI_FUNC స్థిరరాశి TValue *luaH_Hgetshortstr (పట్టిక *t, TString *కీలకం);
 
-LUAI_FUNC int luaH_psetint (Table *t, lua_Integer key, TValue *val);
-LUAI_FUNC int luaH_psetshortstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_psetstr (Table *t, TString *key, TValue *val);
-LUAI_FUNC int luaH_pset (Table *t, const TValue *key, TValue *val);
+LUAI_FUNC పూర్ణాంకం luaH_psetint (పట్టిక *t, lua_Integer కీలకం, TValue *val);
+LUAI_FUNC పూర్ణాంకం luaH_psetshortstr (పట్టిక *t, TString *కీలకం, TValue *val);
+LUAI_FUNC పూర్ణాంకం luaH_psetstr (పట్టిక *t, TString *కీలకం, TValue *val);
+LUAI_FUNC పూర్ణాంకం luaH_pset (పట్టిక *t, స్థిరరాశి TValue *కీలకం, TValue *val);
 
-LUAI_FUNC void luaH_setint (lua_State *L, Table *t, lua_Integer key,
-                                                    TValue *value);
-LUAI_FUNC void luaH_set (lua_State *L, Table *t, const TValue *key,
-                                                 TValue *value);
+LUAI_FUNC శూన్య luaH_setint (lua_State *L, పట్టిక *t, lua_Integer కీలకం,
+                                                    TValue *విలువ);
+LUAI_FUNC శూన్య lua_H_సమితి (lua_State *L, పట్టిక *t, స్థిరరాశి TValue *కీలకం,
+                                                 TValue *విలువ);
 
-LUAI_FUNC void luaH_finishset (lua_State *L, Table *t, const TValue *key,
-                                              TValue *value, int hres);
-LUAI_FUNC Table *luaH_new (lua_State *L);
-LUAI_FUNC void luaH_resize (lua_State *L, Table *t, unsigned nasize,
-                                                    unsigned nhsize);
-LUAI_FUNC void luaH_resizearray (lua_State *L, Table *t, unsigned nasize);
-LUAI_FUNC lu_mem luaH_size (Table *t);
-LUAI_FUNC void luaH_free (lua_State *L, Table *t);
-LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key);
-LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, Table *t);
-
-
-#if defined(LUA_DEBUG)
-LUAI_FUNC Node *luaH_mainposition (const Table *t, const TValue *key);
-#endif
+LUAI_FUNC శూన్య luaH_finishset (lua_State *L, పట్టిక *t, స్థిరరాశి TValue *కీలకం,
+                                              TValue *విలువ, పూర్ణాంకం hres);
+LUAI_FUNC పట్టిక *luaH_new (lua_State *L);
+LUAI_FUNC శూన్య luaH_resize (lua_State *L, పట్టిక *t, గుర్తులేని nasize,
+                                                    గుర్తులేని nhsize);
+LUAI_FUNC శూన్య luaH_resizearray (lua_State *L, పట్టిక *t, గుర్తులేని nasize);
+LUAI_FUNC lu_mem lua_H_కొలత (పట్టిక *t);
+LUAI_FUNC శూన్య luaH_free (lua_State *L, పట్టిక *t);
+LUAI_FUNC పూర్ణాంకం lua_H_తదుపరి (lua_State *L, పట్టిక *t, StkId కీలకం);
+LUAI_FUNC lua_Unsigned luaH_getn (lua_State *L, పట్టిక *t);
 
 
-#endif
+#ఒకవేళ defined(LUA_DEBUG)
+LUAI_FUNC కణుపు_2 *luaH_mainposition (స్థిరరాశి పట్టిక *t, స్థిరరాశి TValue *కీలకం);
+#అయితే_ముగింపు
+
+
+#అయితే_ముగింపు

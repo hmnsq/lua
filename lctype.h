@@ -4,10 +4,10 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lctype_h
-#define lctype_h
+#నిర్వచితం_కాకపోతే lctype_h
+#నిర్వచించు lctype_h
 
-#include "lua.h"
+#అన్తర్భావ "lua.h"
 
 
 /*
@@ -16,50 +16,50 @@
 ** optimized for the specific needs of Lua.
 */
 
-#if !defined(LUA_USE_CTYPE)
+#ఒకవేళ !defined(LUA_USE_CTYPE)
 
-#if 'A' == 65 && '0' == 48
+#ఒకవేళ 'A' == 65 && '0' == 48
 /* ASCII case: can use its own tables; faster and fixed */
-#define LUA_USE_CTYPE	0
-#else
+#నిర్వచించు LUA_USE_CTYPE	0
+#లేకపోతే
 /* must use standard C ctype */
-#define LUA_USE_CTYPE	1
-#endif
+#నిర్వచించు LUA_USE_CTYPE	1
+#అయితే_ముగింపు
 
-#endif
-
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
-
-#include "llimits.h"
+#అయితే_ముగింపు
 
 
-#define ALPHABIT	0
-#define DIGITBIT	1
-#define PRINTBIT	2
-#define SPACEBIT	3
-#define XDIGITBIT	4
+#ఒకవేళ !LUA_USE_CTYPE	/* { */
+
+#అన్తర్భావ <limits.h>
+
+#అన్తర్భావ "llimits.h"
 
 
-#define MASK(B)		(1 << (B))
+#నిర్వచించు ALPHABIT	0
+#నిర్వచించు DIGITBIT	1
+#నిర్వచించు PRINTBIT	2
+#నిర్వచించు SPACEBIT	3
+#నిర్వచించు XDIGITBIT	4
+
+
+#నిర్వచించు ముసుగు(B)		(1 << (B))
 
 
 /*
 ** add 1 to char to allow index -1 (EOZ)
 */
-#define testprop(c,p)	(luai_ctype_[(c)+1] & (p))
+#నిర్వచించు testprop(c,p)	(luai_ctype_[(c)+1] & (p))
 
 /*
 ** 'lalpha' (Lua alphabetic) and 'lalnum' (Lua alphanumeric) both include '_'
 */
-#define lislalpha(c)	testprop(c, MASK(ALPHABIT))
-#define lislalnum(c)	testprop(c, (MASK(ALPHABIT) | MASK(DIGITBIT)))
-#define lisdigit(c)	testprop(c, MASK(DIGITBIT))
-#define lisspace(c)	testprop(c, MASK(SPACEBIT))
-#define lisprint(c)	testprop(c, MASK(PRINTBIT))
-#define lisxdigit(c)	testprop(c, MASK(XDIGITBIT))
+#నిర్వచించు lislalpha(c)	testprop(c, ముసుగు(ALPHABIT))
+#నిర్వచించు lislalnum(c)	testprop(c, (ముసుగు(ALPHABIT) | ముసుగు(DIGITBIT)))
+#నిర్వచించు lisdigit(c)	testprop(c, ముసుగు(DIGITBIT))
+#నిర్వచించు lisspace(c)	testprop(c, ముసుగు(SPACEBIT))
+#నిర్వచించు lisprint(c)	testprop(c, ముసుగు(PRINTBIT))
+#నిర్వచించు lisxdigit(c)	testprop(c, ముసుగు(XDIGITBIT))
 
 
 /*
@@ -68,34 +68,34 @@
 ** the character either is an upper-case letter or is unchanged by
 ** the transformation, which holds for lower-case letters and '.'.)
 */
-#define ltolower(c)  \
+#నిర్వచించు ltolower(c)  \
   check_exp(('A' <= (c) && (c) <= 'Z') || (c) == ((c) | ('A' ^ 'a')),  \
             (c) | ('A' ^ 'a'))
 
 
 /* one entry for each character and for -1 (EOZ) */
-LUAI_DDEC(const lu_byte luai_ctype_[UCHAR_MAX + 2];)
+LUAI_DDEC(స్థిరరాశి lu_byte luai_ctype_[UCHAR_MAX + 2];)
 
 
-#else			/* }{ */
+#లేకపోతే			/* }{ */
 
 /*
 ** use standard C ctypes
 */
 
-#include <ctype.h>
+#అన్తర్భావ <ctype.h>
 
 
-#define lislalpha(c)	(isalpha(c) || (c) == '_')
-#define lislalnum(c)	(isalnum(c) || (c) == '_')
-#define lisdigit(c)	(isdigit(c))
-#define lisspace(c)	(isspace(c))
-#define lisprint(c)	(isprint(c))
-#define lisxdigit(c)	(isxdigit(c))
+#నిర్వచించు lislalpha(c)	(అక్షరమా(c) || (c) == '_')
+#నిర్వచించు lislalnum(c)	(అక్షరమా_అంకెనా(c) || (c) == '_')
+#నిర్వచించు lisdigit(c)	(అంకెనా(c))
+#నిర్వచించు lisspace(c)	(ఖాళీనా(c))
+#నిర్వచించు lisprint(c)	(isprint(c))
+#నిర్వచించు lisxdigit(c)	(isxdigit(c))
 
-#define ltolower(c)	(tolower(c))
+#నిర్వచించు ltolower(c)	(tolower(c))
 
-#endif			/* } */
+#అయితే_ముగింపు			/* } */
 
-#endif
+#అయితే_ముగింపు
 

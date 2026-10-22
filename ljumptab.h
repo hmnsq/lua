@@ -5,25 +5,25 @@
 */
 
 
-#undef vmdispatch
-#undef vmcase
-#undef vmbreak
+#నిర్వచనం_రద్దు vmdispatch
+#నిర్వచనం_రద్దు vmcase
+#నిర్వచనం_రద్దు vmbreak
 
-#define vmdispatch(x)     goto *disptab[x];
+#నిర్వచించు vmdispatch(x)     వెళ్ళు *disptab[x];
 
-#define vmcase(l)     L_##l:
+#నిర్వచించు vmcase(l)     L_##l:
 
-#define vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
+#నిర్వచించు vmbreak		vmfetch(); vmdispatch(GET_OPCODE(i));
 
 
-static const void *const disptab[NUM_OPCODES] = {
+స్థిర స్థిరరాశి శూన్య *స్థిరరాశి disptab[అంకె_OPCODES] = {
 
-#if 0
+#ఒకవేళ 0
 ** you can update the following list with this command:
 **
 **  sed -n '/^OP_/!d; s/OP_/\&\&L_OP_/ ; s/,.*/,/ ; s/\/.*// ; p'  lopcodes.h
 **
-#endif
+#అయితే_ముగింపు
 
 &&L_OP_MOVE,
 &&L_OP_LOADI,
@@ -59,7 +59,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_BXORK,
 &&L_OP_SHLI,
 &&L_OP_SHRI,
-&&L_OP_ADD,
+&&L_OP_కూడు,
 &&L_OP_SUB,
 &&L_OP_MUL,
 &&L_OP_MOD,
@@ -104,7 +104,7 @@ static const void *const disptab[NUM_OPCODES] = {
 &&L_OP_TFORCALL,
 &&L_OP_TFORLOOP,
 &&L_OP_SETLIST,
-&&L_OP_CLOSURE,
+&&L_OP_సంవృతం,
 &&L_OP_VARARG,
 &&L_OP_GETVARG,
 &&L_OP_ERRNNIL,

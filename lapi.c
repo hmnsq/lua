@@ -4,35 +4,35 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lapi_c
-#define LUA_CORE
+#నిర్వచించు lapi_c
+#నిర్వచించు LUA_CORE
 
-#include "lprefix.h"
-
-
-#include <limits.h>
-#include <stdarg.h>
-#include <string.h>
-
-#include "lua.h"
-
-#include "lapi.h"
-#include "ldebug.h"
-#include "ldo.h"
-#include "lfunc.h"
-#include "lgc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lstate.h"
-#include "lstring.h"
-#include "ltable.h"
-#include "ltm.h"
-#include "lundump.h"
-#include "lvm.h"
+#అన్తర్భావ "lprefix.h"
 
 
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <string.h>
 
-const char lua_ident[] =
+#అన్తర్భావ "lua.h"
+
+#అన్తర్భావ "lapi.h"
+#అన్తర్భావ "ldebug.h"
+#అన్తర్భావ "ldo.h"
+#అన్తర్భావ "lfunc.h"
+#అన్తర్భావ "lgc.h"
+#అన్తర్భావ "lmem.h"
+#అన్తర్భావ "lobject.h"
+#అన్తర్భావ "lstate.h"
+#అన్తర్భావ "lstring.h"
+#అన్తర్భావ "ltable.h"
+#అన్తర్భావ "ltm.h"
+#అన్తర్భావ "lundump.h"
+#అన్తర్భావ "lvm.h"
+
+
+
+స్థిరరాశి అక్షరం lua_ident[] =
   "$LuaVersion: " LUA_COPYRIGHT " $"
   "$LuaAuthors: " LUA_AUTHORS " $";
 
@@ -41,46 +41,46 @@ const char lua_ident[] =
 /*
 ** Test for a valid index (one that is not the 'nilvalue').
 */
-#define isvalid(L, o)	((o) != &G(L)->nilvalue)
+#నిర్వచించు isvalid(L, o)	((o) != &G(L)->nilvalue)
 
 
 /* test for pseudo index */
-#define ispseudo(i)		((i) <= LUA_REGISTRYINDEX)
+#నిర్వచించు ispseudo(i)		((i) <= LUA_REGISTRYINDEX)
 
 /* test for upvalue */
-#define isupvalue(i)		((i) < LUA_REGISTRYINDEX)
+#నిర్వచించు isupvalue(i)		((i) < LUA_REGISTRYINDEX)
 
 
 /*
 ** Convert an acceptable index to a pointer to its respective value.
 ** Non-valid indices return the special nil value 'G(L)->nilvalue'.
 */
-static TValue *index2value (lua_State *L, int idx) {
+స్థిర TValue *index2value (lua_State *L, పూర్ణాంకం idx) {
   CallInfo *ci = L->ci;
-  if (idx > 0) {
+  ఒకవేళ (idx > 0) {
     StkId o = ci->func.p + idx;
-    api_check(L, idx <= ci->top.p - (ci->func.p + 1), "unacceptable index");
-    if (o >= L->top.p) return &G(L)->nilvalue;
-    else return s2v(o);
+    api_check(L, idx <= ci->శిఖరం.p - (ci->func.p + 1), "unacceptable index");
+    ఒకవేళ (o >= L->శిఖరం.p) తిరిగి &G(L)->nilvalue;
+    లేకపోతే తిరిగి s2v(o);
   }
-  else if (!ispseudo(idx)) {  /* negative index */
-    api_check(L, idx != 0 && -idx <= L->top.p - (ci->func.p + 1),
+  లేకపోతే ఒకవేళ (!ispseudo(idx)) {  /* negative index */
+    api_check(L, idx != 0 && -idx <= L->శిఖరం.p - (ci->func.p + 1),
                  "invalid index");
-    return s2v(L->top.p + idx);
+    తిరిగి s2v(L->శిఖరం.p + idx);
   }
-  else if (idx == LUA_REGISTRYINDEX)
-    return &G(L)->l_registry;
-  else {  /* upvalues */
+  లేకపోతే ఒకవేళ (idx == LUA_REGISTRYINDEX)
+    తిరిగి &G(L)->l_registry;
+  లేకపోతే {  /* upvalues */
     idx = LUA_REGISTRYINDEX - idx;
     api_check(L, idx <= MAXUPVAL + 1, "upvalue index too large");
-    if (ttisCclosure(s2v(ci->func.p))) {  /* C closure? */
+    ఒకవేళ (ttisCclosure(s2v(ci->func.p))) {  /* C closure? */
       CClosure *func = clCvalue(s2v(ci->func.p));
-      return (idx <= func->nupvalues) ? &func->upvalue[idx-1]
+      తిరిగి (idx <= func->nupvalues) ? &func->upvalue[idx-1]
                                       : &G(L)->nilvalue;
     }
-    else {  /* light C function or Lua function (through a hook)?) */
+    లేకపోతే {  /* light C function or Lua function (through a hook)?) */
       api_check(L, ttislcf(s2v(ci->func.p)), "caller not a C function");
-      return &G(L)->nilvalue;  /* no upvalues */
+      తిరిగి &G(L)->nilvalue;  /* no upvalues */
     }
   }
 }
@@ -90,68 +90,68 @@ static TValue *index2value (lua_State *L, int idx) {
 /*
 ** Convert a valid actual index (not a pseudo-index) to its address.
 */
-static StkId index2stack (lua_State *L, int idx) {
+స్థిర StkId index2stack (lua_State *L, పూర్ణాంకం idx) {
   CallInfo *ci = L->ci;
-  if (idx > 0) {
+  ఒకవేళ (idx > 0) {
     StkId o = ci->func.p + idx;
-    api_check(L, o < L->top.p, "invalid index");
-    return o;
+    api_check(L, o < L->శిఖరం.p, "invalid index");
+    తిరిగి o;
   }
-  else {    /* non-positive index */
-    api_check(L, idx != 0 && -idx <= L->top.p - (ci->func.p + 1),
+  లేకపోతే {    /* non-positive index */
+    api_check(L, idx != 0 && -idx <= L->శిఖరం.p - (ci->func.p + 1),
                  "invalid index");
     api_check(L, !ispseudo(idx), "invalid index");
-    return L->top.p + idx;
+    తిరిగి L->శిఖరం.p + idx;
   }
 }
 
 
-LUA_API int lua_checkstack (lua_State *L, int n) {
-  int res;
+LUA_API పూర్ణాంకం lua_checkstack (lua_State *L, పూర్ణాంకం n) {
+  పూర్ణాంకం res;
   CallInfo *ci;
-  lua_lock(L);
+  lua_తాళం(L);
   ci = L->ci;
   api_check(L, n >= 0, "negative 'n'");
-  if (L->stack_last.p - L->top.p > n)  /* stack large enough? */
+  ఒకవేళ (L->దొంతర_చివరి.p - L->శిఖరం.p > n)  /* stack large enough? */
     res = 1;  /* yes; check is OK */
-  else  /* need to grow stack */
+  లేకపోతే  /* need to grow stack */
     res = luaD_growstack(L, n, 0);
-  if (res && ci->top.p < L->top.p + n)
-    ci->top.p = L->top.p + n;  /* adjust frame top */
+  ఒకవేళ (res && ci->శిఖరం.p < L->శిఖరం.p + n)
+    ci->శిఖరం.p = L->శిఖరం.p + n;  /* adjust frame top */
   lua_unlock(L);
-  return res;
+  తిరిగి res;
 }
 
 
-LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
-  int i;
-  if (from == to) return;
-  lua_lock(to);
+LUA_API శూన్య lua_xmove (lua_State *from, lua_State *గమ్యం, పూర్ణాంకం n) {
+  పూర్ణాంకం i;
+  ఒకవేళ (from == గమ్యం) తిరిగి;
+  lua_తాళం(గమ్యం);
   api_checkpop(from, n);
-  api_check(from, G(from) == G(to), "moving among independent states");
-  api_check(from, to->ci->top.p - to->top.p >= n, "stack overflow");
-  from->top.p -= n;
-  for (i = 0; i < n; i++) {
-    setobjs2s(to, to->top.p, from->top.p + i);
-    to->top.p++;  /* stack already checked by previous 'api_check' */
+  api_check(from, G(from) == G(గమ్యం), "moving among independent states");
+  api_check(from, గమ్యం->ci->శిఖరం.p - గమ్యం->శిఖరం.p >= n, "stack overflow");
+  from->శిఖరం.p -= n;
+  కొరకు (i = 0; i < n; i++) {
+    setobjs2s(గమ్యం, గమ్యం->శిఖరం.p, from->శిఖరం.p + i);
+    గమ్యం->శిఖరం.p++;  /* stack already checked by previous 'api_check' */
   }
-  lua_unlock(to);
+  lua_unlock(గమ్యం);
 }
 
 
 LUA_API lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf) {
   lua_CFunction old;
-  lua_lock(L);
+  lua_తాళం(L);
   old = G(L)->panic;
   G(L)->panic = panicf;
   lua_unlock(L);
-  return old;
+  తిరిగి old;
 }
 
 
-LUA_API lua_Number lua_version (lua_State *L) {
-  UNUSED(L);
-  return LUA_VERSION_NUM;
+LUA_API lua_సంఖ్య lua_సంస్కరణ (lua_State *L) {
+  వాడని(L);
+  తిరిగి LUA_సంస్కరణ_అంకె;
 }
 
 
@@ -164,48 +164,48 @@ LUA_API lua_Number lua_version (lua_State *L) {
 /*
 ** convert an acceptable stack index into an absolute index
 */
-LUA_API int lua_absindex (lua_State *L, int idx) {
-  return (idx > 0 || ispseudo(idx))
+LUA_API పూర్ణాంకం lua_absindex (lua_State *L, పూర్ణాంకం idx) {
+  తిరిగి (idx > 0 || ispseudo(idx))
          ? idx
-         : cast_int(L->top.p - L->ci->func.p) + idx;
+         : cast_int(L->శిఖరం.p - L->ci->func.p) + idx;
 }
 
 
-LUA_API int lua_gettop (lua_State *L) {
-  return cast_int(L->top.p - (L->ci->func.p + 1));
+LUA_API పూర్ణాంకం lua_gettop (lua_State *L) {
+  తిరిగి cast_int(L->శిఖరం.p - (L->ci->func.p + 1));
 }
 
 
-LUA_API void lua_settop (lua_State *L, int idx) {
+LUA_API శూన్య lua_settop (lua_State *L, పూర్ణాంకం idx) {
   CallInfo *ci;
   StkId func, newtop;
   ptrdiff_t diff;  /* difference for new top */
-  lua_lock(L);
+  lua_తాళం(L);
   ci = L->ci;
   func = ci->func.p;
-  if (idx >= 0) {
-    api_check(L, idx <= ci->top.p - (func + 1), "new top too large");
-    diff = ((func + 1) + idx) - L->top.p;
-    for (; diff > 0; diff--)
-      setnilvalue2s(L->top.p++);  /* clear new slots */
+  ఒకవేళ (idx >= 0) {
+    api_check(L, idx <= ci->శిఖరం.p - (func + 1), "new top too large");
+    diff = ((func + 1) + idx) - L->శిఖరం.p;
+    కొరకు (; diff > 0; diff--)
+      setnilvalue2s(L->శిఖరం.p++);  /* clear new slots */
   }
-  else {
-    api_check(L, -(idx+1) <= (L->top.p - (func + 1)), "invalid new top");
+  లేకపోతే {
+    api_check(L, -(idx+1) <= (L->శిఖరం.p - (func + 1)), "invalid new top");
     diff = idx + 1;  /* will "subtract" index (as it is negative) */
   }
-  newtop = L->top.p + diff;
-  if (diff < 0 && L->tbclist.p >= newtop) {
+  newtop = L->శిఖరం.p + diff;
+  ఒకవేళ (diff < 0 && L->tbclist.p >= newtop) {
     lua_assert(ci->callstatus & CIST_TBC);
     newtop = luaF_close(L, newtop, CLOSEKTOP, 0);
   }
-  L->top.p = newtop;  /* correct top only after closing any upvalue */
+  L->శిఖరం.p = newtop;  /* correct top only after closing any upvalue */
   lua_unlock(L);
 }
 
 
-LUA_API void lua_closeslot (lua_State *L, int idx) {
+LUA_API శూన్య lua_closeslot (lua_State *L, పూర్ణాంకం idx) {
   StkId level;
-  lua_lock(L);
+  lua_తాళం(L);
   level = index2stack(L, idx);
   api_check(L, (L->ci->callstatus & CIST_TBC) && (L->tbclist.p == level),
      "no variable to close at given level");
@@ -221,12 +221,12 @@ LUA_API void lua_closeslot (lua_State *L, int idx) {
 ** Note that we move(copy) only the value inside the stack.
 ** (We do not move additional fields that may exist.)
 */
-static void reverse (lua_State *L, StkId from, StkId to) {
-  for (; from < to; from++, to--) {
-    TValue temp;
-    setobj(L, &temp, s2v(from));
-    setobjs2s(L, from, to);
-    setobj2s(L, to, &temp);
+స్థిర శూన్య తిరగేయి (lua_State *L, StkId from, StkId గమ్యం) {
+  కొరకు (; from < గమ్యం; from++, గమ్యం--) {
+    TValue తాత్కాలిక;
+    setobj(L, &తాత్కాలిక, s2v(from));
+    setobjs2s(L, from, గమ్యం);
+    setobj2s(L, గమ్యం, &తాత్కాలిక);
   }
 }
 
@@ -235,29 +235,29 @@ static void reverse (lua_State *L, StkId from, StkId to) {
 ** Let x = AB, where A is a prefix of length 'n'. Then,
 ** rotate x n == BA. But BA == (A^r . B^r)^r.
 */
-LUA_API void lua_rotate (lua_State *L, int idx, int n) {
+LUA_API శూన్య lua_rotate (lua_State *L, పూర్ణాంకం idx, పూర్ణాంకం n) {
   StkId p, t, m;
-  lua_lock(L);
-  t = L->top.p - 1;  /* end of stack segment being rotated */
+  lua_తాళం(L);
+  t = L->శిఖరం.p - 1;  /* end of stack segment being rotated */
   p = index2stack(L, idx);  /* start of segment */
   api_check(L, L->tbclist.p < p, "moving a to-be-closed slot");
   api_check(L, (n >= 0 ? n : -n) <= (t - p + 1), "invalid 'n'");
   m = (n >= 0 ? t - n : p - n - 1);  /* end of prefix */
-  reverse(L, p, m);  /* reverse the prefix with length 'n' */
-  reverse(L, m + 1, t);  /* reverse the suffix */
-  reverse(L, p, t);  /* reverse the entire segment */
+  తిరగేయి(L, p, m);  /* reverse the prefix with length 'n' */
+  తిరగేయి(L, m + 1, t);  /* reverse the suffix */
+  తిరగేయి(L, p, t);  /* reverse the entire segment */
   lua_unlock(L);
 }
 
 
-LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
-  TValue *fr, *to;
-  lua_lock(L);
+LUA_API శూన్య lua_copy (lua_State *L, పూర్ణాంకం fromidx, పూర్ణాంకం toidx) {
+  TValue *fr, *గమ్యం;
+  lua_తాళం(L);
   fr = index2value(L, fromidx);
-  to = index2value(L, toidx);
-  api_check(L, isvalid(L, to), "invalid index");
-  setobj(L, to, fr);
-  if (isupvalue(toidx))  /* function upvalue? */
+  గమ్యం = index2value(L, toidx);
+  api_check(L, isvalid(L, గమ్యం), "invalid index");
+  setobj(L, గమ్యం, fr);
+  ఒకవేళ (isupvalue(toidx))  /* function upvalue? */
     luaC_barrier(L, clCvalue(s2v(L->ci->func.p)), fr);
   /* LUA_REGISTRYINDEX does not need gc barrier
      (collector revisits it before finishing collection) */
@@ -265,10 +265,10 @@ LUA_API void lua_copy (lua_State *L, int fromidx, int toidx) {
 }
 
 
-LUA_API void lua_pushvalue (lua_State *L, int idx) {
-  lua_lock(L);
-  setobj2s(L, L->top.p, index2value(L, idx));
-  api_incr_top(L);
+LUA_API శూన్య lua_pushvalue (lua_State *L, పూర్ణాంకం idx) {
+  lua_తాళం(L);
+  setobj2s(L, L->శిఖరం.p, index2value(L, idx));
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
@@ -279,206 +279,206 @@ LUA_API void lua_pushvalue (lua_State *L, int idx) {
 */
 
 
-LUA_API int lua_type (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (isvalid(L, o) ? ttype(o) : LUA_TNONE);
+LUA_API పూర్ణాంకం lua_type (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి (isvalid(L, o) ? ttype(o) : LUA_TNONE);
 }
 
 
-LUA_API const char *lua_typename (lua_State *L, int t) {
-  UNUSED(L);
+LUA_API స్థిరరాశి అక్షరం *lua_typename (lua_State *L, పూర్ణాంకం t) {
+  వాడని(L);
   api_check(L, LUA_TNONE <= t && t < LUA_NUMTYPES, "invalid type");
-  return ttypename(t);
+  తిరిగి ttypename(t);
 }
 
 
-LUA_API int lua_iscfunction (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttislcf(o) || (ttisCclosure(o)));
+LUA_API పూర్ణాంకం lua_iscfunction (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి (ttislcf(o) || (ttisCclosure(o)));
 }
 
 
-LUA_API int lua_isinteger (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return ttisinteger(o);
+LUA_API పూర్ణాంకం lua_isinteger (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి ttisinteger(o);
 }
 
 
-LUA_API int lua_isnumber (lua_State *L, int idx) {
-  lua_Number n;
-  const TValue *o = index2value(L, idx);
-  return tonumber(o, &n);
+LUA_API పూర్ణాంకం lua_isnumber (lua_State *L, పూర్ణాంకం idx) {
+  lua_సంఖ్య n;
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి tonumber(o, &n);
 }
 
 
-LUA_API int lua_isstring (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttisstring(o) || cvt2str(o));
+LUA_API పూర్ణాంకం lua_isstring (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి (ttisstring(o) || cvt2str(o));
 }
 
 
-LUA_API int lua_isuserdata (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (ttisfulluserdata(o) || ttislightuserdata(o));
+LUA_API పూర్ణాంకం lua_isuserdata (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి (ttisfulluserdata(o) || ttislightuserdata(o));
 }
 
 
-LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
-  const TValue *o1 = index2value(L, index1);
-  const TValue *o2 = index2value(L, index2);
-  return (isvalid(L, o1) && isvalid(L, o2)) ? luaV_rawequalobj(o1, o2) : 0;
+LUA_API పూర్ణాంకం lua_rawequal (lua_State *L, పూర్ణాంకం index1, పూర్ణాంకం index2) {
+  స్థిరరాశి TValue *o1 = index2value(L, index1);
+  స్థిరరాశి TValue *o2 = index2value(L, index2);
+  తిరిగి (isvalid(L, o1) && isvalid(L, o2)) ? luaV_rawequalobj(o1, o2) : 0;
 }
 
 
-LUA_API void lua_arith (lua_State *L, int op) {
-  lua_lock(L);
-  if (op != LUA_OPUNM && op != LUA_OPBNOT)
+LUA_API శూన్య lua_arith (lua_State *L, పూర్ణాంకం op) {
+  lua_తాళం(L);
+  ఒకవేళ (op != LUA_OPUNM && op != LUA_OPBNOT)
     api_checkpop(L, 2);  /* all other operations expect two operands */
-  else {  /* for unary operations, add fake 2nd operand */
+  లేకపోతే {  /* for unary operations, add fake 2nd operand */
     api_checkpop(L, 1);
-    setobjs2s(L, L->top.p, L->top.p - 1);
-    api_incr_top(L);
+    setobjs2s(L, L->శిఖరం.p, L->శిఖరం.p - 1);
+    api_incr_శిఖరం(L);
   }
   /* first operand at top - 2, second at top - 1; result go to top - 2 */
-  luaO_arith(L, op, s2v(L->top.p - 2), s2v(L->top.p - 1), L->top.p - 2);
-  L->top.p--;  /* pop second operand */
+  luaO_arith(L, op, s2v(L->శిఖరం.p - 2), s2v(L->శిఖరం.p - 1), L->శిఖరం.p - 2);
+  L->శిఖరం.p--;  /* pop second operand */
   lua_unlock(L);
 }
 
 
-LUA_API int lua_compare (lua_State *L, int index1, int index2, int op) {
-  const TValue *o1;
-  const TValue *o2;
-  int i = 0;
-  lua_lock(L);  /* may call tag method */
+LUA_API పూర్ణాంకం lua_compare (lua_State *L, పూర్ణాంకం index1, పూర్ణాంకం index2, పూర్ణాంకం op) {
+  స్థిరరాశి TValue *o1;
+  స్థిరరాశి TValue *o2;
+  పూర్ణాంకం i = 0;
+  lua_తాళం(L);  /* may call tag method */
   o1 = index2value(L, index1);
   o2 = index2value(L, index2);
-  if (isvalid(L, o1) && isvalid(L, o2)) {
-    switch (op) {
-      case LUA_OPEQ: i = luaV_equalobj(L, o1, o2); break;
-      case LUA_OPLT: i = luaV_lessthan(L, o1, o2); break;
-      case LUA_OPLE: i = luaV_lessequal(L, o1, o2); break;
-      default: api_check(L, 0, "invalid option");
+  ఒకవేళ (isvalid(L, o1) && isvalid(L, o2)) {
+    ఎంపిక (op) {
+      స్థితి LUA_OPEQ: i = luaV_equalobj(L, o1, o2); ఆపు;
+      స్థితి LUA_OPLT: i = luaV_lessthan(L, o1, o2); ఆపు;
+      స్థితి LUA_OPLE: i = luaV_lessequal(L, o1, o2); ఆపు;
+      అప్రమేయ: api_check(L, 0, "invalid option");
     }
   }
   lua_unlock(L);
-  return i;
+  తిరిగి i;
 }
 
 
-LUA_API unsigned lua_numbertocstring (lua_State *L, int idx, char *buff) {
-  const TValue *o = index2value(L, idx);
-  if (ttisnumber(o)) {
-    unsigned len = luaO_tostringbuff(o, buff);
+LUA_API గుర్తులేని lua_numbertocstring (lua_State *L, పూర్ణాంకం idx, అక్షరం *buff) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  ఒకవేళ (ttisnumber(o)) {
+    గుర్తులేని len = luaO_tostringbuff(o, buff);
     buff[len++] = '\0';  /* add final zero */
-    return len;
+    తిరిగి len;
   }
-  else
-    return 0;
+  లేకపోతే
+    తిరిగి 0;
 }
 
 
-LUA_API size_t lua_stringtonumber (lua_State *L, const char *s) {
-  size_t sz = luaO_str2num(s, s2v(L->top.p));
-  if (sz != 0)
-    api_incr_top(L);
-  return sz;
+LUA_API size_t lua_stringtonumber (lua_State *L, స్థిరరాశి అక్షరం *s) {
+  size_t sz = luaO_str2num(s, s2v(L->శిఖరం.p));
+  ఒకవేళ (sz != 0)
+    api_incr_శిఖరం(L);
+  తిరిగి sz;
 }
 
 
-LUA_API lua_Number lua_tonumberx (lua_State *L, int idx, int *pisnum) {
-  lua_Number n = 0;
-  const TValue *o = index2value(L, idx);
-  int isnum = tonumber(o, &n);
-  if (pisnum)
+LUA_API lua_సంఖ్య lua_tonumberx (lua_State *L, పూర్ణాంకం idx, పూర్ణాంకం *pisnum) {
+  lua_సంఖ్య n = 0;
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  పూర్ణాంకం isnum = tonumber(o, &n);
+  ఒకవేళ (pisnum)
     *pisnum = isnum;
-  return n;
+  తిరిగి n;
 }
 
 
-LUA_API lua_Integer lua_tointegerx (lua_State *L, int idx, int *pisnum) {
+LUA_API lua_Integer lua_tointegerx (lua_State *L, పూర్ణాంకం idx, పూర్ణాంకం *pisnum) {
   lua_Integer res = 0;
-  const TValue *o = index2value(L, idx);
-  int isnum = tointeger(o, &res);
-  if (pisnum)
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  పూర్ణాంకం isnum = tointeger(o, &res);
+  ఒకవేళ (pisnum)
     *pisnum = isnum;
-  return res;
+  తిరిగి res;
 }
 
 
-LUA_API int lua_toboolean (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return !l_isfalse(o);
+LUA_API పూర్ణాంకం lua_toboolean (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి !l_isfalse(o);
 }
 
 
-LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
+LUA_API స్థిరరాశి అక్షరం *lua_tolstring (lua_State *L, పూర్ణాంకం idx, size_t *len) {
   TValue *o;
-  lua_lock(L);
+  lua_తాళం(L);
   o = index2value(L, idx);
-  if (!ttisstring(o)) {
-    if (!cvt2str(o)) {  /* not convertible? */
-      if (len != NULL) *len = 0;
+  ఒకవేళ (!ttisstring(o)) {
+    ఒకవేళ (!cvt2str(o)) {  /* not convertible? */
+      ఒకవేళ (len != ఖాళీ) *len = 0;
       lua_unlock(L);
-      return NULL;
+      తిరిగి ఖాళీ;
     }
     luaO_tostring(L, o);
     luaC_checkGC(L);
     o = index2value(L, idx);  /* previous call may reallocate the stack */
   }
   lua_unlock(L);
-  if (len != NULL)
-    return getlstr(tsvalue(o), *len);
-  else
-    return getstr(tsvalue(o));
+  ఒకవేళ (len != ఖాళీ)
+    తిరిగి getlstr(tsvalue(o), *len);
+  లేకపోతే
+    తిరిగి getstr(tsvalue(o));
 }
 
 
-LUA_API lua_Unsigned lua_rawlen (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  switch (ttypetag(o)) {
-    case LUA_VSHRSTR: return cast(lua_Unsigned, tsvalue(o)->shrlen);
-    case LUA_VLNGSTR: return cast(lua_Unsigned, tsvalue(o)->u.lnglen);
-    case LUA_VUSERDATA: return cast(lua_Unsigned, uvalue(o)->len);
-    case LUA_VTABLE: {
+LUA_API lua_Unsigned lua_rawlen (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  ఎంపిక (ttypetag(o)) {
+    స్థితి LUA_VSHRSTR: తిరిగి cast(lua_Unsigned, tsvalue(o)->shrlen);
+    స్థితి LUA_VLNGSTR: తిరిగి cast(lua_Unsigned, tsvalue(o)->u.lnglen);
+    స్థితి LUA_VUSERDATA: తిరిగి cast(lua_Unsigned, uvalue(o)->len);
+    స్థితి LUA_VTABLE: {
       lua_Unsigned res;
-      lua_lock(L);
+      lua_తాళం(L);
       res = luaH_getn(L, hvalue(o));
       lua_unlock(L);
-      return res;
+      తిరిగి res;
     }
-    default: return 0;
+    అప్రమేయ: తిరిగి 0;
   }
 }
 
 
-LUA_API lua_CFunction lua_tocfunction (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  if (ttislcf(o)) return fvalue(o);
-  else if (ttisCclosure(o))
-    return clCvalue(o)->f;
-  else return NULL;  /* not a C function */
+LUA_API lua_CFunction lua_tocfunction (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  ఒకవేళ (ttislcf(o)) తిరిగి fvalue(o);
+  లేకపోతే ఒకవేళ (ttisCclosure(o))
+    తిరిగి clCvalue(o)->f;
+  లేకపోతే తిరిగి ఖాళీ;  /* not a C function */
 }
 
 
-l_sinline void *touserdata (const TValue *o) {
-  switch (ttype(o)) {
-    case LUA_TUSERDATA: return getudatamem(uvalue(o));
-    case LUA_TLIGHTUSERDATA: return pvalue(o);
-    default: return NULL;
+l_sinline శూన్య *touserdata (స్థిరరాశి TValue *o) {
+  ఎంపిక (ttype(o)) {
+    స్థితి LUA_TUSERDATA: తిరిగి getudatamem(uvalue(o));
+    స్థితి LUA_TLIGHTUSERDATA: తిరిగి pvalue(o);
+    అప్రమేయ: తిరిగి ఖాళీ;
   }
 }
 
 
-LUA_API void *lua_touserdata (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return touserdata(o);
+LUA_API శూన్య *lua_touserdata (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి touserdata(o);
 }
 
 
-LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  return (!ttisthread(o)) ? NULL : thvalue(o);
+LUA_API lua_State *lua_tothread (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  తిరిగి (!ttisthread(o)) ? ఖాళీ : thvalue(o);
 }
 
 
@@ -489,17 +489,17 @@ LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
 ** a 'size_t'. (As the returned pointer is only informative, this
 ** conversion should not be a problem.)
 */
-LUA_API const void *lua_topointer (lua_State *L, int idx) {
-  const TValue *o = index2value(L, idx);
-  switch (ttypetag(o)) {
-    case LUA_VLCF: return cast_voidp(cast_sizet(fvalue(o)));
-    case LUA_VUSERDATA: case LUA_VLIGHTUSERDATA:
-      return touserdata(o);
-    default: {
-      if (iscollectable(o))
-        return gcvalue(o);
-      else
-        return NULL;
+LUA_API స్థిరరాశి శూన్య *lua_topointer (lua_State *L, పూర్ణాంకం idx) {
+  స్థిరరాశి TValue *o = index2value(L, idx);
+  ఎంపిక (ttypetag(o)) {
+    స్థితి LUA_VLCF: తిరిగి cast_voidp(cast_sizet(fvalue(o)));
+    స్థితి LUA_VUSERDATA: స్థితి LUA_VLIGHTUSERDATA:
+      తిరిగి touserdata(o);
+    అప్రమేయ: {
+      ఒకవేళ (iscollectable(o))
+        తిరిగి gcvalue(o);
+      లేకపోతే
+        తిరిగి ఖాళీ;
     }
   }
 }
@@ -511,26 +511,26 @@ LUA_API const void *lua_topointer (lua_State *L, int idx) {
 */
 
 
-LUA_API void lua_pushnil (lua_State *L) {
-  lua_lock(L);
-  setnilvalue2s(L->top.p);
-  api_incr_top(L);
+LUA_API శూన్య lua_pushnil (lua_State *L) {
+  lua_తాళం(L);
+  setnilvalue2s(L->శిఖరం.p);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
 
-LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
-  lua_lock(L);
-  setfltvalue(s2v(L->top.p), n);
-  api_incr_top(L);
+LUA_API శూన్య lua_pushnumber (lua_State *L, lua_సంఖ్య n) {
+  lua_తాళం(L);
+  setfltvalue(s2v(L->శిఖరం.p), n);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
 
-LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
-  lua_lock(L);
-  setivalue(s2v(L->top.p), n);
-  api_incr_top(L);
+LUA_API శూన్య lua_pushinteger (lua_State *L, lua_Integer n) {
+  lua_తాళం(L);
+  setivalue(s2v(L->శిఖరం.p), n);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
@@ -540,124 +540,124 @@ LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
 ** 'len' == 0 (as 's' can be NULL in that case), due to later use of
 ** 'memcmp' and 'memcpy'.
 */
-LUA_API const char *lua_pushlstring (lua_State *L, const char *s, size_t len) {
+LUA_API స్థిరరాశి అక్షరం *lua_pushlstring (lua_State *L, స్థిరరాశి అక్షరం *s, size_t len) {
   TString *ts;
-  lua_lock(L);
+  lua_తాళం(L);
   ts = (len == 0) ? luaS_new(L, "") : luaS_newlstr(L, s, len);
-  setsvalue2s(L, L->top.p, ts);
-  api_incr_top(L);
+  setsvalue2s(L, L->శిఖరం.p, ts);
+  api_incr_శిఖరం(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getstr(ts);
+  తిరిగి getstr(ts);
 }
 
 
-LUA_API const char *lua_pushexternalstring (lua_State *L,
-	        const char *s, size_t len, lua_Alloc falloc, void *ud) {
+LUA_API స్థిరరాశి అక్షరం *lua_pushexternalstring (lua_State *L,
+	        స్థిరరాశి అక్షరం *s, size_t len, lua_Alloc falloc, శూన్య *ud) {
   TString *ts;
-  lua_lock(L);
-  api_check(L, len <= MAX_SIZE, "string too large");
+  lua_తాళం(L);
+  api_check(L, len <= MAX_కొలత, "string too large");
   api_check(L, s[len] == '\0', "string not ending with zero");
   ts = luaS_newextlstr (L, s, len, falloc, ud);
-  setsvalue2s(L, L->top.p, ts);
-  api_incr_top(L);
+  setsvalue2s(L, L->శిఖరం.p, ts);
+  api_incr_శిఖరం(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getstr(ts);
+  తిరిగి getstr(ts);
 }
 
 
-LUA_API const char *lua_pushstring (lua_State *L, const char *s) {
-  lua_lock(L);
-  if (s == NULL)
-    setnilvalue2s(L->top.p);
-  else {
+LUA_API స్థిరరాశి అక్షరం *lua_pushstring (lua_State *L, స్థిరరాశి అక్షరం *s) {
+  lua_తాళం(L);
+  ఒకవేళ (s == ఖాళీ)
+    setnilvalue2s(L->శిఖరం.p);
+  లేకపోతే {
     TString *ts;
     ts = luaS_new(L, s);
-    setsvalue2s(L, L->top.p, ts);
+    setsvalue2s(L, L->శిఖరం.p, ts);
     s = getstr(ts);  /* internal copy's address */
   }
-  api_incr_top(L);
+  api_incr_శిఖరం(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return s;
+  తిరిగి s;
 }
 
 
-LUA_API const char *lua_pushvfstring (lua_State *L, const char *fmt,
+LUA_API స్థిరరాశి అక్షరం *lua_pushvfstring (lua_State *L, స్థిరరాశి అక్షరం *fmt,
                                       va_list argp) {
-  const char *ret;
-  lua_lock(L);
+  స్థిరరాశి అక్షరం *ret;
+  lua_తాళం(L);
   ret = luaO_pushvfstring(L, fmt, argp);
   luaC_checkGC(L);
   lua_unlock(L);
-  return ret;
+  తిరిగి ret;
 }
 
 
-LUA_API const char *lua_pushfstring (lua_State *L, const char *fmt, ...) {
-  const char *ret;
+LUA_API స్థిరరాశి అక్షరం *lua_pushfstring (lua_State *L, స్థిరరాశి అక్షరం *fmt, ...) {
+  స్థిరరాశి అక్షరం *ret;
   va_list argp;
-  lua_lock(L);
+  lua_తాళం(L);
   pushvfstring(L, argp, fmt, ret);
   luaC_checkGC(L);
   lua_unlock(L);
-  return ret;
+  తిరిగి ret;
 }
 
 
-LUA_API void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n) {
-  lua_lock(L);
-  if (n == 0) {
-    setfvalue(s2v(L->top.p), fn);
-    api_incr_top(L);
+LUA_API శూన్య lua_pushcclosure (lua_State *L, lua_CFunction fn, పూర్ణాంకం n) {
+  lua_తాళం(L);
+  ఒకవేళ (n == 0) {
+    setfvalue(s2v(L->శిఖరం.p), fn);
+    api_incr_శిఖరం(L);
   }
-  else {
-    int i;
+  లేకపోతే {
+    పూర్ణాంకం i;
     CClosure *cl;
     api_checkpop(L, n);
     api_check(L, n <= MAXUPVAL, "upvalue index too large");
     cl = luaF_newCclosure(L, n);
     cl->f = fn;
-    for (i = 0; i < n; i++) {
-      setobj2n(L, &cl->upvalue[i], s2v(L->top.p - n + i));
+    కొరకు (i = 0; i < n; i++) {
+      setobj2n(L, &cl->upvalue[i], s2v(L->శిఖరం.p - n + i));
       /* does not need barrier because closure is white */
       lua_assert(iswhite(cl));
     }
-    L->top.p -= n;
-    setclCvalue(L, s2v(L->top.p), cl);
-    api_incr_top(L);
+    L->శిఖరం.p -= n;
+    setclCvalue(L, s2v(L->శిఖరం.p), cl);
+    api_incr_శిఖరం(L);
     luaC_checkGC(L);
   }
   lua_unlock(L);
 }
 
 
-LUA_API void lua_pushboolean (lua_State *L, int b) {
-  lua_lock(L);
-  if (b)
-    setbtvalue(s2v(L->top.p));
-  else
-    setbfvalue(s2v(L->top.p));
-  api_incr_top(L);
+LUA_API శూన్య lua_pushboolean (lua_State *L, పూర్ణాంకం b) {
+  lua_తాళం(L);
+  ఒకవేళ (b)
+    setbtvalue(s2v(L->శిఖరం.p));
+  లేకపోతే
+    setbfvalue(s2v(L->శిఖరం.p));
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
 
-LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
-  lua_lock(L);
-  setpvalue(s2v(L->top.p), p);
-  api_incr_top(L);
+LUA_API శూన్య lua_pushlightuserdata (lua_State *L, శూన్య *p) {
+  lua_తాళం(L);
+  setpvalue(s2v(L->శిఖరం.p), p);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
 
-LUA_API int lua_pushthread (lua_State *L) {
-  lua_lock(L);
-  setthvalue(L, s2v(L->top.p), L);
-  api_incr_top(L);
+LUA_API పూర్ణాంకం lua_pushthread (lua_State *L) {
+  lua_తాళం(L);
+  setthvalue(L, s2v(L->శిఖరం.p), L);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
-  return (mainthread(G(L)) == L);
+  తిరిగి (mainthread(G(L)) == L);
 }
 
 
@@ -667,19 +667,19 @@ LUA_API int lua_pushthread (lua_State *L) {
 */
 
 
-static int auxgetstr (lua_State *L, const TValue *t, const char *k) {
-  lu_byte tag;
+స్థిర పూర్ణాంకం auxgetstr (lua_State *L, స్థిరరాశి TValue *t, స్థిరరాశి అక్షరం *k) {
+  lu_byte ట్యాగ్;
   TString *str = luaS_new(L, k);
-  luaV_fastget(t, str, s2v(L->top.p), luaH_getstr, tag);
-  if (!tagisempty(tag))
-    api_incr_top(L);
-  else {
-    setsvalue2s(L, L->top.p, str);
-    api_incr_top(L);
-    tag = luaV_finishget(L, t, s2v(L->top.p - 1), L->top.p - 1, tag);
+  luaV_fastget(t, str, s2v(L->శిఖరం.p), luaH_getstr, ట్యాగ్);
+  ఒకవేళ (!tagisempty(ట్యాగ్))
+    api_incr_శిఖరం(L);
+  లేకపోతే {
+    setsvalue2s(L, L->శిఖరం.p, str);
+    api_incr_శిఖరం(L);
+    ట్యాగ్ = luaV_finishget(L, t, s2v(L->శిఖరం.p - 1), L->శిఖరం.p - 1, ట్యాగ్);
   }
   lua_unlock(L);
-  return novariant(tag);
+  తిరిగి novariant(ట్యాగ్);
 }
 
 
@@ -688,164 +688,164 @@ static int auxgetstr (lua_State *L, const TValue *t, const char *k) {
 ** table; so, an emergency collection while using the global table
 ** cannot collect it.
 */
-static void getGlobalTable (lua_State *L, TValue *gt) {
-  Table *registry = hvalue(&G(L)->l_registry);
-  lu_byte tag = luaH_getint(registry, LUA_RIDX_GLOBALS, gt);
-  (void)tag;  /* avoid not-used warnings when checks are off */
-  api_check(L, novariant(tag) == LUA_TTABLE, "global table must exist");
+స్థిర శూన్య get_Global_పట్టిక (lua_State *L, TValue *gt) {
+  పట్టిక *registry = hvalue(&G(L)->l_registry);
+  lu_byte ట్యాగ్ = luaH_getint(registry, LUA_RIDX_GLOBALS, gt);
+  (శూన్య)ట్యాగ్;  /* avoid not-used warnings when checks are off */
+  api_check(L, novariant(ట్యాగ్) == LUA_TTABLE, "global table must exist");
 }
 
 
-LUA_API int lua_getglobal (lua_State *L, const char *name) {
+LUA_API పూర్ణాంకం lua_getglobal (lua_State *L, స్థిరరాశి అక్షరం *name) {
   TValue gt;
-  lua_lock(L);
-  getGlobalTable(L, &gt);
-  return auxgetstr(L, &gt, name);
+  lua_తాళం(L);
+  get_Global_పట్టిక(L, &gt);
+  తిరిగి auxgetstr(L, &gt, name);
 }
 
 
-LUA_API int lua_gettable (lua_State *L, int idx) {
-  lu_byte tag;
+LUA_API పూర్ణాంకం lua_gettable (lua_State *L, పూర్ణాంకం idx) {
+  lu_byte ట్యాగ్;
   TValue *t;
-  lua_lock(L);
+  lua_తాళం(L);
   api_checkpop(L, 1);
   t = index2value(L, idx);
-  luaV_fastget(t, s2v(L->top.p - 1), s2v(L->top.p - 1), luaH_get, tag);
-  if (tagisempty(tag))
-    tag = luaV_finishget(L, t, s2v(L->top.p - 1), L->top.p - 1, tag);
+  luaV_fastget(t, s2v(L->శిఖరం.p - 1), s2v(L->శిఖరం.p - 1), luaH_get, ట్యాగ్);
+  ఒకవేళ (tagisempty(ట్యాగ్))
+    ట్యాగ్ = luaV_finishget(L, t, s2v(L->శిఖరం.p - 1), L->శిఖరం.p - 1, ట్యాగ్);
   lua_unlock(L);
-  return novariant(tag);
+  తిరిగి novariant(ట్యాగ్);
 }
 
 
-LUA_API int lua_getfield (lua_State *L, int idx, const char *k) {
-  lua_lock(L);
-  return auxgetstr(L, index2value(L, idx), k);
+LUA_API పూర్ణాంకం lua_getfield (lua_State *L, పూర్ణాంకం idx, స్థిరరాశి అక్షరం *k) {
+  lua_తాళం(L);
+  తిరిగి auxgetstr(L, index2value(L, idx), k);
 }
 
 
-LUA_API int lua_geti (lua_State *L, int idx, lua_Integer n) {
+LUA_API పూర్ణాంకం lua_geti (lua_State *L, పూర్ణాంకం idx, lua_Integer n) {
   TValue *t;
-  lu_byte tag;
-  lua_lock(L);
+  lu_byte ట్యాగ్;
+  lua_తాళం(L);
   t = index2value(L, idx);
-  luaV_fastgeti(t, n, s2v(L->top.p), tag);
-  if (tagisempty(tag)) {
-    TValue key;
-    setivalue(&key, n);
-    tag = luaV_finishget(L, t, &key, L->top.p, tag);
+  luaV_fastgeti(t, n, s2v(L->శిఖరం.p), ట్యాగ్);
+  ఒకవేళ (tagisempty(ట్యాగ్)) {
+    TValue కీలకం;
+    setivalue(&కీలకం, n);
+    ట్యాగ్ = luaV_finishget(L, t, &కీలకం, L->శిఖరం.p, ట్యాగ్);
   }
-  api_incr_top(L);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
-  return novariant(tag);
+  తిరిగి novariant(ట్యాగ్);
 }
 
 
-static int finishrawget (lua_State *L, lu_byte tag) {
-  if (tagisempty(tag))  /* avoid copying empty items to the stack */
-    setnilvalue2s(L->top.p);
-  api_incr_top(L);
+స్థిర పూర్ణాంకం finishrawget (lua_State *L, lu_byte ట్యాగ్) {
+  ఒకవేళ (tagisempty(ట్యాగ్))  /* avoid copying empty items to the stack */
+    setnilvalue2s(L->శిఖరం.p);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
-  return novariant(tag);
+  తిరిగి novariant(ట్యాగ్);
 }
 
 
-l_sinline Table *gettable (lua_State *L, int idx) {
+l_sinline పట్టిక *gettable (lua_State *L, పూర్ణాంకం idx) {
   TValue *t = index2value(L, idx);
   api_check(L, ttistable(t), "table expected");
-  return hvalue(t);
+  తిరిగి hvalue(t);
 }
 
 
-LUA_API int lua_rawget (lua_State *L, int idx) {
-  Table *t;
-  lu_byte tag;
-  lua_lock(L);
+LUA_API పూర్ణాంకం lua_rawget (lua_State *L, పూర్ణాంకం idx) {
+  పట్టిక *t;
+  lu_byte ట్యాగ్;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   t = gettable(L, idx);
-  tag = luaH_get(t, s2v(L->top.p - 1), s2v(L->top.p - 1));
-  L->top.p--;  /* pop key */
-  return finishrawget(L, tag);
+  ట్యాగ్ = luaH_get(t, s2v(L->శిఖరం.p - 1), s2v(L->శిఖరం.p - 1));
+  L->శిఖరం.p--;  /* pop key */
+  తిరిగి finishrawget(L, ట్యాగ్);
 }
 
 
-LUA_API int lua_rawgeti (lua_State *L, int idx, lua_Integer n) {
-  Table *t;
-  lu_byte tag;
-  lua_lock(L);
+LUA_API పూర్ణాంకం lua_rawgeti (lua_State *L, పూర్ణాంకం idx, lua_Integer n) {
+  పట్టిక *t;
+  lu_byte ట్యాగ్;
+  lua_తాళం(L);
   t = gettable(L, idx);
-  luaH_fastgeti(t, n, s2v(L->top.p), tag);
-  return finishrawget(L, tag);
+  luaH_fastgeti(t, n, s2v(L->శిఖరం.p), ట్యాగ్);
+  తిరిగి finishrawget(L, ట్యాగ్);
 }
 
 
-LUA_API int lua_rawgetp (lua_State *L, int idx, const void *p) {
-  Table *t;
+LUA_API పూర్ణాంకం lua_rawgetp (lua_State *L, పూర్ణాంకం idx, స్థిరరాశి శూన్య *p) {
+  పట్టిక *t;
   TValue k;
-  lua_lock(L);
+  lua_తాళం(L);
   t = gettable(L, idx);
   setpvalue(&k, cast_voidp(p));
-  return finishrawget(L, luaH_get(t, &k, s2v(L->top.p)));
+  తిరిగి finishrawget(L, luaH_get(t, &k, s2v(L->శిఖరం.p)));
 }
 
 
-LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
-  Table *t;
-  lua_lock(L);
+LUA_API శూన్య lua_createtable (lua_State *L, పూర్ణాంకం narray, పూర్ణాంకం nrec) {
+  పట్టిక *t;
+  lua_తాళం(L);
   t = luaH_new(L);
-  sethvalue2s(L, L->top.p, t);
-  api_incr_top(L);
-  if (narray > 0 || nrec > 0)
+  sethvalue2s(L, L->శిఖరం.p, t);
+  api_incr_శిఖరం(L);
+  ఒకవేళ (narray > 0 || nrec > 0)
     luaH_resize(L, t, cast_uint(narray), cast_uint(nrec));
   luaC_checkGC(L);
   lua_unlock(L);
 }
 
 
-LUA_API int lua_getmetatable (lua_State *L, int objindex) {
-  const TValue *obj;
-  Table *mt;
-  int res = 0;
-  lua_lock(L);
+LUA_API పూర్ణాంకం lua_getmetatable (lua_State *L, పూర్ణాంకం objindex) {
+  స్థిరరాశి TValue *obj;
+  పట్టిక *mt;
+  పూర్ణాంకం res = 0;
+  lua_తాళం(L);
   obj = index2value(L, objindex);
-  switch (ttype(obj)) {
-    case LUA_TTABLE:
+  ఎంపిక (ttype(obj)) {
+    స్థితి LUA_TTABLE:
       mt = hvalue(obj)->metatable;
-      break;
-    case LUA_TUSERDATA:
+      ఆపు;
+    స్థితి LUA_TUSERDATA:
       mt = uvalue(obj)->metatable;
-      break;
-    default:
+      ఆపు;
+    అప్రమేయ:
       mt = G(L)->mt[ttype(obj)];
-      break;
+      ఆపు;
   }
-  if (mt != NULL) {
-    sethvalue2s(L, L->top.p, mt);
-    api_incr_top(L);
+  ఒకవేళ (mt != ఖాళీ) {
+    sethvalue2s(L, L->శిఖరం.p, mt);
+    api_incr_శిఖరం(L);
     res = 1;
   }
   lua_unlock(L);
-  return res;
+  తిరిగి res;
 }
 
 
-LUA_API int lua_getiuservalue (lua_State *L, int idx, int n) {
+LUA_API పూర్ణాంకం lua_getiuservalue (lua_State *L, పూర్ణాంకం idx, పూర్ణాంకం n) {
   TValue *o;
-  int t;
-  lua_lock(L);
+  పూర్ణాంకం t;
+  lua_తాళం(L);
   o = index2value(L, idx);
   api_check(L, ttisfulluserdata(o), "full userdata expected");
-  if (n <= 0 || n > uvalue(o)->nuvalue) {
-    setnilvalue2s(L->top.p);
+  ఒకవేళ (n <= 0 || n > uvalue(o)->nuvalue) {
+    setnilvalue2s(L->శిఖరం.p);
     t = LUA_TNONE;
   }
-  else {
-    setobj2s(L, L->top.p, &uvalue(o)->uv[n - 1].uv);
-    t = ttype(s2v(L->top.p));
+  లేకపోతే {
+    setobj2s(L, L->శిఖరం.p, &uvalue(o)->uv[n - 1].uv);
+    t = ttype(s2v(L->శిఖరం.p));
   }
-  api_incr_top(L);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
-  return t;
+  తిరిగి t;
 }
 
 
@@ -856,168 +856,168 @@ LUA_API int lua_getiuservalue (lua_State *L, int idx, int n) {
 /*
 ** t[k] = value at the top of the stack (where 'k' is a string)
 */
-static void auxsetstr (lua_State *L, const TValue *t, const char *k) {
-  int hres;
+స్థిర శూన్య auxsetstr (lua_State *L, స్థిరరాశి TValue *t, స్థిరరాశి అక్షరం *k) {
+  పూర్ణాంకం hres;
   TString *str = luaS_new(L, k);
   api_checkpop(L, 1);
-  luaV_fastset(t, str, s2v(L->top.p - 1), hres, luaH_psetstr);
-  if (hres == HOK) {
-    luaV_finishfastset(L, t, s2v(L->top.p - 1));
-    L->top.p--;  /* pop value */
+  luaV_fastset(t, str, s2v(L->శిఖరం.p - 1), hres, luaH_psetstr);
+  ఒకవేళ (hres == HOK) {
+    luaV_finishfastset(L, t, s2v(L->శిఖరం.p - 1));
+    L->శిఖరం.p--;  /* pop value */
   }
-  else {
-    setsvalue2s(L, L->top.p, str);  /* push 'str' (to make it a TValue) */
-    api_incr_top(L);
-    luaV_finishset(L, t, s2v(L->top.p - 1), s2v(L->top.p - 2), hres);
-    L->top.p -= 2;  /* pop value and key */
+  లేకపోతే {
+    setsvalue2s(L, L->శిఖరం.p, str);  /* push 'str' (to make it a TValue) */
+    api_incr_శిఖరం(L);
+    luaV_finishset(L, t, s2v(L->శిఖరం.p - 1), s2v(L->శిఖరం.p - 2), hres);
+    L->శిఖరం.p -= 2;  /* pop value and key */
   }
   lua_unlock(L);  /* lock done by caller */
 }
 
 
-LUA_API void lua_setglobal (lua_State *L, const char *name) {
+LUA_API శూన్య lua_setglobal (lua_State *L, స్థిరరాశి అక్షరం *name) {
   TValue gt;
-  lua_lock(L);  /* unlock done in 'auxsetstr' */
-  getGlobalTable(L, &gt);
+  lua_తాళం(L);  /* unlock done in 'auxsetstr' */
+  get_Global_పట్టిక(L, &gt);
   auxsetstr(L, &gt, name);
 }
 
 
-LUA_API void lua_settable (lua_State *L, int idx) {
+LUA_API శూన్య lua_settable (lua_State *L, పూర్ణాంకం idx) {
   TValue *t;
-  int hres;
-  lua_lock(L);
+  పూర్ణాంకం hres;
+  lua_తాళం(L);
   api_checkpop(L, 2);
   t = index2value(L, idx);
-  luaV_fastset(t, s2v(L->top.p - 2), s2v(L->top.p - 1), hres, luaH_pset);
-  if (hres == HOK)
-    luaV_finishfastset(L, t, s2v(L->top.p - 1));
-  else
-    luaV_finishset(L, t, s2v(L->top.p - 2), s2v(L->top.p - 1), hres);
-  L->top.p -= 2;  /* pop index and value */
+  luaV_fastset(t, s2v(L->శిఖరం.p - 2), s2v(L->శిఖరం.p - 1), hres, luaH_pset);
+  ఒకవేళ (hres == HOK)
+    luaV_finishfastset(L, t, s2v(L->శిఖరం.p - 1));
+  లేకపోతే
+    luaV_finishset(L, t, s2v(L->శిఖరం.p - 2), s2v(L->శిఖరం.p - 1), hres);
+  L->శిఖరం.p -= 2;  /* pop index and value */
   lua_unlock(L);
 }
 
 
-LUA_API void lua_setfield (lua_State *L, int idx, const char *k) {
-  lua_lock(L);  /* unlock done in 'auxsetstr' */
+LUA_API శూన్య lua_setfield (lua_State *L, పూర్ణాంకం idx, స్థిరరాశి అక్షరం *k) {
+  lua_తాళం(L);  /* unlock done in 'auxsetstr' */
   auxsetstr(L, index2value(L, idx), k);
 }
 
 
-LUA_API void lua_seti (lua_State *L, int idx, lua_Integer n) {
+LUA_API శూన్య lua_seti (lua_State *L, పూర్ణాంకం idx, lua_Integer n) {
   TValue *t;
-  int hres;
-  lua_lock(L);
+  పూర్ణాంకం hres;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   t = index2value(L, idx);
-  luaV_fastseti(t, n, s2v(L->top.p - 1), hres);
-  if (hres == HOK)
-    luaV_finishfastset(L, t, s2v(L->top.p - 1));
-  else {
-    TValue temp;
-    setivalue(&temp, n);
-    luaV_finishset(L, t, &temp, s2v(L->top.p - 1), hres);
+  luaV_fastseti(t, n, s2v(L->శిఖరం.p - 1), hres);
+  ఒకవేళ (hres == HOK)
+    luaV_finishfastset(L, t, s2v(L->శిఖరం.p - 1));
+  లేకపోతే {
+    TValue తాత్కాలిక;
+    setivalue(&తాత్కాలిక, n);
+    luaV_finishset(L, t, &తాత్కాలిక, s2v(L->శిఖరం.p - 1), hres);
   }
-  L->top.p--;  /* pop value */
+  L->శిఖరం.p--;  /* pop value */
   lua_unlock(L);
 }
 
 
-static void aux_rawset (lua_State *L, int idx, TValue *key, int n) {
-  Table *t;
-  lua_lock(L);
+స్థిర శూన్య aux_rawset (lua_State *L, పూర్ణాంకం idx, TValue *కీలకం, పూర్ణాంకం n) {
+  పట్టిక *t;
+  lua_తాళం(L);
   api_checkpop(L, n);
   t = gettable(L, idx);
-  luaH_set(L, t, key, s2v(L->top.p - 1));
+  lua_H_సమితి(L, t, కీలకం, s2v(L->శిఖరం.p - 1));
   invalidateTMcache(t);
-  luaC_barrierback(L, obj2gco(t), s2v(L->top.p - 1));
-  L->top.p -= n;
+  luaC_barrierback(L, obj2gco(t), s2v(L->శిఖరం.p - 1));
+  L->శిఖరం.p -= n;
   lua_unlock(L);
 }
 
 
-LUA_API void lua_rawset (lua_State *L, int idx) {
-  aux_rawset(L, idx, s2v(L->top.p - 2), 2);
+LUA_API శూన్య lua_rawset (lua_State *L, పూర్ణాంకం idx) {
+  aux_rawset(L, idx, s2v(L->శిఖరం.p - 2), 2);
 }
 
 
-LUA_API void lua_rawsetp (lua_State *L, int idx, const void *p) {
+LUA_API శూన్య lua_rawsetp (lua_State *L, పూర్ణాంకం idx, స్థిరరాశి శూన్య *p) {
   TValue k;
   setpvalue(&k, cast_voidp(p));
   aux_rawset(L, idx, &k, 1);
 }
 
 
-LUA_API void lua_rawseti (lua_State *L, int idx, lua_Integer n) {
-  Table *t;
-  lua_lock(L);
+LUA_API శూన్య lua_rawseti (lua_State *L, పూర్ణాంకం idx, lua_Integer n) {
+  పట్టిక *t;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   t = gettable(L, idx);
-  luaH_setint(L, t, n, s2v(L->top.p - 1));
-  luaC_barrierback(L, obj2gco(t), s2v(L->top.p - 1));
-  L->top.p--;
+  luaH_setint(L, t, n, s2v(L->శిఖరం.p - 1));
+  luaC_barrierback(L, obj2gco(t), s2v(L->శిఖరం.p - 1));
+  L->శిఖరం.p--;
   lua_unlock(L);
 }
 
 
-LUA_API int lua_setmetatable (lua_State *L, int objindex) {
+LUA_API పూర్ణాంకం lua_setmetatable (lua_State *L, పూర్ణాంకం objindex) {
   TValue *obj;
-  Table *mt;
-  lua_lock(L);
+  పట్టిక *mt;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   obj = index2value(L, objindex);
-  if (ttisnil(s2v(L->top.p - 1)))
-    mt = NULL;
-  else {
-    api_check(L, ttistable(s2v(L->top.p - 1)), "table expected");
-    mt = hvalue(s2v(L->top.p - 1));
+  ఒకవేళ (ttisnil(s2v(L->శిఖరం.p - 1)))
+    mt = ఖాళీ;
+  లేకపోతే {
+    api_check(L, ttistable(s2v(L->శిఖరం.p - 1)), "table expected");
+    mt = hvalue(s2v(L->శిఖరం.p - 1));
   }
-  switch (ttype(obj)) {
-    case LUA_TTABLE: {
+  ఎంపిక (ttype(obj)) {
+    స్థితి LUA_TTABLE: {
       hvalue(obj)->metatable = mt;
-      if (mt) {
+      ఒకవేళ (mt) {
         luaC_objbarrier(L, gcvalue(obj), mt);
         luaC_checkfinalizer(L, gcvalue(obj), mt);
       }
-      break;
+      ఆపు;
     }
-    case LUA_TUSERDATA: {
+    స్థితి LUA_TUSERDATA: {
       uvalue(obj)->metatable = mt;
-      if (mt) {
+      ఒకవేళ (mt) {
         luaC_objbarrier(L, uvalue(obj), mt);
         luaC_checkfinalizer(L, gcvalue(obj), mt);
       }
-      break;
+      ఆపు;
     }
-    default: {
+    అప్రమేయ: {
       G(L)->mt[ttype(obj)] = mt;
-      break;
+      ఆపు;
     }
   }
-  L->top.p--;
+  L->శిఖరం.p--;
   lua_unlock(L);
-  return 1;
+  తిరిగి 1;
 }
 
 
-LUA_API int lua_setiuservalue (lua_State *L, int idx, int n) {
+LUA_API పూర్ణాంకం lua_setiuservalue (lua_State *L, పూర్ణాంకం idx, పూర్ణాంకం n) {
   TValue *o;
-  int res;
-  lua_lock(L);
+  పూర్ణాంకం res;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   o = index2value(L, idx);
   api_check(L, ttisfulluserdata(o), "full userdata expected");
-  if (!(cast_uint(n) - 1u < cast_uint(uvalue(o)->nuvalue)))
+  ఒకవేళ (!(cast_uint(n) - 1u < cast_uint(uvalue(o)->nuvalue)))
     res = 0;  /* 'n' not in [1, uvalue(o)->nuvalue] */
-  else {
-    setobj(L, &uvalue(o)->uv[n - 1].uv, s2v(L->top.p - 1));
-    luaC_barrierback(L, gcvalue(o), s2v(L->top.p - 1));
+  లేకపోతే {
+    setobj(L, &uvalue(o)->uv[n - 1].uv, s2v(L->శిఖరం.p - 1));
+    luaC_barrierback(L, gcvalue(o), s2v(L->శిఖరం.p - 1));
     res = 1;
   }
-  L->top.p--;
+  L->శిఖరం.p--;
   lua_unlock(L);
-  return res;
+  తిరిగి res;
 }
 
 
@@ -1026,30 +1026,30 @@ LUA_API int lua_setiuservalue (lua_State *L, int idx, int n) {
 */
 
 
-#define checkresults(L,na,nr) \
+#నిర్వచించు checkresults(L,na,nr) \
      (api_check(L, (nr) == LUA_MULTRET \
-               || (L->ci->top.p - L->top.p >= (nr) - (na)), \
+               || (L->ci->శిఖరం.p - L->శిఖరం.p >= (nr) - (na)), \
 	"results from function overflow current stack size"), \
       api_check(L, LUA_MULTRET <= (nr) && (nr) <= MAXRESULTS,  \
                    "invalid number of results"))
 
 
-LUA_API void lua_callk (lua_State *L, int nargs, int nresults,
+LUA_API శూన్య lua_callk (lua_State *L, పూర్ణాంకం nargs, పూర్ణాంకం nresults,
                         lua_KContext ctx, lua_KFunction k) {
   StkId func;
-  lua_lock(L);
-  api_check(L, k == NULL || !isLua(L->ci),
+  lua_తాళం(L);
+  api_check(L, k == ఖాళీ || !isLua(L->ci),
     "cannot use continuations inside hooks");
   api_checkpop(L, nargs + 1);
-  api_check(L, L->status == LUA_OK, "cannot do calls on non-normal thread");
+  api_check(L, L->స్థితి_2 == LUA_OK, "cannot do calls on non-normal thread");
   checkresults(L, nargs, nresults);
-  func = L->top.p - (nargs+1);
-  if (k != NULL && yieldable(L)) {  /* need to prepare continuation? */
+  func = L->శిఖరం.p - (nargs+1);
+  ఒకవేళ (k != ఖాళీ && yieldable(L)) {  /* need to prepare continuation? */
     L->ci->u.c.k = k;  /* save continuation */
     L->ci->u.c.ctx = ctx;  /* save context */
     luaD_call(L, func, nresults);  /* do the call */
   }
-  else  /* no continuation or no yieldable */
+  లేకపోతే  /* no continuation or no yieldable */
     luaD_callnoyield(L, func, nresults);  /* just do the call */
   adjustresults(L, nresults);
   lua_unlock(L);
@@ -1060,43 +1060,43 @@ LUA_API void lua_callk (lua_State *L, int nargs, int nresults,
 /*
 ** Execute a protected call.
 */
-struct CallS {  /* data to 'f_call' */
+నిర్మాణం CallS {  /* data to 'f_call' */
   StkId func;
-  int nresults;
+  పూర్ణాంకం nresults;
 };
 
 
-static void f_call (lua_State *L, void *ud) {
-  struct CallS *c = cast(struct CallS *, ud);
+స్థిర శూన్య f_call (lua_State *L, శూన్య *ud) {
+  నిర్మాణం CallS *c = cast(నిర్మాణం CallS *, ud);
   luaD_callnoyield(L, c->func, c->nresults);
 }
 
 
 
-LUA_API int lua_pcallk (lua_State *L, int nargs, int nresults, int errfunc,
+LUA_API పూర్ణాంకం lua_pcallk (lua_State *L, పూర్ణాంకం nargs, పూర్ణాంకం nresults, పూర్ణాంకం errfunc,
                         lua_KContext ctx, lua_KFunction k) {
-  struct CallS c;
-  TStatus status;
+  నిర్మాణం CallS c;
+  TStatus స్థితి_2;
   ptrdiff_t func;
-  lua_lock(L);
-  api_check(L, k == NULL || !isLua(L->ci),
+  lua_తాళం(L);
+  api_check(L, k == ఖాళీ || !isLua(L->ci),
     "cannot use continuations inside hooks");
   api_checkpop(L, nargs + 1);
-  api_check(L, L->status == LUA_OK, "cannot do calls on non-normal thread");
+  api_check(L, L->స్థితి_2 == LUA_OK, "cannot do calls on non-normal thread");
   checkresults(L, nargs, nresults);
-  if (errfunc == 0)
+  ఒకవేళ (errfunc == 0)
     func = 0;
-  else {
+  లేకపోతే {
     StkId o = index2stack(L, errfunc);
     api_check(L, ttisfunction(s2v(o)), "error handler must be a function");
     func = savestack(L, o);
   }
-  c.func = L->top.p - (nargs+1);  /* function to be called */
-  if (k == NULL || !yieldable(L)) {  /* no continuation or no yieldable? */
+  c.func = L->శిఖరం.p - (nargs+1);  /* function to be called */
+  ఒకవేళ (k == ఖాళీ || !yieldable(L)) {  /* no continuation or no yieldable? */
     c.nresults = nresults;  /* do a 'conventional' protected call */
-    status = luaD_pcall(L, f_call, &c, savestack(L, c.func), func);
+    స్థితి_2 = luaD_pcall(L, f_call, &c, savestack(L, c.func), func);
   }
-  else {  /* prepare continuation (call is already protected by 'resume') */
+  లేకపోతే {  /* prepare continuation (call is already protected by 'resume') */
     CallInfo *ci = L->ci;
     ci->u.c.k = k;  /* save continuation */
     ci->u.c.ctx = ctx;  /* save context */
@@ -1109,36 +1109,36 @@ LUA_API int lua_pcallk (lua_State *L, int nargs, int nresults, int errfunc,
     luaD_call(L, c.func, nresults);  /* do the call */
     ci->callstatus &= ~CIST_YPCALL;
     L->errfunc = ci->u.c.old_errfunc;
-    status = LUA_OK;  /* if it is here, there were no errors */
+    స్థితి_2 = LUA_OK;  /* if it is here, there were no errors */
   }
   adjustresults(L, nresults);
   lua_unlock(L);
-  return APIstatus(status);
+  తిరిగి APIstatus(స్థితి_2);
 }
 
 
-LUA_API int lua_load (lua_State *L, lua_Reader reader, void *data,
-                      const char *chunkname, const char *mode) {
+LUA_API పూర్ణాంకం lua_ఎక్కించు (lua_State *L, lua_Reader reader, శూన్య *దత్తాంశం,
+                      స్థిరరాశి అక్షరం *chunkname, స్థిరరాశి అక్షరం *బహుళకం) {
   ZIO z;
-  TStatus status;
-  lua_lock(L);
+  TStatus స్థితి_2;
+  lua_తాళం(L);
   luaC_checkGC(L);
-  if (!chunkname) chunkname = "?";
-  luaZ_init(L, &z, reader, data);
-  status = luaD_protectedparser(L, &z, chunkname, mode);
-  if (status == LUA_OK) {  /* no errors? */
-    LClosure *f = clLvalue(s2v(L->top.p - 1));  /* get new function */
-    if (f->nupvalues >= 1) {  /* does it have an upvalue? */
+  ఒకవేళ (!chunkname) chunkname = "?";
+  luaZ_init(L, &z, reader, దత్తాంశం);
+  స్థితి_2 = luaD_protectedparser(L, &z, chunkname, బహుళకం);
+  ఒకవేళ (స్థితి_2 == LUA_OK) {  /* no errors? */
+    LClosure *f = clLvalue(s2v(L->శిఖరం.p - 1));  /* get new function */
+    ఒకవేళ (f->nupvalues >= 1) {  /* does it have an upvalue? */
       /* get global table from registry */
       TValue gt;
-      getGlobalTable(L, &gt);
+      get_Global_పట్టిక(L, &gt);
       /* set global table as 1st upvalue of 'f' (may be LUA_ENV) */
       setobj(L, f->upvals[0]->v.p, &gt);
       luaC_barrier(L, f->upvals[0], &gt);
     }
   }
   lua_unlock(L);
-  return APIstatus(status);
+  తిరిగి APIstatus(స్థితి_2);
 }
 
 
@@ -1146,106 +1146,106 @@ LUA_API int lua_load (lua_State *L, lua_Reader reader, void *data,
 ** Dump a Lua function, calling 'writer' to write its parts. Ensure
 ** the stack returns with its original size.
 */
-LUA_API int lua_dump (lua_State *L, lua_Writer writer, void *data, int strip) {
-  int status;
-  ptrdiff_t otop = savestack(L, L->top.p);  /* original top */
-  TValue *f = s2v(L->top.p - 1);  /* function to be dumped */
-  lua_lock(L);
+LUA_API పూర్ణాంకం lua_dump (lua_State *L, lua_Writer writer, శూన్య *దత్తాంశం, పూర్ణాంకం strip) {
+  పూర్ణాంకం స్థితి_2;
+  ptrdiff_t otop = savestack(L, L->శిఖరం.p);  /* original top */
+  TValue *f = s2v(L->శిఖరం.p - 1);  /* function to be dumped */
+  lua_తాళం(L);
   api_checkpop(L, 1);
   api_check(L, isLfunction(f), "Lua function expected");
-  status = luaU_dump(L, clLvalue(f)->p, writer, data, strip);
-  L->top.p = restorestack(L, otop);  /* restore top */
+  స్థితి_2 = luaU_dump(L, clLvalue(f)->p, writer, దత్తాంశం, strip);
+  L->శిఖరం.p = restorestack(L, otop);  /* restore top */
   lua_unlock(L);
-  return status;
+  తిరిగి స్థితి_2;
 }
 
 
-LUA_API int lua_status (lua_State *L) {
-  return APIstatus(L->status);
+LUA_API పూర్ణాంకం lua_స్థితి (lua_State *L) {
+  తిరిగి APIstatus(L->స్థితి_2);
 }
 
 
 /*
 ** Garbage-collection function
 */
-LUA_API int lua_gc (lua_State *L, int what, ...) {
+LUA_API పూర్ణాంకం lua_gc (lua_State *L, పూర్ణాంకం what, ...) {
   va_list argp;
-  int res = 0;
+  పూర్ణాంకం res = 0;
   global_State *g = G(L);
-  if (g->gcstp & (GCSTPGC | GCSTPCLS))  /* internal stop? */
-    return -1;  /* all options are invalid when stopped */
-  lua_lock(L);
+  ఒకవేళ (g->gcstp & (GCSTPGC | GCSTPCLS))  /* internal stop? */
+    తిరిగి -1;  /* all options are invalid when stopped */
+  lua_తాళం(L);
   va_start(argp, what);
-  switch (what) {
-    case LUA_GCSTOP: {
+  ఎంపిక (what) {
+    స్థితి LUA_GCSTOP: {
       g->gcstp = GCSTPUSR;  /* stopped by the user */
-      break;
+      ఆపు;
     }
-    case LUA_GCRESTART: {
+    స్థితి LUA_GCRESTART: {
       luaE_setdebt(g, 0);
       g->gcstp = 0;  /* (other bits must be zero here) */
-      break;
+      ఆపు;
     }
-    case LUA_GCCOLLECT: {
+    స్థితి LUA_GCCOLLECT: {
       luaC_fullgc(L, 0);
-      break;
+      ఆపు;
     }
-    case LUA_GCCOUNT: {
+    స్థితి LUA_GCCOUNT: {
       /* GC values are expressed in Kbytes: #bytes/2^10 */
       res = cast_int(gettotalbytes(g) >> 10);
-      break;
+      ఆపు;
     }
-    case LUA_GCCOUNTB: {
+    స్థితి LUA_GCCOUNTB: {
       res = cast_int(gettotalbytes(g) & 0x3ff);
-      break;
+      ఆపు;
     }
-    case LUA_GCSTEP: {
+    స్థితి LUA_GCSTEP: {
       lu_byte oldstp = g->gcstp;
       l_mem n = cast(l_mem, va_arg(argp, size_t));
       l_mem newdebt;
-      int work = 0;  /* true if GC did some work */
+      పూర్ణాంకం work = 0;  /* true if GC did some work */
       g->gcstp = 0;  /* allow GC to run (other bits must be zero here) */
-      if (n <= 0)
+      ఒకవేళ (n <= 0)
         newdebt = 0;  /* force to run one basic step */
-      else if (g->GCdebt >= n - MAX_LMEM)  /* no overflow? */
+      లేకపోతే ఒకవేళ (g->GCdebt >= n - MAX_LMEM)  /* no overflow? */
         newdebt = g->GCdebt - n;
-      else  /* overflow */
+      లేకపోతే  /*అధికప్రవాహం*/
         newdebt = -MAX_LMEM;  /* set debt to mininum value */
       luaE_setdebt(g, newdebt);
-      luaC_condGC(L, (void)0, work = 1);
-      if (work && g->gcstate == GCSpause)  /* end of cycle? */
+      luaC_condGC(L, (శూన్య)0, work = 1);
+      ఒకవేళ (work && g->gcstate == GCSpause)  /* end of cycle? */
         res = 1;  /* signal it */
       g->gcstp = oldstp;  /* restore previous state */
-      break;
+      ఆపు;
     }
-    case LUA_GCISRUNNING: {
+    స్థితి LUA_GCISRUNNING: {
       res = gcrunning(g);
-      break;
+      ఆపు;
     }
-    case LUA_GCGEN: {
+    స్థితి LUA_GCGEN: {
       res = (g->gckind == KGC_INC) ? LUA_GCINC : LUA_GCGEN;
       luaC_changemode(L, KGC_GENMINOR);
-      break;
+      ఆపు;
     }
-    case LUA_GCINC: {
+    స్థితి LUA_GCINC: {
       res = (g->gckind == KGC_INC) ? LUA_GCINC : LUA_GCGEN;
       luaC_changemode(L, KGC_INC);
-      break;
+      ఆపు;
     }
-    case LUA_GCPARAM: {
-      int param = va_arg(argp, int);
-      int value = va_arg(argp, int);
+    స్థితి LUA_GCPARAM: {
+      పూర్ణాంకం param = va_arg(argp, పూర్ణాంకం);
+      పూర్ణాంకం విలువ = va_arg(argp, పూర్ణాంకం);
       api_check(L, 0 <= param && param < LUA_GCPN, "invalid parameter");
       res = cast_int(luaO_applyparam(g->gcparams[param], 100));
-      if (value >= 0)
-        g->gcparams[param] = luaO_codeparam(cast_uint(value));
-      break;
+      ఒకవేళ (విలువ >= 0)
+        g->gcparams[param] = luaO_codeparam(cast_uint(విలువ));
+      ఆపు;
     }
-    default: res = -1;  /* invalid option */
+    అప్రమేయ: res = -1;  /* invalid option */
   }
   va_end(argp);
   lua_unlock(L);
-  return res;
+  తిరిగి res;
 }
 
 
@@ -1255,40 +1255,40 @@ LUA_API int lua_gc (lua_State *L, int what, ...) {
 */
 
 
-LUA_API int lua_error (lua_State *L) {
+LUA_API పూర్ణాంకం lua_error (lua_State *L) {
   TValue *errobj;
-  lua_lock(L);
-  errobj = s2v(L->top.p - 1);
+  lua_తాళం(L);
+  errobj = s2v(L->శిఖరం.p - 1);
   api_checkpop(L, 1);
   /* error object is the memory error message? */
-  if (ttisshrstring(errobj) && eqshrstr(tsvalue(errobj), G(L)->memerrmsg))
+  ఒకవేళ (ttisshrstring(errobj) && eqshrstr(tsvalue(errobj), G(L)->memerrmsg))
     luaM_error(L);  /* raise a memory error */
-  else
+  లేకపోతే
     luaG_errormsg(L);  /* raise a regular error */
   /* code unreachable; will unlock when control actually leaves the kernel */
-  return 0;  /* to avoid warnings */
+  తిరిగి 0;  /* to avoid warnings */
 }
 
 
-LUA_API int lua_next (lua_State *L, int idx) {
-  Table *t;
-  int more;
-  lua_lock(L);
+LUA_API పూర్ణాంకం lua_తదుపరి (lua_State *L, పూర్ణాంకం idx) {
+  పట్టిక *t;
+  పూర్ణాంకం మరిన్ని;
+  lua_తాళం(L);
   api_checkpop(L, 1);
   t = gettable(L, idx);
-  more = luaH_next(L, t, L->top.p - 1);
-  if (more)
-    api_incr_top(L);
-  else  /* no more elements */
-    L->top.p--;  /* pop key */
+  మరిన్ని = lua_H_తదుపరి(L, t, L->శిఖరం.p - 1);
+  ఒకవేళ (మరిన్ని)
+    api_incr_శిఖరం(L);
+  లేకపోతే  /* no more elements */
+    L->శిఖరం.p--;  /* pop key */
   lua_unlock(L);
-  return more;
+  తిరిగి మరిన్ని;
 }
 
 
-LUA_API void lua_toclose (lua_State *L, int idx) {
+LUA_API శూన్య lua_toclose (lua_State *L, పూర్ణాంకం idx) {
   StkId o;
-  lua_lock(L);
+  lua_తాళం(L);
   o = index2stack(L, idx);
   api_check(L, L->tbclist.p < o, "given index below or equal a marked one");
   luaF_newtbcupval(L, o);  /* create new to-be-closed upvalue */
@@ -1297,181 +1297,181 @@ LUA_API void lua_toclose (lua_State *L, int idx) {
 }
 
 
-LUA_API void lua_concat (lua_State *L, int n) {
-  lua_lock(L);
-  if (n > 0) {
+LUA_API శూన్య lua_concat (lua_State *L, పూర్ణాంకం n) {
+  lua_తాళం(L);
+  ఒకవేళ (n > 0) {
     api_checkpop(L, n);
     luaV_concat(L, n);
     luaC_checkGC(L);
   }
-  else {  /* nothing to concatenate */
-    setsvalue2s(L, L->top.p, luaS_newlstr(L, "", 0));  /* push empty string */
-    api_incr_top(L);
+  లేకపోతే {  /* nothing to concatenate */
+    setsvalue2s(L, L->శిఖరం.p, luaS_newlstr(L, "", 0));  /* push empty string */
+    api_incr_శిఖరం(L);
   }
   lua_unlock(L);
 }
 
 
-LUA_API void lua_len (lua_State *L, int idx) {
+LUA_API శూన్య lua_len (lua_State *L, పూర్ణాంకం idx) {
   TValue *t;
-  lua_lock(L);
+  lua_తాళం(L);
   t = index2value(L, idx);
-  luaV_objlen(L, L->top.p, t);
-  api_incr_top(L);
+  luaV_objlen(L, L->శిఖరం.p, t);
+  api_incr_శిఖరం(L);
   lua_unlock(L);
 }
 
 
-LUA_API lua_Alloc lua_getallocf (lua_State *L, void **ud) {
+LUA_API lua_Alloc lua_getallocf (lua_State *L, శూన్య **ud) {
   lua_Alloc f;
-  lua_lock(L);
-  if (ud) *ud = G(L)->ud;
+  lua_తాళం(L);
+  ఒకవేళ (ud) *ud = G(L)->ud;
   f = G(L)->frealloc;
   lua_unlock(L);
-  return f;
+  తిరిగి f;
 }
 
 
-LUA_API void lua_setallocf (lua_State *L, lua_Alloc f, void *ud) {
-  lua_lock(L);
+LUA_API శూన్య lua_setallocf (lua_State *L, lua_Alloc f, శూన్య *ud) {
+  lua_తాళం(L);
   G(L)->ud = ud;
   G(L)->frealloc = f;
   lua_unlock(L);
 }
 
 
-void lua_setwarnf (lua_State *L, lua_WarnFunction f, void *ud) {
-  lua_lock(L);
+శూన్య lua_setwarnf (lua_State *L, lua_WarnFunction f, శూన్య *ud) {
+  lua_తాళం(L);
   G(L)->ud_warn = ud;
   G(L)->warnf = f;
   lua_unlock(L);
 }
 
 
-void lua_warning (lua_State *L, const char *msg, int tocont) {
-  lua_lock(L);
-  luaE_warning(L, msg, tocont);
+శూన్య lua_warning (lua_State *L, స్థిరరాశి అక్షరం *సందేశం, పూర్ణాంకం tocont) {
+  lua_తాళం(L);
+  luaE_warning(L, సందేశం, tocont);
   lua_unlock(L);
 }
 
 
 
-LUA_API void *lua_newuserdatauv (lua_State *L, size_t size, int nuvalue) {
+LUA_API శూన్య *lua_newuserdatauv (lua_State *L, size_t కొలత, పూర్ణాంకం nuvalue) {
   Udata *u;
-  lua_lock(L);
+  lua_తాళం(L);
   api_check(L, 0 <= nuvalue && nuvalue < SHRT_MAX, "invalid value");
-  u = luaS_newudata(L, size, cast(unsigned short, nuvalue));
-  setuvalue(L, s2v(L->top.p), u);
-  api_incr_top(L);
+  u = luaS_newudata(L, కొలత, cast(గుర్తులేని పొట్టి, nuvalue));
+  setuvalue(L, s2v(L->శిఖరం.p), u);
+  api_incr_శిఖరం(L);
   luaC_checkGC(L);
   lua_unlock(L);
-  return getudatamem(u);
+  తిరిగి getudatamem(u);
 }
 
 
 
-static const char *aux_upvalue (TValue *fi, int n, TValue **val,
+స్థిర స్థిరరాశి అక్షరం *aux_upvalue (TValue *fi, పూర్ణాంకం n, TValue **val,
                                 GCObject **owner) {
-  switch (ttypetag(fi)) {
-    case LUA_VCCL: {  /* C closure */
+  ఎంపిక (ttypetag(fi)) {
+    స్థితి LUA_VCCL: {  /* C closure */
       CClosure *f = clCvalue(fi);
-      if (!(cast_uint(n) - 1u < cast_uint(f->nupvalues)))
-        return NULL;  /* 'n' not in [1, f->nupvalues] */
+      ఒకవేళ (!(cast_uint(n) - 1u < cast_uint(f->nupvalues)))
+        తిరిగి ఖాళీ;  /* 'n' not in [1, f->nupvalues] */
       *val = &f->upvalue[n-1];
-      if (owner) *owner = obj2gco(f);
-      return "";
+      ఒకవేళ (owner) *owner = obj2gco(f);
+      తిరిగి "";
     }
-    case LUA_VLCL: {  /* Lua closure */
+    స్థితి LUA_VLCL: {  /* Lua closure */
       LClosure *f = clLvalue(fi);
       TString *name;
       Proto *p = f->p;
-      if (!(cast_uint(n) - 1u  < cast_uint(p->sizeupvalues)))
-        return NULL;  /* 'n' not in [1, p->sizeupvalues] */
+      ఒకవేళ (!(cast_uint(n) - 1u  < cast_uint(p->sizeupvalues)))
+        తిరిగి ఖాళీ;  /* 'n' not in [1, p->sizeupvalues] */
       *val = f->upvals[n-1]->v.p;
-      if (owner) *owner = obj2gco(f->upvals[n - 1]);
+      ఒకవేళ (owner) *owner = obj2gco(f->upvals[n - 1]);
       name = p->upvalues[n-1].name;
-      return (name == NULL) ? "(no name)" : getstr(name);
+      తిరిగి (name == ఖాళీ) ? "(no name)" : getstr(name);
     }
-    default: return NULL;  /* not a closure */
+    అప్రమేయ: తిరిగి ఖాళీ;  /* not a closure */
   }
 }
 
 
-LUA_API const char *lua_getupvalue (lua_State *L, int funcindex, int n) {
-  const char *name;
-  TValue *val = NULL;  /* to avoid warnings */
-  lua_lock(L);
-  name = aux_upvalue(index2value(L, funcindex), n, &val, NULL);
-  if (name) {
-    setobj2s(L, L->top.p, val);
-    api_incr_top(L);
+LUA_API స్థిరరాశి అక్షరం *lua_getupvalue (lua_State *L, పూర్ణాంకం funcindex, పూర్ణాంకం n) {
+  స్థిరరాశి అక్షరం *name;
+  TValue *val = ఖాళీ;  /* to avoid warnings */
+  lua_తాళం(L);
+  name = aux_upvalue(index2value(L, funcindex), n, &val, ఖాళీ);
+  ఒకవేళ (name) {
+    setobj2s(L, L->శిఖరం.p, val);
+    api_incr_శిఖరం(L);
   }
   lua_unlock(L);
-  return name;
+  తిరిగి name;
 }
 
 
-LUA_API const char *lua_setupvalue (lua_State *L, int funcindex, int n) {
-  const char *name;
-  TValue *val = NULL;  /* to avoid warnings */
-  GCObject *owner = NULL;  /* to avoid warnings */
+LUA_API స్థిరరాశి అక్షరం *lua_setupvalue (lua_State *L, పూర్ణాంకం funcindex, పూర్ణాంకం n) {
+  స్థిరరాశి అక్షరం *name;
+  TValue *val = ఖాళీ;  /* to avoid warnings */
+  GCObject *owner = ఖాళీ;  /* to avoid warnings */
   TValue *fi;
-  lua_lock(L);
+  lua_తాళం(L);
   fi = index2value(L, funcindex);
   api_checkpop(L, 1);
   name = aux_upvalue(fi, n, &val, &owner);
-  if (name) {
-    L->top.p--;
-    setobj(L, val, s2v(L->top.p));
+  ఒకవేళ (name) {
+    L->శిఖరం.p--;
+    setobj(L, val, s2v(L->శిఖరం.p));
     luaC_barrier(L, owner, val);
   }
   lua_unlock(L);
-  return name;
+  తిరిగి name;
 }
 
 
-static UpVal **getupvalref (lua_State *L, int fidx, int n, LClosure **pf) {
-  static const UpVal *const nullup = NULL;
+స్థిర పైకి_Val **getupvalref (lua_State *L, పూర్ణాంకం fidx, పూర్ణాంకం n, LClosure **pf) {
+  స్థిర స్థిరరాశి పైకి_Val *స్థిరరాశి nullup = ఖాళీ;
   LClosure *f;
   TValue *fi = index2value(L, fidx);
   api_check(L, ttisLclosure(fi), "Lua function expected");
   f = clLvalue(fi);
-  if (pf) *pf = f;
-  if (1 <= n && n <= f->p->sizeupvalues)
-    return &f->upvals[n - 1];  /* get its upvalue pointer */
-  else
-    return (UpVal**)&nullup;
+  ఒకవేళ (pf) *pf = f;
+  ఒకవేళ (1 <= n && n <= f->p->sizeupvalues)
+    తిరిగి &f->upvals[n - 1];  /* get its upvalue pointer */
+  లేకపోతే
+    తిరిగి (పైకి_Val**)&nullup;
 }
 
 
-LUA_API void *lua_upvalueid (lua_State *L, int fidx, int n) {
+LUA_API శూన్య *lua_upvalueid (lua_State *L, పూర్ణాంకం fidx, పూర్ణాంకం n) {
   TValue *fi = index2value(L, fidx);
-  switch (ttypetag(fi)) {
-    case LUA_VLCL: {  /* lua closure */
-      return *getupvalref(L, fidx, n, NULL);
+  ఎంపిక (ttypetag(fi)) {
+    స్థితి LUA_VLCL: {  /* lua closure */
+      తిరిగి *getupvalref(L, fidx, n, ఖాళీ);
     }
-    case LUA_VCCL: {  /* C closure */
+    స్థితి LUA_VCCL: {  /* C closure */
       CClosure *f = clCvalue(fi);
-      if (1 <= n && n <= f->nupvalues)
-        return &f->upvalue[n - 1];
+      ఒకవేళ (1 <= n && n <= f->nupvalues)
+        తిరిగి &f->upvalue[n - 1];
       /* else */
     }  /* FALLTHROUGH */
-    case LUA_VLCF:
-      return NULL;  /* light C functions have no upvalues */
-    default: {
+    స్థితి LUA_VLCF:
+      తిరిగి ఖాళీ;  /* light C functions have no upvalues */
+    అప్రమేయ: {
       api_check(L, 0, "function expected");
-      return NULL;
+      తిరిగి ఖాళీ;
     }
   }
 }
 
 
-LUA_API void lua_upvaluejoin (lua_State *L, int fidx1, int n1,
-                                            int fidx2, int n2) {
+LUA_API శూన్య lua_upvaluejoin (lua_State *L, పూర్ణాంకం fidx1, పూర్ణాంకం n1,
+                                            పూర్ణాంకం fidx2, పూర్ణాంకం n2) {
   LClosure *f1;
-  UpVal **up1 = getupvalref(L, fidx1, n1, &f1);
-  UpVal **up2 = getupvalref(L, fidx2, n2, NULL);
-  api_check(L, *up1 != NULL && *up2 != NULL, "invalid upvalue index");
+  పైకి_Val **up1 = getupvalref(L, fidx1, n1, &f1);
+  పైకి_Val **up2 = getupvalref(L, fidx2, n2, ఖాళీ);
+  api_check(L, *up1 != ఖాళీ && *up2 != ఖాళీ, "invalid upvalue index");
   *up1 = *up2;
   luaC_objbarrier(L, f1, *up1);
 }

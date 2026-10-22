@@ -4,28 +4,28 @@
 ** See Copyright Notice in lua.h
 */
 
-#define lctype_c
-#define LUA_CORE
+#నిర్వచించు lctype_c
+#నిర్వచించు LUA_CORE
 
-#include "lprefix.h"
-
-
-#include "lctype.h"
-
-#if !LUA_USE_CTYPE	/* { */
-
-#include <limits.h>
+#అన్తర్భావ "lprefix.h"
 
 
-#if defined (LUA_UCID)		/* accept UniCode IDentifiers? */
+#అన్తర్భావ "lctype.h"
+
+#ఒకవేళ !LUA_USE_CTYPE	/* { */
+
+#అన్తర్భావ <limits.h>
+
+
+#ఒకవేళ defined (LUA_UCID)		/* accept UniCode IDentifiers? */
 /* consider all non-ASCII codepoints to be alphabetic */
-#define NONA		0x01
-#else
-#define NONA		0x00	/* default */
-#endif
+#నిర్వచించు NONA		0x01
+#లేకపోతే
+#నిర్వచించు NONA		0x00	/* default */
+#అయితే_ముగింపు
 
 
-LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
+LUAI_DDEF స్థిరరాశి lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  /* EOZ */
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,	/* 0. */
   0x00,  0x08,  0x08,  0x08,  0x08,  0x08,  0x00,  0x00,
@@ -61,4 +61,4 @@ LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
   0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00
 };
 
-#endif			/* } */
+#అయితే_ముగింపు			/* } */

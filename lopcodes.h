@@ -4,11 +4,11 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lopcodes_h
-#define lopcodes_h
+#నిర్వచితం_కాకపోతే lopcodes_h
+#నిర్వచించు lopcodes_h
 
-#include "llimits.h"
-#include "lobject.h"
+#అన్తర్భావ "llimits.h"
+#అన్తర్భావ "lobject.h"
 
 
 /*===========================================================================
@@ -33,37 +33,37 @@ isJ                           sJ (signed)(25)            |   Op(7)     |
 
 
 /* basic instruction formats */
-enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
+గణన Op_బహుళకం {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 
 
 /*
 ** size and position of opcode arguments.
 */
-#define SIZE_C		8
-#define SIZE_vC		10
-#define SIZE_B		8
-#define SIZE_vB		6
-#define SIZE_Bx		(SIZE_C + SIZE_B + 1)
-#define SIZE_A		8
-#define SIZE_Ax		(SIZE_Bx + SIZE_A)
-#define SIZE_sJ		(SIZE_Bx + SIZE_A)
+#నిర్వచించు కొలత_C		8
+#నిర్వచించు కొలత_v_C		10
+#నిర్వచించు కొలత_B		8
+#నిర్వచించు కొలత_v_B		6
+#నిర్వచించు కొలత_Bx		(కొలత_C + కొలత_B + 1)
+#నిర్వచించు కొలత_A		8
+#నిర్వచించు కొలత_Ax		(కొలత_Bx + కొలత_A)
+#నిర్వచించు కొలత_s_J		(కొలత_Bx + కొలత_A)
 
-#define SIZE_OP		7
+#నిర్వచించు కొలత_OP		7
 
-#define POS_OP		0
+#నిర్వచించు POS_OP		0
 
-#define POS_A		(POS_OP + SIZE_OP)
-#define POS_k		(POS_A + SIZE_A)
-#define POS_B		(POS_k + 1)
-#define POS_vB		(POS_k + 1)
-#define POS_C		(POS_B + SIZE_B)
-#define POS_vC		(POS_vB + SIZE_vB)
+#నిర్వచించు POS_A		(POS_OP + కొలత_OP)
+#నిర్వచించు POS_k		(POS_A + కొలత_A)
+#నిర్వచించు POS_B		(POS_k + 1)
+#నిర్వచించు POS_vB		(POS_k + 1)
+#నిర్వచించు POS_C		(POS_B + కొలత_B)
+#నిర్వచించు POS_vC		(POS_vB + కొలత_v_B)
 
-#define POS_Bx		POS_k
+#నిర్వచించు POS_Bx		POS_k
 
-#define POS_Ax		POS_A
+#నిర్వచించు POS_Ax		POS_A
 
-#define POS_sJ		POS_A
+#నిర్వచించు POS_sJ		POS_A
 
 
 /*
@@ -76,143 +76,143 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** Check whether type 'int' has at least 'b' + 1 bits.
 ** 'b' < 32; +1 for the sign bit.
 */
-#define L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
+#నిర్వచించు L_INTHASBITS(b)		((UINT_MAX >> (b)) >= 1)
 
 
-#if L_INTHASBITS(SIZE_Bx)
-#define MAXARG_Bx	((1<<SIZE_Bx)-1)
-#else
-#define MAXARG_Bx	INT_MAX
-#endif
+#ఒకవేళ L_INTHASBITS(కొలత_Bx)
+#నిర్వచించు MAXARG_Bx	((1<<కొలత_Bx)-1)
+#లేకపోతే
+#నిర్వచించు MAXARG_Bx	గరిష్ఠ_పూర్ణాంకం
+#అయితే_ముగింపు
 
-#define OFFSET_sBx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
-
-
-#if L_INTHASBITS(SIZE_Ax)
-#define MAXARG_Ax	((1<<SIZE_Ax)-1)
-#else
-#define MAXARG_Ax	INT_MAX
-#endif
-
-#if L_INTHASBITS(SIZE_sJ)
-#define MAXARG_sJ	((1 << SIZE_sJ) - 1)
-#else
-#define MAXARG_sJ	INT_MAX
-#endif
-
-#define OFFSET_sJ	(MAXARG_sJ >> 1)
+#నిర్వచించు స్థానభ్రంశం_s_Bx	(MAXARG_Bx>>1)         /* 'sBx' is signed */
 
 
-#define MAXARG_A	((1<<SIZE_A)-1)
-#define MAXARG_B	((1<<SIZE_B)-1)
-#define MAXARG_vB	((1<<SIZE_vB)-1)
-#define MAXARG_C	((1<<SIZE_C)-1)
-#define MAXARG_vC	((1<<SIZE_vC)-1)
-#define OFFSET_sC	(MAXARG_C >> 1)
+#ఒకవేళ L_INTHASBITS(కొలత_Ax)
+#నిర్వచించు MAXARG_Ax	((1<<కొలత_Ax)-1)
+#లేకపోతే
+#నిర్వచించు MAXARG_Ax	గరిష్ఠ_పూర్ణాంకం
+#అయితే_ముగింపు
 
-#define int2sC(i)	((i) + OFFSET_sC)
-#define sC2int(i)	((i) - OFFSET_sC)
+#ఒకవేళ L_INTHASBITS(కొలత_s_J)
+#నిర్వచించు MAXARG_sJ	((1 << కొలత_s_J) - 1)
+#లేకపోతే
+#నిర్వచించు MAXARG_sJ	గరిష్ఠ_పూర్ణాంకం
+#అయితే_ముగింపు
+
+#నిర్వచించు స్థానభ్రంశం_s_J	(MAXARG_sJ >> 1)
+
+
+#నిర్వచించు MAXARG_A	((1<<కొలత_A)-1)
+#నిర్వచించు MAXARG_B	((1<<కొలత_B)-1)
+#నిర్వచించు MAXARG_vB	((1<<కొలత_v_B)-1)
+#నిర్వచించు MAXARG_C	((1<<కొలత_C)-1)
+#నిర్వచించు MAXARG_vC	((1<<కొలత_v_C)-1)
+#నిర్వచించు స్థానభ్రంశం_s_C	(MAXARG_C >> 1)
+
+#నిర్వచించు int2sC(i)	((i) + స్థానభ్రంశం_s_C)
+#నిర్వచించు sC2int(i)	((i) - స్థానభ్రంశం_s_C)
 
 
 /* creates a mask with 'n' 1 bits at position 'p' */
-#define MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
+#నిర్వచించు MASK1(n,p)	((~((~(Instruction)0)<<(n)))<<(p))
 
 /* creates a mask with 'n' 0 bits at position 'p' */
-#define MASK0(n,p)	(~MASK1(n,p))
+#నిర్వచించు MASK0(n,p)	(~MASK1(n,p))
 
 /*
 ** the following macros help to manipulate instructions
 */
 
-#define GET_OPCODE(i)	(cast(OpCode, ((i)>>POS_OP) & MASK1(SIZE_OP,0)))
-#define SET_OPCODE(i,o)	((i) = (((i)&MASK0(SIZE_OP,POS_OP)) | \
-		((cast_Inst(o)<<POS_OP)&MASK1(SIZE_OP,POS_OP))))
+#నిర్వచించు GET_OPCODE(i)	(cast(Op_సంకేతం, ((i)>>POS_OP) & MASK1(కొలత_OP,0)))
+#నిర్వచించు సమితి_OPCODE(i,o)	((i) = (((i)&MASK0(కొలత_OP,POS_OP)) | \
+		((cast_Inst(o)<<POS_OP)&MASK1(కొలత_OP,POS_OP))))
 
-#define checkopm(i,m)	(getOpMode(GET_OPCODE(i)) == m)
-
-
-#define getarg(i,pos,size)	(cast_int(((i)>>(pos)) & MASK1(size,0)))
-#define setarg(i,v,pos,size)	((i) = (((i)&MASK0(size,pos)) | \
-                ((cast_Inst(v)<<pos)&MASK1(size,pos))))
-
-#define GETARG_A(i)	getarg(i, POS_A, SIZE_A)
-#define SETARG_A(i,v)	setarg(i, v, POS_A, SIZE_A)
-
-#define GETARG_B(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_B, SIZE_B))
-#define GETARG_vB(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, SIZE_vB))
-#define GETARG_sB(i)	sC2int(GETARG_B(i))
-#define SETARG_B(i,v)	setarg(i, v, POS_B, SIZE_B)
-#define SETARG_vB(i,v)	setarg(i, v, POS_vB, SIZE_vB)
-
-#define GETARG_C(i)  \
-	check_exp(checkopm(i, iABC), getarg(i, POS_C, SIZE_C))
-#define GETARG_vC(i)  \
-	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, SIZE_vC))
-#define GETARG_sC(i)	sC2int(GETARG_C(i))
-#define SETARG_C(i,v)	setarg(i, v, POS_C, SIZE_C)
-#define SETARG_vC(i,v)	setarg(i, v, POS_vC, SIZE_vC)
-
-#define TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
-#define GETARG_k(i)	getarg(i, POS_k, 1)
-#define SETARG_k(i,v)	setarg(i, v, POS_k, 1)
-
-#define GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, SIZE_Bx))
-#define SETARG_Bx(i,v)	setarg(i, v, POS_Bx, SIZE_Bx)
-
-#define GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, SIZE_Ax))
-#define SETARG_Ax(i,v)	setarg(i, v, POS_Ax, SIZE_Ax)
-
-#define GETARG_sBx(i)  \
-	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, SIZE_Bx) - OFFSET_sBx)
-#define SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+OFFSET_sBx))
-
-#define GETARG_sJ(i)  \
-	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, SIZE_sJ) - OFFSET_sJ)
-#define SETARG_sJ(i,j) \
-	setarg(i, cast_uint((j)+OFFSET_sJ), POS_sJ, SIZE_sJ)
+#నిర్వచించు checkopm(i,m)	(get_Op_బహుళకం(GET_OPCODE(i)) == m)
 
 
-#define CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#నిర్వచించు getarg(i,pos,కొలత)	(cast_int(((i)>>(pos)) & MASK1(కొలత,0)))
+#నిర్వచించు setarg(i,v,pos,కొలత)	((i) = (((i)&MASK0(కొలత,pos)) | \
+                ((cast_Inst(v)<<pos)&MASK1(కొలత,pos))))
+
+#నిర్వచించు GETARG_A(i)	getarg(i, POS_A, కొలత_A)
+#నిర్వచించు SETARG_A(i,v)	setarg(i, v, POS_A, కొలత_A)
+
+#నిర్వచించు GETARG_B(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_B, కొలత_B))
+#నిర్వచించు GETARG_vB(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vB, కొలత_v_B))
+#నిర్వచించు GETARG_sB(i)	sC2int(GETARG_B(i))
+#నిర్వచించు SETARG_B(i,v)	setarg(i, v, POS_B, కొలత_B)
+#నిర్వచించు SETARG_vB(i,v)	setarg(i, v, POS_vB, కొలత_v_B)
+
+#నిర్వచించు GETARG_C(i)  \
+	check_exp(checkopm(i, iABC), getarg(i, POS_C, కొలత_C))
+#నిర్వచించు GETARG_vC(i)  \
+	check_exp(checkopm(i, ivABC), getarg(i, POS_vC, కొలత_v_C))
+#నిర్వచించు GETARG_sC(i)	sC2int(GETARG_C(i))
+#నిర్వచించు SETARG_C(i,v)	setarg(i, v, POS_C, కొలత_C)
+#నిర్వచించు SETARG_vC(i,v)	setarg(i, v, POS_vC, కొలత_v_C)
+
+#నిర్వచించు TESTARG_k(i)	(cast_int(((i) & (1u << POS_k))))
+#నిర్వచించు GETARG_k(i)	getarg(i, POS_k, 1)
+#నిర్వచించు SETARG_k(i,v)	setarg(i, v, POS_k, 1)
+
+#నిర్వచించు GETARG_Bx(i)	check_exp(checkopm(i, iABx), getarg(i, POS_Bx, కొలత_Bx))
+#నిర్వచించు SETARG_Bx(i,v)	setarg(i, v, POS_Bx, కొలత_Bx)
+
+#నిర్వచించు GETARG_Ax(i)	check_exp(checkopm(i, iAx), getarg(i, POS_Ax, కొలత_Ax))
+#నిర్వచించు SETARG_Ax(i,v)	setarg(i, v, POS_Ax, కొలత_Ax)
+
+#నిర్వచించు GETARG_sBx(i)  \
+	check_exp(checkopm(i, iAsBx), getarg(i, POS_Bx, కొలత_Bx) - స్థానభ్రంశం_s_Bx)
+#నిర్వచించు SETARG_sBx(i,b)	SETARG_Bx((i),cast_uint((b)+స్థానభ్రంశం_s_Bx))
+
+#నిర్వచించు GETARG_sJ(i)  \
+	check_exp(checkopm(i, isJ), getarg(i, POS_sJ, కొలత_s_J) - స్థానభ్రంశం_s_J)
+#నిర్వచించు SETARG_sJ(i,j) \
+	setarg(i, cast_uint((j)+స్థానభ్రంశం_s_J), POS_sJ, కొలత_s_J)
+
+
+#నిర్వచించు CREATE_ABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_B) \
 			| (cast_Inst(c)<<POS_C) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
+#నిర్వచించు CREATE_vABCk(o,a,b,c,k)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(b)<<POS_vB) \
 			| (cast_Inst(c)<<POS_vC) \
 			| (cast_Inst(k)<<POS_k))
 
-#define CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
+#నిర్వచించు CREATE_ABx(o,a,bc)	((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_A) \
 			| (cast_Inst(bc)<<POS_Bx))
 
-#define CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
+#నిర్వచించు CREATE_Ax(o,a)		((cast_Inst(o)<<POS_OP) \
 			| (cast_Inst(a)<<POS_Ax))
 
-#define CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
+#నిర్వచించు CREATE_sJ(o,j,k)	((cast_Inst(o) << POS_OP) \
 			| (cast_Inst(j) << POS_sJ) \
 			| (cast_Inst(k) << POS_k))
 
 
-#if !defined(MAXINDEXRK)  /* (for debugging only) */
-#define MAXINDEXRK	MAXARG_B
-#endif
+#ఒకవేళ !defined(MAXINDEXRK)  /* (for debugging only) */
+#నిర్వచించు MAXINDEXRK	MAXARG_B
+#అయితే_ముగింపు
 
 
 /*
 ** Maximum size for the stack of a Lua function. It must fit in 8 bits.
 ** The highest valid register is one less than this value.
 */
-#define MAX_FSTACK	MAXARG_A
+#నిర్వచించు MAX_FSTACK	MAXARG_A
 
 /*
 ** Invalid register (one more than last valid register).
 */
-#define NO_REG		MAX_FSTACK
+#నిర్వచించు NO_REG		MAX_FSTACK
 
 
 
@@ -228,7 +228,7 @@ enum OpMode {iABC, ivABC, iABx, iAsBx, iAx, isJ};
 ** See "Notes" below for more information about some instructions.
 */
 
-typedef enum {
+రకనిర్వచనం గణన {
 /*----------------------------------------------------------------------
   name		args	description
 ------------------------------------------------------------------------*/
@@ -275,7 +275,7 @@ OP_BXORK,/*	A B C	R[A] := R[B] ~ K[C]:integer			*/
 OP_SHLI,/*	A B sC	R[A] := sC << R[B]				*/
 OP_SHRI,/*	A B sC	R[A] := R[B] >> sC				*/
 
-OP_ADD,/*	A B C	R[A] := R[B] + R[C]				*/
+OP_కూడు,/*	A B C	R[A] := R[B] + R[C]				*/
 OP_SUB,/*	A B C	R[A] := R[B] - R[C]				*/
 OP_MUL,/*	A B C	R[A] := R[B] * R[C]				*/
 OP_MOD,/*	A B C	R[A] := R[B] % R[C]				*/
@@ -334,7 +334,7 @@ OP_TFORLOOP,/*	A Bx	if R[A+2] ~= nil then { R[A]=R[A+2]; pc -= Bx }	*/
 
 OP_SETLIST,/*	A vB vC k	R[A][vC+i] := R[A+i], 1 <= i <= vB	*/
 
-OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
+OP_సంవృతం,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
 
 OP_VARARG,/*	A B C k	R[A], ..., R[A+C-2] = varargs  			*/
 
@@ -345,10 +345,10 @@ OP_ERRNNIL,/*	A Bx	raise error if R[A] ~= nil (K[Bx - 1] is global name)*/
 OP_VARARGPREP,/* 	(adjust varargs)				*/
 
 OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
-} OpCode;
+} Op_సంకేతం;
 
 
-#define NUM_OPCODES	((int)(OP_EXTRAARG) + 1)
+#నిర్వచించు అంకె_OPCODES	((పూర్ణాంకం)(OP_EXTRAARG) + 1)
 
 
 
@@ -422,23 +422,23 @@ OP_EXTRAARG/*	Ax	extra (larger) argument for previous opcode	*/
 ** bit 7: instruction is an MM instruction (call a metamethod)
 */
 
-LUAI_DDEC(const lu_byte luaP_opmodes[NUM_OPCODES];)
+LUAI_DDEC(స్థిరరాశి lu_byte luaP_opmodes[అంకె_OPCODES];)
 
-#define getOpMode(m)	(cast(enum OpMode, luaP_opmodes[m] & 7))
-#define testAMode(m)	(luaP_opmodes[m] & (1 << 3))
-#define testTMode(m)	(luaP_opmodes[m] & (1 << 4))
-#define testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
+#నిర్వచించు get_Op_బహుళకం(m)	(cast(గణన Op_బహుళకం, luaP_opmodes[m] & 7))
+#నిర్వచించు testAMode(m)	(luaP_opmodes[m] & (1 << 3))
+#నిర్వచించు testTMode(m)	(luaP_opmodes[m] & (1 << 4))
+#నిర్వచించు testMMMode(m)	(luaP_opmodes[m] & (1 << 7))
 
 
 /* Check whether instruction sets top for next instruction, that is,
 ** it results in multiple values. Used only for tests.
 */
-#define luaP_isOT(i)  \
+#నిర్వచించు luaP_isOT(i)  \
 	(GET_OPCODE(i) == OP_TAILCALL || \
 	 ((luaP_opmodes[GET_OPCODE(i)] & (1 << 6)) && GETARG_C(i) == 0))
 
 
-LUAI_FUNC int luaP_isIT (Instruction i);
+LUAI_FUNC పూర్ణాంకం luaP_isIT (Instruction i);
 
 
-#endif
+#అయితే_ముగింపు

@@ -16,13 +16,13 @@
 */
 
 /* default is to build the full interpreter */
-#ifndef MAKE_LIB
-#ifndef MAKE_LUAC
-#ifndef MAKE_LUA
-#define MAKE_LUA
-#endif
-#endif
-#endif
+#నిర్వచితం_కాకపోతే MAKE_LIB
+#నిర్వచితం_కాకపోతే MAKE_LUAC
+#నిర్వచితం_కాకపోతే MAKE_LUA
+#నిర్వచించు MAKE_LUA
+#అయితే_ముగింపు
+#అయితే_ముగింపు
+#అయితే_ముగింపు
 
 
 /*
@@ -30,107 +30,107 @@
 ** platform-specific features. Some of these options may need extra
 ** libraries such as -ldl -lreadline -lncurses
 */
-#if 0
-#define LUA_USE_LINUX
-#define LUA_USE_MACOSX
-#define LUA_USE_POSIX
-#endif
+#ఒకవేళ 0
+#నిర్వచించు LUA_USE_LINUX
+#నిర్వచించు LUA_USE_MACOSX
+#నిర్వచించు LUA_USE_POSIX
+#అయితే_ముగింపు
 
 
 /*
 ** Other specific features
 */
-#if 0
-#define LUA_32BITS
-#define LUA_USE_C89
-#endif
+#ఒకవేళ 0
+#నిర్వచించు LUA_32_బిట్లు
+#నిర్వచించు LUA_USE_C89
+#అయితే_ముగింపు
 
 
 /* no need to change anything below this line ----------------------------- */
 
-#include "lprefix.h"
+#అన్తర్భావ "lprefix.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#అన్తర్భావ <assert.h>
+#అన్తర్భావ <ctype.h>
+#అన్తర్భావ <errno.h>
+#అన్తర్భావ <float.h>
+#అన్తర్భావ <limits.h>
+#అన్తర్భావ <locale.h>
+#అన్తర్భావ <math.h>
+#అన్తర్భావ <setjmp.h>
+#అన్తర్భావ <signal.h>
+#అన్తర్భావ <stdarg.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdio.h>
+#అన్తర్భావ <stdlib.h>
+#అన్తర్భావ <string.h>
+#అన్తర్భావ <time.h>
 
 /* setup for luaconf.h */
-#define LUA_CORE
-#define LUA_LIB
+#నిర్వచించు LUA_CORE
+#నిర్వచించు LUA_LIB
 
-#include "luaconf.h"
+#అన్తర్భావ "luaconf.h"
 
 /* do not export internal symbols */
-#undef LUAI_FUNC
-#undef LUAI_DDEC
-#undef LUAI_DDEF
-#define LUAI_FUNC	static
-#define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
+#నిర్వచనం_రద్దు LUAI_FUNC
+#నిర్వచనం_రద్దు LUAI_DDEC
+#నిర్వచనం_రద్దు LUAI_DDEF
+#నిర్వచించు LUAI_FUNC	స్థిర
+#నిర్వచించు LUAI_DDEC(def)	/*ఖాళీలు*/
+#నిర్వచించు LUAI_DDEF	స్థిర
 
 /* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
+#అన్తర్భావ "lzio.c"
+#అన్తర్భావ "lctype.c"
+#అన్తర్భావ "lopcodes.c"
+#అన్తర్భావ "lmem.c"
+#అన్తర్భావ "lundump.c"
+#అన్తర్భావ "ldump.c"
+#అన్తర్భావ "lstate.c"
+#అన్తర్భావ "lgc.c"
+#అన్తర్భావ "llex.c"
+#అన్తర్భావ "lcode.c"
+#అన్తర్భావ "lparser.c"
+#అన్తర్భావ "ldebug.c"
+#అన్తర్భావ "lfunc.c"
+#అన్తర్భావ "lobject.c"
+#అన్తర్భావ "ltm.c"
+#అన్తర్భావ "lstring.c"
+#అన్తర్భావ "ltable.c"
+#అన్తర్భావ "ldo.c"
+#అన్తర్భావ "lvm.c"
+#అన్తర్భావ "lapi.c"
 
 /* auxiliary library -- used by all */
-#include "lauxlib.c"
+#అన్తర్భావ "lauxlib.c"
 
 /* standard library  -- not used by luac */
-#ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
-#endif
+#నిర్వచితం_కాకపోతే MAKE_LUAC
+#అన్తర్భావ "lbaselib.c"
+#అన్తర్భావ "lcorolib.c"
+#అన్తర్భావ "ldblib.c"
+#అన్తర్భావ "liolib.c"
+#అన్తర్భావ "lmathlib.c"
+#అన్తర్భావ "loadlib.c"
+#అన్తర్భావ "loslib.c"
+#అన్తర్భావ "lstrlib.c"
+#అన్తర్భావ "ltablib.c"
+#అన్తర్భావ "lutf8lib.c"
+#అన్తర్భావ "linit.c"
+#అయితే_ముగింపు
 
 /* test library -- used only for internal development */
-#if defined(LUA_DEBUG)
-#include "ltests.c"
-#endif
+#ఒకవేళ defined(LUA_DEBUG)
+#అన్తర్భావ "ltests.c"
+#అయితే_ముగింపు
 
 /* lua */
-#ifdef MAKE_LUA
-#include "lua.c"
-#endif
+#నిర్వచితమైతే MAKE_LUA
+#అన్తర్భావ "lua.c"
+#అయితే_ముగింపు
 
 /* luac */
-#ifdef MAKE_LUAC
-#include "luac.c"
-#endif
+#నిర్వచితమైతే MAKE_LUAC
+#అన్తర్భావ "luac.c"
+#అయితే_ముగింపు

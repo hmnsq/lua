@@ -4,62 +4,62 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ldebug_h
-#define ldebug_h
+#నిర్వచితం_కాకపోతే ldebug_h
+#నిర్వచించు ldebug_h
 
 
-#include "lstate.h"
+#అన్తర్భావ "lstate.h"
 
 
-#define pcRel(pc, p)	(cast_int((pc) - (p)->code) - 1)
+#నిర్వచించు pcRel(pc, p)	(cast_int((pc) - (p)->సంకేతం_2) - 1)
 
 
 /* Active Lua function (given call info) */
-#define ci_func(ci)		(clLvalue(s2v((ci)->func.p)))
+#నిర్వచించు ci_func(ci)		(clLvalue(s2v((ci)->func.p)))
 
 
-#define resethookcount(L)	(L->hookcount = L->basehookcount)
+#నిర్వచించు resethookcount(L)	(L->hookcount = L->basehookcount)
 
 /*
 ** mark for entries in 'lineinfo' array that has absolute information in
 ** 'abslineinfo' array
 */
-#define ABSLINEINFO	(-0x80)
+#నిర్వచించు ABSLINEINFO	(-0x80)
 
 
 /*
 ** MAXimum number of successive Instructions WiTHout ABSolute line
 ** information. (A power of two allows fast divisions.)
 */
-#if !defined(MAXIWTHABS)
-#define MAXIWTHABS	128
-#endif
+#ఒకవేళ !defined(MAXIWTHABS)
+#నిర్వచించు MAXIWTHABS	128
+#అయితే_ముగింపు
 
 
-LUAI_FUNC int luaG_getfuncline (const Proto *f, int pc);
-LUAI_FUNC const char *luaG_findlocal (lua_State *L, CallInfo *ci, int n,
+LUAI_FUNC పూర్ణాంకం luaG_getfuncline (స్థిరరాశి Proto *f, పూర్ణాంకం pc);
+LUAI_FUNC స్థిరరాశి అక్షరం *luaG_findlocal (lua_State *L, CallInfo *ci, పూర్ణాంకం n,
                                                     StkId *pos);
-LUAI_FUNC l_noret luaG_typeerror (lua_State *L, const TValue *o,
-                                                const char *opname);
-LUAI_FUNC l_noret luaG_callerror (lua_State *L, const TValue *o);
-LUAI_FUNC l_noret luaG_forerror (lua_State *L, const TValue *o,
-                                               const char *what);
-LUAI_FUNC l_noret luaG_concaterror (lua_State *L, const TValue *p1,
-                                                  const TValue *p2);
-LUAI_FUNC l_noret luaG_opinterror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2,
-                                                 const char *msg);
-LUAI_FUNC l_noret luaG_tointerror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2);
-LUAI_FUNC l_noret luaG_ordererror (lua_State *L, const TValue *p1,
-                                                 const TValue *p2);
-LUAI_FUNC l_noret luaG_errnnil (lua_State *L, LClosure *cl, int k);
-LUAI_FUNC l_noret luaG_runerror (lua_State *L, const char *fmt, ...);
-LUAI_FUNC const char *luaG_addinfo (lua_State *L, const char *msg,
-                                                  TString *src, int line);
+LUAI_FUNC l_noret luaG_typeerror (lua_State *L, స్థిరరాశి TValue *o,
+                                                స్థిరరాశి అక్షరం *opname);
+LUAI_FUNC l_noret luaG_callerror (lua_State *L, స్థిరరాశి TValue *o);
+LUAI_FUNC l_noret luaG_forerror (lua_State *L, స్థిరరాశి TValue *o,
+                                               స్థిరరాశి అక్షరం *what);
+LUAI_FUNC l_noret luaG_concaterror (lua_State *L, స్థిరరాశి TValue *p1,
+                                                  స్థిరరాశి TValue *p2);
+LUAI_FUNC l_noret luaG_opinterror (lua_State *L, స్థిరరాశి TValue *p1,
+                                                 స్థిరరాశి TValue *p2,
+                                                 స్థిరరాశి అక్షరం *సందేశం);
+LUAI_FUNC l_noret luaG_tointerror (lua_State *L, స్థిరరాశి TValue *p1,
+                                                 స్థిరరాశి TValue *p2);
+LUAI_FUNC l_noret luaG_ordererror (lua_State *L, స్థిరరాశి TValue *p1,
+                                                 స్థిరరాశి TValue *p2);
+LUAI_FUNC l_noret luaG_errnnil (lua_State *L, LClosure *cl, పూర్ణాంకం k);
+LUAI_FUNC l_noret luaG_runerror (lua_State *L, స్థిరరాశి అక్షరం *fmt, ...);
+LUAI_FUNC స్థిరరాశి అక్షరం *luaG_addinfo (lua_State *L, స్థిరరాశి అక్షరం *సందేశం,
+                                                  TString *src, పూర్ణాంకం పంక్తి);
 LUAI_FUNC l_noret luaG_errormsg (lua_State *L);
-LUAI_FUNC int luaG_traceexec (lua_State *L, const Instruction *pc);
-LUAI_FUNC int luaG_tracecall (lua_State *L);
+LUAI_FUNC పూర్ణాంకం luaG_traceexec (lua_State *L, స్థిరరాశి Instruction *pc);
+LUAI_FUNC పూర్ణాంకం luaG_tracecall (lua_State *L);
 
 
-#endif
+#అయితే_ముగింపు

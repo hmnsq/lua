@@ -4,17 +4,17 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lmem_h
-#define lmem_h
+#నిర్వచితం_కాకపోతే lmem_h
+#నిర్వచించు lmem_h
 
 
-#include <stddef.h>
+#అన్తర్భావ <stddef.h>
 
-#include "llimits.h"
-#include "lua.h"
+#అన్తర్భావ "llimits.h"
+#అన్తర్భావ "lua.h"
 
 
-#define luaM_error(L)	luaD_throw(L, LUA_ERRMEM)
+#నిర్వచించు luaM_error(L)	luaD_throw(L, LUA_ERRMEM)
 
 
 /*
@@ -28,10 +28,10 @@
 ** false due to limited range of data type"; the +1 tricks the compiler,
 ** avoiding this warning but also this optimization.)
 */
-#define luaM_testsize(n,e)  \
-	(sizeof(n) >= sizeof(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
+#నిర్వచించు luaM_testsize(n,e)  \
+	(పరిమాణం(n) >= పరిమాణం(size_t) && cast_sizet((n)) + 1 > MAX_SIZET/(e))
 
-#define luaM_checksize(L,n,e)  \
+#నిర్వచించు luaM_checksize(L,n,e)  \
 	(luaM_testsize(n,e) ? luaM_toobig(L) : cast_void(0))
 
 
@@ -41,56 +41,56 @@
 ** when multiplied by the size of type 't'. (Assumes that 'n' is an
 ** 'int' and that 'int' is not larger than 'size_t'.)
 */
-#define luaM_limitN(n,t)  \
-  ((cast_sizet(n) <= MAX_SIZET/sizeof(t)) ? (n) :  \
-     cast_int((MAX_SIZET/sizeof(t))))
+#నిర్వచించు lua_M_హద్దు_N(n,t)  \
+  ((cast_sizet(n) <= MAX_SIZET/పరిమాణం(t)) ? (n) :  \
+     cast_int((MAX_SIZET/పరిమాణం(t))))
 
 
 /*
 ** Arrays of chars do not need any test
 */
-#define luaM_reallocvchar(L,b,on,n)  \
-  cast_charp(luaM_saferealloc_(L, (b), (on)*sizeof(char), (n)*sizeof(char)))
+#నిర్వచించు luaM_reallocvchar(L,b,on,n)  \
+  cast_charp(luaM_saferealloc_(L, (b), (on)*పరిమాణం(అక్షరం), (n)*పరిమాణం(అక్షరం)))
 
-#define luaM_freemem(L, b, s)	luaM_free_(L, (b), (s))
-#define luaM_free(L, b)		luaM_free_(L, (b), sizeof(*(b)))
-#define luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*sizeof(*(b)))
+#నిర్వచించు luaM_freemem(L, b, s)	luaM_free_(L, (b), (s))
+#నిర్వచించు luaM_free(L, b)		luaM_free_(L, (b), పరిమాణం(*(b)))
+#నిర్వచించు luaM_freearray(L, b, n)   luaM_free_(L, (b), (n)*పరిమాణం(*(b)))
 
-#define luaM_new(L,t)		cast(t*, luaM_malloc_(L, sizeof(t), 0))
-#define luaM_newvector(L,n,t)  \
-	cast(t*, luaM_malloc_(L, cast_sizet(n)*sizeof(t), 0))
-#define luaM_newvectorchecked(L,n,t) \
-  (luaM_checksize(L,n,sizeof(t)), luaM_newvector(L,n,t))
+#నిర్వచించు luaM_new(L,t)		cast(t*, luaM_malloc_(L, పరిమాణం(t), 0))
+#నిర్వచించు luaM_newvector(L,n,t)  \
+	cast(t*, luaM_malloc_(L, cast_sizet(n)*పరిమాణం(t), 0))
+#నిర్వచించు luaM_newvectorchecked(L,n,t) \
+  (luaM_checksize(L,n,పరిమాణం(t)), luaM_newvector(L,n,t))
 
-#define luaM_newobject(L,tag,s)	luaM_malloc_(L, (s), tag)
+#నిర్వచించు luaM_newobject(L,ట్యాగ్,s)	luaM_malloc_(L, (s), ట్యాగ్)
 
-#define luaM_newblock(L, size)	luaM_newvector(L, size, char)
+#నిర్వచించు luaM_newblock(L, కొలత)	luaM_newvector(L, కొలత, అక్షరం)
 
-#define luaM_growvector(L,v,nelems,size,t,limit,e) \
-	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(size),sizeof(t), \
-                         luaM_limitN(limit,t),e)))
+#నిర్వచించు luaM_growvector(L,v,nelems,కొలత,t,హద్దు,e) \
+	((v)=cast(t *, luaM_growaux_(L,v,nelems,&(కొలత),పరిమాణం(t), \
+                         lua_M_హద్దు_N(హద్దు,t),e)))
 
-#define luaM_reallocvector(L, v,oldn,n,t) \
-   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * sizeof(t), \
-                                  cast_sizet(n) * sizeof(t))))
+#నిర్వచించు luaM_reallocvector(L, v,oldn,n,t) \
+   (cast(t *, luaM_realloc_(L, v, cast_sizet(oldn) * పరిమాణం(t), \
+                                  cast_sizet(n) * పరిమాణం(t))))
 
-#define luaM_shrinkvector(L,v,size,fs,t) \
-   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(size), fs, sizeof(t))))
+#నిర్వచించు luaM_shrinkvector(L,v,కొలత,fs,t) \
+   ((v)=cast(t *, luaM_shrinkvector_(L, v, &(కొలత), fs, పరిమాణం(t))))
 
 LUAI_FUNC l_noret luaM_toobig (lua_State *L);
 
 /* not to be called directly */
-LUAI_FUNC void *luaM_realloc_ (lua_State *L, void *block, size_t oldsize,
-                                                          size_t size);
-LUAI_FUNC void *luaM_saferealloc_ (lua_State *L, void *block, size_t oldsize,
-                                                              size_t size);
-LUAI_FUNC void luaM_free_ (lua_State *L, void *block, size_t osize);
-LUAI_FUNC void *luaM_growaux_ (lua_State *L, void *block, int nelems,
-                               int *size, unsigned size_elem, int limit,
-                               const char *what);
-LUAI_FUNC void *luaM_shrinkvector_ (lua_State *L, void *block, int *nelem,
-                                    int final_n, unsigned size_elem);
-LUAI_FUNC void *luaM_malloc_ (lua_State *L, size_t size, int tag);
+LUAI_FUNC శూన్య *luaM_realloc_ (lua_State *L, శూన్య *ఖండం, size_t oldsize,
+                                                          size_t కొలత);
+LUAI_FUNC శూన్య *luaM_saferealloc_ (lua_State *L, శూన్య *ఖండం, size_t oldsize,
+                                                              size_t కొలత);
+LUAI_FUNC శూన్య luaM_free_ (lua_State *L, శూన్య *ఖండం, size_t osize);
+LUAI_FUNC శూన్య *luaM_growaux_ (lua_State *L, శూన్య *ఖండం, పూర్ణాంకం nelems,
+                               పూర్ణాంకం *కొలత, గుర్తులేని కొలత_elem, పూర్ణాంకం హద్దు,
+                               స్థిరరాశి అక్షరం *what);
+LUAI_FUNC శూన్య *luaM_shrinkvector_ (lua_State *L, శూన్య *ఖండం, పూర్ణాంకం *nelem,
+                                    పూర్ణాంకం final_n, గుర్తులేని కొలత_elem);
+LUAI_FUNC శూన్య *luaM_malloc_ (lua_State *L, size_t కొలత, పూర్ణాంకం ట్యాగ్);
 
-#endif
+#అయితే_ముగింపు
 

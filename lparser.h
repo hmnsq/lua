@@ -4,12 +4,12 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lparser_h
-#define lparser_h
+#నిర్వచితం_కాకపోతే lparser_h
+#నిర్వచించు lparser_h
 
-#include "llimits.h"
-#include "lobject.h"
-#include "lzio.h"
+#అన్తర్భావ "llimits.h"
+#అన్తర్భావ "lobject.h"
+#అన్తర్భావ "lzio.h"
 
 
 /*
@@ -22,7 +22,7 @@
 */
 
 /* kinds of variables/expressions */
-typedef enum {
+రకనిర్వచనం గణన {
   VVOID,  /* when 'expdesc' describes the last expression of a list,
              this kind means an empty list (so, no expression) */
   VNIL,  /* constant nil */
@@ -71,56 +71,56 @@ typedef enum {
 } expkind;
 
 
-#define vkisvar(k)	(VLOCAL <= (k) && (k) <= VINDEXSTR)
-#define vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
+#నిర్వచించు vkisvar(k)	(VLOCAL <= (k) && (k) <= VINDEXSTR)
+#నిర్వచించు vkisindexed(k)	(VINDEXED <= (k) && (k) <= VINDEXSTR)
 
 
-typedef struct expdesc {
+రకనిర్వచనం నిర్మాణం expdesc {
   expkind k;
-  union {
+  సంఘం {
     lua_Integer ival;    /* for VKINT */
-    lua_Number nval;  /* for VKFLT */
+    lua_సంఖ్య nval;  /* for VKFLT */
     TString *strval;  /* for VKSTR */
-    int info;  /* for generic use */
-    struct {  /* for indexed variables */
-      short idx;  /* index (R or "long" K) */
+    పూర్ణాంకం info;  /* for generic use */
+    నిర్మాణం {  /* for indexed variables */
+      పొట్టి idx;  /* index (R or "long" K) */
       lu_byte t;  /* table (register or upvalue) */
       lu_byte ro;  /* true if variable is read-only */
-      int keystr;  /* index in 'k' of string key, or -1 if not a string */
+      పూర్ణాంకం keystr;  /* index in 'k' of string key, or -1 if not a string */
     } ind;
-    struct {  /* for local variables */
+    నిర్మాణం {  /* for local variables */
       lu_byte ridx;  /* register holding the variable */
-      short vidx;  /* index in 'actvar.arr' */
+      పొట్టి vidx;  /* index in 'actvar.arr' */
     } var;
   } u;
-  int t;  /* patch list of 'exit when true' */
-  int f;  /* patch list of 'exit when false' */
+  పూర్ణాంకం t;  /* patch list of 'exit when true' */
+  పూర్ణాంకం f;  /* patch list of 'exit when false' */
 } expdesc;
 
 
 /* kinds of variables */
-#define VDKREG		0   /* regular local */
-#define RDKCONST	1   /* local constant */
-#define RDKVAVAR	2   /* vararg parameter */
-#define RDKTOCLOSE	3   /* to-be-closed */
-#define RDKCTC		4   /* local compile-time constant */
-#define GDKREG		5   /* regular global */
-#define GDKCONST	6   /* global constant */
+#నిర్వచించు VDKREG		0   /* regular local */
+#నిర్వచించు RDKCONST	1   /* local constant */
+#నిర్వచించు RDKVAVAR	2   /* vararg parameter */
+#నిర్వచించు RDKTOCLOSE	3   /* to-be-closed */
+#నిర్వచించు RDKCTC		4   /* local compile-time constant */
+#నిర్వచించు GDKREG		5   /* regular global */
+#నిర్వచించు GDKCONST	6   /* global constant */
 
 /* variables that live in registers */
-#define varinreg(v)	((v)->vd.kind <= RDKTOCLOSE)
+#నిర్వచించు varinreg(v)	((v)->vd.రకం <= RDKTOCLOSE)
 
 /* test for global variables */
-#define varglobal(v)	((v)->vd.kind >= GDKREG)
+#నిర్వచించు varglobal(v)	((v)->vd.రకం >= GDKREG)
 
 
 /* description of an active variable */
-typedef union Vardesc {
-  struct {
+రకనిర్వచనం సంఘం Vardesc {
+  నిర్మాణం {
     TValuefields;  /* constant value (if it is a compile-time constant) */
-    lu_byte kind;
+    lu_byte రకం;
     lu_byte ridx;  /* register holding the variable */
-    short pidx;  /* index of the variable in the Proto's 'locvars' array */
+    పొట్టి pidx;  /* index of the variable in the Proto's 'locvars' array */
     TString *name;  /* variable name */
   } vd;
   TValue k;  /* constant value (if any) */
@@ -129,29 +129,29 @@ typedef union Vardesc {
 
 
 /* description of pending goto statements and label statements */
-typedef struct Labeldesc {
+రకనిర్వచనం నిర్మాణం Labeldesc {
   TString *name;  /* label identifier */
-  int pc;  /* position in code */
-  int line;  /* line where it appeared */
-  short nactvar;  /* number of active variables in that position */
+  పూర్ణాంకం pc;  /* position in code */
+  పూర్ణాంకం పంక్తి;  /* line where it appeared */
+  పొట్టి nactvar;  /* number of active variables in that position */
   lu_byte close;  /* true for goto that escapes upvalues */
 } Labeldesc;
 
 
 /* list of labels or gotos */
-typedef struct Labellist {
+రకనిర్వచనం నిర్మాణం Labellist {
   Labeldesc *arr;  /* array */
-  int n;  /* number of entries in use */
-  int size;  /* array size */
+  పూర్ణాంకం n;  /* number of entries in use */
+  పూర్ణాంకం కొలత;  /* array size */
 } Labellist;
 
 
 /* dynamic structures used by the parser */
-typedef struct Dyndata {
-  struct {  /* list of all active local variables */
+రకనిర్వచనం నిర్మాణం Dyndata {
+  నిర్మాణం {  /* list of all active local variables */
     Vardesc *arr;
-    int n;
-    int size;
+    పూర్ణాంకం n;
+    పూర్ణాంకం కొలత;
   } actvar;
   Labellist gt;  /* list of pending gotos */
   Labellist label;   /* list of active labels */
@@ -159,26 +159,26 @@ typedef struct Dyndata {
 
 
 /* control of blocks */
-struct BlockCnt;  /* defined in lparser.c */
+నిర్మాణం ఖండం_Cnt;  /* defined in lparser.c */
 
 
 /* state needed to generate code for a given function */
-typedef struct FuncState {
+రకనిర్వచనం నిర్మాణం FuncState {
   Proto *f;  /* current function header */
-  struct FuncState *prev;  /* enclosing function */
-  struct LexState *ls;  /* lexical state */
-  struct BlockCnt *bl;  /* chain of current blocks */
-  Table *kcache;  /* cache for reusing constants */
-  int pc;  /* next position to code (equivalent to 'ncode') */
-  int lasttarget;   /* 'label' of last 'jump label' */
-  int previousline;  /* last line that was saved in 'lineinfo' */
-  int nk;  /* number of elements in 'k' */
-  int np;  /* number of elements in 'p' */
-  int nabslineinfo;  /* number of elements in 'abslineinfo' */
-  int firstlocal;  /* index of first local var (in Dyndata array) */
-  int firstlabel;  /* index of first label (in 'dyd->label->arr') */
-  short ndebugvars;  /* number of elements in 'f->locvars' */
-  short nactvar;  /* number of active variable declarations */
+  నిర్మాణం FuncState *prev;  /* enclosing function */
+  నిర్మాణం LexState *ls;  /* lexical state */
+  నిర్మాణం ఖండం_Cnt *bl;  /* chain of current blocks */
+  పట్టిక *kcache;  /* cache for reusing constants */
+  పూర్ణాంకం pc;  /* next position to code (equivalent to 'ncode') */
+  పూర్ణాంకం lasttarget;   /* 'label' of last 'jump label' */
+  పూర్ణాంకం previousline;  /* last line that was saved in 'lineinfo' */
+  పూర్ణాంకం nk;  /* number of elements in 'k' */
+  పూర్ణాంకం np;  /* number of elements in 'p' */
+  పూర్ణాంకం nabslineinfo;  /* number of elements in 'abslineinfo' */
+  పూర్ణాంకం firstlocal;  /* index of first local var (in Dyndata array) */
+  పూర్ణాంకం firstlabel;  /* index of first label (in 'dyd->label->arr') */
+  పొట్టి ndebugvars;  /* number of elements in 'f->locvars' */
+  పొట్టి nactvar;  /* number of active variable declarations */
   lu_byte nups;  /* number of upvalues */
   lu_byte freereg;  /* first free register */
   lu_byte iwthabs;  /* instructions issued since last absolute line info */
@@ -187,11 +187,11 @@ typedef struct FuncState {
 
 
 LUAI_FUNC lu_byte luaY_nvarstack (FuncState *fs);
-LUAI_FUNC void luaY_checklimit (FuncState *fs, int v, int l,
-                                const char *what);
-LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, Table *anchor,
+LUAI_FUNC శూన్య luaY_checklimit (FuncState *fs, పూర్ణాంకం v, పూర్ణాంకం l,
+                                స్థిరరాశి అక్షరం *what);
+LUAI_FUNC LClosure *luaY_parser (lua_State *L, ZIO *z, పట్టిక *anchor,
                                  Mbuffer *buff, Dyndata *dyd,
-                                 const char *name, int firstchar);
+                                 స్థిరరాశి అక్షరం *name, పూర్ణాంకం firstchar);
 
 
-#endif
+#అయితే_ముగింపు

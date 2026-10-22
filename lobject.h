@@ -5,30 +5,30 @@
 */
 
 
-#ifndef lobject_h
-#define lobject_h
+#నిర్వచితం_కాకపోతే lobject_h
+#నిర్వచించు lobject_h
 
 
-#include <stdarg.h>
+#అన్తర్భావ <stdarg.h>
 
 
-#include "llimits.h"
-#include "lua.h"
+#అన్తర్భావ "llimits.h"
+#అన్తర్భావ "lua.h"
 
 
 /*
 ** Extra types for collectable non-values
 */
-#define LUA_TUPVAL	LUA_NUMTYPES  /* upvalues */
-#define LUA_TPROTO	(LUA_NUMTYPES+1)  /* function prototypes */
-#define LUA_TDEADKEY	(LUA_NUMTYPES+2)  /* removed keys in tables */
+#నిర్వచించు LUA_TUPVAL	LUA_NUMTYPES  /* upvalues */
+#నిర్వచించు LUA_TPROTO	(LUA_NUMTYPES+1)  /* function prototypes */
+#నిర్వచించు LUA_TDEADKEY	(LUA_NUMTYPES+2)  /* removed keys in tables */
 
 
 
 /*
 ** number of all possible types (including LUA_TNONE but excluding DEADKEY)
 */
-#define LUA_TOTALTYPES		(LUA_TPROTO + 2)
+#నిర్వచించు LUA_TOTALTYPES		(LUA_TPROTO + 2)
 
 
 /*
@@ -39,22 +39,22 @@
 */
 
 /* add variant bits to a type */
-#define makevariant(t,v)	((t) | ((v) << 4))
+#నిర్వచించు makevariant(t,v)	((t) | ((v) << 4))
 
 
 
 /*
 ** Union of all Lua values
 */
-typedef union Value {
-  struct GCObject *gc;    /* collectable objects */
-  void *p;         /* light userdata */
+రకనిర్వచనం సంఘం విలువ_2 {
+  నిర్మాణం GCObject *gc;    /* collectable objects */
+  శూన్య *p;         /* light userdata */
   lua_CFunction f; /* light C functions */
   lua_Integer i;   /* integer numbers */
-  lua_Number n;    /* float numbers */
+  lua_సంఖ్య n;    /* float numbers */
   /* not used, but may avoid warnings for uninitialized value */
   lu_byte ub;
-} Value;
+} విలువ_2;
 
 
 /*
@@ -62,40 +62,40 @@ typedef union Value {
 ** an actual value plus a tag with its type.
 */
 
-#define TValuefields	Value value_; lu_byte tt_
+#నిర్వచించు TValuefields	విలువ_2 విలువ_3; lu_byte tt_
 
-typedef struct TValue {
+రకనిర్వచనం నిర్మాణం TValue {
   TValuefields;
 } TValue;
 
 
-#define val_(o)		((o)->value_)
-#define valraw(o)	(val_(o))
+#నిర్వచించు val_(o)		((o)->విలువ_3)
+#నిర్వచించు valraw(o)	(val_(o))
 
 
 /* raw type tag of a TValue */
-#define rawtt(o)	((o)->tt_)
+#నిర్వచించు rawtt(o)	((o)->tt_)
 
 /* tag with no variants (bits 0-3) */
-#define novariant(t)	((t) & 0x0F)
+#నిర్వచించు novariant(t)	((t) & 0x0F)
 
 /* type tag of a TValue (bits 0-3 for tags + variant bits 4-5) */
-#define withvariant(t)	((t) & 0x3F)
-#define ttypetag(o)	withvariant(rawtt(o))
+#నిర్వచించు withvariant(t)	((t) & 0x3F)
+#నిర్వచించు ttypetag(o)	withvariant(rawtt(o))
 
 /* type of a TValue */
-#define ttype(o)	(novariant(rawtt(o)))
+#నిర్వచించు ttype(o)	(novariant(rawtt(o)))
 
 
 /* Macros to test type */
-#define checktag(o,t)		(rawtt(o) == (t))
-#define checktype(o,t)		(ttype(o) == (t))
+#నిర్వచించు checktag(o,t)		(rawtt(o) == (t))
+#నిర్వచించు checktype(o,t)		(ttype(o) == (t))
 
 
 /* Macros for internal tests */
 
 /* collectable object has the same tag as the original value */
-#define righttt(obj)		(ttypetag(obj) == gcvalue(obj)->tt)
+#నిర్వచించు righttt(obj)		(ttypetag(obj) == gcvalue(obj)->tt)
 
 /*
 ** Any value being manipulated by the program either is non
@@ -103,21 +103,21 @@ typedef struct TValue {
 ** and it is not dead. The option 'L == NULL' allows other
 ** macros using this one to be used where L is not available.
 */
-#define checkliveness(L,obj) \
-	((void)L, lua_longassert(!iscollectable(obj) || \
-		(righttt(obj) && (L == NULL || !isdead(G(L),gcvalue(obj))))))
+#నిర్వచించు checkliveness(L,obj) \
+	((శూన్య)L, lua_longassert(!iscollectable(obj) || \
+		(righttt(obj) && (L == ఖాళీ || !isdead(G(L),gcvalue(obj))))))
 
 
 /* Macros to set values */
 
 /* set a value's tag */
-#define settt_(o,t)	((o)->tt_=(t))
+#నిర్వచించు settt_(o,t)	((o)->tt_=(t))
 
 
 /* main macro to copy values (from 'obj2' to 'obj1') */
-#define setobj(L,obj1,obj2) \
-	{ TValue *io1=(obj1); const TValue *io2=(obj2); \
-          io1->value_ = io2->value_; settt_(io1, io2->tt_); \
+#నిర్వచించు setobj(L,obj1,obj2) \
+	{ TValue *io1=(obj1); స్థిరరాశి TValue *io2=(obj2); \
+          io1->విలువ_3 = io2->విలువ_3; settt_(io1, io2->tt_); \
 	  checkliveness(L,io1); lua_assert(!isnonstrictnil(io1)); }
 
 /*
@@ -126,15 +126,15 @@ typedef struct TValue {
 */
 
 /* from stack to stack */
-#define setobjs2s(L,o1,o2)	setobj(L,s2v(o1),s2v(o2))
+#నిర్వచించు setobjs2s(L,o1,o2)	setobj(L,s2v(o1),s2v(o2))
 /* to stack (not from same stack) */
-#define setobj2s(L,o1,o2)	setobj(L,s2v(o1),o2)
+#నిర్వచించు setobj2s(L,o1,o2)	setobj(L,s2v(o1),o2)
 /* from table to same table */
-#define setobjt2t	setobj
+#నిర్వచించు setobjt2t	setobj
 /* to new object */
-#define setobj2n	setobj
+#నిర్వచించు setobj2n	setobj
 /* to table */
-#define setobj2t	setobj
+#నిర్వచించు setobj2t	setobj
 
 
 /*
@@ -145,31 +145,31 @@ typedef struct TValue {
 ** their real delta is always the maximum value that fits in
 ** that field.
 */
-typedef union StackValue {
+రకనిర్వచనం సంఘం దొంతర_విలువ {
   TValue val;
-  struct {
+  నిర్మాణం {
     TValuefields;
-    unsigned short delta;
+    గుర్తులేని పొట్టి delta;
   } tbclist;
-} StackValue;
+} దొంతర_విలువ;
 
 
 /* index to stack elements */
-typedef StackValue *StkId;
+రకనిర్వచనం దొంతర_విలువ *StkId;
 
 
 /*
 ** When reallocating the stack, change all pointers to the stack into
 ** proper offsets.
 */
-typedef union {
+రకనిర్వచనం సంఘం {
   StkId p;  /* actual pointer */
-  ptrdiff_t offset;  /* used while the stack is being reallocated */
+  ptrdiff_t స్థానభ్రంశం;  /* used while the stack is being reallocated */
 } StkIdRel;
 
 
 /* convert a 'StackValue' to a 'TValue' */
-#define s2v(o)	(&(o)->val)
+#నిర్వచించు s2v(o)	(&(o)->val)
 
 
 
@@ -180,20 +180,20 @@ typedef union {
 */
 
 /* Standard nil */
-#define LUA_VNIL	makevariant(LUA_TNIL, 0)
+#నిర్వచించు LUA_VNIL	makevariant(LUA_TNIL, 0)
 
 /* Empty slot (which might be different from a slot containing nil) */
-#define LUA_VEMPTY	makevariant(LUA_TNIL, 1)
+#నిర్వచించు LUA_VEMPTY	makevariant(LUA_TNIL, 1)
 
 /* Value returned for a key not found in a table (absent key) */
-#define LUA_VABSTKEY	makevariant(LUA_TNIL, 2)
+#నిర్వచించు LUA_VABSTKEY	makevariant(LUA_TNIL, 2)
 
 /* Special variant to signal that a fast get is accessing a non-table */
-#define LUA_VNOTABLE    makevariant(LUA_TNIL, 3)
+#నిర్వచించు LUA_VNOTABLE    makevariant(LUA_TNIL, 3)
 
 
 /* macro to test for (any kind of) nil */
-#define ttisnil(v)		checktype((v), LUA_TNIL)
+#నిర్వచించు ttisnil(v)		checktype((v), LUA_TNIL)
 
 /*
 ** Macro to test the result of a table access. Formally, it should
@@ -201,24 +201,24 @@ typedef union {
 ** other tags. As currently nil is equivalent to LUA_VEMPTY, it is
 ** simpler to just test whether the value is nil.
 */
-#define tagisempty(tag)		(novariant(tag) == LUA_TNIL)
+#నిర్వచించు tagisempty(ట్యాగ్)		(novariant(ట్యాగ్) == LUA_TNIL)
 
 
 /* macro to test for a standard nil */
-#define ttisstrictnil(o)	checktag((o), LUA_VNIL)
+#నిర్వచించు ttisstrictnil(o)	checktag((o), LUA_VNIL)
 
 
-#define setnilvalue(obj)	settt_(obj, LUA_VNIL)
-#define setnilvalue2s(stk)	setnilvalue(s2v(stk))
+#నిర్వచించు setnilvalue(obj)	settt_(obj, LUA_VNIL)
+#నిర్వచించు setnilvalue2s(stk)	setnilvalue(s2v(stk))
 
 
-#define isabstkey(v)		checktag((v), LUA_VABSTKEY)
+#నిర్వచించు isabstkey(v)		checktag((v), LUA_VABSTKEY)
 
 
 /*
 ** macro to detect non-standard nils (used only in assertions)
 */
-#define isnonstrictnil(v)	(ttisnil(v) && !ttisstrictnil(v))
+#నిర్వచించు isnonstrictnil(v)	(ttisnil(v) && !ttisstrictnil(v))
 
 
 /*
@@ -226,15 +226,15 @@ typedef union {
 ** (In any definition, values associated with absent keys must also
 ** be accepted as empty.)
 */
-#define isempty(v)		ttisnil(v)
+#నిర్వచించు isempty(v)		ttisnil(v)
 
 
 /* macro defining a value corresponding to an absent key */
-#define ABSTKEYCONSTANT		{NULL}, LUA_VABSTKEY
+#నిర్వచించు ABSTKEYCONSTANT		{ఖాళీ}, LUA_VABSTKEY
 
 
 /* mark an entry as empty */
-#define setempty(v)		settt_(v, LUA_VEMPTY)
+#నిర్వచించు setempty(v)		settt_(v, LUA_VEMPTY)
 
 
 
@@ -248,21 +248,21 @@ typedef union {
 */
 
 
-#define LUA_VFALSE	makevariant(LUA_TBOOLEAN, 0)
-#define LUA_VTRUE	makevariant(LUA_TBOOLEAN, 1)
+#నిర్వచించు LUA_VFALSE	makevariant(LUA_TBOOLEAN, 0)
+#నిర్వచించు LUA_VTRUE	makevariant(LUA_TBOOLEAN, 1)
 
-#define ttisboolean(o)		checktype((o), LUA_TBOOLEAN)
-#define ttisfalse(o)		checktag((o), LUA_VFALSE)
-#define ttistrue(o)		checktag((o), LUA_VTRUE)
-
-
-#define l_isfalse(o)	(ttisfalse(o) || ttisnil(o))
-#define tagisfalse(t)	((t) == LUA_VFALSE || novariant(t) == LUA_TNIL)
+#నిర్వచించు ttisboolean(o)		checktype((o), LUA_TBOOLEAN)
+#నిర్వచించు ttisfalse(o)		checktag((o), LUA_VFALSE)
+#నిర్వచించు ttistrue(o)		checktag((o), LUA_VTRUE)
 
 
+#నిర్వచించు l_isfalse(o)	(ttisfalse(o) || ttisnil(o))
+#నిర్వచించు tagisfalse(t)	((t) == LUA_VFALSE || novariant(t) == LUA_TNIL)
 
-#define setbfvalue(obj)		settt_(obj, LUA_VFALSE)
-#define setbtvalue(obj)		settt_(obj, LUA_VTRUE)
+
+
+#నిర్వచించు setbfvalue(obj)		settt_(obj, LUA_VFALSE)
+#నిర్వచించు setbtvalue(obj)		settt_(obj, LUA_VTRUE)
 
 /* }================================================================== */
 
@@ -273,18 +273,18 @@ typedef union {
 ** ===================================================================
 */
 
-#define LUA_VTHREAD		makevariant(LUA_TTHREAD, 0)
+#నిర్వచించు LUA_VTHREAD		makevariant(LUA_TTHREAD, 0)
 
-#define ttisthread(o)		checktag((o), ctb(LUA_VTHREAD))
+#నిర్వచించు ttisthread(o)		checktag((o), ctb(LUA_VTHREAD))
 
-#define thvalue(o)	check_exp(ttisthread(o), gco2th(val_(o).gc))
+#నిర్వచించు thvalue(o)	check_exp(ttisthread(o), gco2th(val_(o).gc))
 
-#define setthvalue(L,obj,x) \
+#నిర్వచించు setthvalue(L,obj,x) \
   { TValue *io = (obj); lua_State *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(LUA_VTHREAD)); \
     checkliveness(L,io); }
 
-#define setthvalue2s(L,o,t)	setthvalue(L,s2v(o),t)
+#నిర్వచించు setthvalue2s(L,o,t)	setthvalue(L,s2v(o),t)
 
 /* }================================================================== */
 
@@ -299,28 +299,28 @@ typedef union {
 ** Common Header for all collectable objects (in macro form, to be
 ** included in other objects)
 */
-#define CommonHeader	struct GCObject *next; lu_byte tt; lu_byte marked
+#నిర్వచించు Common_శీర్షిక	నిర్మాణం GCObject *తదుపరి; lu_byte tt; lu_byte marked
 
 
 /* Common type for all collectable objects */
-typedef struct GCObject {
-  CommonHeader;
+రకనిర్వచనం నిర్మాణం GCObject {
+  Common_శీర్షిక;
 } GCObject;
 
 
 /* Bit mark for collectable types */
-#define BIT_ISCOLLECTABLE	(1 << 6)
+#నిర్వచించు బిట్టు_ISCOLLECTABLE	(1 << 6)
 
-#define iscollectable(o)	(rawtt(o) & BIT_ISCOLLECTABLE)
+#నిర్వచించు iscollectable(o)	(rawtt(o) & బిట్టు_ISCOLLECTABLE)
 
 /* mark a tag as collectable */
-#define ctb(t)			((t) | BIT_ISCOLLECTABLE)
+#నిర్వచించు ctb(t)			((t) | బిట్టు_ISCOLLECTABLE)
 
-#define gcvalue(o)	check_exp(iscollectable(o), val_(o).gc)
+#నిర్వచించు gcvalue(o)	check_exp(iscollectable(o), val_(o).gc)
 
-#define gcvalueraw(v)	((v).gc)
+#నిర్వచించు gcvalueraw(v)	((v).gc)
 
-#define setgcovalue(L,obj,x) \
+#నిర్వచించు setgcovalue(L,obj,x) \
   { TValue *io = (obj); GCObject *i_g=(x); \
     val_(io).gc = i_g; settt_(io, ctb(i_g->tt)); }
 
@@ -334,31 +334,31 @@ typedef struct GCObject {
 */
 
 /* Variant tags for numbers */
-#define LUA_VNUMINT	makevariant(LUA_TNUMBER, 0)  /* integer numbers */
-#define LUA_VNUMFLT	makevariant(LUA_TNUMBER, 1)  /* float numbers */
+#నిర్వచించు LUA_VNUMINT	makevariant(LUA_TNUMBER, 0)  /* integer numbers */
+#నిర్వచించు LUA_VNUMFLT	makevariant(LUA_TNUMBER, 1)  /* float numbers */
 
-#define ttisnumber(o)		checktype((o), LUA_TNUMBER)
-#define ttisfloat(o)		checktag((o), LUA_VNUMFLT)
-#define ttisinteger(o)		checktag((o), LUA_VNUMINT)
+#నిర్వచించు ttisnumber(o)		checktype((o), LUA_TNUMBER)
+#నిర్వచించు ttisfloat(o)		checktag((o), LUA_VNUMFLT)
+#నిర్వచించు ttisinteger(o)		checktag((o), LUA_VNUMINT)
 
-#define nvalue(o)	check_exp(ttisnumber(o), \
-	(ttisinteger(o) ? cast_num(ivalue(o)) : fltvalue(o)))
-#define fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
-#define ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
+#నిర్వచించు nvalue(o)	check_exp(ttisnumber(o), \
+	(ttisinteger(o) ? cast_అంకె(ivalue(o)) : fltvalue(o)))
+#నిర్వచించు fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
+#నిర్వచించు ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
 
-#define fltvalueraw(v)	((v).n)
-#define ivalueraw(v)	((v).i)
+#నిర్వచించు fltvalueraw(v)	((v).n)
+#నిర్వచించు ivalueraw(v)	((v).i)
 
-#define setfltvalue(obj,x) \
+#నిర్వచించు setfltvalue(obj,x) \
   { TValue *io=(obj); val_(io).n=(x); settt_(io, LUA_VNUMFLT); }
 
-#define chgfltvalue(obj,x) \
+#నిర్వచించు chgfltvalue(obj,x) \
   { TValue *io=(obj); lua_assert(ttisfloat(io)); val_(io).n=(x); }
 
-#define setivalue(obj,x) \
+#నిర్వచించు setivalue(obj,x) \
   { TValue *io=(obj); val_(io).i=(x); settt_(io, LUA_VNUMINT); }
 
-#define chgivalue(obj,x) \
+#నిర్వచించు chgivalue(obj,x) \
   { TValue *io=(obj); lua_assert(ttisinteger(io)); val_(io).i=(x); }
 
 /* }================================================================== */
@@ -371,74 +371,74 @@ typedef struct GCObject {
 */
 
 /* Variant tags for strings */
-#define LUA_VSHRSTR	makevariant(LUA_TSTRING, 0)  /* short strings */
-#define LUA_VLNGSTR	makevariant(LUA_TSTRING, 1)  /* long strings */
+#నిర్వచించు LUA_VSHRSTR	makevariant(LUA_TSTRING, 0)  /* short strings */
+#నిర్వచించు LUA_VLNGSTR	makevariant(LUA_TSTRING, 1)  /* long strings */
 
-#define ttisstring(o)		checktype((o), LUA_TSTRING)
-#define ttisshrstring(o)	checktag((o), ctb(LUA_VSHRSTR))
-#define ttislngstring(o)	checktag((o), ctb(LUA_VLNGSTR))
+#నిర్వచించు ttisstring(o)		checktype((o), LUA_TSTRING)
+#నిర్వచించు ttisshrstring(o)	checktag((o), ctb(LUA_VSHRSTR))
+#నిర్వచించు ttislngstring(o)	checktag((o), ctb(LUA_VLNGSTR))
 
-#define tsvalueraw(v)	(gco2ts((v).gc))
+#నిర్వచించు tsvalueraw(v)	(gco2ts((v).gc))
 
-#define tsvalue(o)	check_exp(ttisstring(o), gco2ts(val_(o).gc))
+#నిర్వచించు tsvalue(o)	check_exp(ttisstring(o), gco2ts(val_(o).gc))
 
-#define setsvalue(L,obj,x) \
+#నిర్వచించు setsvalue(L,obj,x) \
   { TValue *io = (obj); TString *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(x_->tt)); \
     checkliveness(L,io); }
 
 /* set a string to the stack */
-#define setsvalue2s(L,o,s)	setsvalue(L,s2v(o),s)
+#నిర్వచించు setsvalue2s(L,o,s)	setsvalue(L,s2v(o),s)
 
 /* set a string to a new object */
-#define setsvalue2n	setsvalue
+#నిర్వచించు setsvalue2n	setsvalue
 
 
 /* Kinds of long strings (stored in 'shrlen') */
-#define LSTRREG		-1  /* regular long string */
-#define LSTRFIX		-2  /* fixed external long string */
-#define LSTRMEM		-3  /* external long string with deallocation */
+#నిర్వచించు LSTRREG		-1  /* regular long string */
+#నిర్వచించు LSTRFIX		-2  /* fixed external long string */
+#నిర్వచించు LSTRMEM		-3  /* external long string with deallocation */
 
 
 /*
 ** Header for a string value.
 */
-typedef struct TString {
-  CommonHeader;
+రకనిర్వచనం నిర్మాణం TString {
+  Common_శీర్షిక;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   ls_byte shrlen;  /* length for short strings, negative for long strings */
-  unsigned int hash;
-  union {
+  గుర్తులేని పూర్ణాంకం hash;
+  సంఘం {
     size_t lnglen;  /* length for long strings */
-    struct TString *hnext;  /* linked list for hash table */
+    నిర్మాణం TString *hnext;  /* linked list for hash table */
   } u;
-  char *contents;  /* pointer to content in long strings */
+  అక్షరం *contents;  /* pointer to content in long strings */
   lua_Alloc falloc;  /* deallocation function for external strings */
-  void *ud;  /* user data for external strings */
+  శూన్య *ud;  /* user data for external strings */
 } TString;
 
 
-#define strisshr(ts)	((ts)->shrlen >= 0)
-#define isextstr(ts)	(ttislngstring(ts) && tsvalue(ts)->shrlen != LSTRREG)
+#నిర్వచించు strisshr(ts)	((ts)->shrlen >= 0)
+#నిర్వచించు isextstr(ts)	(ttislngstring(ts) && tsvalue(ts)->shrlen != LSTRREG)
 
 
 /*
 ** Get the actual string (array of bytes) from a 'TString'. (Generic
 ** version and specialized versions for long and short strings.)
 */
-#define rawgetshrstr(ts)  (cast_charp(&(ts)->contents))
-#define getshrstr(ts)	check_exp(strisshr(ts), rawgetshrstr(ts))
-#define getlngstr(ts)	check_exp(!strisshr(ts), (ts)->contents)
-#define getstr(ts) 	(strisshr(ts) ? rawgetshrstr(ts) : (ts)->contents)
+#నిర్వచించు rawgetshrstr(ts)  (cast_charp(&(ts)->contents))
+#నిర్వచించు getshrstr(ts)	check_exp(strisshr(ts), rawgetshrstr(ts))
+#నిర్వచించు getlngstr(ts)	check_exp(!strisshr(ts), (ts)->contents)
+#నిర్వచించు getstr(ts) 	(strisshr(ts) ? rawgetshrstr(ts) : (ts)->contents)
 
 
 /* get string length from 'TString *ts' */
-#define tsslen(ts)  \
+#నిర్వచించు tsslen(ts)  \
 	(strisshr(ts) ? cast_sizet((ts)->shrlen) : (ts)->u.lnglen)
 
 /*
 ** Get string and length */
-#define getlstr(ts, len)  \
+#నిర్వచించు getlstr(ts, len)  \
 	(strisshr(ts) \
 	? (cast_void((len) = cast_sizet((ts)->shrlen)), rawgetshrstr(ts)) \
 	: (cast_void((len) = (ts)->u.lnglen), (ts)->contents))
@@ -457,29 +457,29 @@ typedef struct TString {
 ** Light userdata should be a variant of userdata, but for compatibility
 ** reasons they are also different types.
 */
-#define LUA_VLIGHTUSERDATA	makevariant(LUA_TLIGHTUSERDATA, 0)
+#నిర్వచించు LUA_VLIGHTUSERDATA	makevariant(LUA_TLIGHTUSERDATA, 0)
 
-#define LUA_VUSERDATA		makevariant(LUA_TUSERDATA, 0)
+#నిర్వచించు LUA_VUSERDATA		makevariant(LUA_TUSERDATA, 0)
 
-#define ttislightuserdata(o)	checktag((o), LUA_VLIGHTUSERDATA)
-#define ttisfulluserdata(o)	checktag((o), ctb(LUA_VUSERDATA))
+#నిర్వచించు ttislightuserdata(o)	checktag((o), LUA_VLIGHTUSERDATA)
+#నిర్వచించు ttisfulluserdata(o)	checktag((o), ctb(LUA_VUSERDATA))
 
-#define pvalue(o)	check_exp(ttislightuserdata(o), val_(o).p)
-#define uvalue(o)	check_exp(ttisfulluserdata(o), gco2u(val_(o).gc))
+#నిర్వచించు pvalue(o)	check_exp(ttislightuserdata(o), val_(o).p)
+#నిర్వచించు uvalue(o)	check_exp(ttisfulluserdata(o), gco2u(val_(o).gc))
 
-#define pvalueraw(v)	((v).p)
+#నిర్వచించు pvalueraw(v)	((v).p)
 
-#define setpvalue(obj,x) \
+#నిర్వచించు setpvalue(obj,x) \
   { TValue *io=(obj); val_(io).p=(x); settt_(io, LUA_VLIGHTUSERDATA); }
 
-#define setuvalue(L,obj,x) \
+#నిర్వచించు setuvalue(L,obj,x) \
   { TValue *io = (obj); Udata *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(LUA_VUSERDATA)); \
     checkliveness(L,io); }
 
 
 /* Ensures that addresses after this type are always fully aligned. */
-typedef union UValue {
+రకనిర్వచనం సంఘం UValue {
   TValue uv;
   LUAI_MAXALIGN;  /* ensures maximum alignment for udata bytes */
 } UValue;
@@ -489,11 +489,11 @@ typedef union UValue {
 ** Header for userdata with user values;
 ** memory area follows the end of this structure.
 */
-typedef struct Udata {
-  CommonHeader;
-  unsigned short nuvalue;  /* number of user values */
+రకనిర్వచనం నిర్మాణం Udata {
+  Common_శీర్షిక;
+  గుర్తులేని పొట్టి nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
+  నిర్మాణం పట్టిక *metatable;
   GCObject *gclist;
   UValue uv[1];  /* user values */
 } Udata;
@@ -508,25 +508,25 @@ typedef struct Udata {
 ** this representation. (The 'bindata' field in its end ensures correct
 ** alignment for binary data following this header.)
 */
-typedef struct Udata0 {
-  CommonHeader;
-  unsigned short nuvalue;  /* number of user values */
+రకనిర్వచనం నిర్మాణం Udata0 {
+  Common_శీర్షిక;
+  గుర్తులేని పొట్టి nuvalue;  /* number of user values */
   size_t len;  /* number of bytes */
-  struct Table *metatable;
-  union {LUAI_MAXALIGN;} bindata;
+  నిర్మాణం పట్టిక *metatable;
+  సంఘం {LUAI_MAXALIGN;} bindata;
 } Udata0;
 
 
 /* compute the offset of the memory area of a userdata */
-#define udatamemoffset(nuv) \
+#నిర్వచించు udatamemoffset(nuv) \
        ((nuv) == 0 ? offsetof(Udata0, bindata)  \
-		   : offsetof(Udata, uv) + (sizeof(UValue) * (nuv)))
+		   : offsetof(Udata, uv) + (పరిమాణం(UValue) * (nuv)))
 
 /* get the address of the memory block inside 'Udata' */
-#define getudatamem(u)	(cast_charp(u) + udatamemoffset((u)->nuvalue))
+#నిర్వచించు getudatamem(u)	(cast_charp(u) + udatamemoffset((u)->nuvalue))
 
 /* compute the size of a userdata */
-#define sizeudata(nuv,nb)	(udatamemoffset(nuv) + (nb))
+#నిర్వచించు sizeudata(nuv,nb)	(udatamemoffset(nuv) + (nb))
 
 /* }================================================================== */
 
@@ -537,20 +537,20 @@ typedef struct Udata0 {
 ** ===================================================================
 */
 
-#define LUA_VPROTO	makevariant(LUA_TPROTO, 0)
+#నిర్వచించు LUA_VPROTO	makevariant(LUA_TPROTO, 0)
 
 
-typedef l_uint32 Instruction;
+రకనిర్వచనం l_uint32 Instruction;
 
 
 /*
 ** Description of an upvalue for function prototypes
 */
-typedef struct Upvaldesc {
+రకనిర్వచనం నిర్మాణం Upvaldesc {
   TString *name;  /* upvalue name (for debug information) */
   lu_byte instack;  /* whether it is in stack (register) */
   lu_byte idx;  /* index of upvalue (in stack or in outer function's list) */
-  lu_byte kind;  /* kind of corresponding variable */
+  lu_byte రకం;  /* kind of corresponding variable */
 } Upvaldesc;
 
 
@@ -558,10 +558,10 @@ typedef struct Upvaldesc {
 ** Description of a local variable for function prototypes
 ** (used for debug information)
 */
-typedef struct LocVar {
+రకనిర్వచనం నిర్మాణం LocVar {
   TString *varname;
-  int startpc;  /* first point where variable is active */
-  int endpc;    /* first point where variable is dead */
+  పూర్ణాంకం startpc;  /* first point where variable is active */
+  పూర్ణాంకం endpc;    /* first point where variable is dead */
 } LocVar;
 
 
@@ -575,53 +575,53 @@ typedef struct LocVar {
 ** absolute-line array, but we must traverse the 'lineinfo' array
 ** linearly to compute a line.)
 */
-typedef struct AbsLineInfo {
-  int pc;
-  int line;
-} AbsLineInfo;
+రకనిర్వచనం నిర్మాణం Abs_పంక్తి_Info {
+  పూర్ణాంకం pc;
+  పూర్ణాంకం పంక్తి;
+} Abs_పంక్తి_Info;
 
 
 /*
 ** Flags in Prototypes
 */
-#define PF_VAHID	1  /* function has hidden vararg arguments */
-#define PF_VATAB	2  /* function has vararg table */
-#define PF_FIXED	4  /* prototype has parts in fixed memory */
+#నిర్వచించు PF_VAHID	1  /* function has hidden vararg arguments */
+#నిర్వచించు PF_VATAB	2  /* function has vararg table */
+#నిర్వచించు PF_FIXED	4  /* prototype has parts in fixed memory */
 
 /* a vararg function either has hidden args. or a vararg table */
-#define isvararg(p)	((p)->flag & (PF_VAHID | PF_VATAB))
+#నిర్వచించు isvararg(p)	((p)->flag & (PF_VAHID | PF_VATAB))
 
 /*
 ** mark that a function needs a vararg table. (The flag PF_VAHID will
 ** be cleared later.)
 */
-#define needvatab(p)	((p)->flag |= PF_VATAB)
+#నిర్వచించు needvatab(p)	((p)->flag |= PF_VATAB)
 
 /*
 ** Function Prototypes
 */
-typedef struct Proto {
-  CommonHeader;
+రకనిర్వచనం నిర్మాణం Proto {
+  Common_శీర్షిక;
   lu_byte numparams;  /* number of fixed (named) parameters */
   lu_byte flag;
   lu_byte maxstacksize;  /* number of registers needed by this function */
-  int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of 'k' */
-  int sizecode;
-  int sizelineinfo;
-  int sizep;  /* size of 'p' */
-  int sizelocvars;
-  int sizeabslineinfo;  /* size of 'abslineinfo' */
-  int linedefined;  /* debug information  */
-  int lastlinedefined;  /* debug information  */
+  పూర్ణాంకం sizeupvalues;  /* size of 'upvalues' */
+  పూర్ణాంకం sizek;  /* size of 'k' */
+  పూర్ణాంకం sizecode;
+  పూర్ణాంకం sizelineinfo;
+  పూర్ణాంకం sizep;  /* size of 'p' */
+  పూర్ణాంకం sizelocvars;
+  పూర్ణాంకం sizeabslineinfo;  /* size of 'abslineinfo' */
+  పూర్ణాంకం linedefined;  /* debug information  */
+  పూర్ణాంకం lastlinedefined;  /* debug information  */
   TValue *k;  /* constants used by the function */
-  Instruction *code;  /* opcodes */
-  struct Proto **p;  /* functions defined inside the function */
+  Instruction *సంకేతం_2;  /* opcodes */
+  నిర్మాణం Proto **p;  /* functions defined inside the function */
   Upvaldesc *upvalues;  /* upvalue information */
   ls_byte *lineinfo;  /* information about source lines (debug information) */
-  AbsLineInfo *abslineinfo;  /* idem */
+  Abs_పంక్తి_Info *abslineinfo;  /* idem */
   LocVar *locvars;  /* information about local variables (debug information) */
-  TString  *source;  /* used for debug information */
+  TString  *ఆధారం;  /* used for debug information */
   GCObject *gclist;
 } Proto;
 
@@ -634,41 +634,41 @@ typedef struct Proto {
 ** ===================================================================
 */
 
-#define LUA_VUPVAL	makevariant(LUA_TUPVAL, 0)
+#నిర్వచించు LUA_VUPVAL	makevariant(LUA_TUPVAL, 0)
 
 
 /* Variant tags for functions */
-#define LUA_VLCL	makevariant(LUA_TFUNCTION, 0)  /* Lua closure */
-#define LUA_VLCF	makevariant(LUA_TFUNCTION, 1)  /* light C function */
-#define LUA_VCCL	makevariant(LUA_TFUNCTION, 2)  /* C closure */
+#నిర్వచించు LUA_VLCL	makevariant(LUA_TFUNCTION, 0)  /* Lua closure */
+#నిర్వచించు LUA_VLCF	makevariant(LUA_TFUNCTION, 1)  /* light C function */
+#నిర్వచించు LUA_VCCL	makevariant(LUA_TFUNCTION, 2)  /* C closure */
 
-#define ttisfunction(o)		checktype(o, LUA_TFUNCTION)
-#define ttisLclosure(o)		checktag((o), ctb(LUA_VLCL))
-#define ttislcf(o)		checktag((o), LUA_VLCF)
-#define ttisCclosure(o)		checktag((o), ctb(LUA_VCCL))
-#define ttisclosure(o)         (ttisLclosure(o) || ttisCclosure(o))
+#నిర్వచించు ttisfunction(o)		checktype(o, LUA_TFUNCTION)
+#నిర్వచించు ttisLclosure(o)		checktag((o), ctb(LUA_VLCL))
+#నిర్వచించు ttislcf(o)		checktag((o), LUA_VLCF)
+#నిర్వచించు ttisCclosure(o)		checktag((o), ctb(LUA_VCCL))
+#నిర్వచించు ttisclosure(o)         (ttisLclosure(o) || ttisCclosure(o))
 
 
-#define isLfunction(o)	ttisLclosure(o)
+#నిర్వచించు isLfunction(o)	ttisLclosure(o)
 
-#define clvalue(o)	check_exp(ttisclosure(o), gco2cl(val_(o).gc))
-#define clLvalue(o)	check_exp(ttisLclosure(o), gco2lcl(val_(o).gc))
-#define fvalue(o)	check_exp(ttislcf(o), val_(o).f)
-#define clCvalue(o)	check_exp(ttisCclosure(o), gco2ccl(val_(o).gc))
+#నిర్వచించు clvalue(o)	check_exp(ttisclosure(o), gco2cl(val_(o).gc))
+#నిర్వచించు clLvalue(o)	check_exp(ttisLclosure(o), gco2lcl(val_(o).gc))
+#నిర్వచించు fvalue(o)	check_exp(ttislcf(o), val_(o).f)
+#నిర్వచించు clCvalue(o)	check_exp(ttisCclosure(o), gco2ccl(val_(o).gc))
 
-#define fvalueraw(v)	((v).f)
+#నిర్వచించు fvalueraw(v)	((v).f)
 
-#define setclLvalue(L,obj,x) \
+#నిర్వచించు setclLvalue(L,obj,x) \
   { TValue *io = (obj); LClosure *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(LUA_VLCL)); \
     checkliveness(L,io); }
 
-#define setclLvalue2s(L,o,cl)	setclLvalue(L,s2v(o),cl)
+#నిర్వచించు setclLvalue2s(L,o,cl)	setclLvalue(L,s2v(o),cl)
 
-#define setfvalue(obj,x) \
+#నిర్వచించు setfvalue(obj,x) \
   { TValue *io=(obj); val_(io).f=(x); settt_(io, LUA_VLCF); }
 
-#define setclCvalue(L,obj,x) \
+#నిర్వచించు setclCvalue(L,obj,x) \
   { TValue *io = (obj); CClosure *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(LUA_VCCL)); \
     checkliveness(L,io); }
@@ -677,47 +677,47 @@ typedef struct Proto {
 /*
 ** Upvalues for Lua closures
 */
-typedef struct UpVal {
-  CommonHeader;
-  union {
+రకనిర్వచనం నిర్మాణం పైకి_Val {
+  Common_శీర్షిక;
+  సంఘం {
     TValue *p;  /* points to stack or to its own value */
-    ptrdiff_t offset;  /* used while the stack is being reallocated */
+    ptrdiff_t స్థానభ్రంశం;  /* used while the stack is being reallocated */
   } v;
-  union {
-    struct {  /* (when open) */
-      struct UpVal *next;  /* linked list */
-      struct UpVal **previous;
+  సంఘం {
+    నిర్మాణం {  /* (when open) */
+      నిర్మాణం పైకి_Val *తదుపరి;  /* linked list */
+      నిర్మాణం పైకి_Val **మునుపటి;
     } open;
-    TValue value;  /* the value (when closed) */
+    TValue విలువ;  /* the value (when closed) */
   } u;
-} UpVal;
+} పైకి_Val;
 
 
 
-#define ClosureHeader \
-	CommonHeader; lu_byte nupvalues; GCObject *gclist
+#నిర్వచించు సంవృతం_శీర్షిక \
+	Common_శీర్షిక; lu_byte nupvalues; GCObject *gclist
 
-typedef struct CClosure {
-  ClosureHeader;
+రకనిర్వచనం నిర్మాణం CClosure {
+  సంవృతం_శీర్షిక;
   lua_CFunction f;
   TValue upvalue[1];  /* list of upvalues */
 } CClosure;
 
 
-typedef struct LClosure {
-  ClosureHeader;
-  struct Proto *p;
-  UpVal *upvals[1];  /* list of upvalues */
+రకనిర్వచనం నిర్మాణం LClosure {
+  సంవృతం_శీర్షిక;
+  నిర్మాణం Proto *p;
+  పైకి_Val *upvals[1];  /* list of upvalues */
 } LClosure;
 
 
-typedef union Closure {
+రకనిర్వచనం సంఘం సంవృతం {
   CClosure c;
   LClosure l;
-} Closure;
+} సంవృతం;
 
 
-#define getproto(o)	(clLvalue(o)->p)
+#నిర్వచించు getproto(o)	(clLvalue(o)->p)
 
 /* }================================================================== */
 
@@ -728,18 +728,18 @@ typedef union Closure {
 ** ===================================================================
 */
 
-#define LUA_VTABLE	makevariant(LUA_TTABLE, 0)
+#నిర్వచించు LUA_VTABLE	makevariant(LUA_TTABLE, 0)
 
-#define ttistable(o)		checktag((o), ctb(LUA_VTABLE))
+#నిర్వచించు ttistable(o)		checktag((o), ctb(LUA_VTABLE))
 
-#define hvalue(o)	check_exp(ttistable(o), gco2t(val_(o).gc))
+#నిర్వచించు hvalue(o)	check_exp(ttistable(o), gco2t(val_(o).gc))
 
-#define sethvalue(L,obj,x) \
-  { TValue *io = (obj); Table *x_ = (x); \
+#నిర్వచించు sethvalue(L,obj,x) \
+  { TValue *io = (obj); పట్టిక *x_ = (x); \
     val_(io).gc = obj2gco(x_); settt_(io, ctb(LUA_VTABLE)); \
     checkliveness(L,io); }
 
-#define sethvalue2s(L,o,h)	sethvalue(L,s2v(o),h)
+#నిర్వచించు sethvalue2s(L,o,h)	sethvalue(L,s2v(o),h)
 
 
 /*
@@ -749,61 +749,61 @@ typedef union Closure {
 ** 'TValue' allows for a smaller size for 'Node' both in 4-byte
 ** and 8-byte alignments.
 */
-typedef union Node {
-  struct NodeKey {
+రకనిర్వచనం సంఘం కణుపు_2 {
+  నిర్మాణం కణుపు_కీలకం {
     TValuefields;  /* fields for value */
-    lu_byte key_tt;  /* key type */
-    int next;  /* for chaining */
-    Value key_val;  /* key value */
+    lu_byte కీలకం_tt;  /* key type */
+    పూర్ణాంకం తదుపరి;  /* for chaining */
+    విలువ_2 కీలకం_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
-} Node;
+} కణుపు_2;
 
 
 /* copy a value into a key */
-#define setnodekey(node,obj) \
-	{ Node *n_=(node); const TValue *io_=(obj); \
-	  n_->u.key_val = io_->value_; n_->u.key_tt = io_->tt_; }
+#నిర్వచించు setnodekey(కణుపు,obj) \
+	{ కణుపు_2 *n_=(కణుపు); స్థిరరాశి TValue *io_=(obj); \
+	  n_->u.కీలకం_val = io_->విలువ_3; n_->u.కీలకం_tt = io_->tt_; }
 
 
 /* copy a value from a key */
-#define getnodekey(L,obj,node) \
-	{ TValue *io_=(obj); const Node *n_=(node); \
-	  io_->value_ = n_->u.key_val; io_->tt_ = n_->u.key_tt; \
+#నిర్వచించు getnodekey(L,obj,కణుపు) \
+	{ TValue *io_=(obj); స్థిరరాశి కణుపు_2 *n_=(కణుపు); \
+	  io_->విలువ_3 = n_->u.కీలకం_val; io_->tt_ = n_->u.కీలకం_tt; \
 	  checkliveness(L,io_); }
 
 
 
-typedef struct Table {
-  CommonHeader;
+రకనిర్వచనం నిర్మాణం పట్టిక {
+  Common_శీర్షిక;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
-  unsigned int asize;  /* number of slots in 'array' array */
-  Value *array;  /* array part */
-  Node *node;
-  struct Table *metatable;
+  గుర్తులేని పూర్ణాంకం asize;  /* number of slots in 'array' array */
+  విలువ_2 *array;  /* array part */
+  కణుపు_2 *కణుపు;
+  నిర్మాణం పట్టిక *metatable;
   GCObject *gclist;
-} Table;
+} పట్టిక;
 
 
 /*
 ** Macros to manipulate keys inserted in nodes
 */
-#define keytt(node)		((node)->u.key_tt)
-#define keyval(node)		((node)->u.key_val)
+#నిర్వచించు keytt(కణుపు)		((కణుపు)->u.కీలకం_tt)
+#నిర్వచించు keyval(కణుపు)		((కణుపు)->u.కీలకం_val)
 
-#define keyisnil(node)		(keytt(node) == LUA_TNIL)
-#define keyisinteger(node)	(keytt(node) == LUA_VNUMINT)
-#define keyival(node)		(keyval(node).i)
-#define keyisshrstr(node)	(keytt(node) == ctb(LUA_VSHRSTR))
-#define keystrval(node)		(gco2ts(keyval(node).gc))
+#నిర్వచించు keyisnil(కణుపు)		(keytt(కణుపు) == LUA_TNIL)
+#నిర్వచించు keyisinteger(కణుపు)	(keytt(కణుపు) == LUA_VNUMINT)
+#నిర్వచించు keyival(కణుపు)		(keyval(కణుపు).i)
+#నిర్వచించు keyisshrstr(కణుపు)	(keytt(కణుపు) == ctb(LUA_VSHRSTR))
+#నిర్వచించు keystrval(కణుపు)		(gco2ts(keyval(కణుపు).gc))
 
-#define setnilkey(node)		(keytt(node) = LUA_TNIL)
+#నిర్వచించు setnilkey(కణుపు)		(keytt(కణుపు) = LUA_TNIL)
 
-#define keyiscollectable(n)	(keytt(n) & BIT_ISCOLLECTABLE)
+#నిర్వచించు keyiscollectable(n)	(keytt(n) & బిట్టు_ISCOLLECTABLE)
 
-#define gckey(n)	(keyval(n).gc)
-#define gckeyN(n)	(keyiscollectable(n) ? gckey(n) : NULL)
+#నిర్వచించు gckey(n)	(keyval(n).gc)
+#నిర్వచించు gckeyN(n)	(keyiscollectable(n) ? gckey(n) : ఖాళీ)
 
 
 /*
@@ -812,8 +812,8 @@ typedef struct Table {
 ** be found when searched in a special way. ('next' needs that to find
 ** keys removed from a table during a traversal.)
 */
-#define setdeadkey(node)	(keytt(node) = LUA_TDEADKEY)
-#define keyisdead(node)		(keytt(node) == LUA_TDEADKEY)
+#నిర్వచించు setdeadkey(కణుపు)	(keytt(కణుపు) = LUA_TDEADKEY)
+#నిర్వచించు keyisdead(కణుపు)		(keytt(కణుపు) == LUA_TDEADKEY)
 
 /* }================================================================== */
 
@@ -822,44 +822,44 @@ typedef struct Table {
 /*
 ** 'module' operation for hashing (size is always a power of 2)
 */
-#define lmod(s,size) \
-	(check_exp((size&(size-1))==0, (cast_uint(s) & cast_uint((size)-1))))
+#నిర్వచించు lmod(s,కొలత) \
+	(check_exp((కొలత&(కొలత-1))==0, (cast_uint(s) & cast_uint((కొలత)-1))))
 
 
-#define twoto(x)	(1u<<(x))
-#define sizenode(t)	cast_uint(twoto((t)->lsizenode))
+#నిర్వచించు twoto(x)	(1u<<(x))
+#నిర్వచించు sizenode(t)	cast_uint(twoto((t)->lsizenode))
 
 
 /* size of buffer for 'luaO_utf8esc' function */
-#define UTF8BUFFSZ	8
+#నిర్వచించు UTF8BUFFSZ	8
 
 
 /* macro to call 'luaO_pushvfstring' correctly */
-#define pushvfstring(L, argp, fmt, msg)	\
+#నిర్వచించు pushvfstring(L, argp, fmt, సందేశం)	\
   { va_start(argp, fmt); \
-  msg = luaO_pushvfstring(L, fmt, argp); \
+  సందేశం = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  ఒకవేళ (సందేశం == ఖాళీ) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
-LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);
-LUAI_FUNC lu_byte luaO_ceillog2 (unsigned int x);
-LUAI_FUNC lu_byte luaO_codeparam (unsigned int p);
+LUAI_FUNC పూర్ణాంకం luaO_utf8esc (అక్షరం *buff, l_uint32 x);
+LUAI_FUNC lu_byte luaO_ceillog2 (గుర్తులేని పూర్ణాంకం x);
+LUAI_FUNC lu_byte luaO_codeparam (గుర్తులేని పూర్ణాంకం p);
 LUAI_FUNC l_mem luaO_applyparam (lu_byte p, l_mem x);
 
-LUAI_FUNC int luaO_rawarith (lua_State *L, int op, const TValue *p1,
-                             const TValue *p2, TValue *res);
-LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
-                           const TValue *p2, StkId res);
-LUAI_FUNC size_t luaO_str2num (const char *s, TValue *o);
-LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, char *buff);
-LUAI_FUNC lu_byte luaO_hexavalue (int c);
-LUAI_FUNC void luaO_tostring (lua_State *L, TValue *obj);
-LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
+LUAI_FUNC పూర్ణాంకం luaO_rawarith (lua_State *L, పూర్ణాంకం op, స్థిరరాశి TValue *p1,
+                             స్థిరరాశి TValue *p2, TValue *res);
+LUAI_FUNC శూన్య luaO_arith (lua_State *L, పూర్ణాంకం op, స్థిరరాశి TValue *p1,
+                           స్థిరరాశి TValue *p2, StkId res);
+LUAI_FUNC size_t luaO_str2num (స్థిరరాశి అక్షరం *s, TValue *o);
+LUAI_FUNC గుర్తులేని luaO_tostringbuff (స్థిరరాశి TValue *obj, అక్షరం *buff);
+LUAI_FUNC lu_byte luaO_hexavalue (పూర్ణాంకం c);
+LUAI_FUNC శూన్య luaO_tostring (lua_State *L, TValue *obj);
+LUAI_FUNC స్థిరరాశి అక్షరం *luaO_pushvfstring (lua_State *L, స్థిరరాశి అక్షరం *fmt,
                                                        va_list argp);
-LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
-LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t srclen);
+LUAI_FUNC స్థిరరాశి అక్షరం *luaO_pushfstring (lua_State *L, స్థిరరాశి అక్షరం *fmt, ...);
+LUAI_FUNC శూన్య luaO_chunkid (అక్షరం *బహిర్గతం, స్థిరరాశి అక్షరం *ఆధారం, size_t srclen);
 
 
-#endif
+#అయితే_ముగింపు
 

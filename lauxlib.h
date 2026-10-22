@@ -5,122 +5,122 @@
 */
 
 
-#ifndef lauxlib_h
-#define lauxlib_h
+#నిర్వచితం_కాకపోతే lauxlib_h
+#నిర్వచించు lauxlib_h
 
 
-#include <stddef.h>
-#include <stdio.h>
+#అన్తర్భావ <stddef.h>
+#అన్తర్భావ <stdio.h>
 
-#include "luaconf.h"
-#include "lua.h"
+#అన్తర్భావ "luaconf.h"
+#అన్తర్భావ "lua.h"
 
 
 /* global table */
-#define LUA_GNAME	"_G"
+#నిర్వచించు LUA_GNAME	"_G"
 
 
-typedef struct luaL_Buffer luaL_Buffer;
+రకనిర్వచనం నిర్మాణం lua_L_బఫరు lua_L_బఫరు;
 
 
 /* extra error code for 'luaL_loadfilex' */
-#define LUA_ERRFILE     (LUA_ERRERR+1)
+#నిర్వచించు LUA_ERRFILE     (LUA_ERRERR+1)
 
 
 /* key, in the registry, for table of loaded modules */
-#define LUA_LOADED_TABLE	"_LOADED"
+#నిర్వచించు LUA_LOADED_పట్టిక	"_LOADED"
 
 
 /* key, in the registry, for table of preloaded loaders */
-#define LUA_PRELOAD_TABLE	"_PRELOAD"
+#నిర్వచించు LUA_PRELOAD_పట్టిక	"_PRELOAD"
 
 
-typedef struct luaL_Reg {
-  const char *name;
+రకనిర్వచనం నిర్మాణం luaL_Reg {
+  స్థిరరాశి అక్షరం *name;
   lua_CFunction func;
 } luaL_Reg;
 
 
-#define LUAL_NUMSIZES	(sizeof(lua_Integer)*16 + sizeof(lua_Number))
+#నిర్వచించు LUAL_NUMSIZES	(పరిమాణం(lua_Integer)*16 + పరిమాణం(lua_సంఖ్య))
 
-LUALIB_API void (luaL_checkversion_) (lua_State *L, lua_Number ver, size_t sz);
-#define luaL_checkversion(L)  \
-	  luaL_checkversion_(L, LUA_VERSION_NUM, LUAL_NUMSIZES)
+LUALIB_API శూన్య (luaL_checkversion_) (lua_State *L, lua_సంఖ్య ver, size_t sz);
+#నిర్వచించు luaL_checkversion(L)  \
+	  luaL_checkversion_(L, LUA_సంస్కరణ_అంకె, LUAL_NUMSIZES)
 
-LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
-LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
-LUALIB_API const char *(luaL_tolstring) (lua_State *L, int idx, size_t *len);
-LUALIB_API int (luaL_argerror) (lua_State *L, int arg, const char *extramsg);
-LUALIB_API int (luaL_typeerror) (lua_State *L, int arg, const char *tname);
-LUALIB_API const char *(luaL_checklstring) (lua_State *L, int arg,
+LUALIB_API పూర్ణాంకం (luaL_getmetafield) (lua_State *L, పూర్ణాంకం obj, స్థిరరాశి అక్షరం *e);
+LUALIB_API పూర్ణాంకం (luaL_callmeta) (lua_State *L, పూర్ణాంకం obj, స్థిరరాశి అక్షరం *e);
+LUALIB_API స్థిరరాశి అక్షరం *(luaL_tolstring) (lua_State *L, పూర్ణాంకం idx, size_t *len);
+LUALIB_API పూర్ణాంకం (luaL_argerror) (lua_State *L, పూర్ణాంకం arg, స్థిరరాశి అక్షరం *extramsg);
+LUALIB_API పూర్ణాంకం (luaL_typeerror) (lua_State *L, పూర్ణాంకం arg, స్థిరరాశి అక్షరం *tname);
+LUALIB_API స్థిరరాశి అక్షరం *(luaL_checklstring) (lua_State *L, పూర్ణాంకం arg,
                                                           size_t *l);
-LUALIB_API const char *(luaL_optlstring) (lua_State *L, int arg,
-                                          const char *def, size_t *l);
-LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int arg);
-LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int arg, lua_Number def);
+LUALIB_API స్థిరరాశి అక్షరం *(luaL_optlstring) (lua_State *L, పూర్ణాంకం arg,
+                                          స్థిరరాశి అక్షరం *def, size_t *l);
+LUALIB_API lua_సంఖ్య (luaL_checknumber) (lua_State *L, పూర్ణాంకం arg);
+LUALIB_API lua_సంఖ్య (luaL_optnumber) (lua_State *L, పూర్ణాంకం arg, lua_సంఖ్య def);
 
-LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, int arg);
-LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, int arg,
+LUALIB_API lua_Integer (luaL_checkinteger) (lua_State *L, పూర్ణాంకం arg);
+LUALIB_API lua_Integer (luaL_optinteger) (lua_State *L, పూర్ణాంకం arg,
                                           lua_Integer def);
 
-LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
-LUALIB_API void (luaL_checktype) (lua_State *L, int arg, int t);
-LUALIB_API void (luaL_checkany) (lua_State *L, int arg);
+LUALIB_API శూన్య (luaL_checkstack) (lua_State *L, పూర్ణాంకం sz, స్థిరరాశి అక్షరం *సందేశం);
+LUALIB_API శూన్య (luaL_checktype) (lua_State *L, పూర్ణాంకం arg, పూర్ణాంకం t);
+LUALIB_API శూన్య (luaL_checkany) (lua_State *L, పూర్ణాంకం arg);
 
-LUALIB_API int   (luaL_newmetatable) (lua_State *L, const char *tname);
-LUALIB_API void  (luaL_setmetatable) (lua_State *L, const char *tname);
-LUALIB_API void *(luaL_testudata) (lua_State *L, int ud, const char *tname);
-LUALIB_API void *(luaL_checkudata) (lua_State *L, int ud, const char *tname);
+LUALIB_API పూర్ణాంకం   (luaL_newmetatable) (lua_State *L, స్థిరరాశి అక్షరం *tname);
+LUALIB_API శూన్య  (luaL_setmetatable) (lua_State *L, స్థిరరాశి అక్షరం *tname);
+LUALIB_API శూన్య *(luaL_testudata) (lua_State *L, పూర్ణాంకం ud, స్థిరరాశి అక్షరం *tname);
+LUALIB_API శూన్య *(luaL_checkudata) (lua_State *L, పూర్ణాంకం ud, స్థిరరాశి అక్షరం *tname);
 
-LUALIB_API void (luaL_where) (lua_State *L, int lvl);
-LUALIB_API int (luaL_error) (lua_State *L, const char *fmt, ...);
+LUALIB_API శూన్య (luaL_where) (lua_State *L, పూర్ణాంకం lvl);
+LUALIB_API పూర్ణాంకం (luaL_error) (lua_State *L, స్థిరరాశి అక్షరం *fmt, ...);
 
-LUALIB_API int (luaL_checkoption) (lua_State *L, int arg, const char *def,
-                                   const char *const lst[]);
+LUALIB_API పూర్ణాంకం (luaL_checkoption) (lua_State *L, పూర్ణాంకం arg, స్థిరరాశి అక్షరం *def,
+                                   స్థిరరాశి అక్షరం *స్థిరరాశి lst[]);
 
-LUALIB_API int (luaL_fileresult) (lua_State *L, int stat, const char *fname);
-LUALIB_API int (luaL_execresult) (lua_State *L, int stat);
+LUALIB_API పూర్ణాంకం (luaL_fileresult) (lua_State *L, పూర్ణాంకం stat, స్థిరరాశి అక్షరం *fname);
+LUALIB_API పూర్ణాంకం (luaL_execresult) (lua_State *L, పూర్ణాంకం stat);
 
-LUALIB_API void *(luaL_alloc) (void *ud, void *ptr, size_t osize,
+LUALIB_API శూన్య *(luaL_alloc) (శూన్య *ud, శూన్య *ptr, size_t osize,
                                                     size_t nsize);
 
 
 /* predefined references */
-#define LUA_NOREF       (-2)
-#define LUA_REFNIL      (-1)
+#నిర్వచించు LUA_NOREF       (-2)
+#నిర్వచించు LUA_REFNIL      (-1)
 
-LUALIB_API int (luaL_ref) (lua_State *L, int t);
-LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
+LUALIB_API పూర్ణాంకం (luaL_ref) (lua_State *L, పూర్ణాంకం t);
+LUALIB_API శూన్య (luaL_unref) (lua_State *L, పూర్ణాంకం t, పూర్ణాంకం ref);
 
-LUALIB_API int (luaL_loadfilex) (lua_State *L, const char *filename,
-                                               const char *mode);
+LUALIB_API పూర్ణాంకం (luaL_loadfilex) (lua_State *L, స్థిరరాశి అక్షరం *filename,
+                                               స్థిరరాశి అక్షరం *బహుళకం);
 
-#define luaL_loadfile(L,f)	luaL_loadfilex(L,f,NULL)
+#నిర్వచించు luaL_loadfile(L,f)	luaL_loadfilex(L,f,ఖాళీ)
 
-LUALIB_API int (luaL_loadbufferx) (lua_State *L, const char *buff, size_t sz,
-                                   const char *name, const char *mode);
-LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s);
+LUALIB_API పూర్ణాంకం (luaL_loadbufferx) (lua_State *L, స్థిరరాశి అక్షరం *buff, size_t sz,
+                                   స్థిరరాశి అక్షరం *name, స్థిరరాశి అక్షరం *బహుళకం);
+LUALIB_API పూర్ణాంకం (luaL_loadstring) (lua_State *L, స్థిరరాశి అక్షరం *s);
 
-LUALIB_API lua_State *(luaL_newstate) (void);
+LUALIB_API lua_State *(luaL_newstate) (శూన్య);
 
-LUALIB_API unsigned (luaL_makeseed) (lua_State *L);
+LUALIB_API గుర్తులేని (luaL_makeseed) (lua_State *L);
 
-LUALIB_API lua_Integer (luaL_len) (lua_State *L, int idx);
+LUALIB_API lua_Integer (luaL_len) (lua_State *L, పూర్ణాంకం idx);
 
-LUALIB_API void (luaL_addgsub) (luaL_Buffer *b, const char *s,
-                                     const char *p, const char *r);
-LUALIB_API const char *(luaL_gsub) (lua_State *L, const char *s,
-                                    const char *p, const char *r);
+LUALIB_API శూన్య (luaL_addgsub) (lua_L_బఫరు *b, స్థిరరాశి అక్షరం *s,
+                                     స్థిరరాశి అక్షరం *p, స్థిరరాశి అక్షరం *r);
+LUALIB_API స్థిరరాశి అక్షరం *(luaL_gsub) (lua_State *L, స్థిరరాశి అక్షరం *s,
+                                    స్థిరరాశి అక్షరం *p, స్థిరరాశి అక్షరం *r);
 
-LUALIB_API void (luaL_setfuncs) (lua_State *L, const luaL_Reg *l, int nup);
+LUALIB_API శూన్య (luaL_setfuncs) (lua_State *L, స్థిరరాశి luaL_Reg *l, పూర్ణాంకం nup);
 
-LUALIB_API int (luaL_getsubtable) (lua_State *L, int idx, const char *fname);
+LUALIB_API పూర్ణాంకం (luaL_getsubtable) (lua_State *L, పూర్ణాంకం idx, స్థిరరాశి అక్షరం *fname);
 
-LUALIB_API void (luaL_traceback) (lua_State *L, lua_State *L1,
-                                  const char *msg, int level);
+LUALIB_API శూన్య (luaL_traceback) (lua_State *L, lua_State *L1,
+                                  స్థిరరాశి అక్షరం *సందేశం, పూర్ణాంకం level);
 
-LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
-                                 lua_CFunction openf, int glb);
+LUALIB_API శూన్య (luaL_requiref) (lua_State *L, స్థిరరాశి అక్షరం *modname,
+                                 lua_CFunction openf, పూర్ణాంకం glb);
 
 /*
 ** ===============================================================
@@ -129,50 +129,50 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 */
 
 
-#define luaL_newlibtable(L,l)	\
-  lua_createtable(L, 0, sizeof(l)/sizeof((l)[0]) - 1)
+#నిర్వచించు luaL_newlibtable(L,l)	\
+  lua_createtable(L, 0, పరిమాణం(l)/పరిమాణం((l)[0]) - 1)
 
-#define luaL_newlib(L,l)  \
+#నిర్వచించు luaL_newlib(L,l)  \
   (luaL_checkversion(L), luaL_newlibtable(L,l), luaL_setfuncs(L,l,0))
 
-#define luaL_argcheck(L, cond,arg,extramsg)	\
-	((void)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
+#నిర్వచించు luaL_argcheck(L, cond,arg,extramsg)	\
+	((శూన్య)(luai_likely(cond) || luaL_argerror(L, (arg), (extramsg))))
 
-#define luaL_argexpected(L,cond,arg,tname)	\
-	((void)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
+#నిర్వచించు luaL_argexpected(L,cond,arg,tname)	\
+	((శూన్య)(luai_likely(cond) || luaL_typeerror(L, (arg), (tname))))
 
-#define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
-#define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
+#నిర్వచించు luaL_checkstring(L,n)	(luaL_checklstring(L, (n), ఖాళీ))
+#నిర్వచించు luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), ఖాళీ))
 
-#define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
+#నిర్వచించు luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 
-#define luaL_dofile(L, fn) \
+#నిర్వచించు luaL_dofile(L, fn) \
 	(luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0))
 
-#define luaL_dostring(L, s) \
+#నిర్వచించు luaL_dostring(L, s) \
 	(luaL_loadstring(L, s) || lua_pcall(L, 0, LUA_MULTRET, 0))
 
-#define luaL_getmetatable(L,n)	(lua_getfield(L, LUA_REGISTRYINDEX, (n)))
+#నిర్వచించు luaL_getmetatable(L,n)	(lua_getfield(L, LUA_REGISTRYINDEX, (n)))
 
-#define luaL_opt(L,f,n,d)	(lua_isnoneornil(L,(n)) ? (d) : f(L,(n)))
+#నిర్వచించు luaL_opt(L,f,n,d)	(lua_isnoneornil(L,(n)) ? (d) : f(L,(n)))
 
-#define luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,NULL)
+#నిర్వచించు luaL_loadbuffer(L,s,sz,n)	luaL_loadbufferx(L,s,sz,n,ఖాళీ)
 
 
 /*
 ** Perform arithmetic operations on lua_Integer values with wrap-around
 ** semantics, as the Lua core does.
 */
-#define luaL_intop(op,v1,v2)  \
+#నిర్వచించు luaL_intop(op,v1,v2)  \
 	((lua_Integer)((lua_Unsigned)(v1) op (lua_Unsigned)(v2)))
 
 
 /* push the value used to represent failure/error */
-#if defined(LUA_FAILISFALSE)
-#define luaL_pushfail(L)	lua_pushboolean(L, 0)
-#else
-#define luaL_pushfail(L)	lua_pushnil(L)
-#endif
+#ఒకవేళ defined(LUA_FAILISFALSE)
+#నిర్వచించు luaL_pushfail(L)	lua_pushboolean(L, 0)
+#లేకపోతే
+#నిర్వచించు luaL_pushfail(L)	lua_pushnil(L)
+#అయితే_ముగింపు
 
 
 
@@ -182,40 +182,40 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 ** =======================================================
 */
 
-struct luaL_Buffer {
-  char *b;  /* buffer address */
-  size_t size;  /* buffer size */
+నిర్మాణం lua_L_బఫరు {
+  అక్షరం *b;  /* buffer address */
+  size_t కొలత;  /* buffer size */
   size_t n;  /* number of characters in buffer */
   lua_State *L;
-  union {
+  సంఘం {
     LUAI_MAXALIGN;  /* ensure maximum alignment for buffer */
-    char b[LUAL_BUFFERSIZE];  /* initial buffer */
+    అక్షరం b[LUAL_BUFFERSIZE];  /* initial buffer */
   } init;
 };
 
 
-#define luaL_bufflen(bf)	((bf)->n)
-#define luaL_buffaddr(bf)	((bf)->b)
+#నిర్వచించు luaL_bufflen(bf)	((bf)->n)
+#నిర్వచించు luaL_buffaddr(bf)	((bf)->b)
 
 
-#define luaL_addchar(B,c) \
-  ((void)((B)->n < (B)->size || luaL_prepbuffsize((B), 1)), \
+#నిర్వచించు luaL_addchar(B,c) \
+  ((శూన్య)((B)->n < (B)->కొలత || luaL_prepbuffsize((B), 1)), \
    ((B)->b[(B)->n++] = (c)))
 
-#define luaL_addsize(B,s)	((B)->n += (s))
+#నిర్వచించు luaL_addsize(B,s)	((B)->n += (s))
 
-#define luaL_buffsub(B,s)	((B)->n -= (s))
+#నిర్వచించు luaL_buffsub(B,s)	((B)->n -= (s))
 
-LUALIB_API void (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
-LUALIB_API char *(luaL_prepbuffsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
-LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
-LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
-LUALIB_API void (luaL_pushresultsize) (luaL_Buffer *B, size_t sz);
-LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
+LUALIB_API శూన్య (luaL_buffinit) (lua_State *L, lua_L_బఫరు *B);
+LUALIB_API అక్షరం *(luaL_prepbuffsize) (lua_L_బఫరు *B, size_t sz);
+LUALIB_API శూన్య (luaL_addlstring) (lua_L_బఫరు *B, స్థిరరాశి అక్షరం *s, size_t l);
+LUALIB_API శూన్య (luaL_addstring) (lua_L_బఫరు *B, స్థిరరాశి అక్షరం *s);
+LUALIB_API శూన్య (luaL_addvalue) (lua_L_బఫరు *B);
+LUALIB_API శూన్య (luaL_pushresult) (lua_L_బఫరు *B);
+LUALIB_API శూన్య (luaL_pushresultsize) (lua_L_బఫరు *B, size_t sz);
+LUALIB_API అక్షరం *(luaL_buffinitsize) (lua_State *L, lua_L_బఫరు *B, size_t sz);
 
-#define luaL_prepbuffer(B)	luaL_prepbuffsize(B, LUAL_BUFFERSIZE)
+#నిర్వచించు luaL_prepbuffer(B)	luaL_prepbuffsize(B, LUAL_BUFFERSIZE)
 
 /* }====================================================== */
 
@@ -233,13 +233,13 @@ LUALIB_API char *(luaL_buffinitsize) (lua_State *L, luaL_Buffer *B, size_t sz);
 ** after that initial structure).
 */
 
-#define LUA_FILEHANDLE          "FILE*"
+#నిర్వచించు LUA_FILEHANDLE          "FILE*"
 
 
-typedef struct luaL_Stream {
+రకనిర్వచనం నిర్మాణం lua_L_ప్రవాహం {
   FILE *f;  /* stream (NULL for incompletely created streams) */
   lua_CFunction closef;  /* to close stream (NULL for closed streams) */
-} luaL_Stream;
+} lua_L_ప్రవాహం;
 
 /* }====================================================== */
 
@@ -249,23 +249,23 @@ typedef struct luaL_Stream {
 ** Compatibility with deprecated conversions
 ** =============================================================
 */
-#if defined(LUA_COMPAT_APIINTCASTS)
+#ఒకవేళ defined(LUA_COMPAT_APIINTCASTS)
 
-#define luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
-#define luaL_optunsigned(L,a,d)	\
+#నిర్వచించు luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
+#నిర్వచించు luaL_optunsigned(L,a,d)	\
 	((lua_Unsigned)luaL_optinteger(L,a,(lua_Integer)(d)))
 
-#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
-#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+#నిర్వచించు luaL_checkint(L,n)	((పూర్ణాంకం)luaL_checkinteger(L, (n)))
+#నిర్వచించు luaL_optint(L,n,d)	((పూర్ణాంకం)luaL_optinteger(L, (n), (d)))
 
-#define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
-#define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
+#నిర్వచించు luaL_checklong(L,n)	((దీర్ఘ)luaL_checkinteger(L, (n)))
+#నిర్వచించు luaL_optlong(L,n,d)	((దీర్ఘ)luaL_optinteger(L, (n), (d)))
 
-#endif
+#అయితే_ముగింపు
 /* }============================================================ */
 
 
 
-#endif
+#అయితే_ముగింపు
 
 

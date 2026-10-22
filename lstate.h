@@ -4,19 +4,19 @@
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lstate_h
-#define lstate_h
+#నిర్వచితం_కాకపోతే lstate_h
+#నిర్వచించు lstate_h
 
-#include "lua.h"
+#అన్తర్భావ "lua.h"
 
 
 /* Some header files included here need this definition */
-typedef struct CallInfo CallInfo;
+రకనిర్వచనం నిర్మాణం CallInfo CallInfo;
 
 
-#include "lobject.h"
-#include "ltm.h"
-#include "lzio.h"
+#అన్తర్భావ "lobject.h"
+#అన్తర్భావ "ltm.h"
+#అన్తర్భావ "lzio.h"
 
 
 /*
@@ -101,35 +101,35 @@ typedef struct CallInfo CallInfo;
 
 
 /* true if this thread does not have non-yieldable calls in the stack */
-#define yieldable(L)		(((L)->nCcalls & 0xffff0000) == 0)
+#నిర్వచించు yieldable(L)		(((L)->nCcalls & 0xffff0000) == 0)
 
 /* real number of C calls */
-#define getCcalls(L)	((L)->nCcalls & 0xffff)
+#నిర్వచించు getCcalls(L)	((L)->nCcalls & 0xffff)
 
 
 /* Increment the number of non-yieldable calls */
-#define incnny(L)	((L)->nCcalls += 0x10000)
+#నిర్వచించు incnny(L)	((L)->nCcalls += 0x10000)
 
 /* Decrement the number of non-yieldable calls */
-#define decnny(L)	((L)->nCcalls -= 0x10000)
+#నిర్వచించు decnny(L)	((L)->nCcalls -= 0x10000)
 
 /* Non-yieldable call increment */
-#define nyci	(0x10000 | 1)
+#నిర్వచించు nyci	(0x10000 | 1)
 
 
 
 
-struct lua_longjmp;  /* defined in ldo.c */
+నిర్మాణం lua_longjmp;  /* defined in ldo.c */
 
 
 /*
 ** Atomic type (relative to signals) to better ensure that 'lua_sethook'
 ** is thread safe
 */
-#if !defined(l_signalT)
-#include <signal.h>
-#define l_signalT	sig_atomic_t
-#endif
+#ఒకవేళ !defined(l_signalT)
+#అన్తర్భావ <signal.h>
+#నిర్వచించు l_signalT	sig_atomic_t
+#అయితే_ముగింపు
 
 
 /*
@@ -139,7 +139,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** there will be a stack check soon after the push. Function frames
 ** never use this extra space, so it does not need to be kept clean.
 */
-#define EXTRA_STACK   5
+#నిర్వచించు EXTRA_దొంతర   5
 
 
 /*
@@ -147,27 +147,27 @@ struct lua_longjmp;  /* defined in ldo.c */
 ** sets (better be a prime) and "M" is the size of each set.
 ** (M == 1 makes a direct cache.)
 */
-#if !defined(STRCACHE_N)
-#define STRCACHE_N              53
-#define STRCACHE_M              2
-#endif
+#ఒకవేళ !defined(STRCACHE_N)
+#నిర్వచించు STRCACHE_N              53
+#నిర్వచించు STRCACHE_M              2
+#అయితే_ముగింపు
 
 
-#define BASIC_STACK_SIZE        (2*LUA_MINSTACK)
+#నిర్వచించు BASIC_దొంతర_కొలత        (2*LUA_MINSTACK)
 
-#define stacksize(th)	cast_int((th)->stack_last.p - (th)->stack.p)
+#నిర్వచించు stacksize(th)	cast_int((th)->దొంతర_చివరి.p - (th)->దొంతర.p)
 
 
 /* kinds of Garbage Collection */
-#define KGC_INC		0	/* incremental gc */
-#define KGC_GENMINOR	1	/* generational gc in minor (regular) mode */
-#define KGC_GENMAJOR	2	/* generational in major mode */
+#నిర్వచించు KGC_INC		0	/* incremental gc */
+#నిర్వచించు KGC_GENMINOR	1	/* generational gc in minor (regular) mode */
+#నిర్వచించు KGC_GENMAJOR	2	/* generational in major mode */
 
 
-typedef struct stringtable {
+రకనిర్వచనం నిర్మాణం stringtable {
   TString **hash;  /* array of buckets (linked lists of strings) */
-  int nuse;  /* number of elements */
-  int size;  /* number of buckets */
+  పూర్ణాంకం nuse;  /* number of elements */
+  పూర్ణాంకం కొలత;  /* number of buckets */
 } stringtable;
 
 
@@ -184,26 +184,26 @@ typedef struct stringtable {
 ** - field 'nres' is used only while closing tbc variables when
 ** returning from a function;
 */
-struct CallInfo {
+నిర్మాణం CallInfo {
   StkIdRel func;  /* function index in the stack */
-  StkIdRel top;  /* top for this function */
-  struct CallInfo *previous, *next;  /* dynamic call link */
-  union {
-    struct {  /* only for Lua functions */
-      const Instruction *savedpc;
-      volatile l_signalT trap;  /* function is tracing lines/counts */
-      int nextraargs;  /* # of extra arguments in vararg functions */
+  StkIdRel శిఖరం;  /* top for this function */
+  నిర్మాణం CallInfo *మునుపటి, *తదుపరి;  /* dynamic call link */
+  సంఘం {
+    నిర్మాణం {  /* only for Lua functions */
+      స్థిరరాశి Instruction *savedpc;
+      అస్థిర l_signalT trap;  /* function is tracing lines/counts */
+      పూర్ణాంకం nextraargs;  /* # of extra arguments in vararg functions */
     } l;
-    struct {  /* only for C functions */
+    నిర్మాణం {  /* only for C functions */
       lua_KFunction k;  /* continuation in case of yields */
       ptrdiff_t old_errfunc;
       lua_KContext ctx;  /* context info. in case of yields */
     } c;
   } u;
-  union {
-    int funcidx;  /* called-function index */
-    int nyield;  /* number of values yielded */
-    int nres;  /* number of values returned */
+  సంఘం {
+    పూర్ణాంకం funcidx;  /* called-function index */
+    పూర్ణాంకం nyield;  /* number of values yielded */
+    పూర్ణాంకం nres;  /* number of values returned */
   } u2;
   l_uint32 callstatus;
 };
@@ -213,45 +213,45 @@ struct CallInfo {
 ** Maximum expected number of results from a function
 ** (must fit in CIST_NRESULTS).
 */
-#define MAXRESULTS	250
+#నిర్వచించు MAXRESULTS	250
 
 
 /*
 ** Bits in CallInfo status
 */
 /* bits 0-7 are the expected number of results from this function + 1 */
-#define CIST_NRESULTS	0xffu
+#నిర్వచించు CIST_NRESULTS	0xffu
 
 /* bits 8-11 count call metamethods (and their extra arguments) */
-#define CIST_CCMT	8  /* the offset, not the mask */
-#define MAX_CCMT	(0xfu << CIST_CCMT)
+#నిర్వచించు CIST_CCMT	8  /* the offset, not the mask */
+#నిర్వచించు MAX_CCMT	(0xfu << CIST_CCMT)
 
 /* Bits 12-14 are used for CIST_RECST (see below) */
-#define CIST_RECST	12  /* the offset, not the mask */
+#నిర్వచించు CIST_RECST	12  /* the offset, not the mask */
 
 /* call is running a C function (still in first 16 bits) */
-#define CIST_C		(1u << (CIST_RECST + 3))
+#నిర్వచించు CIST_C		(1u << (CIST_RECST + 3))
 /* call is on a fresh "luaV_execute" frame */
-#define CIST_FRESH	(cast(l_uint32, CIST_C) << 1)
+#నిర్వచించు CIST_FRESH	(cast(l_uint32, CIST_C) << 1)
 /* function is closing tbc variables */
-#define CIST_CLSRET	(CIST_FRESH << 1)
+#నిర్వచించు CIST_CLSRET	(CIST_FRESH << 1)
 /* function has tbc variables to close */
-#define CIST_TBC	(CIST_CLSRET << 1)
+#నిర్వచించు CIST_TBC	(CIST_CLSRET << 1)
 /* original value of 'allowhook' */
-#define CIST_OAH	(CIST_TBC << 1)
+#నిర్వచించు CIST_OAH	(CIST_TBC << 1)
 /* call is running a debug hook */
-#define CIST_HOOKED	(CIST_OAH << 1)
+#నిర్వచించు CIST_HOOKED	(CIST_OAH << 1)
 /* doing a yieldable protected call */
-#define CIST_YPCALL	(CIST_HOOKED << 1)
+#నిర్వచించు CIST_YPCALL	(CIST_HOOKED << 1)
 /* call was tail called */
-#define CIST_TAIL	(CIST_YPCALL << 1)
+#నిర్వచించు CIST_తోక	(CIST_YPCALL << 1)
 /* last hook called yielded */
-#define CIST_HOOKYIELD	(CIST_TAIL << 1)
+#నిర్వచించు CIST_HOOKYIELD	(CIST_తోక << 1)
 /* function "called" a finalizer */
-#define CIST_FIN	(CIST_HOOKYIELD << 1)
+#నిర్వచించు CIST_FIN	(CIST_HOOKYIELD << 1)
 
 
-#define get_nresults(cs)  (cast_int((cs) & CIST_NRESULTS) - 1)
+#నిర్వచించు get_nresults(cs)  (cast_int((cs) & CIST_NRESULTS) - 1)
 
 /*
 ** Field CIST_RECST stores the "recover status", used to keep the error
@@ -259,55 +259,55 @@ struct CallInfo {
 ** Lua can correctly resume after an yield from a __close method called
 ** because of an error.  (Three bits are enough for error status.)
 */
-#define getcistrecst(ci)     (((ci)->callstatus >> CIST_RECST) & 7)
-#define setcistrecst(ci,st)  \
+#నిర్వచించు getcistrecst(ci)     (((ci)->callstatus >> CIST_RECST) & 7)
+#నిర్వచించు setcistrecst(ci,st)  \
   check_exp(((st) & 7) == (st),   /* status must fit in three bits */  \
             ((ci)->callstatus = ((ci)->callstatus & ~(7u << CIST_RECST))  \
                                 | (cast(l_uint32, st) << CIST_RECST)))
 
 
 /* active function is a Lua function */
-#define isLua(ci)	(!((ci)->callstatus & CIST_C))
+#నిర్వచించు isLua(ci)	(!((ci)->callstatus & CIST_C))
 
 /* call is running Lua code (not a hook) */
-#define isLuacode(ci)	(!((ci)->callstatus & (CIST_C | CIST_HOOKED)))
+#నిర్వచించు isLuacode(ci)	(!((ci)->callstatus & (CIST_C | CIST_HOOKED)))
 
 
-#define setoah(ci,v)  \
+#నిర్వచించు setoah(ci,v)  \
   ((ci)->callstatus = ((v) ? (ci)->callstatus | CIST_OAH  \
                            : (ci)->callstatus & ~CIST_OAH))
-#define getoah(ci)  (((ci)->callstatus & CIST_OAH) ? 1 : 0)
+#నిర్వచించు getoah(ci)  (((ci)->callstatus & CIST_OAH) ? 1 : 0)
 
 
 /*
 ** 'per thread' state
 */
-struct lua_State {
-  CommonHeader;
+నిర్మాణం lua_State {
+  Common_శీర్షిక;
   lu_byte allowhook;
-  TStatus status;
-  StkIdRel top;  /* first free slot in the stack */
-  struct global_State *l_G;
+  TStatus స్థితి_2;
+  StkIdRel శిఖరం;  /* first free slot in the stack */
+  నిర్మాణం global_State *l_G;
   CallInfo *ci;  /* call info for current function */
-  StkIdRel stack_last;  /* end of stack (last element + 1) */
-  StkIdRel stack;  /* stack base */
-  UpVal *openupval;  /* list of open upvalues in this stack */
+  StkIdRel దొంతర_చివరి;  /* end of stack (last element + 1) */
+  StkIdRel దొంతర;  /* stack base */
+  పైకి_Val *openupval;  /* list of open upvalues in this stack */
   StkIdRel tbclist;  /* list of to-be-closed variables */
   GCObject *gclist;
-  struct lua_State *twups;  /* list of threads with open upvalues */
-  struct lua_longjmp *errorJmp;  /* current error recover point */
-  CallInfo base_ci;  /* CallInfo for first level (C host) */
-  volatile lua_Hook hook;
+  నిర్మాణం lua_State *twups;  /* list of threads with open upvalues */
+  నిర్మాణం lua_longjmp *errorJmp;  /* current error recover point */
+  CallInfo పునాది_ci;  /* CallInfo for first level (C host) */
+  అస్థిర lua_Hook hook;
   ptrdiff_t errfunc;  /* current error handling function (stack index) */
   l_uint32 nCcalls;  /* number of nested non-yieldable or C calls */
-  int oldpc;  /* last pc traced */
-  int nci;  /* number of items in 'ci' list */
-  int basehookcount;
-  int hookcount;
-  volatile l_signalT hookmask;
-  struct {  /* info about transferred values (for call/return hooks) */
-    int ftransfer;  /* offset of first value transferred */
-    int ntransfer;  /* number of values transferred */
+  పూర్ణాంకం oldpc;  /* last pc traced */
+  పూర్ణాంకం nci;  /* number of items in 'ci' list */
+  పూర్ణాంకం basehookcount;
+  పూర్ణాంకం hookcount;
+  అస్థిర l_signalT hookmask;
+  నిర్మాణం {  /* info about transferred values (for call/return hooks) */
+    పూర్ణాంకం ftransfer;  /* offset of first value transferred */
+    పూర్ణాంకం ntransfer;  /* number of values transferred */
   } transferinfo;
 };
 
@@ -315,7 +315,7 @@ struct lua_State {
 /*
 ** thread state + extra space
 */
-typedef struct LX {
+రకనిర్వచనం నిర్మాణం LX {
   lu_byte extra_[LUA_EXTRASPACE];
   lua_State l;
 } LX;
@@ -324,9 +324,9 @@ typedef struct LX {
 /*
 ** 'global state', shared by all threads of this state
 */
-typedef struct global_State {
+రకనిర్వచనం నిర్మాణం global_State {
   lua_Alloc frealloc;  /* function to reallocate memory */
-  void *ud;         /* auxiliary data to 'frealloc' */
+  శూన్య *ud;         /* auxiliary data to 'frealloc' */
   l_mem GCtotalbytes;  /* number of bytes currently allocated + debt */
   l_mem GCdebt;  /* bytes counted but not yet allocated */
   l_mem GCmarked;  /* number of objects marked in a GC cycle */
@@ -334,7 +334,7 @@ typedef struct global_State {
   stringtable strt;  /* hash table for strings */
   TValue l_registry;
   TValue nilvalue;  /* a nil value */
-  unsigned int seed;  /* randomized seed for hashes */
+  గుర్తులేని పూర్ణాంకం విత్తనం;  /* randomized seed for hashes */
   lu_byte gcparams[LUA_GCPN];
   lu_byte currentwhite;
   lu_byte gcstate;  /* state of garbage collector */
@@ -345,7 +345,7 @@ typedef struct global_State {
   GCObject *allgc;  /* list of all collectable objects */
   GCObject **sweepgc;  /* current position of sweep in list */
   GCObject *finobj;  /* list of collectable objects with finalizers */
-  GCObject *gray;  /* list of gray objects */
+  GCObject *బూడిద;  /* list of gray objects */
   GCObject *grayagain;  /* list of objects to be traversed atomically */
   GCObject *weak;  /* list of tables with weak values */
   GCObject *ephemeron;  /* list of ephemeron tables (weak keys) */
@@ -360,26 +360,26 @@ typedef struct global_State {
   GCObject *finobjsur;  /* list of survival objects with finalizers */
   GCObject *finobjold1;  /* list of old1 objects with finalizers */
   GCObject *finobjrold;  /* list of really old objects with finalizers */
-  struct lua_State *twups;  /* list of threads with open upvalues */
+  నిర్మాణం lua_State *twups;  /* list of threads with open upvalues */
   lua_CFunction panic;  /* to be called in unprotected errors */
   TString *memerrmsg;  /* message for memory-allocation errors */
   TString *tmname[TM_N];  /* array with tag-method names */
-  struct Table *mt[LUA_NUMTYPES];  /* metatables for basic types */
+  నిర్మాణం పట్టిక *mt[LUA_NUMTYPES];  /* metatables for basic types */
   TString *strcache[STRCACHE_N][STRCACHE_M];  /* cache for strings in API */
   lua_WarnFunction warnf;  /* warning function */
-  void *ud_warn;         /* auxiliary data to 'warnf' */
+  శూన్య *ud_warn;         /* auxiliary data to 'warnf' */
   LX mainth;  /* main thread of this state */
 } global_State;
 
 
-#define G(L)	(L->l_G)
-#define mainthread(G)	(&(G)->mainth.l)
+#నిర్వచించు G(L)	(L->l_G)
+#నిర్వచించు mainthread(G)	(&(G)->mainth.l)
 
 /*
 ** 'g->nilvalue' being a nil value flags that the state was completely
 ** build.
 */
-#define completestate(g)	ttisnil(&g->nilvalue)
+#నిర్వచించు completestate(g)	ttisnil(&g->nilvalue)
 
 
 /*
@@ -391,15 +391,15 @@ typedef struct global_State {
 ** part of any of them anywhere that a declaration of the complete type
 ** of the union is visible."
 */
-union GCUnion {
+సంఘం GCUnion {
   GCObject gc;  /* common header */
-  struct TString ts;
-  struct Udata u;
-  union Closure cl;
-  struct Table h;
-  struct Proto p;
-  struct lua_State th;  /* thread */
-  struct UpVal upv;
+  నిర్మాణం TString ts;
+  నిర్మాణం Udata u;
+  సంఘం సంవృతం cl;
+  నిర్మాణం పట్టిక h;
+  నిర్మాణం Proto p;
+  నిర్మాణం lua_State th;  /* thread */
+  నిర్మాణం పైకి_Val upv;
 };
 
 
@@ -411,41 +411,41 @@ union GCUnion {
 ** behavior is undefined. Otherwise, when converted back again, the
 ** result shall compare equal to the original pointer."
 */
-#define gco2(v,T,o)	check_exp((o)->tt == v, cast(T*, o))
-#define gco2nv(t,T,o)	check_exp(novariant((o)->tt) == t, cast(T*, o))
-#define gco2ts(o)	gco2nv(LUA_TSTRING, TString, o)
-#define gco2u(o)	gco2(LUA_VUSERDATA, Udata, o)
-#define gco2lcl(o)	(&gco2(LUA_VLCL, Closure, o)->l)
-#define gco2ccl(o)	(&gco2(LUA_VCCL, Closure, o)->c)
-#define gco2cl(o)	gco2nv(LUA_TFUNCTION, Closure, o)
-#define gco2t(o)	gco2(LUA_VTABLE, Table, o)
-#define gco2p(o)	gco2(LUA_VPROTO, Proto, o)
-#define gco2th(o)	gco2(LUA_VTHREAD, lua_State, o)
-#define gco2upv(o)	gco2(LUA_VUPVAL, UpVal, o)
+#నిర్వచించు gco2(v,T,o)	check_exp((o)->tt == v, cast(T*, o))
+#నిర్వచించు gco2nv(t,T,o)	check_exp(novariant((o)->tt) == t, cast(T*, o))
+#నిర్వచించు gco2ts(o)	gco2nv(LUA_TSTRING, TString, o)
+#నిర్వచించు gco2u(o)	gco2(LUA_VUSERDATA, Udata, o)
+#నిర్వచించు gco2lcl(o)	(&gco2(LUA_VLCL, సంవృతం, o)->l)
+#నిర్వచించు gco2ccl(o)	(&gco2(LUA_VCCL, సంవృతం, o)->c)
+#నిర్వచించు gco2cl(o)	gco2nv(LUA_TFUNCTION, సంవృతం, o)
+#నిర్వచించు gco2t(o)	gco2(LUA_VTABLE, పట్టిక, o)
+#నిర్వచించు gco2p(o)	gco2(LUA_VPROTO, Proto, o)
+#నిర్వచించు gco2th(o)	gco2(LUA_VTHREAD, lua_State, o)
+#నిర్వచించు gco2upv(o)	gco2(LUA_VUPVAL, పైకి_Val, o)
 
 
 /*
 ** macro to convert a Lua object into a GCObject
 */
-#define obj2gco(v)  \
+#నిర్వచించు obj2gco(v)  \
 	check_exp(novariant((v)->tt) >= LUA_TSTRING, cast(GCObject*, v))
 
 
 /* actual number of total memory allocated */
-#define gettotalbytes(g)	((g)->GCtotalbytes - (g)->GCdebt)
+#నిర్వచించు gettotalbytes(g)	((g)->GCtotalbytes - (g)->GCdebt)
 
 
-LUAI_FUNC void luaE_setdebt (global_State *g, l_mem debt);
-LUAI_FUNC void luaE_freethread (lua_State *L, lua_State *L1);
+LUAI_FUNC శూన్య luaE_setdebt (global_State *g, l_mem debt);
+LUAI_FUNC శూన్య luaE_freethread (lua_State *L, lua_State *L1);
 LUAI_FUNC lu_mem luaE_threadsize (lua_State *L);
-LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, int err);
-LUAI_FUNC void luaE_shrinkCI (lua_State *L);
-LUAI_FUNC void luaE_checkcstack (lua_State *L);
-LUAI_FUNC void luaE_incCstack (lua_State *L);
-LUAI_FUNC void luaE_warning (lua_State *L, const char *msg, int tocont);
-LUAI_FUNC void luaE_warnerror (lua_State *L, const char *where);
-LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus status);
+LUAI_FUNC CallInfo *luaE_extendCI (lua_State *L, పూర్ణాంకం err);
+LUAI_FUNC శూన్య luaE_shrinkCI (lua_State *L);
+LUAI_FUNC శూన్య luaE_checkcstack (lua_State *L);
+LUAI_FUNC శూన్య luaE_incCstack (lua_State *L);
+LUAI_FUNC శూన్య luaE_warning (lua_State *L, స్థిరరాశి అక్షరం *సందేశం, పూర్ణాంకం tocont);
+LUAI_FUNC శూన్య luaE_warnerror (lua_State *L, స్థిరరాశి అక్షరం *where);
+LUAI_FUNC TStatus luaE_resetthread (lua_State *L, TStatus స్థితి_2);
 
 
-#endif
+#అయితే_ముగింపు
 
