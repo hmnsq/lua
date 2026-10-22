@@ -87,19 +87,19 @@ LUAI_FUNC void luaT_trybinTM (lua_State *L, const TValue *p1, const TValue *p2,
                               StkId res, TMS event);
 LUAI_FUNC void luaT_tryconcatTM (lua_State *L);
 LUAI_FUNC void luaT_trybinassocTM (lua_State *L, const TValue *p1,
-       const TValue *p2, int inv, StkId res, TMS event);
+       const TValue *p2, 整数 inv, StkId res, TMS event);
 LUAI_FUNC void luaT_trybiniTM (lua_State *L, const TValue *p1, lua_Integer i2,
-                               int inv, StkId res, TMS event);
-LUAI_FUNC int luaT_callorderTM (lua_State *L, const TValue *p1,
+                               整数 inv, StkId res, TMS event);
+LUAI_FUNC 整数 luaT_callorderTM (lua_State *L, const TValue *p1,
                                 const TValue *p2, TMS event);
-LUAI_FUNC int luaT_callorderiTM (lua_State *L, const TValue *p1, int v2,
-                                 int inv, int isfloat, TMS event);
+LUAI_FUNC 整数 luaT_callorderiTM (lua_State *L, const TValue *p1, 整数 v2,
+                                 整数 inv, 整数 isfloat, TMS event);
 
 LUAI_FUNC void luaT_adjustvarargs (lua_State *L, struct CallInfo *ci,
                                                  const Proto *p);
 LUAI_FUNC void luaT_getvararg (CallInfo *ci, StkId ra, TValue *rc);
 LUAI_FUNC void luaT_getvarargs (lua_State *L, struct CallInfo *ci, StkId where,
-                                              int wanted, int vatab);
+                                              整数 wanted, 整数 vatab);
 
 
 #endif

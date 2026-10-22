@@ -1,8 +1,8 @@
 #include "lua.h"
 #include "lauxlib.h"
 
-static int id (lua_State *L) {
-  return lua_gettop(L);
+static 整数 id (lua_State *L) {
+  戻る lua_gettop(L);
 }
 
 
@@ -13,32 +13,32 @@ static const struct luaL_Reg funcs[] = {
 
 
 /* function used by lib11.c */
-LUAMOD_API int lib1_export (lua_State *L) {
+LUAMOD_API 整数 lib1_export (lua_State *L) {
   lua_pushstring(L, "exported");
-  return 1;
+  戻る 1;
 }
 
 
-LUAMOD_API int onefunction (lua_State *L) {
+LUAMOD_API 整数 onefunction (lua_State *L) {
   luaL_checkversion(L);
   lua_settop(L, 2);
   lua_pushvalue(L, 1);
-  return 2;
+  戻る 2;
 }
 
 
-LUAMOD_API int anotherfunc (lua_State *L) {
+LUAMOD_API 整数 anotherfunc (lua_State *L) {
   luaL_checkversion(L);
-  lua_pushfstring(L, "%d%%%d\n", (int)lua_tointeger(L, 1),
-                                 (int)lua_tointeger(L, 2));
-  return 1;
+  lua_pushfstring(L, "%d%%%d\n", (整数)lua_tointeger(L, 1),
+                                 (整数)lua_tointeger(L, 2));
+  戻る 1;
 } 
 
 
-LUAMOD_API int luaopen_lib1_sub (lua_State *L) {
+LUAMOD_API 整数 luaopen_lib1_sub (lua_State *L) {
   lua_setglobal(L, "y");  /* 2nd arg: extra value (file name) */
   lua_setglobal(L, "x");  /* 1st arg: module name */
   luaL_newlib(L, funcs);
-  return 1;
+  戻る 1;
 }
 

@@ -33,7 +33,7 @@
 ** metaevent keys + a few others). Libraries would typically add
 ** a few dozens more.
 */
-#if !defined(MINSTRTABSIZE)
+#もし !defined(MINSTRTABSIZE)
 #define MINSTRTABSIZE   128
 #endif
 
@@ -41,44 +41,44 @@
 /*
 ** generic equality for strings
 */
-int luaS_eqstr (TString *a, TString *b) {
+整数 luaS_eqstr (TString *a, TString *b) {
   size_t len1, len2;
   const char *s1 = getlstr(a, len1);
   const char *s2 = getlstr(b, len2);
-  return ((len1 == len2) &&  /* equal length and ... */
+  戻る ((len1 == len2) &&  /* equal length and ... */
           (memcmp(s1, s2, len1) == 0));  /* equal contents */
 }
 
 
 static unsigned luaS_hash (const char *str, size_t l, unsigned seed) {
-  unsigned int h = seed ^ cast_uint(l);
-  for (; l > 0; l--)
+  unsigned 整数 h = seed ^ cast_uint(l);
+  ために (; l > 0; l--)
     h ^= ((h<<5) + (h>>2) + cast_byte(str[l - 1]));
-  return h;
+  戻る h;
 }
 
 
 unsigned luaS_hashlongstr (TString *ts) {
   lua_assert(ts->tt == LUA_VLNGSTR);
-  if (ts->extra == 0) {  /* no hash? */
+  もし (ts->extra == 0) {  /* no hash? */
     size_t len = ts->u.lnglen;
     ts->hash = luaS_hash(getlngstr(ts), len, ts->hash);
     ts->extra = 1;  /* now it has its hash */
   }
-  return ts->hash;
+  戻る ts->hash;
 }
 
 
-static void tablerehash (TString **vect, int osize, int nsize) {
-  int i;
-  for (i = osize; i < nsize; i++)  /* clear new elements */
+static void tablerehash (TString **vect, 整数 osize, 整数 nsize) {
+  整数 i;
+  ために (i = osize; i < nsize; i++)  /* clear new elements */
     vect[i] = NULL;
-  for (i = 0; i < osize; i++) {  /* rehash old part of the array */
+  ために (i = 0; i < osize; i++) {  /* rehash old part of the array */
     TString *p = vect[i];
     vect[i] = NULL;
-    while (p) {  /* for each string in the list */
+    ながら (p) {  /* for each string in the list */
       TString *hnext = p->u.hnext;  /* save next */
-      unsigned int h = lmod(p->hash, nsize);  /* new position */
+      unsigned 整数 h = lmod(p->hash, nsize);  /* new position */
       p->u.hnext = vect[h];  /* chain it into array */
       vect[h] = p;
       p = hnext;
@@ -92,22 +92,22 @@ static void tablerehash (TString **vect, int osize, int nsize) {
 ** (This can degrade performance, but any non-zero size should work
 ** correctly.)
 */
-void luaS_resize (lua_State *L, int nsize) {
+void luaS_resize (lua_State *L, 整数 nsize) {
   stringtable *tb = &G(L)->strt;
-  int osize = tb->size;
+  整数 osize = tb->size;
   TString **newvect;
-  if (nsize < osize)  /* shrinking table? */
+  もし (nsize < osize)  /* shrinking table? */
     tablerehash(tb->hash, osize, nsize);  /* depopulate shrinking part */
   newvect = luaM_reallocvector(L, tb->hash, osize, nsize, TString*);
-  if (l_unlikely(newvect == NULL)) {  /* reallocation failed? */
-    if (nsize < osize)  /* was it shrinking table? */
+  もし (l_unlikely(newvect == NULL)) {  /* reallocation failed? */
+    もし (nsize < osize)  /* was it shrinking table? */
       tablerehash(tb->hash, nsize, osize);  /* restore to original size */
     /* leave table as it was */
   }
-  else {  /* allocation succeeded */
+  否则 {  /* allocation succeeded */
     tb->hash = newvect;
     tb->size = nsize;
-    if (nsize > osize)
+    もし (nsize > osize)
       tablerehash(newvect, osize, nsize);  /* rehash for new size */
   }
 }
@@ -118,10 +118,10 @@ void luaS_resize (lua_State *L, int nsize) {
 ** a non-collectable string.)
 */
 void luaS_clearcache (global_State *g) {
-  int i, j;
-  for (i = 0; i < STRCACHE_N; i++)
-    for (j = 0; j < STRCACHE_M; j++) {
-      if (iswhite(g->strcache[i][j]))  /* will entry be collected? */
+  整数 i, j;
+  ために (i = 0; i < STRCACHE_N; i++)
+    ために (j = 0; j < STRCACHE_M; j++) {
+      もし (iswhite(g->strcache[i][j]))  /* will entry be collected? */
         g->strcache[i][j] = g->memerrmsg;  /* replace it with something fixed */
     }
 }
@@ -132,7 +132,7 @@ void luaS_clearcache (global_State *g) {
 */
 void luaS_init (lua_State *L) {
   global_State *g = G(L);
-  int i, j;
+  整数 i, j;
   stringtable *tb = &G(L)->strt;
   tb->hash = luaM_newvector(L, MINSTRTABSIZE, TString*);
   tablerehash(tb->hash, 0, MINSTRTABSIZE);  /* clear array */
@@ -140,23 +140,23 @@ void luaS_init (lua_State *L) {
   /* pre-create memory-error message */
   g->memerrmsg = luaS_newliteral(L, MEMERRMSG);
   luaC_fix(L, obj2gco(g->memerrmsg));  /* it should never be collected */
-  for (i = 0; i < STRCACHE_N; i++)  /* fill cache with valid strings */
-    for (j = 0; j < STRCACHE_M; j++)
+  ために (i = 0; i < STRCACHE_N; i++)  /* fill cache with valid strings */
+    ために (j = 0; j < STRCACHE_M; j++)
       g->strcache[i][j] = g->memerrmsg;
 }
 
 
-size_t luaS_sizelngstr (size_t len, int kind) {
+size_t luaS_sizelngstr (size_t len, 整数 kind) {
   switch (kind) {
     case LSTRREG:  /* regular long string */
       /* don't need 'falloc'/'ud', but need space for content */
-      return offsetof(TString, falloc) + (len + 1) * sizeof(char);
+      戻る offsetof(TString, falloc) + (len + 1) * sizeof(char);
     case LSTRFIX:  /* fixed external long string */
       /* don't need 'falloc'/'ud' */
-      return offsetof(TString, falloc);
+      戻る offsetof(TString, falloc);
     default:  /* external long string with deallocation */
       lua_assert(kind == LSTRMEM);
-      return sizeof(TString);
+      戻る sizeof(TString);
   }
 }
 
@@ -172,7 +172,7 @@ static TString *createstrobj (lua_State *L, size_t totalsize, lu_byte tag,
   ts = gco2ts(o);
   ts->hash = h;
   ts->extra = 0;
-  return ts;
+  戻る ts;
 }
 
 
@@ -183,14 +183,14 @@ TString *luaS_createlngstrobj (lua_State *L, size_t l) {
   ts->shrlen = LSTRREG;  /* signals that it is a regular long string */
   ts->contents = cast_charp(ts) + offsetof(TString, falloc);
   ts->contents[l] = '\0';  /* ending 0 */
-  return ts;
+  戻る ts;
 }
 
 
 void luaS_remove (lua_State *L, TString *ts) {
   stringtable *tb = &G(L)->strt;
   TString **p = &tb->hash[lmod(ts->hash, tb->size)];
-  while (*p != ts)  /* find previous element */
+  ながら (*p != ts)  /* find previous element */
     p = &(*p)->u.hnext;
   *p = (*p)->u.hnext;  /* remove element from its list */
   tb->nuse--;
@@ -198,12 +198,12 @@ void luaS_remove (lua_State *L, TString *ts) {
 
 
 static void growstrtab (lua_State *L, stringtable *tb) {
-  if (l_unlikely(tb->nuse == INT_MAX)) {  /* too many strings? */
+  もし (l_unlikely(tb->nuse == INT_MAX)) {  /* too many strings? */
     luaC_fullgc(L, 1);  /* try to free some... */
-    if (tb->nuse == INT_MAX)  /* still too many? */
+    もし (tb->nuse == INT_MAX)  /* still too many? */
       luaM_error(L);  /* cannot even create a message... */
   }
-  if (tb->size <= MAXSTRTB / 2)  /* can grow string table? */
+  もし (tb->size <= MAXSTRTB / 2)  /* can grow string table? */
     luaS_resize(L, tb->size * 2);
 }
 
@@ -215,20 +215,20 @@ static TString *internshrstr (lua_State *L, const char *str, size_t l) {
   TString *ts;
   global_State *g = G(L);
   stringtable *tb = &g->strt;
-  unsigned int h = luaS_hash(str, l, g->seed);
+  unsigned 整数 h = luaS_hash(str, l, g->seed);
   TString **list = &tb->hash[lmod(h, tb->size)];
   lua_assert(str != NULL);  /* otherwise 'memcmp'/'memcpy' are undefined */
-  for (ts = *list; ts != NULL; ts = ts->u.hnext) {
-    if (l == cast_uint(ts->shrlen) &&
+  ために (ts = *list; ts != NULL; ts = ts->u.hnext) {
+    もし (l == cast_uint(ts->shrlen) &&
         (memcmp(str, getshrstr(ts), l * sizeof(char)) == 0)) {
       /* found! */
-      if (isdead(g, ts))  /* dead (but not collected yet)? */
+      もし (isdead(g, ts))  /* dead (but not collected yet)? */
         changewhite(ts);  /* resurrect it */
-      return ts;
+      戻る ts;
     }
   }
   /* else must create a new string */
-  if (tb->nuse >= tb->size) {  /* need to grow string table? */
+  もし (tb->nuse >= tb->size) {  /* need to grow string table? */
     growstrtab(L, tb);
     list = &tb->hash[lmod(h, tb->size)];  /* rehash with new size */
   }
@@ -239,7 +239,7 @@ static TString *internshrstr (lua_State *L, const char *str, size_t l) {
   ts->u.hnext = *list;
   *list = ts;
   tb->nuse++;
-  return ts;
+  戻る ts;
 }
 
 
@@ -247,15 +247,15 @@ static TString *internshrstr (lua_State *L, const char *str, size_t l) {
 ** new string (with explicit length)
 */
 TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
-  if (l <= LUAI_MAXSHORTLEN)  /* short string? */
-    return internshrstr(L, str, l);
-  else {
+  もし (l <= LUAI_MAXSHORTLEN)  /* short string? */
+    戻る internshrstr(L, str, l);
+  否则 {
     TString *ts;
-    if (l_unlikely(l * sizeof(char) >= (MAX_SIZE - sizeof(TString))))
+    もし (l_unlikely(l * sizeof(char) >= (MAX_SIZE - sizeof(TString))))
       luaM_toobig(L);
     ts = luaS_createlngstrobj(L, l);
     memcpy(getlngstr(ts), str, l * sizeof(char));
-    return ts;
+    戻る ts;
   }
 }
 
@@ -267,36 +267,36 @@ TString *luaS_newlstr (lua_State *L, const char *str, size_t l) {
 ** check hits.
 */
 TString *luaS_new (lua_State *L, const char *str) {
-  unsigned int i = point2uint(str) % STRCACHE_N;  /* hash */
-  int j;
+  unsigned 整数 i = point2uint(str) % STRCACHE_N;  /* hash */
+  整数 j;
   TString **p = G(L)->strcache[i];
-  for (j = 0; j < STRCACHE_M; j++) {
-    if (strcmp(str, getstr(p[j])) == 0)  /* hit? */
-      return p[j];  /* that is it */
+  ために (j = 0; j < STRCACHE_M; j++) {
+    もし (strcmp(str, getstr(p[j])) == 0)  /* hit? */
+      戻る p[j];  /* that is it */
   }
   /* normal route */
-  for (j = STRCACHE_M - 1; j > 0; j--)
+  ために (j = STRCACHE_M - 1; j > 0; j--)
     p[j] = p[j - 1];  /* move out last element */
   /* new element is first in the list */
   p[0] = luaS_newlstr(L, str, strlen(str));
-  return p[0];
+  戻る p[0];
 }
 
 
 Udata *luaS_newudata (lua_State *L, size_t s, unsigned short nuvalue) {
   Udata *u;
-  int i;
+  整数 i;
   GCObject *o;
-  if (l_unlikely(s > MAX_SIZE - udatamemoffset(nuvalue)))
+  もし (l_unlikely(s > MAX_SIZE - udatamemoffset(nuvalue)))
     luaM_toobig(L);
   o = luaC_newobj(L, LUA_VUSERDATA, sizeudata(nuvalue, s));
   u = gco2u(o);
   u->len = s;
   u->nuvalue = nuvalue;
   u->metatable = NULL;
-  for (i = 0; i < nuvalue; i++)
+  ために (i = 0; i < nuvalue; i++)
     setnilvalue(&u->uv[i].uv);
-  return u;
+  戻る u;
 }
 
 
@@ -318,13 +318,13 @@ static void f_newext (lua_State *L, void *ud) {
 TString *luaS_newextlstr (lua_State *L,
 	          const char *s, size_t len, lua_Alloc falloc, void *ud) {
   struct NewExt ne;
-  if (!falloc) {
+  もし (!falloc) {
     ne.kind = LSTRFIX;
     f_newext(L, &ne);  /* just create header */
   }
-  else {
+  否则 {
     ne.kind = LSTRMEM;
-    if (luaD_rawrunprotected(L, f_newext, &ne) != LUA_OK) {  /* mem. error? */
+    もし (luaD_rawrunprotected(L, f_newext, &ne) != LUA_OK) {  /* mem. error? */
       (*falloc)(ud, cast_voidp(s), len + 1, 0);  /* free external string */
       luaM_error(L);  /* re-raise memory error */
     }
@@ -334,7 +334,7 @@ TString *luaS_newextlstr (lua_State *L,
   ne.ts->shrlen = ne.kind;
   ne.ts->u.lnglen = len;
   ne.ts->contents = cast_charp(s);
-  return ne.ts;
+  戻る ne.ts;
 }
 
 
@@ -343,11 +343,11 @@ TString *luaS_newextlstr (lua_State *L,
 */
 TString *luaS_normstr (lua_State *L, TString *ts) {
   size_t len = ts->u.lnglen;
-  if (len > LUAI_MAXSHORTLEN)
-    return ts;  /* long string; keep the original */
-  else {
+  もし (len > LUAI_MAXSHORTLEN)
+    戻る ts;  /* long string; keep the original */
+  否则 {
     const char *str = getlngstr(ts);
-    return internshrstr(L, str, len);
+    戻る internshrstr(L, str, len);
   }
 }
 

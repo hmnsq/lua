@@ -23,13 +23,13 @@
 ** computations.) 'lu_mem' is a corresponding unsigned type.  Usually,
 ** 'ptrdiff_t' should work, but we use 'long' for 16-bit machines.
 */
-#if defined(LUAI_MEM)		/* { external definitions? */
+#もし defined(LUAI_MEM)		/* { external definitions? */
 typedef LUAI_MEM l_mem;
 typedef LUAI_UMEM lu_mem;
 #elif LUAI_IS32INT	/* }{ */
 typedef ptrdiff_t l_mem;
 typedef size_t lu_mem;
-#else  /* 16-bit ints */	/* }{ */
+#否则  /* 16-bit ints */	/* }{ */
 typedef long l_mem;
 typedef unsigned long lu_mem;
 #endif				/* } */
@@ -75,15 +75,15 @@ typedef lu_byte TStatus;
 ** value. (In strict ISO C this may cause undefined behavior, but no
 ** actual machine seems to bother.)
 */
-#if !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
+#もし !defined(LUA_USE_C89) && defined(__STDC_VERSION__) && \
     __STDC_VERSION__ >= 199901L
 #include <stdint.h>
-#if defined(UINTPTR_MAX)  /* even in C99 this type is optional */
+#もし defined(UINTPTR_MAX)  /* even in C99 this type is optional */
 #define L_P2I	uintptr_t
-#else  /* no 'intptr'? */
+#否则  /* no 'intptr'? */
 #define L_P2I	uintmax_t  /* use the largest available integer */
 #endif
-#else  /* C89 option */
+#否则  /* C89 option */
 #define L_P2I	size_t
 #endif
 
@@ -99,15 +99,15 @@ typedef LUAI_UACINT l_uacInt;
 /*
 ** Internal assertions for in-house debugging
 */
-#if defined LUAI_ASSERT
+#もし defined LUAI_ASSERT
 #undef NDEBUG
 #include <assert.h>
 #define lua_assert(c)           assert(c)
 #define assert_code(c)		c
 #endif
 
-#if defined(lua_assert)
-#else
+#もし defined(lua_assert)
+#否则
 #define lua_assert(c)		((void)0)
 #define assert_code(c)		((void)0)
 #endif
@@ -118,7 +118,7 @@ typedef LUAI_UACINT l_uacInt;
 
 
 /* macro to avoid warnings about unused variables */
-#if !defined(UNUSED)
+#もし !defined(UNUSED)
 #define UNUSED(x)	((void)(x))
 #endif
 
@@ -129,9 +129,9 @@ typedef LUAI_UACINT l_uacInt;
 #define cast_void(i)	cast(void, (i))
 #define cast_voidp(i)	cast(void *, (i))
 #define cast_num(i)	cast(lua_Number, (i))
-#define cast_int(i)	cast(int, (i))
+#define cast_int(i)	cast(整数, (i))
 #define cast_short(i)	cast(short, (i))
-#define cast_uint(i)	cast(unsigned int, (i))
+#define cast_uint(i)	cast(unsigned 整数, (i))
 #define cast_byte(i)	cast(lu_byte, (i))
 #define cast_uchar(i)	cast(unsigned char, (i))
 #define cast_char(i)	cast(char, (i))
@@ -142,7 +142,7 @@ typedef LUAI_UACINT l_uacInt;
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
-#if !defined(l_castS2U)
+#もし !defined(l_castS2U)
 #define l_castS2U(i)	((lua_Unsigned)(i))
 #endif
 
@@ -151,7 +151,7 @@ typedef LUAI_UACINT l_uacInt;
 ** not strict ISO C, but two-complement architectures should
 ** work fine.
 */
-#if !defined(l_castU2S)
+#もし !defined(l_castU2S)
 #define l_castU2S(i)	((lua_Integer)(i))
 #endif
 
@@ -180,9 +180,9 @@ typedef void (*voidf)(void);
 ** is undefined according to ISO C, but POSIX assumes that it works.
 ** (The '__extension__' in gnu compilers is only to avoid warnings.)
 */
-#if defined(__GNUC__)
+#もし defined(__GNUC__)
 #define cast_func(p) (__extension__ (voidf)(p))
-#else
+#否则
 #define cast_func(p) ((voidf)(p))
 #endif
 
@@ -191,13 +191,13 @@ typedef void (*voidf)(void);
 /*
 ** non-return type
 */
-#if !defined(l_noret)
+#もし !defined(l_noret)
 
-#if defined(__GNUC__)
+#もし defined(__GNUC__)
 #define l_noret		void __attribute__((noreturn))
 #elif defined(_MSC_VER) && _MSC_VER >= 1200
 #define l_noret		void __declspec(noreturn)
-#else
+#否则
 #define l_noret		void
 #endif
 
@@ -207,11 +207,11 @@ typedef void (*voidf)(void);
 /*
 ** Inline functions
 */
-#if !defined(LUA_USE_C89)
+#もし !defined(LUA_USE_C89)
 #define l_inline	inline
 #elif defined(__GNUC__)
 #define l_inline	__inline__
-#else
+#否则
 #define l_inline	/* empty */
 #endif
 
@@ -221,9 +221,9 @@ typedef void (*voidf)(void);
 /*
 ** An unsigned with (at least) 4 bytes
 */
-#if LUAI_IS32INT
-typedef unsigned int l_uint32;
-#else
+#もし LUAI_IS32INT
+typedef unsigned 整数 l_uint32;
+#否则
 typedef unsigned long l_uint32;
 #endif
 
@@ -233,12 +233,12 @@ typedef unsigned long l_uint32;
 */
 
 /* floor division (defined as 'floor(a/b)') */
-#if !defined(luai_numidiv)
+#もし !defined(luai_numidiv)
 #define luai_numidiv(L,a,b)     l_floor(luai_numdiv(L,a,b))
 #endif
 
 /* float division */
-#if !defined(luai_numdiv)
+#もし !defined(luai_numdiv)
 #define luai_numdiv(L,a,b)      ((void)L, (a)/(b))
 #endif
 
@@ -253,20 +253,20 @@ typedef unsigned long l_uint32;
 ** 'b' with different signs, or 'm' and 'b' with different signs
 ** (as the result 'm' of 'fmod' has the same sign of 'a').
 */
-#if !defined(luai_nummod)
+#もし !defined(luai_nummod)
 #define luai_nummod(L,a,b,m)  \
   { (void)L; (m) = l_mathop(fmod)(a,b); \
-    if (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
+    もし (((m) > 0) ? (b) < 0 : ((m) < 0 && (b) > 0)) (m) += (b); }
 #endif
 
 /* exponentiation */
-#if !defined(luai_numpow)
+#もし !defined(luai_numpow)
 #define luai_numpow(L,a,b)  \
   ((void)L, (b == 2) ? (a)*(a) : l_mathop(pow)(a,b))
 #endif
 
 /* the others are quite standard operations */
-#if !defined(luai_numadd)
+#もし !defined(luai_numadd)
 #define luai_numadd(L,a,b)      ((void)L, (a)+(b))
 #define luai_numsub(L,a,b)      ((void)L, (a)-(b))
 #define luai_nummul(L,a,b)      ((void)L, (a)*(b))
@@ -310,12 +310,12 @@ typedef unsigned long l_uint32;
 ** without support give a warning about it. To avoid these warnings,
 ** change to the default definition.
 */
-#if !defined(LUAI_FUNC)
+#もし !defined(LUAI_FUNC)
 
-#if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
+#もし defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
     (defined(__ELF__) || defined(__MACH__))
 #define LUAI_FUNC	__attribute__((visibility("internal"))) extern
-#else
+#否则
 #define LUAI_FUNC	extern
 #endif
 
@@ -336,17 +336,17 @@ typedef unsigned long l_uint32;
 */
 
 /* print a string */
-#if !defined(lua_writestring)
+#もし !defined(lua_writestring)
 #define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
 #endif
 
 /* print a newline and flush the output */
-#if !defined(lua_writeline)
+#もし !defined(lua_writeline)
 #define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
 #endif
 
 /* print an error message */
-#if !defined(lua_writestringerror)
+#もし !defined(lua_writestringerror)
 #define lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
 #endif

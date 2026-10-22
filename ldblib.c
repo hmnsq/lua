@@ -33,56 +33,56 @@ static const char *const HOOKKEY = "_HOOKKEY";
 ** guarantees about its stack space; any push in L1 must be
 ** checked.
 */
-static void checkstack (lua_State *L, lua_State *L1, int n) {
-  if (l_unlikely(L != L1 && !lua_checkstack(L1, n)))
+static void checkstack (lua_State *L, lua_State *L1, 整数 n) {
+  もし (l_unlikely(L != L1 && !lua_checkstack(L1, n)))
     luaL_error(L, "stack overflow");
 }
 
 
-static int db_getregistry (lua_State *L) {
+static 整数 db_getregistry (lua_State *L) {
   lua_pushvalue(L, LUA_REGISTRYINDEX);
-  return 1;
+  戻る 1;
 }
 
 
-static int db_getmetatable (lua_State *L) {
+static 整数 db_getmetatable (lua_State *L) {
   luaL_checkany(L, 1);
-  if (!lua_getmetatable(L, 1)) {
+  もし (!lua_getmetatable(L, 1)) {
     lua_pushnil(L);  /* no metatable */
   }
-  return 1;
+  戻る 1;
 }
 
 
-static int db_setmetatable (lua_State *L) {
-  int t = lua_type(L, 2);
+static 整数 db_setmetatable (lua_State *L) {
+  整数 t = lua_type(L, 2);
   luaL_argexpected(L, t == LUA_TNIL || t == LUA_TTABLE, 2, "nil or table");
   lua_settop(L, 2);
   lua_setmetatable(L, 1);
-  return 1;  /* return 1st argument */
+  戻る 1;  /* return 1st argument */
 }
 
 
-static int db_getuservalue (lua_State *L) {
-  int n = (int)luaL_optinteger(L, 2, 1);
-  if (lua_type(L, 1) != LUA_TUSERDATA)
+static 整数 db_getuservalue (lua_State *L) {
+  整数 n = (整数)luaL_optinteger(L, 2, 1);
+  もし (lua_type(L, 1) != LUA_TUSERDATA)
     luaL_pushfail(L);
-  else if (lua_getiuservalue(L, 1, n) != LUA_TNONE) {
+  否则 もし (lua_getiuservalue(L, 1, n) != LUA_TNONE) {
     lua_pushboolean(L, 1);
-    return 2;
+    戻る 2;
   }
-  return 1;
+  戻る 1;
 }
 
 
-static int db_setuservalue (lua_State *L) {
-  int n = (int)luaL_optinteger(L, 3, 1);
+static 整数 db_setuservalue (lua_State *L) {
+  整数 n = (整数)luaL_optinteger(L, 3, 1);
   luaL_checktype(L, 1, LUA_TUSERDATA);
   luaL_checkany(L, 2);
   lua_settop(L, 2);
-  if (!lua_setiuservalue(L, 1, n))
+  もし (!lua_setiuservalue(L, 1, n))
     luaL_pushfail(L);
-  return 1;
+  戻る 1;
 }
 
 
@@ -92,14 +92,14 @@ static int db_setuservalue (lua_State *L) {
 ** 1 if this argument is present (so that functions can skip it to
 ** access their other arguments)
 */
-static lua_State *getthread (lua_State *L, int *arg) {
-  if (lua_isthread(L, 1)) {
+static lua_State *getthread (lua_State *L, 整数 *arg) {
+  もし (lua_isthread(L, 1)) {
     *arg = 1;
-    return lua_tothread(L, 1);
+    戻る lua_tothread(L, 1);
   }
-  else {
+  否则 {
     *arg = 0;
-    return L;  /* function will operate over current thread */
+    戻る L;  /* function will operate over current thread */
   }
 }
 
@@ -114,12 +114,12 @@ static void settabss (lua_State *L, const char *k, const char *v) {
   lua_setfield(L, -2, k);
 }
 
-static void settabsi (lua_State *L, const char *k, int v) {
+static void settabsi (lua_State *L, const char *k, 整数 v) {
   lua_pushinteger(L, v);
   lua_setfield(L, -2, k);
 }
 
-static void settabsb (lua_State *L, const char *k, int v) {
+static void settabsb (lua_State *L, const char *k, 整数 v) {
   lua_pushboolean(L, v);
   lua_setfield(L, -2, k);
 }
@@ -133,9 +133,9 @@ static void settabsb (lua_State *L, const char *k, int v) {
 ** 'lua_setfield'.
 */
 static void treatstackoption (lua_State *L, lua_State *L1, const char *fname) {
-  if (L == L1)
+  もし (L == L1)
     lua_rotate(L, -2, 1);  /* exchange object and table */
-  else
+  否则
     lua_xmove(L1, L, 1);  /* move object to the "main" stack */
   lua_setfield(L, -2, fname);  /* put object into table */
 }
@@ -147,28 +147,28 @@ static void treatstackoption (lua_State *L, lua_State *L1, const char *fname) {
 ** two optional outputs (function and line table) from function
 ** 'lua_getinfo'.
 */
-static int db_getinfo (lua_State *L) {
+static 整数 db_getinfo (lua_State *L) {
   lua_Debug ar;
-  int arg;
+  整数 arg;
   lua_State *L1 = getthread(L, &arg);
   const char *options = luaL_optstring(L, arg+2, "flnSrtu");
   checkstack(L, L1, 3);
   luaL_argcheck(L, options[0] != '>', arg + 2, "invalid option '>'");
-  if (lua_isfunction(L, arg + 1)) {  /* info about a function? */
+  もし (lua_isfunction(L, arg + 1)) {  /* info about a function? */
     options = lua_pushfstring(L, ">%s", options);  /* add '>' to 'options' */
     lua_pushvalue(L, arg + 1);  /* move function to 'L1' stack */
     lua_xmove(L, L1, 1);
   }
-  else {  /* stack level */
-    if (!lua_getstack(L1, (int)luaL_checkinteger(L, arg + 1), &ar)) {
+  否则 {  /* stack level */
+    もし (!lua_getstack(L1, (整数)luaL_checkinteger(L, arg + 1), &ar)) {
       luaL_pushfail(L);  /* level out of range */
-      return 1;
+      戻る 1;
     }
   }
-  if (!lua_getinfo(L1, options, &ar))
-    return luaL_argerror(L, arg+2, "invalid option");
+  もし (!lua_getinfo(L1, options, &ar))
+    戻る luaL_argerror(L, arg+2, "invalid option");
   lua_newtable(L);  /* table to collect results */
-  if (strchr(options, 'S')) {
+  もし (strchr(options, 'S')) {
     lua_pushlstring(L, ar.source, ar.srclen);
     lua_setfield(L, -2, "source");
     settabss(L, "short_src", ar.short_src);
@@ -176,108 +176,108 @@ static int db_getinfo (lua_State *L) {
     settabsi(L, "lastlinedefined", ar.lastlinedefined);
     settabss(L, "what", ar.what);
   }
-  if (strchr(options, 'l'))
+  もし (strchr(options, 'l'))
     settabsi(L, "currentline", ar.currentline);
-  if (strchr(options, 'u')) {
+  もし (strchr(options, 'u')) {
     settabsi(L, "nups", ar.nups);
     settabsi(L, "nparams", ar.nparams);
     settabsb(L, "isvararg", ar.isvararg);
   }
-  if (strchr(options, 'n')) {
+  もし (strchr(options, 'n')) {
     settabss(L, "name", ar.name);
     settabss(L, "namewhat", ar.namewhat);
   }
-  if (strchr(options, 'r')) {
+  もし (strchr(options, 'r')) {
     settabsi(L, "ftransfer", ar.ftransfer);
     settabsi(L, "ntransfer", ar.ntransfer);
   }
-  if (strchr(options, 't')) {
+  もし (strchr(options, 't')) {
     settabsb(L, "istailcall", ar.istailcall);
     settabsi(L, "extraargs", ar.extraargs);
   }
-  if (strchr(options, 'L'))
+  もし (strchr(options, 'L'))
     treatstackoption(L, L1, "activelines");
-  if (strchr(options, 'f'))
+  もし (strchr(options, 'f'))
     treatstackoption(L, L1, "func");
-  return 1;  /* return table */
+  戻る 1;  /* return table */
 }
 
 
-static int db_getlocal (lua_State *L) {
-  int arg;
+static 整数 db_getlocal (lua_State *L) {
+  整数 arg;
   lua_State *L1 = getthread(L, &arg);
-  int nvar = (int)luaL_checkinteger(L, arg + 2);  /* local-variable index */
-  if (lua_isfunction(L, arg + 1)) {  /* function argument? */
+  整数 nvar = (整数)luaL_checkinteger(L, arg + 2);  /* local-variable index */
+  もし (lua_isfunction(L, arg + 1)) {  /* function argument? */
     lua_pushvalue(L, arg + 1);  /* push function */
     lua_pushstring(L, lua_getlocal(L, NULL, nvar));  /* push local name */
-    return 1;  /* return only name (there is no value) */
+    戻る 1;  /* return only name (there is no value) */
   }
-  else {  /* stack-level argument */
+  否则 {  /* stack-level argument */
     lua_Debug ar;
     const char *name;
-    int level = (int)luaL_checkinteger(L, arg + 1);
-    if (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
-      return luaL_argerror(L, arg+1, "level out of range");
+    整数 level = (整数)luaL_checkinteger(L, arg + 1);
+    もし (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
+      戻る luaL_argerror(L, arg+1, "level out of range");
     checkstack(L, L1, 1);
     name = lua_getlocal(L1, &ar, nvar);
-    if (name) {
+    もし (name) {
       lua_xmove(L1, L, 1);  /* move local value */
       lua_pushstring(L, name);  /* push name */
       lua_rotate(L, -2, 1);  /* re-order */
-      return 2;
+      戻る 2;
     }
-    else {
+    否则 {
       luaL_pushfail(L);  /* no name (nor value) */
-      return 1;
+      戻る 1;
     }
   }
 }
 
 
-static int db_setlocal (lua_State *L) {
-  int arg;
+static 整数 db_setlocal (lua_State *L) {
+  整数 arg;
   const char *name;
   lua_State *L1 = getthread(L, &arg);
   lua_Debug ar;
-  int level = (int)luaL_checkinteger(L, arg + 1);
-  int nvar = (int)luaL_checkinteger(L, arg + 2);
-  if (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
-    return luaL_argerror(L, arg+1, "level out of range");
+  整数 level = (整数)luaL_checkinteger(L, arg + 1);
+  整数 nvar = (整数)luaL_checkinteger(L, arg + 2);
+  もし (l_unlikely(!lua_getstack(L1, level, &ar)))  /* out of range? */
+    戻る luaL_argerror(L, arg+1, "level out of range");
   luaL_checkany(L, arg+3);
   lua_settop(L, arg+3);
   checkstack(L, L1, 1);
   lua_xmove(L, L1, 1);
   name = lua_setlocal(L1, &ar, nvar);
-  if (name == NULL)
+  もし (name == NULL)
     lua_pop(L1, 1);  /* pop value (if not popped by 'lua_setlocal') */
   lua_pushstring(L, name);
-  return 1;
+  戻る 1;
 }
 
 
 /*
 ** get (if 'get' is true) or set an upvalue from a closure
 */
-static int auxupvalue (lua_State *L, int get) {
+static 整数 auxupvalue (lua_State *L, 整数 get) {
   const char *name;
-  int n = (int)luaL_checkinteger(L, 2);  /* upvalue index */
+  整数 n = (整数)luaL_checkinteger(L, 2);  /* upvalue index */
   luaL_checktype(L, 1, LUA_TFUNCTION);  /* closure */
   name = get ? lua_getupvalue(L, 1, n) : lua_setupvalue(L, 1, n);
-  if (name == NULL) return 0;
+  もし (name == NULL) 戻る 0;
   lua_pushstring(L, name);
   lua_insert(L, -(get+1));  /* no-op if get is false */
-  return get + 1;
+  戻る get + 1;
 }
 
 
-static int db_getupvalue (lua_State *L) {
-  return auxupvalue(L, 1);
+static 整数 db_getupvalue (lua_State *L) {
+  戻る auxupvalue(L, 1);
 }
 
 
-static int db_setupvalue (lua_State *L) {
+static 整数 db_setupvalue (lua_State *L) {
   luaL_checkany(L, 3);
-  return auxupvalue(L, 0);
+  戻る auxupvalue(L, 0);
 }
 
 
@@ -285,37 +285,37 @@ static int db_setupvalue (lua_State *L) {
 ** Check whether a given upvalue from a given closure exists and
 ** returns its index
 */
-static void *checkupval (lua_State *L, int argf, int argnup, int *pnup) {
+static void *checkupval (lua_State *L, 整数 argf, 整数 argnup, 整数 *pnup) {
   void *id;
-  int nup = (int)luaL_checkinteger(L, argnup);  /* upvalue index */
+  整数 nup = (整数)luaL_checkinteger(L, argnup);  /* upvalue index */
   luaL_checktype(L, argf, LUA_TFUNCTION);  /* closure */
   id = lua_upvalueid(L, argf, nup);
-  if (pnup) {
+  もし (pnup) {
     luaL_argcheck(L, id != NULL, argnup, "invalid upvalue index");
     *pnup = nup;
   }
-  return id;
+  戻る id;
 }
 
 
-static int db_upvalueid (lua_State *L) {
+static 整数 db_upvalueid (lua_State *L) {
   void *id = checkupval(L, 1, 2, NULL);
-  if (id != NULL)
+  もし (id != NULL)
     lua_pushlightuserdata(L, id);
-  else
+  否则
     luaL_pushfail(L);
-  return 1;
+  戻る 1;
 }
 
 
-static int db_upvaluejoin (lua_State *L) {
-  int n1, n2;
+static 整数 db_upvaluejoin (lua_State *L) {
+  整数 n1, n2;
   checkupval(L, 1, 2, &n1);
   checkupval(L, 3, 4, &n2);
   luaL_argcheck(L, !lua_iscfunction(L, 1), 1, "Lua function expected");
   luaL_argcheck(L, !lua_iscfunction(L, 3), 3, "Lua function expected");
   lua_upvaluejoin(L, 1, n1, 3, n2);
-  return 0;
+  戻る 0;
 }
 
 
@@ -328,11 +328,11 @@ static void hookf (lua_State *L, lua_Debug *ar) {
     {"call", "return", "line", "count", "tail call"};
   lua_getfield(L, LUA_REGISTRYINDEX, HOOKKEY);
   lua_pushthread(L);
-  if (lua_rawget(L, -2) == LUA_TFUNCTION) {  /* is there a hook function? */
-    lua_pushstring(L, hooknames[(int)ar->event]);  /* push event name */
-    if (ar->currentline >= 0)
+  もし (lua_rawget(L, -2) == LUA_TFUNCTION) {  /* is there a hook function? */
+    lua_pushstring(L, hooknames[(整数)ar->event]);  /* push event name */
+    もし (ar->currentline >= 0)
       lua_pushinteger(L, ar->currentline);  /* push current line */
-    else lua_pushnil(L);
+    否则 lua_pushnil(L);
     lua_assert(lua_getinfo(L, "lS", ar));
     lua_call(L, 2, 0);  /* call hook function */
   }
@@ -342,44 +342,44 @@ static void hookf (lua_State *L, lua_Debug *ar) {
 /*
 ** Convert a string mask (for 'sethook') into a bit mask
 */
-static int makemask (const char *smask, int count) {
-  int mask = 0;
-  if (strchr(smask, 'c')) mask |= LUA_MASKCALL;
-  if (strchr(smask, 'r')) mask |= LUA_MASKRET;
-  if (strchr(smask, 'l')) mask |= LUA_MASKLINE;
-  if (count > 0) mask |= LUA_MASKCOUNT;
-  return mask;
+static 整数 makemask (const char *smask, 整数 count) {
+  整数 mask = 0;
+  もし (strchr(smask, 'c')) mask |= LUA_MASKCALL;
+  もし (strchr(smask, 'r')) mask |= LUA_MASKRET;
+  もし (strchr(smask, 'l')) mask |= LUA_MASKLINE;
+  もし (count > 0) mask |= LUA_MASKCOUNT;
+  戻る mask;
 }
 
 
 /*
 ** Convert a bit mask (for 'gethook') into a string mask
 */
-static char *unmakemask (int mask, char *smask) {
-  int i = 0;
-  if (mask & LUA_MASKCALL) smask[i++] = 'c';
-  if (mask & LUA_MASKRET) smask[i++] = 'r';
-  if (mask & LUA_MASKLINE) smask[i++] = 'l';
+static char *unmakemask (整数 mask, char *smask) {
+  整数 i = 0;
+  もし (mask & LUA_MASKCALL) smask[i++] = 'c';
+  もし (mask & LUA_MASKRET) smask[i++] = 'r';
+  もし (mask & LUA_MASKLINE) smask[i++] = 'l';
   smask[i] = '\0';
-  return smask;
+  戻る smask;
 }
 
 
-static int db_sethook (lua_State *L) {
-  int arg, mask, count;
+static 整数 db_sethook (lua_State *L) {
+  整数 arg, mask, count;
   lua_Hook func;
   lua_State *L1 = getthread(L, &arg);
-  if (lua_isnoneornil(L, arg+1)) {  /* no hook? */
+  もし (lua_isnoneornil(L, arg+1)) {  /* no hook? */
     lua_settop(L, arg+1);
     func = NULL; mask = 0; count = 0;  /* turn off hooks */
   }
-  else {
+  否则 {
     const char *smask = luaL_checkstring(L, arg+2);
     luaL_checktype(L, arg+1, LUA_TFUNCTION);
-    count = (int)luaL_optinteger(L, arg + 3, 0);
+    count = (整数)luaL_optinteger(L, arg + 3, 0);
     func = hookf; mask = makemask(smask, count);
   }
-  if (!luaL_getsubtable(L, LUA_REGISTRYINDEX, HOOKKEY)) {
+  もし (!luaL_getsubtable(L, LUA_REGISTRYINDEX, HOOKKEY)) {
     /* table just created; initialize it */
     lua_pushliteral(L, "k");
     lua_setfield(L, -2, "__mode");  /** hooktable.__mode = "k" */
@@ -391,23 +391,23 @@ static int db_sethook (lua_State *L) {
   lua_pushvalue(L, arg + 1);  /* value (hook function) */
   lua_rawset(L, -3);  /* hooktable[L1] = new Lua hook */
   lua_sethook(L1, func, mask, count);
-  return 0;
+  戻る 0;
 }
 
 
-static int db_gethook (lua_State *L) {
-  int arg;
+static 整数 db_gethook (lua_State *L) {
+  整数 arg;
   lua_State *L1 = getthread(L, &arg);
   char buff[5];
-  int mask = lua_gethookmask(L1);
+  整数 mask = lua_gethookmask(L1);
   lua_Hook hook = lua_gethook(L1);
-  if (hook == NULL) {  /* no hook? */
+  もし (hook == NULL) {  /* no hook? */
     luaL_pushfail(L);
-    return 1;
+    戻る 1;
   }
-  else if (hook != hookf)  /* external hook? */
+  否则 もし (hook != hookf)  /* external hook? */
     lua_pushliteral(L, "external hook");
-  else {  /* hook table must exist */
+  否则 {  /* hook table must exist */
     lua_getfield(L, LUA_REGISTRYINDEX, HOOKKEY);
     checkstack(L, L1, 1);
     lua_pushthread(L1); lua_xmove(L1, L, 1);
@@ -416,18 +416,18 @@ static int db_gethook (lua_State *L) {
   }
   lua_pushstring(L, unmakemask(mask, buff));  /* 2nd result = mask */
   lua_pushinteger(L, lua_gethookcount(L1));  /* 3rd result = count */
-  return 3;
+  戻る 3;
 }
 
 
-static int db_debug (lua_State *L) {
-  for (;;) {
+static 整数 db_debug (lua_State *L) {
+  ために (;;) {
     char buffer[250];
     lua_writestringerror("%s", "lua_debug> ");
-    if (fgets(buffer, sizeof(buffer), stdin) == NULL ||
+    もし (fgets(buffer, sizeof(buffer), stdin) == NULL ||
         strcmp(buffer, "cont\n") == 0)
-      return 0;
-    if (luaL_loadbufferx(L, buffer, strlen(buffer), "=(debug command)", "t") ||
+      戻る 0;
+    もし (luaL_loadbufferx(L, buffer, strlen(buffer), "=(debug command)", "t") ||
         lua_pcall(L, 0, 0, 0))
       lua_writestringerror("%s\n", luaL_tolstring(L, -1, NULL));
     lua_settop(L, 0);  /* remove eventual returns */
@@ -435,17 +435,17 @@ static int db_debug (lua_State *L) {
 }
 
 
-static int db_traceback (lua_State *L) {
-  int arg;
+static 整数 db_traceback (lua_State *L) {
+  整数 arg;
   lua_State *L1 = getthread(L, &arg);
   const char *msg = lua_tostring(L, arg + 1);
-  if (msg == NULL && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
+  もし (msg == NULL && !lua_isnoneornil(L, arg + 1))  /* non-string 'msg'? */
     lua_pushvalue(L, arg + 1);  /* return it untouched */
-  else {
-    int level = (int)luaL_optinteger(L, arg + 2, (L == L1) ? 1 : 0);
+  否则 {
+    整数 level = (整数)luaL_optinteger(L, arg + 2, (L == L1) ? 1 : 0);
     luaL_traceback(L, L1, msg, level);
   }
-  return 1;
+  戻る 1;
 }
 
 
@@ -470,8 +470,8 @@ static const luaL_Reg dblib[] = {
 };
 
 
-LUAMOD_API int luaopen_debug (lua_State *L) {
+LUAMOD_API 整数 luaopen_debug (lua_State *L) {
   luaL_newlib(L, dblib);
-  return 1;
+  戻る 1;
 }
 

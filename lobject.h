@@ -407,7 +407,7 @@ typedef struct TString {
   CommonHeader;
   lu_byte extra;  /* reserved words for short strings; "has hash" for longs */
   ls_byte shrlen;  /* length for short strings, negative for long strings */
-  unsigned int hash;
+  unsigned 整数 hash;
   union {
     size_t lnglen;  /* length for long strings */
     struct TString *hnext;  /* linked list for hash table */
@@ -560,8 +560,8 @@ typedef struct Upvaldesc {
 */
 typedef struct LocVar {
   TString *varname;
-  int startpc;  /* first point where variable is active */
-  int endpc;    /* first point where variable is dead */
+  整数 startpc;  /* first point where variable is active */
+  整数 endpc;    /* first point where variable is dead */
 } LocVar;
 
 
@@ -576,8 +576,8 @@ typedef struct LocVar {
 ** linearly to compute a line.)
 */
 typedef struct AbsLineInfo {
-  int pc;
-  int line;
+  整数 pc;
+  整数 line;
 } AbsLineInfo;
 
 
@@ -605,15 +605,15 @@ typedef struct Proto {
   lu_byte numparams;  /* number of fixed (named) parameters */
   lu_byte flag;
   lu_byte maxstacksize;  /* number of registers needed by this function */
-  int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of 'k' */
-  int sizecode;
-  int sizelineinfo;
-  int sizep;  /* size of 'p' */
-  int sizelocvars;
-  int sizeabslineinfo;  /* size of 'abslineinfo' */
-  int linedefined;  /* debug information  */
-  int lastlinedefined;  /* debug information  */
+  整数 sizeupvalues;  /* size of 'upvalues' */
+  整数 sizek;  /* size of 'k' */
+  整数 sizecode;
+  整数 sizelineinfo;
+  整数 sizep;  /* size of 'p' */
+  整数 sizelocvars;
+  整数 sizeabslineinfo;  /* size of 'abslineinfo' */
+  整数 linedefined;  /* debug information  */
+  整数 lastlinedefined;  /* debug information  */
   TValue *k;  /* constants used by the function */
   Instruction *code;  /* opcodes */
   struct Proto **p;  /* functions defined inside the function */
@@ -753,7 +753,7 @@ typedef union Node {
   struct NodeKey {
     TValuefields;  /* fields for value */
     lu_byte key_tt;  /* key type */
-    int next;  /* for chaining */
+    整数 next;  /* for chaining */
     Value key_val;  /* key value */
   } u;
   TValue i_val;  /* direct access to node's value as a proper 'TValue' */
@@ -778,7 +778,7 @@ typedef struct Table {
   CommonHeader;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
   lu_byte lsizenode;  /* log2 of number of slots of 'node' array */
-  unsigned int asize;  /* number of slots in 'array' array */
+  unsigned 整数 asize;  /* number of slots in 'array' array */
   Value *array;  /* array part */
   Node *node;
   struct Table *metatable;
@@ -839,21 +839,21 @@ typedef struct Table {
   { va_start(argp, fmt); \
   msg = luaO_pushvfstring(L, fmt, argp); \
   va_end(argp); \
-  if (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
+  もし (msg == NULL) luaD_throw(L, LUA_ERRMEM);  /* only after 'va_end' */ }
 
 
-LUAI_FUNC int luaO_utf8esc (char *buff, l_uint32 x);
-LUAI_FUNC lu_byte luaO_ceillog2 (unsigned int x);
-LUAI_FUNC lu_byte luaO_codeparam (unsigned int p);
+LUAI_FUNC 整数 luaO_utf8esc (char *buff, l_uint32 x);
+LUAI_FUNC lu_byte luaO_ceillog2 (unsigned 整数 x);
+LUAI_FUNC lu_byte luaO_codeparam (unsigned 整数 p);
 LUAI_FUNC l_mem luaO_applyparam (lu_byte p, l_mem x);
 
-LUAI_FUNC int luaO_rawarith (lua_State *L, int op, const TValue *p1,
+LUAI_FUNC 整数 luaO_rawarith (lua_State *L, 整数 op, const TValue *p1,
                              const TValue *p2, TValue *res);
-LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
+LUAI_FUNC void luaO_arith (lua_State *L, 整数 op, const TValue *p1,
                            const TValue *p2, StkId res);
 LUAI_FUNC size_t luaO_str2num (const char *s, TValue *o);
 LUAI_FUNC unsigned luaO_tostringbuff (const TValue *obj, char *buff);
-LUAI_FUNC lu_byte luaO_hexavalue (int c);
+LUAI_FUNC lu_byte luaO_hexavalue (整数 c);
 LUAI_FUNC void luaO_tostring (lua_State *L, TValue *obj);
 LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
                                                        va_list argp);

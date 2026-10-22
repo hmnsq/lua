@@ -28,8 +28,8 @@ typedef struct {
   lua_Writer writer;
   void *data;
   size_t offset;  /* current position relative to beginning of dump */
-  int strip;
-  int status;
+  整数 strip;
+  整数 status;
   Table *h;  /* table to track saved strings */
   lua_Unsigned nstr;  /* counter for counting saved strings */
 } DumpState;
@@ -50,7 +50,7 @@ typedef struct {
 ** of the dump.
 */
 static void dumpBlock (DumpState *D, const void *b, size_t size) {
-  if (D->status == 0) {  /* do not write anything after an error */
+  もし (D->status == 0) {  /* do not write anything after an error */
     lua_unlock(D->L);
     D->status = (*D->writer)(D->L, b, size, D->data);
     lua_lock(D->L);
@@ -65,7 +65,7 @@ static void dumpBlock (DumpState *D, const void *b, size_t size) {
 */
 static void dumpAlign (DumpState *D, unsigned align) {
   unsigned padding = align - cast_uint(D->offset % align);
-  if (padding < align) {  /* padding == align means no padding */
+  もし (padding < align) {  /* padding == align means no padding */
     static lua_Integer paddingContent = 0;
     lua_assert(align <= sizeof(lua_Integer));
     dumpBlock(D, &paddingContent, padding);
@@ -77,7 +77,7 @@ static void dumpAlign (DumpState *D, unsigned align) {
 #define dumpVar(D,x)		dumpVector(D,&x,1)
 
 
-static void dumpByte (DumpState *D, int y) {
+static void dumpByte (DumpState *D, 整数 y) {
   lu_byte x = (lu_byte)y;
   dumpVar(D, x);
 }
@@ -96,7 +96,7 @@ static void dumpVarint (DumpState *D, lua_Unsigned x) {
   lu_byte buff[DIBS];
   unsigned n = 1;
   buff[DIBS - 1] = x & 0x7f;  /* fill least-significant byte */
-  while ((x >>= 7) != 0)  /* fill other bytes in reverse order */
+  ながら ((x >>= 7) != 0)  /* fill other bytes in reverse order */
     buff[DIBS - (++n)] = cast_byte((x & 0x7f) | 0x80);
   dumpVector(D, buff + DIBS - n, n);
 }
@@ -107,7 +107,7 @@ static void dumpSize (DumpState *D, size_t sz) {
 }
 
 
-static void dumpInt (DumpState *D, int x) {
+static void dumpInt (DumpState *D, 整数 x) {
   lua_assert(x >= 0);
   dumpVarint(D, cast_uint(x));
 }
@@ -141,18 +141,18 @@ static void dumpInteger (DumpState *D, lua_Integer x) {
 ** so adding 1 to it cannot overflow a size_t.
 */
 static void dumpString (DumpState *D, TString *ts) {
-  if (ts == NULL) {
+  もし (ts == NULL) {
     dumpVarint(D, 0);  /* will "reuse" NULL */
     dumpVarint(D, 0);  /* special index for NULL */
   }
-  else {
+  否则 {
     TValue idx;
-    int tag = luaH_getstr(D->h, ts, &idx);
-    if (!tagisempty(tag)) {  /* string already saved? */
+    整数 tag = luaH_getstr(D->h, ts, &idx);
+    もし (!tagisempty(tag)) {  /* string already saved? */
       dumpVarint(D, 0);  /* reuse a saved string */
       dumpVarint(D, l_castS2U(ivalue(&idx)));  /* index of saved string */
     }
-    else {  /* must write and save the string */
+    否则 {  /* must write and save the string */
       TValue key, value;  /* to save the string in the hash */
       size_t size;
       const char *s = getlstr(ts, size);
@@ -179,12 +179,12 @@ static void dumpCode (DumpState *D, const Proto *f) {
 static void dumpFunction (DumpState *D, const Proto *f);
 
 static void dumpConstants (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizek;
+  整数 i;
+  整数 n = f->sizek;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  ために (i = 0; i < n; i++) {
     const TValue *o = &f->k[i];
-    int tt = ttypetag(o);
+    整数 tt = ttypetag(o);
     dumpByte(D, tt);
     switch (tt) {
       case LUA_VNUMFLT:
@@ -205,18 +205,18 @@ static void dumpConstants (DumpState *D, const Proto *f) {
 
 
 static void dumpProtos (DumpState *D, const Proto *f) {
-  int i;
-  int n = f->sizep;
+  整数 i;
+  整数 n = f->sizep;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  ために (i = 0; i < n; i++)
     dumpFunction(D, f->p[i]);
 }
 
 
 static void dumpUpvalues (DumpState *D, const Proto *f) {
-  int i, n = f->sizeupvalues;
+  整数 i, n = f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  ために (i = 0; i < n; i++) {
     dumpByte(D, f->upvalues[i].instack);
     dumpByte(D, f->upvalues[i].idx);
     dumpByte(D, f->upvalues[i].kind);
@@ -225,28 +225,28 @@ static void dumpUpvalues (DumpState *D, const Proto *f) {
 
 
 static void dumpDebug (DumpState *D, const Proto *f) {
-  int i, n;
+  整数 i, n;
   n = (D->strip) ? 0 : f->sizelineinfo;
   dumpInt(D, n);
-  if (f->lineinfo != NULL)
+  もし (f->lineinfo != NULL)
     dumpVector(D, f->lineinfo, cast_uint(n));
   n = (D->strip) ? 0 : f->sizeabslineinfo;
   dumpInt(D, n);
-  if (n > 0) {
+  もし (n > 0) {
     /* 'abslineinfo' is an array of structures of int's */
-    dumpAlign(D, sizeof(int));
+    dumpAlign(D, sizeof(整数));
     dumpVector(D, f->abslineinfo, cast_uint(n));
   }
   n = (D->strip) ? 0 : f->sizelocvars;
   dumpInt(D, n);
-  for (i = 0; i < n; i++) {
+  ために (i = 0; i < n; i++) {
     dumpString(D, f->locvars[i].varname);
     dumpInt(D, f->locvars[i].startpc);
     dumpInt(D, f->locvars[i].endpc);
   }
   n = (D->strip) ? 0 : f->sizeupvalues;
   dumpInt(D, n);
-  for (i = 0; i < n; i++)
+  ために (i = 0; i < n; i++)
     dumpString(D, f->upvalues[i].name);
 }
 
@@ -275,7 +275,7 @@ static void dumpHeader (DumpState *D) {
   dumpByte(D, LUAC_VERSION);
   dumpByte(D, LUAC_FORMAT);
   dumpLiteral(D, LUAC_DATA);
-  dumpNumInfo(D, int, LUAC_INT);
+  dumpNumInfo(D, 整数, LUAC_INT);
   dumpNumInfo(D, Instruction, LUAC_INST);
   dumpNumInfo(D, lua_Integer, LUAC_INT);
   dumpNumInfo(D, lua_Number, LUAC_NUM);
@@ -285,8 +285,8 @@ static void dumpHeader (DumpState *D) {
 /*
 ** dump Lua function as precompiled chunk
 */
-int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
-               int strip) {
+整数 luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
+               整数 strip) {
   DumpState D;
   D.h = luaH_new(L);  /* aux. table to keep strings already dumped */
   sethvalue2s(L, L->top.p, D.h);  /* anchor it */
@@ -302,6 +302,6 @@ int luaU_dump (lua_State *L, const Proto *f, lua_Writer w, void *data,
   dumpByte(&D, f->sizeupvalues);
   dumpFunction(&D, f);
   dumpBlock(&D, NULL, 0);  /* signal end of dump */
-  return D.status;
+  戻る D.status;
 }
 
